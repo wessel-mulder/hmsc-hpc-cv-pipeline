@@ -6,16 +6,23 @@ require(jsonify)
 ### Set up directories #### 
 
 #If you are using RStudio this will set the working directory to exactly where the file is 
-setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
-model_description = "Example1_hpc_x1_TRphy_Site"
+#setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
+pattern2match <- "2026-01-20_12-40-41"
+  
+matching_folders <- list.dirs('Hmsc Outputs', recursive = FALSE, full.names = F)
+matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+
+for(folders2match in matching_folders){
+model_description = folders2match
 localDir = sprintf("./Hmsc Outputs/%s",model_description)
 ModelDir = file.path(localDir, "Models")
 
 ### Read in the unfitted models ####
 load(file = file.path(ModelDir, "Unfitted/unfitted_models.RData"))
 
-samples_list = c(100, 250, 500)
-thin_list = c(10, 20, 20)
+samples_list = 250
+thin_list = 10
+transient = 100000
 nChains = 4
 nParallel = 4
 Lst = 1
@@ -24,7 +31,7 @@ verbose = 1
 while(Lst <= length(samples_list)){
   thin = thin_list[Lst]
   samples = samples_list[Lst]
-  transient = ceiling(0.5*samples*thin)
+  transient = transient
   
   filename = file.path(ModelDir,sprintf("INITS/HPC_INIT_samples_%.4d_thin_%.2d_chains_%.1d.rds",samples,thin,nChains))
   m = sampleMcmc(models[[1]], samples = samples, thin=thin,
@@ -36,4 +43,5 @@ while(Lst <= length(samples_list)){
   
   saveRDS(to_json(m), filename)
   Lst = Lst + 1
+}
 }
