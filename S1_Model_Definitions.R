@@ -55,9 +55,17 @@ XFormula <- as.formula(paste("~", paste(colnames(X), collapse = "+"), sep = " ")
 #TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " "))
 
 # get random effects for space
-proj_xycoords_unique <- distinct(data.frame(X = Design$lon,
-                                            Y = Design$lat))
-rownames(proj_xycoords_unique) <- unique(Design$site)
+proj_xycoords_unique <- unique(
+  data.frame(
+    site = Design$site,
+    X    = Design$lon,
+    Y    = Design$lat,
+    stringsAsFactors = FALSE
+  )
+)
+rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
+proj_xycoords_unique$site <- NULL
+
 struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
 struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
 

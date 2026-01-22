@@ -18,8 +18,9 @@ getwd()
 localDir = "./HmscOutputs"
 ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
 TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
-ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
 UnfittedDir = file.path(localDir, sprintf("%s/Models/Unfitted",models_description))
+ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
+TestDir = file.path(localDir, sprintf("%s/Tests",models_description))
 
 samples_list = c(250)
 thin_list = c(10)
@@ -50,7 +51,7 @@ if(!dir.exists(file.path(ResultDir,"Preds"))){
 }
 
 load(file = file.path(UnfittedDir,"unfitted_models.RData"))
-
+Lst <- nst[1]
 for (Lst in nst:1) {
   thin = thin_list[Lst]
   samples = samples_list[Lst]
@@ -104,7 +105,6 @@ if(file.exists(filename)){
     #Note that I use different file names for the R fitted and HPC fitted models
     #just to keep track
     outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
-    outfiletest = file.path(TestDir,sprintf("Preds/AtlasPreds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
 
     #outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_R_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",model_description, m$samples, m$thin, nChains))
     cli_h1("Making predictions")
@@ -130,7 +130,6 @@ if(file.exists(filename)){
         predY = predict(m, Gradient=Gradient, expected = TRUE)
         computational.time = proc.time() - ptm
         cli_progress_step("Making predictions based on Gradient2:")
-        
         ptm = proc.time()
         predY2 = predict(m, Gradient=Gradient2, expected = TRUE)
         cli_process_done()
@@ -193,10 +192,72 @@ if(file.exists(filename)){
       }
     }
   }
+  
   #This strange loop ensures that all output devices are turned off at the end.
   #Without it sometimes the pdf file that is create would crash on loading and
   #require the whole script to be reran
   while(!is.null(dev.list())){
     dev.off()
   }
-}
+  
+  ### NOW CHECK FOR SOME ATLAS TESTS 
+  filename = file.path(TestDir,'test_atlases.RData')
+  #filename = file.path(ModelDir,sprintf("Fitted/FittedR_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
+  if(file.exists(filename)){
+    outfiletest = file.path(TestDir,sprintf("Preds/AtlasPreds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
+    
+    load(filename)
+    cli_h1("Running tests")
+    if(file.exists(file.path(outfiletest))){
+      cli_alert_success("Predictions already calculated")
+      load(outfile)
+    } else {
+      Atlases = testing_list
+      tests<-lapply(Atlases,function(atlas_test){
+
+        cli_h2(sprintf('Starting test for Atlas'))
+        atlas_data <- atlas_test
+  
+        subset <- nrow(atlas_data$X)
+        X_sub <- atlas_data$X[1:subset,]
+        Design_sub <- atlas_data$Design[1:subset,]
+        
+        #rownames(X_sub) <- gsub("_2", "_3", rownames(X_sub))
+        #rownames(Design_sub) <- gsub("_2", "_3", rownames(Design_sub))
+        
+        # get ranlevels 
+  
+        proj_xycoords_unique <- unique(
+          data.frame(
+            site = Design_sub$site,
+            X    = Design_sub$lon,
+            Y    = Design_sub$lat,
+            stringsAsFactors = FALSE
+          )
+        )
+        rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
+        proj_xycoords_unique$site <- NULL
+        
+        struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
+        struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
+        
+        ### GET PREDICTIONS 
+        preds <- predict(m,
+                XData = X_sub,
+                studyDesign = Design_sub,
+                ranLevels = list('site'=struc_space))
+        EpredY = Reduce('+', preds)/length(preds) # convert to 2d 
+        ### get fid 
+        predArray = abind::abind(preds, along=3)
+        test_fit = evaluateModelFit(hM_test,predArray)
+        atlas_data$Ypred = predArray
+        atlas_data$fit_test = test_fit
+        atlas_data
+        })
+      names(tests) <- names(Atlases)
+      save(tests, file = outfiletest)
+
+      }
+    }
+  }
+
