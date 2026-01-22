@@ -1,28 +1,41 @@
 remove(list=ls())
+.libPaths(c("~/Rlibs", .libPaths()))
+
 require(Hmsc)
 require(ggplot2)
 require(cli)
 set.seed(369)
 ### Set up directories #### Because I run this on two difference computers this
-setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
-model_description = "Example1_hpc_x1_TRphy_Site"
-localDir = sprintf("./Hmsc Outputs/%s",model_description)
-ModelDir = file.path(localDir, "Models")
-UnfittedDir = file.path(ModelDir, "Unfitted")
-ResultDir = file.path(localDir, "Results")
+### Set up directories #### 
+#If you are using RStudio this will set the working directory to exactly where the file is 
 
-samples_list = c(100, 250, 500, 750)
-thin_list = c(10, 20, 20, 50)
-nst = length(thin_list)
+guild <- 'Woodpeckers'
+env_var <- 'LandusePercs'
+models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+
+getwd()
+localDir = "./HmscOutputs"
+ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
+TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
+ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
+UnfittedDir = file.path(localDir, sprintf("%s/Models/Unfitted",models_description))
+
+samples_list = c(250)
+thin_list = c(10)
+transient = 100000
+nParallel = 10
 nChains = 4
+nfolds = 5
+
+nst = length(thin_list)
 
 #Note that changing the species and traits only effect the graphical outputs and
 #don't require now predictions to be calculated
 #If you want to make predictions for certain species you can pass a list here,
 #where the numbers relate to the position of the species in the Y matrix.
 #Alternatively if you set this to NULL no species predictions will be plotted.
-species.list = c(13,15,20,43)
+species.list = NULL
 trait.list = NULL
 #Changing this does not always require recalculation of the predictions, unless
 #you add a new factor since predictions are calculate for each covariant
@@ -44,7 +57,7 @@ for (Lst in nst:1) {
   #Note that I use different file names for the R fitted and HPC fitted models
   #just to keep track
   
-  filename = file.path(ModelDir,sprintf("Fitted/HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
+  filename = file.path(ModelDir,sprintf("HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
   #filename = file.path(ModelDir,sprintf("Fitted/FittedR_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
   if(file.exists(filename)){
     cli_alert_success("File {filename} exists")
@@ -61,7 +74,7 @@ if(file.exists(filename)){
   m = fitted_model$posteriors
   rm(fitted_model)
   
-  modelnames = model_description
+  modelnames = models_description
   if(is.null(species.list)){
     species.list = list()
     species.list = 0
@@ -75,7 +88,7 @@ if(file.exists(filename)){
     env.list = 0
   }
   
-  pdf(file= file.path(ResultDir,paste0(model_description,"predictions.pdf")))
+  pdf(file= file.path(ResultDir,paste0(models_description,"predictions.pdf")))
   if(all(env.list==0)){
     if(m$XFormula=="~."){
       covariates = colnames(m$XData)
@@ -90,7 +103,9 @@ if(file.exists(filename)){
   if(length(covariates)>0){
     #Note that I use different file names for the R fitted and HPC fitted models
     #just to keep track
-    outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",model_description, m$samples, m$thin, nChains))
+    outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
+    outfiletest = file.path(TestDir,sprintf("Preds/AtlasPreds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
+
     #outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_R_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",model_description, m$samples, m$thin, nChains))
     cli_h1("Making predictions")
     if(file.exists(file.path(outfile))){
@@ -144,6 +159,8 @@ if(file.exists(filename)){
       if(inherits(pl, "ggplot")){
         print(pl + labs(title=paste0(modelnames,": summed response (marginal effect)")))
       }
+      # only if species are supplied to list
+      if(!species.list==0){
       for(l in 1:length(species.list)){
         par(mfrow=c(2,1))
         pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, yshow = if(m$distr[1,1]==2){c(-0.1,1.1)}else{0}, measure="Y",index=species.list[l], showData = TRUE, 
@@ -156,7 +173,7 @@ if(file.exists(filename)){
         if(inherits(pl, "ggplot")){
           print(pl + labs(title=paste0(modelnames,": example species (marginal effect)")))
         }
-      }
+      }}
       if(m$nt>1){
         traitSelection = 2:m$nt
         if(!all(trait.list==0)) traitSelection = trait.list

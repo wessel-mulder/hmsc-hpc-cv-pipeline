@@ -1,18 +1,34 @@
 #################################################
 # Here we fit the models defined for the system
 ################################################
+cat("Script started\n"); flush.console()
+
 remove(list=ls())
 set.seed(369)
-require(Hmsc)
-require(colorspace)
-require(vioplot)
-require(jsonify)
-require(cli)
-### Set up directories #### Because I run this on two difference computers this
-setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+library(jsonify,lib='~/Rlibs')
+library(colorspace,lib='~/Rlibs')
 
-model_description = "Example1_hpc_x1_TRphy_Site"
-localDir = sprintf("./Hmsc Outputs/%s",model_description)
+library(RColorBrewer,lib='~/Rlibs')
+library(farver,lib='~/Rlibs')
+library(scales,lib='~/Rlibs')
+library(Hmsc,lib='~/Rlibs')
+library(cli,lib='~/Rlibs')
+library(vioplot,lib="~/Rlibs")
+cat("Libraries loaded\n"); flush.console()
+
+### Set up directories #### Because I run this on two difference computers this
+#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+### Set up directories ####
+guilds <- c("Woodpeckers","Plovers")
+env_vars <- c('LandusePercs','Climate')
+for(guild in guilds){
+for(env_var in env_vars){
+
+# assigne properly
+model_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+
+localDir = sprintf("./HmscOutputs/%s",model_description)
 ModelDir = file.path(localDir, "Models/Fitted")
 ResultDir = file.path(localDir, "Results")
 
@@ -30,8 +46,9 @@ lables.gamma = NULL
 ma.omega= NULL
 lables.omega=NULL
 
-samples_list = c(100, 250, 500, 750)
-thin_list = c(10, 20, 20, 50)
+samples_list = c(250)
+thin_list = c(10)
+transient = 100000
 nChains = 4
 nParallel = 4
 Lst = 1
@@ -46,7 +63,7 @@ cat(sprintf("%s\nThis file contains human readable information regarding the mod
 while(Lst <= length(samples_list)){
   samples = samples_list[Lst]
   thin = thin_list[Lst]
-  transient = ceiling(0.5*samples*thin)
+  transient = transient
   filename = file.path(ModelDir,sprintf("HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
   if(file.exists(filename)){
     ptm = proc.time()
@@ -58,9 +75,9 @@ while(Lst <= length(samples_list)){
     values = c(model_description,sprintf("%.3d",thin),sprintf("%.3d",samples),sprintf("%.2d",nChains))
     rm(fitted_model)
     cli_h1("Model running")
-    cli_text("Model Info:\n Samples:{samples} Thin:{thin}")
-    cli_text("Current time: {format(Sys.time())}")
-    cli_rule()
+    #cli_text("Model Info:\n Samples:{samples} Thin:{thin}")
+    #cli_text("Current time: {format(Sys.time())}")
+    #cli_rule()
     cat(sprintf("%s\n%-35s\t\t\t|\t%-s",strrep("-",80),"Model Description","Fitting Times"),file=text.file,append = TRUE)
     cat(sprintf("\n%-05s\t\t%-30s\t|\tChain %.1d\t\t%.2f s", labels, values, c(1,2,3,4), unlist(fit_times)),file=text.file,append = TRUE)
     cat(sprintf("\n%35s\t\t\t|\t\t\t\t-------\n%1$35s\t\t\t|\tTotal\t\t%.2f s\n","",sum(unlist(fit_times))),file=text.file,append = TRUE)
@@ -189,7 +206,7 @@ while(Lst <= length(samples_list)){
   cat(sprintf("%s\n%50s\n%1$s\n",strrep("=",80),"END OF CURRENT MODEL"),file=text.file,append=TRUE)
   Lst = Lst + 1
 }
-#pdf(file= file.path(ResultDir,paste0("/",model_description,"MCMC_convergence.pdf")))
+pdf(file= file.path(ResultDir,paste0("/",model_description,"MCMC_convergence.pdf")))
 par(mfrow=c(3,2))
 vioplot(ma.beta,col=rainbow_hcl(nm),names=lables.beta,ylim=c(0,max(ma.beta)),main="psrf(beta)")
 #legend("topright",legend = names(models), fill=rainbow_hcl(nm))
@@ -202,3 +219,6 @@ vioplot(ma.gamma,col=rainbow_hcl(nm),names=lables.gamma,ylim=c(0.9,1.1),main="ps
 vioplot(ma.omega,col=rainbow_hcl(nm),names=lables.omega,ylim=c(0,max(ma.omega)),main="psrf(omega)")
 #legend("topright",legend = names(models), fill=rainbow_hcl(nm))
 vioplot(ma.omega,col=rainbow_hcl(nm),names=lables.omega,ylim=c(0.9,1.1),main="psrf(omega)")
+
+}
+}

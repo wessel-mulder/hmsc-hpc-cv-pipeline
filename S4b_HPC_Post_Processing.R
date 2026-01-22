@@ -1,37 +1,48 @@
 set.seed(369)
-require(Hmsc)
-require(jsonify)
+print('loading libraries')
+
+# 1. SET THE LIBPATH GLOBALLY FIRST
+# This ensures any parallel workers created later inherit this path
+.libPaths(c("~/Rlibs", .libPaths()))
+
+# 2. LOAD YOUR LIBRARIES
+library(jsonify)
+library(colorspace)
+library(RColorBrewer)
+library(farver)
+library(scales)
+library(Hmsc)
+library(cli)
+library(vioplot)
+
+# 3. (OPTIONAL BUT RECOMMENDED) 
+# Force parallel processes to use this path
+options(parallel.lib.paths = "~/Rlibs")
+
 c.Hmsc = getS3method("c","Hmsc")
-### Set up directories #### Because I run this on two difference computers this
-#checks if the D drive pointer works and if it does not it sets the working
-#directly to the C drive location (Work laptop)
 
-area = "Baltic"
-models_description = "Con_TSNPD_TrPhyCoYr_Groupped"
+guild <- 'Woodpeckers'
+env_var <- 'LandusePercs'
+models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
 
-if(dir.exists("/home/jdehaast")){
-  setwd(sprintf("~/HMSC_Data/%s", area))
-  ModelDir = file.path(sprintf("./%s/Fitted",models_description))
-  TempDir = file.path(sprintf("./%s/Temp",models_description))
-}else{
-  cat("Can't find HPC directoy.\nExcution may be slow on personal computers\n")
-  setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path),"../"))
-  
-  localDir = sprintf("./HMSC/Hmsc Outputs/%s",models_description)
-  ModelDir = file.path(localDir, "Models/Fitted")
-  TempDir = file.path(localDir,"Models/Temp")
-}
+getwd()
+localDir = "./HmscOutputs"
+ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
+TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
 
-samples_list = c(10, 50, 100, 250, 250, 500, 500, 500, 500)
-thin_list = c(1, 10, 10, 10, 20, 20, 30, 40, 50)
+samples_list = c(250)
+thin_list = c(10)
+transient = 100000
+nParallel = 10
 nChains = 4
-nfolds = 2
+nfolds = 5
 
 Lst = 1
+print('starting')
 for(Lst in length(samples_list):1){
   thin = thin_list[Lst]
   samples = samples_list[Lst]
-  transient = ceiling(0.5*thin*samples)
+  transient = transient
   filename.in = file.path(TempDir,sprintf("temp_fold_info_samples_%.4d_thin_%.2d.rdata", samples, thin))
   filename.out = file.path(ModelDir,sprintf("MF_samples_%.4d_thin_%.2d_chains_%.1d_nfolds_%.1d.rdata",
                                             samples, thin, nChains,nfolds))
@@ -70,6 +81,7 @@ for(Lst in length(samples_list):1){
     partition.sp = NULL
     Yc = NULL
     expected=TRUE
+
     for (p in parts) {
       message("predictions for partition ", p)
       val <- partition == p
@@ -86,7 +98,7 @@ for(Lst in length(samples_list):1){
         predict(m, post=postList, X = Xval,
                 XRRR = hM$XRRR[val,, drop=FALSE],
                 Yc = Yc[val,, drop=FALSE], studyDesign = dfPi,
-                mcmcStep = mcmcStep, expected = expected)
+                mcmcStep = mcmcStep, expected = expected, nParallel = nParallel, useSocket = FALSE)
       } else {
         getSpeciesFoldPrediction(hM, m, val, postList, dfPi,
                                  partition.sp = partition.sp,

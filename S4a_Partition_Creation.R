@@ -1,27 +1,26 @@
 set.seed(369)
-require(Hmsc)
-require(jsonify)
+library(jsonify,lib='~/Rlibs')
+library(colorspace,lib='~/Rlibs')
+library(RColorBrewer,lib='~/Rlibs')
+library(farver,lib='~/Rlibs')
+library(scales,lib='~/Rlibs')
+library(Hmsc,lib='~/Rlibs')
+library(cli,lib='~/Rlibs')
+library(vioplot,lib="~/Rlibs")
 
-area = "Baltic"
-models_description = "Con_TSNPD_TrPhyCoYr_Groupped"
+guild <- 'Woodpeckers'
+env_var <- 'LandusePercs'
+models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
 
-if(dir.exists("/home/jdehaast")){
-  setwd(sprintf("~/HMSC_Data/%s", area))
-  ModelDir = file.path(sprintf("./%s/Fitted",models_description))
-  TempDir = file.path(sprintf("./%s/Temp",models_description))
-}else{
-  cat("Can't find HPC directoy.\nExcution may be slow on personal computers\n")
-  setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path),"../"))
-  
-  localDir = "./HMSC/Hmsc Outputs"
-  ModelDir = file.path(localDir, sprintf("Models/%s/Fitted",models_description))
-  TempDir = file.path(localDir,sprintf("Models/%s/Temp",models_description))
-}
+getwd()
+localDir = "./HmscOutputs"
+ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
+TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
 
-samples_list = c(10, 50, 100, 250, 250, 500, 500, 500, 500)
-thin_list = c(1, 10, 10, 10, 20, 20, 30, 40, 50)
+samples_list = c(250)
+thin_list = c(10)
 nChains = 4
-nfolds = 2
+nfolds = 5
 
 #Only run for the longest model run
 for(Lst in length(samples_list):1){
@@ -107,6 +106,8 @@ for(Lst in length(samples_list):1){
       ## therefore we set nChains=1, nParallel=1 within
       
       ##Loop over all the modes to make nfolds*nchains sets of training and testing data
+      message(hM$transient)
+      message(hM$adaptNf)
       for(i in 1:threads){
         set.seed(seeds[i])
         k <- idfold[i]

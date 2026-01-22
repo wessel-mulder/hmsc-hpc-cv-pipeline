@@ -1,36 +1,48 @@
 ### Loading packages####
-require(jsonify)
-require(Hmsc)
-require(cli)
+require(jsonify,lib='~/Rlibs')
+require(RColorBrewer,lib='~/Rlibs')
+require(farver,lib='~/Rlibs')
+require(scales,lib='~/Rlibs')
+require(Hmsc,lib='~/Rlibs')
+require(cli,lib='~/Rlibs')
 
 ### Set up directories ####
-models_description = "Example1_hpc_x1_TRphy_Site"
+guilds <- c("Woodpeckers","Plovers")
+env_vars <- c('LandusePercs','Climate')
+for(guild in guilds){
+for(env_var in env_vars){
+
+# assigne properly
+models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+
 #New version of the ifstatement, this only works if rstudioapi is present and
 #assumes that this script file is one level down down from the main working
 #file. This is the case in these implemtations
-setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
+#setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
 getwd()
-localDir = "./Hmsc Outputs"
+localDir = "./HmscOutputs"
 ModelDir = file.path(localDir, sprintf("%s/Models",models_description))
 
 ### Model name and samples and thining lists ####
-samples_list = c(100, 250, 500, 750)
-thin_list = c(10, 20, 20, 50)
+samples_list = c(250)
+thin_list = c(10)
+transient = 100000
+force_rerun <- TRUE
 verbose = 10 #This is for alpha fix outputs
 #Loading in the unfitted model
-load(file = file.path(ModelDir, "unfitted/unfitted_models.RData"))
+load(file = file.path(ModelDir, "Unfitted/unfitted_models.RData"))
 
 
 for (x in 1:length(samples_list)) {
   samples = samples_list[x]
   thin = thin_list[x]
-  filename = sprintf("/Raw_HPC/HPC_samples_%.4d_thin_%.2d_chain_*.rds", samples, thin)
+  filename = sprintf("/Sampled/HPC_samples_%.4d_thin_%.2d_chain_*.rds", samples, thin)
   in_files = Sys.glob(file.path(ModelDir,filename))
   chains = length(in_files)
   out_file = file.path(ModelDir,sprintf("/Fitted/HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, chains))
   cli_h1("Model {models_description}")
   cli_alert_info("Samples: {samples} \t Thin: {thin}")
-  if(file.exists(out_file)){
+  if(file.exists(out_file) & !force_rerun){
     cli_alert_success("HPC outputs have already been converted")
     cli_rule()
   } else if(file.exists(in_files[1])){
@@ -64,7 +76,7 @@ for (x in 1:length(samples_list)) {
     Reading_time = proc.time() - ptm0
     cli_progress_step("Importing and merging Posteriors\n")
     ptm1 = proc.time()
-    transient = ceiling(0.5*samples*thin)
+    transient = transient
     posteriors = importPosteriorFromHPC(models[[1]], chainList, samples, thin, transient, alignPost = TRUE)
     #The posterior model is missing important information related to the model
     #run
@@ -91,4 +103,7 @@ for (x in 1:length(samples_list)) {
     cli_alert_warning("RDS files could not be found")
     cli_rule()
   }
+}
+
+}
 }

@@ -1,6 +1,6 @@
 ################################################
 remove(list=ls())
-
+.libPaths(c("~/Rlibs", .libPaths()))
 require(Hmsc)
 require(cli)
 
@@ -19,7 +19,7 @@ plot_CV = function(type){
        ylab = "predictive power",
        main=sprintf("%s:\n%s thin = %i, samples = %i\nMF: mean(%1$s) = %.4f MFSCV: mean(%1$s) = %.4f",
                     type,modelnames,thin,samples,mean(cMF[[type]],na.rm=TRUE),
-                    mean(cMF[[type]],na.rm=TRUE)))
+                    mean(cMFCV[[type]],na.rm=TRUE)))
   
   # 
   # main=paste0(modelnames,", thin = ",
@@ -35,19 +35,27 @@ plot_CV = function(type){
 
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
-setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
 
-model_description = "Example1_hpc_x1_TRphy_Site"
-localDir = sprintf("./Hmsc Outputs/%s",model_description)
-ModelDir = file.path(localDir, "Models/Fitted")
-ResultDir = file.path(localDir, "Results")
+guild <- 'Woodpeckers'
+env_var <- 'LandusePercs'
+models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
 
-samples_list = c(100, 250, 500)
-thin_list = c(10, 20, 20)
+getwd()
+localDir = "./HmscOutputs"
+ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
+TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
+ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
+
+
+samples_list = c(250)
+thin_list = c(10)
+transient = 100000
+nParallel = 10
 nChains = 4
+nfolds = 5
+
 nst = length(thin_list)
 
-nfolds = 2
 
 for (Lst in nst:1) {
   thin = thin_list[Lst]
@@ -66,9 +74,9 @@ if(file.exists(filename)){
   cli_progress_step("Loading File")
   load(filename)
   cli_progress_done()
-  modelnames = model_description
+  modelnames = models_description
   
-  pdf(file = file.path(ResultDir,paste0("/",model_description,"_model_fit_nfolds_",nfolds,".pdf")))
+  pdf(file = file.path(ResultDir,paste0("/",models_description,"_model_fit_nfolds_",nfolds,".pdf")))
   
   cMF = MF
   cMFCV = MFCV
