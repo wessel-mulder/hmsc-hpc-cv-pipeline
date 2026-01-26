@@ -94,28 +94,43 @@ Y <- read.csv(
 ) %>%
   filter(row.names(.) %in% row.names(X))
 
+### filter based on richness per atlas 
+effort_list <- c(
+  '1' = .03,
+  '2' = .01,
+  '3' = 0
+)
+number='1'
+for(number in c('1','2','3')){
+quantile <- effort_list[[number]]
+Y_sub <- Y[rownames(Y)[grep(paste0("_",number,"$"), rownames(Y))],,drop=F]
+if(quantile > 0){
+  print(sprintf('In atlas %s the quantile is %s percent',
+          number,quantile))
+  th = quantile(rowSums(Y_sub),quantile)
+  tofilter = rownames(Y_sub)[rowSums(Y_sub)<th]
+  Y <- Y[!rownames(Y) %in% tofilter,]
+  print(sprintf("Removed %s sites from atlas %s",
+                length(tofilter),number))
+}
+}
+
+min_occs <- 5
 for(number in c('1','2','3')){
   Y_sub <- Y[rownames(Y)[grep(paste0("_",number,"$"), rownames(Y))],,drop=F]
-  if(any(colSums(Y_sub, na.rm =T)<5)){
+  if(any(colSums(Y_sub, na.rm =T)<min_occs)){
     print(paste0('In atlas ',number,' these species: '))
-    print(names(which(colSums(Y_sub, na.rm =T)<5)))
-    tofilter <- names(which(colSums(Y_sub, na.rm =T)<5))
+    print(names(which(colSums(Y_sub, na.rm =T)<min_occs)))
+    tofilter <- names(which(colSums(Y_sub, na.rm =T)<min_occs))
     print('have less than 5 occurrences')
     Y <- Y[, !(colnames(Y) %in% tofilter)]
     print('and are now filtered ')
   }
 }
 
-for(number in c('1','2','3')){
-  Y_sub <- Y[rownames(Y)[grep(paste0("_",number,"$"), rownames(Y))],,drop=F]
-  if(any(colSums(Y_sub, na.rm =T)<5)){
-    print(paste0('In atlas ',number,' these species: '))
-    print(names(which(colSums(Y_sub, na.rm =T)<5)))
-    tofilter <- names(which(colSums(Y_sub, na.rm =T)<5))
-    print('have less than 5 occurrences')
-    stop('stop')
-  }
-}
+# now refilter X again 
+X <- X %>%
+  filter(rownames(.) %in% rownames(Y))
 
 ##### TRAITS #####
 Tr <- read.csv(
@@ -161,7 +176,7 @@ save(
   Y,
   Tr,
   Design,
-  file = file.path("Data/preprocessed_data.RData")
+  file = file.path(sprintf("Data/preprocessed_data_minoccs%s_atlasrichnessfilterbyeffort.RData",min_occs))
 )
 
 # 
@@ -281,32 +296,5 @@ save(
 #     print('Init files created')
 # 
 
-    # --- Auto-backup of the running script ----------------------------------------
 
-    # Try to detect the current script path
-    args <- commandArgs(trailingOnly = FALSE)
-    script_path <- NULL
-
-    if ("--file=" %in% substr(args, 1, 7)) {
-      # Works for Rscript or batch jobs
-      script_path <- normalizePath(sub("--file=", "", args[grep("--file=", args)]))
-    } else if (!is.null(sys.frames()) && !is.na(sys.frames()[[1]]$ofile)) {
-      # Fallback for interactive runs in RStudio
-      script_path <- normalizePath(sys.frames()[[1]]$ofile)
-    }
-
-    if (!is.null(script_path) && file.exists(script_path)) {
-      backup_file <- file.path(
-        file.path(input,'tmp_rds',dir_name),
-        paste0(format(Sys.time(), "%Y-%m-%d_%H-%M-%S_"), basename(script_path))
-      )
-
-      file.copy(script_path, backup_file, overwrite = TRUE)
-      message("Script copied to: ", backup_file)
-    } else {
-      warning("Could not determine script path")
-    }
-  }
-
-}
 

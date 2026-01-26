@@ -4,6 +4,7 @@ remove(list=ls())
 gc()
 
 require(Hmsc)
+require(dplyr)
 #### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
@@ -15,6 +16,10 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 guild_models <- c('All')
 variable_models <- c('All')
 atlas_models <- 3
+min_occs <- 20
+guild2run <- guild_models[[1]]
+variable2run <- variable_models[[1]]
+
 for(guild2run in guild_models){
 for(variable2run in variable_models){
 # assign correct names 
@@ -32,7 +37,7 @@ model_description = paste(as.character(date),
 # If the data are saved as an RData file
 # These files contain the preprocessed data values. Filtered for >5 occurrences in each atlas and 
 # at least 25% of the atlas grid cell is land 
-load(file.path(dataDir,"preprocessed_data.RData"))
+load(file.path(dataDir,sprintf("preprocessed_data_minoccs%s_atlasrichnessfilterbyeffort.RData",min_occs)))
 
 # Subset environmental data 
 X <- X %>%
@@ -41,18 +46,20 @@ X <- X %>%
       select(., matches("^perc_"))
     } else if (variables == 'Climate') {
       select(., tmean_year,prec_year)
-    } else if {variables 
-      .
+    } else if (variables == 'All') {
+      select(., tmean_year,prec_year, hh, dominant,matches("^perc_"))
+      
     }
   }
 # Grab species from the guild 
+if(guild_models != 'All'){
 Y <- Y %>%
   select(any_of(rownames(Tr)[Tr$foraging_guild_consensus == guild]))
-
+}
 #### Prepare for model ####
 # Define model formulas for environmental and trait data
 XFormula <- as.formula(paste("~", paste(colnames(X), collapse = "+"), sep = " "))
-#TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " "))
+TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " "))
 
 # get random effects for space
 proj_xycoords_unique <- unique(
@@ -80,8 +87,8 @@ Design_sub$atlas <- droplevels(Design_sub$atlas)
 model = Hmsc(Y = Y_sub,
                      XData = X_sub,
                      XFormula = XFormula,
-                     # TrData = Tr,
-                     # TrFormula = TrFormula,
+                     TrData = Tr,
+                     TrFormula = TrFormula,
                      # phyloTree = phy,
                      studyDesign = Design_sub[,c('site'),drop=F],
                      ranLevels = list('site'=struc_space),
@@ -103,7 +110,7 @@ test.dir = file.path(ModelDir, "Tests")
 if(!dir.exists(save.dir)){
   dir.create(ModelDir)
   dir.create(save.dir)
-  for(x in c("Fitted","Raw_HPC","Unfitted","INITS","Temp")){dir.create(file.path(save.dir,x))}
+  for(x in c("Fitted","Raw_HPC","Unfitted","INITS","Temp","Logs","Logs_CV","Sampled")){dir.create(file.path(save.dir,x))}
   if(!dir.exists(results.dir)){dir.create(results.dir)}
   if(!dir.exists(test.dir)){dir.create(test.dir)}
 } else {
@@ -172,3 +179,4 @@ save(testing_list,
 
 }
 }
+
