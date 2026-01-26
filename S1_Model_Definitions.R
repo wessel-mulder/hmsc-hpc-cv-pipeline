@@ -7,13 +7,13 @@ require(Hmsc)
 #### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
-localDir = "./Hmsc Outputs"
+localDir = "./HmscOutputs"
 dataDir = "./Data"
 date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 
 #### Model specs ####
-guild_models <- c('Plovers','Woodpeckers')
-variable_models <- c('Climate','LandusePercs')
+guild_models <- c('All')
+variable_models <- c('All')
 atlas_models <- 3
 for(guild2run in guild_models){
 for(variable2run in variable_models){
@@ -41,7 +41,7 @@ X <- X %>%
       select(., matches("^perc_"))
     } else if (variables == 'Climate') {
       select(., tmean_year,prec_year)
-    } else {
+    } else if {variables 
       .
     }
   }
