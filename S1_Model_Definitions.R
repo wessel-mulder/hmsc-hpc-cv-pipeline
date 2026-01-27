@@ -16,10 +16,11 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 guild_models <- c('All')
 variable_models <- c('All')
 atlas_models <- 3
-min_occs <- 20
+min_occs2run <- c(5,20)
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
 
+for(min_occs in min_occs2run){
 for(guild2run in guild_models){
 for(variable2run in variable_models){
 # assign correct names 
@@ -31,6 +32,7 @@ model_description = paste(as.character(date),
                           guild,
                           variables,
                           paste('Atlas',atlas,sep=''),
+                          paste('MinOccs',min_occs,sep=''),
                           sep='_')
 
 #### Edit the data ####
@@ -76,6 +78,18 @@ proj_xycoords_unique$site <- NULL
 struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
 struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
 
+### GET PHYLOGENY
+phy <- read.tree(file.path('Data/data/1_preprocessing/Taxonomy/tree_fromPD.tre'))
+phy <- keep.tip(phy,colnames(Y))
+
+pd_matrix <- cophenetic.phylo(phy)
+pd_matrix <- pd_matrix[sort(rownames(pd_matrix)), sort(colnames(pd_matrix))]
+pd_matrix
+
+# check if species-lists are identical
+setdiff(rownames(pd_matrix),names(Y))
+# stunning 
+
 #### Grab training atlas data ####
 pattern <- paste0("_(", paste(atlas, collapse = "|"), ")$")
 
@@ -89,11 +103,11 @@ model = Hmsc(Y = Y_sub,
                      XFormula = XFormula,
                      TrData = Tr,
                      TrFormula = TrFormula,
-                     # phyloTree = phy,
+                     phyloTree = phy,
                      studyDesign = Design_sub[,c('site'),drop=F],
                      ranLevels = list('site'=struc_space),
                      distr='probit')
-
+print(model)
 #### Save model ####
 #These lists are left over from the orginal pipeline which had multiple models
 #defined at the same time
@@ -179,4 +193,4 @@ save(testing_list,
 
 }
 }
-
+}
