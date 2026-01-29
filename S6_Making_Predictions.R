@@ -293,6 +293,7 @@ if(file.exists(filename)){
                 ranLevels = list('site'=struc_space),
                 distr = m$distr) # Ensure distribution matches
 
+
         test_fit = evaluateModelFit(hM_test, predArray)
         atlas_data$Ypred = predArray
         atlas_data$fit_test = test_fit
