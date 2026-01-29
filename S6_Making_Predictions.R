@@ -243,6 +243,7 @@ if(file.exists(filename)){
       cli_alert_success("Predictions already calculated")
     } else {
       Atlases = testing_list
+      atlas_test <- Atlases[[1]]
       tests<-lapply(Atlases,function(atlas_test){
 
         cli_h2(sprintf('Starting test for Atlas'))
@@ -291,10 +292,12 @@ if(file.exists(filename)){
                 studyDesign = Design_sub[,'site',drop=F],
                 ranLevels = list('site'=struc_space),
                 distr = m$distr) # Ensure distribution matches
+
         test_fit = evaluateModelFit(hM_test, predArray)
         atlas_data$Ypred = predArray
         atlas_data$fit_test = test_fit
         atlas_data
+        
         })
       names(tests) <- names(Atlases)
       if(!dir.exists(file.path(TestDir,"Preds"))){
