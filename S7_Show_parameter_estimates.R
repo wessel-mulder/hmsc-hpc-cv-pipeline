@@ -8,9 +8,16 @@ require(cli)
 
 set.seed(369)
 
-guild <- 'Woodpeckers'
-env_var <- 'LandusePercs'
-models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+### Set up directories #### 
+#If you are using RStudio this will set the working directory to exactly where the file is 
+### Set up directories ####
+pattern2match <- "2026-01-27"
+  
+matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
+matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+
+for(folders2match in matching_folders){
+models_description = folders2match
 
 getwd()
 localDir = "./HmscOutputs"
@@ -20,7 +27,7 @@ ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
 UnfittedDir = file.path(localDir, sprintf("%s/Models/Unfitted",models_description))
 
 samples_list = c(250)
-thin_list = c(10)
+thin_list = c(100)
 transient = 100000
 nParallel = 10
 nChains = 4
@@ -271,4 +278,5 @@ if(file.exists(filename)){
   # if ("pdf" %in% names(dev.list())) {
   #   dev.off()
   # }
+}
 }

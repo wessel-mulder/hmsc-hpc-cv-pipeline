@@ -1,13 +1,17 @@
 #### Hmsc analyses on ####
 #General cleaning of the workspace
 remove(list=ls())
-gc()
+print('loading libraries')
+
+# 1. SET THE LIBPATH GLOBALLY FIRST
+# This ensures any parallel workers created later inherit this path
+.libPaths(c("~/Rlibs", .libPaths()))
 
 require(Hmsc)
 require(dplyr)
+library(ape)
 #### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
-setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
 localDir = "./HmscOutputs"
 dataDir = "./Data"
 date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")

@@ -3,16 +3,35 @@ remove(list=ls())
 
 require(Hmsc)
 require(ggplot2)
+require(parallel)
 require(cli)
 set.seed(369)
 ### Set up directories #### Because I run this on two difference computers this
 
+
+
+### MY FLAGS 
+ngrid <- 3
+skip_covariates <- TRUE # skip the first part of the script which constructs gradients & predicts over them 
+atlas_subset <- NULL # set to NULL for all atlas rows, or a number for a subset  
+overwrite_prediction <- TRUE # overwrite atlas predictions if they've already been made 
+
+# # Get arguments from command line
+# args <- commandArgs(trailingOnly = TRUE)
+
+# # Set a thinnning factor
+# # Default value if no argument is provided, otherwise use the first argument
+
+### Set up directories #### 
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
-
-guild <- 'Woodpeckers'
-env_var <- 'LandusePercs'
-models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+### Set up directories ####
+pattern2match <- "2026-01-27"
+  
+matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
+matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+for(folders2match in matching_folders){
+models_description = folders2match
 
 getwd()
 localDir = "./HmscOutputs"
@@ -23,11 +42,15 @@ ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
 TestDir = file.path(localDir, sprintf("%s/Tests",models_description))
 
 samples_list = c(250)
-thin_list = c(10)
+thin_list = c(100)
 transient = 100000
-nParallel = 10
 nChains = 4
 nfolds = 5
+
+nParallel = detectCores() - 1
+print(nParallel)
+
+
 
 nst = length(thin_list)
 
@@ -73,6 +96,7 @@ if(file.exists(filename)){
   load(filename)
   #If you are using R fitted models you don't need to run the following two lines as the model is saved differently.
   m = fitted_model$posteriors
+  m$postList = m$postList[1:2]
   rm(fitted_model)
   
   modelnames = models_description
@@ -101,6 +125,10 @@ if(file.exists(filename)){
   }
   
   #Change this to save the gradients, check if the file exists and if it does skip calculating them and move straight to plotting
+  if(skip_covariates){
+    cli_alert_info("Skipping covariate predictions as per user request")
+    covariates = c()
+  }
   if(length(covariates)>0){
     #Note that I use different file names for the R fitted and HPC fitted models
     #just to keep track
@@ -117,21 +145,22 @@ if(file.exists(filename)){
         covariate = covariates[[k]]
         cli_h2("Calculating predictions for {covariate}")
         cli_progress_step("Starting to construction Gradient:")
+        sprintf('Making predictions for %s ngrids',ngrid)
         ptm_tot = proc.time()
         ptm = ptm_tot
-        Gradient = constructGradient(m,focalVariable = covariate, ngrid=30)
+        Gradient = constructGradient(m,focalVariable = covariate, ngrid=ngrid)
         computational.time = proc.time() - ptm
         
         cli_progress_step("Starting to construction Gradient2:")
-        Gradient2 = constructGradient(m,focalVariable = covariate,non.focalVariables = 1, ngrid=30)
+        Gradient2 = constructGradient(m,focalVariable = covariate,non.focalVariables = 1, ngrid=ngrid)
         computational.time = proc.time() - ptm
         
         cli_progress_step("Making predictions based on Gradient 1:")
-        predY = predict(m, Gradient=Gradient, expected = TRUE)
+        predY = predict(m, Gradient=Gradient, expected = TRUE,nParallel = nParallel,useSocket=F)
         computational.time = proc.time() - ptm
         cli_progress_step("Making predictions based on Gradient2:")
         ptm = proc.time()
-        predY2 = predict(m, Gradient=Gradient2, expected = TRUE)
+        predY2 = predict(m, Gradient=Gradient2, expected = TRUE,nParallel = nParallel,useSocket=F)
         cli_process_done()
         computational.time = proc.time() - ptm
         Preds[[k]]$predY = predY 
@@ -204,23 +233,29 @@ if(file.exists(filename)){
   filename = file.path(TestDir,'test_atlases.RData')
   #filename = file.path(ModelDir,sprintf("Fitted/FittedR_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
   if(file.exists(filename)){
+    ptm = proc.time()
+
     outfiletest = file.path(TestDir,sprintf("Preds/AtlasPreds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
     
     load(filename)
     cli_h1("Running tests")
-    if(file.exists(file.path(outfiletest))){
+    if(file.exists(file.path(outfiletest)) & !overwrite_prediction){
       cli_alert_success("Predictions already calculated")
-      load(outfile)
     } else {
       Atlases = testing_list
       tests<-lapply(Atlases,function(atlas_test){
 
         cli_h2(sprintf('Starting test for Atlas'))
         atlas_data <- atlas_test
-  
-        subset <- nrow(atlas_data$X)
+
+        if(length(atlas_subset)>0){
+          subset <- atlas_subset
+        }else{
+          subset <- nrow(atlas_data$X)
+        }
         X_sub <- atlas_data$X[1:subset,]
         Design_sub <- atlas_data$Design[1:subset,]
+        Y_sub <- atlas_data$Y[1:subset,]
         
         #rownames(X_sub) <- gsub("_2", "_3", rownames(X_sub))
         #rownames(Design_sub) <- gsub("_2", "_3", rownames(Design_sub))
@@ -245,19 +280,32 @@ if(file.exists(filename)){
         preds <- predict(m,
                 XData = X_sub,
                 studyDesign = Design_sub,
-                ranLevels = list('site'=struc_space))
+                ranLevels = list('site'=struc_space),
+                nParallel = nParallel,useSocket=F)
         EpredY = Reduce('+', preds)/length(preds) # convert to 2d 
         ### get fid 
+        str(Design_sub)
         predArray = abind::abind(preds, along=3)
-        test_fit = evaluateModelFit(hM_test,predArray)
+        hM_test <- Hmsc(Y = Y_sub, 
+                XData = X_sub, 
+                studyDesign = Design_sub[,'site',drop=F],
+                ranLevels = list('site'=struc_space),
+                distr = m$distr) # Ensure distribution matches
+        test_fit = evaluateModelFit(hM_test, predArray)
         atlas_data$Ypred = predArray
         atlas_data$fit_test = test_fit
         atlas_data
         })
       names(tests) <- names(Atlases)
+      if(!dir.exists(file.path(TestDir,"Preds"))){
+        dir.create(file.path(TestDir,"Preds"))
+      }
       save(tests, file = outfiletest)
+      computational.time = proc.time() - ptm
+      cat("Time taken:", computational.time[3],"s \n\n")
 
       }
     }
   }
 
+}

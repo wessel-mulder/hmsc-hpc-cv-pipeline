@@ -15,8 +15,8 @@ plot_CV = function(type){
                  "AUC" = c(0,1,0.5,0.5),
                  "O.AUC" = c(0,1,0.5,0.5),
                  c(rep(1,2),0,0))
-  pch = 1
-  cex = 2
+  pch = 19
+  cex = 0.5
   par(mar=c(5,5,7.5,5))
   plot(cMF[[type]],cMFCV[[type]],xlim=c(-limit[1],limit[2]),ylim=c(-limit[1],limit[2]),pch=pch,cex=cex,
        xlab = "explanatory power",
@@ -49,9 +49,14 @@ plot_CV = function(type){
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 
-guild <- 'Woodpeckers'
-env_var <- 'LandusePercs'
-models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+pattern2match <- "2026-01-27"
+  
+matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
+matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+
+print('starting predictions')
+for(folders2match in matching_folders){
+models_description = folders2match
 
 getwd()
 localDir = "./HmscOutputs"
@@ -61,7 +66,7 @@ ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
 TestDir = file.path(localDir, sprintf("%s/Tests",models_description))
 
 samples_list = c(250)
-thin_list = c(10)
+thin_list = c(100)
 transient = 100000
 nParallel = 10
 nChains = 4
@@ -94,9 +99,9 @@ if(file.exists(filename)){
   load(filename)
   #cli_progress_done()
   modelnames = models_description
-  
-  pdf(file = file.path(ResultDir,paste0("/",models_description,"_model_fit_nfolds_",nfolds,".pdf")))
-  
+
+  pdf(file = file.path(TestDir,paste0("/",models_description,"_model_fit_nfolds_",nfolds,".pdf")))
+
   if(file.exists(testfilename)){
     extract_fit <- function(tests, atlas_name) {
       tests[[atlas_name]]$fit_test
@@ -116,4 +121,5 @@ if(file.exists(filename)){
     cli_progress_done()
   }
   dev.off()
+}
 }

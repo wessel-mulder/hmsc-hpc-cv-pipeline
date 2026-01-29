@@ -1,19 +1,21 @@
 ### Loading packages####
-require(jsonify,lib='~/Rlibs')
-require(RColorBrewer,lib='~/Rlibs')
-require(farver,lib='~/Rlibs')
-require(scales,lib='~/Rlibs')
-require(Hmsc,lib='~/Rlibs')
-require(cli,lib='~/Rlibs')
+.libPaths(c("~/Rlibs", .libPaths()))
+
+require(jsonify)
+require(RColorBrewer)
+require(farver)
+require(scales)
+require(Hmsc)
+require(cli)
 
 ### Set up directories ####
-guilds <- c("Woodpeckers","Plovers")
-env_vars <- c('LandusePercs','Climate')
-for(guild in guilds){
-for(env_var in env_vars){
+pattern2match <- "2026-01-27"
+  
+matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
+matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
 
-# assigne properly
-models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+for(folders2match in matching_folders){
+models_description = folders2match
 
 #New version of the ifstatement, this only works if rstudioapi is present and
 #assumes that this script file is one level down down from the main working
@@ -25,7 +27,7 @@ ModelDir = file.path(localDir, sprintf("%s/Models",models_description))
 
 ### Model name and samples and thining lists ####
 samples_list = c(250)
-thin_list = c(10)
+thin_list = c(100)
 transient = 100000
 force_rerun <- TRUE
 verbose = 10 #This is for alpha fix outputs
@@ -105,5 +107,4 @@ for (x in 1:length(samples_list)) {
   }
 }
 
-}
 }

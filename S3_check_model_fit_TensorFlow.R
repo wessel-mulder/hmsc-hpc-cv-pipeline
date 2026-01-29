@@ -5,30 +5,29 @@ cat("Script started\n"); flush.console()
 
 remove(list=ls())
 set.seed(369)
-library(jsonify,lib='~/Rlibs')
-library(colorspace,lib='~/Rlibs')
+### Loading packages####
+.libPaths(c("~/Rlibs", .libPaths()))
 
-library(RColorBrewer,lib='~/Rlibs')
-library(farver,lib='~/Rlibs')
-library(scales,lib='~/Rlibs')
-library(Hmsc,lib='~/Rlibs')
-library(cli,lib='~/Rlibs')
-library(vioplot,lib="~/Rlibs")
-cat("Libraries loaded\n"); flush.console()
+require(jsonify)
+require(RColorBrewer)
+require(farver)
+require(scales)
+require(Hmsc)
+require(cli)
+require(vioplot)
+require(colorspace)
 
-### Set up directories #### Because I run this on two difference computers this
-#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 ### Set up directories ####
-guilds <- c("Woodpeckers","Plovers")
-env_vars <- c('LandusePercs','Climate')
-for(guild in guilds){
-for(env_var in env_vars){
+pattern2match <- "2026-01-27"
+  
+matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
+matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
 
-# assigne properly
-model_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+for(folders2match in matching_folders){
+models_description = folders2match
 
-localDir = sprintf("./HmscOutputs/%s",model_description)
+localDir = sprintf("./HmscOutputs/%s",models_description)
 ModelDir = file.path(localDir, "Models/Fitted")
 ResultDir = file.path(localDir, "Results")
 
@@ -37,7 +36,7 @@ showGamma = TRUE
 showOmega = TRUE
 showAlpha = TRUE
 
-maxOmega = 100
+maxOmega = 1000
 
 ma.beta = NULL
 lables.beta = NULL
@@ -47,7 +46,7 @@ ma.omega= NULL
 lables.omega=NULL
 
 samples_list = c(250)
-thin_list = c(10)
+thin_list = c(100)
 transient = 100000
 nChains = 4
 nParallel = 4
@@ -55,7 +54,7 @@ Lst = 1
 verbose = 1
 
 #Add back in the loop for multiple model lengths in the future
-text.file = file.path(ResultDir,paste0(model_description,"model_fit_details.txt"))
+text.file = file.path(ResultDir,paste0(models_description,"model_fit_details.txt"))
 cat(sprintf("%s\nThis file contains human readable information regarding the model fit.\nFitting Date:\t%s\n%1$s\n\n",
             strrep("-",80), strptime(Sys.time(),format = "%Y-%m-%d %H:%M")),
     file=text.file)
@@ -72,7 +71,7 @@ while(Lst <= length(samples_list)){
     fit_times = fitted_model$fit_times
     labels = c("Names","Thin", "Samples", "Chains")
     labels2 = c("Min.   :","1st Qu.:","Median :","Mean   :","3rd Qu.:","Max.   :")
-    values = c(model_description,sprintf("%.3d",thin),sprintf("%.3d",samples),sprintf("%.2d",nChains))
+    values = c(models_description,sprintf("%.3d",thin),sprintf("%.3d",samples),sprintf("%.2d",nChains))
     rm(fitted_model)
     cli_h1("Model running")
     #cli_text("Model Info:\n Samples:{samples} Thin:{thin}")
@@ -200,13 +199,13 @@ while(Lst <= length(samples_list)){
     computational.time = proc.time() - ptm
     cat("Time taken:", computational.time[3],"s \nCurrent time:",format(Sys.time(), "%H:%M:%S"),"\n\n")
   } else {
-    cat(sprintf("File not found for:\nModel Description\nName:\t\t%s\nThin:\t\t%.3d\nSamples:\t%.4d\nChains:\t\t%.2d\n\n",model_description,thin,samples,nChains),file=text.file,append = TRUE)
+    cat(sprintf("File not found for:\nModel Description\nName:\t\t%s\nThin:\t\t%.3d\nSamples:\t%.4d\nChains:\t\t%.2d\n\n",models_description,thin,samples,nChains),file=text.file,append = TRUE)
   }
   
   cat(sprintf("%s\n%50s\n%1$s\n",strrep("=",80),"END OF CURRENT MODEL"),file=text.file,append=TRUE)
   Lst = Lst + 1
 }
-pdf(file= file.path(ResultDir,paste0("/",model_description,"MCMC_convergence.pdf")))
+pdf(file= file.path(ResultDir,paste0("/",models_description,"MCMC_convergence.pdf")))
 par(mfrow=c(3,2))
 vioplot(ma.beta,col=rainbow_hcl(nm),names=lables.beta,ylim=c(0,max(ma.beta)),main="psrf(beta)")
 #legend("topright",legend = names(models), fill=rainbow_hcl(nm))
@@ -220,5 +219,4 @@ vioplot(ma.omega,col=rainbow_hcl(nm),names=lables.omega,ylim=c(0,max(ma.omega)),
 #legend("topright",legend = names(models), fill=rainbow_hcl(nm))
 vioplot(ma.omega,col=rainbow_hcl(nm),names=lables.omega,ylim=c(0.9,1.1),main="psrf(omega)")
 
-}
 }

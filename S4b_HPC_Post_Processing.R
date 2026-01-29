@@ -14,6 +14,7 @@ library(scales)
 library(Hmsc)
 library(cli)
 library(vioplot)
+library(parallel)
 
 # 3. (OPTIONAL BUT RECOMMENDED) 
 # Force parallel processes to use this path
@@ -21,19 +22,34 @@ options(parallel.lib.paths = "~/Rlibs")
 
 c.Hmsc = getS3method("c","Hmsc")
 
-guild <- 'Woodpeckers'
-env_var <- 'LandusePercs'
-models_description = sprintf("2026-01-20_12-40-41_%s_%s_Atlas3",guild,env_var)
+# Get arguments from command line
+args <- commandArgs(trailingOnly = TRUE)
+# Default value if no argument is provided, otherwise use the first argument
+thin2 <- if(length(args) > 0) as.numeric(args[1]) else 250
+models_description <- args[2]
+
+# ### Set up directories ####
+# pattern2match <- "2026-01-27"
+  
+# matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
+# matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+
+# for(folders2match in matching_folders){
+#models_description = folders2match
 
 getwd()
 localDir = "./HmscOutputs"
 ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
 TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
 
+
+
+
 samples_list = c(250)
-thin_list = c(10)
+thin_list = c(100)
 transient = 100000
-nParallel = 10
+nParallel = detectCores() - 1
+print(nParallel)
 nChains = 4
 nfolds = 5
 
@@ -53,26 +69,55 @@ for(Lst in length(samples_list):1){
     postN <- Reduce(sum, lapply(hM$postList, length))
     predArray <- array(NA, c(hM$ny, hM$ns, postN))
     mods = vector("list", threads)
-    for(i in 1:threads){
-      temp_fitted = file.path(TempDir,sprintf("Sampled_HPC_samples_%.4d_thin_%.2d_thread_%.1d.rds", samples, thin,i))
-      temp = from_json(readRDS(file = temp_fitted)[[1]])
+    # for(i in 1:threads){
+    #   temp_fitted = file.path(TempDir,sprintf("Sampled_HPC_samples_%.4d_thin_%.2d_thread_%.1d.rds", samples, thin,i))
+    #   temp = from_json(readRDS(file = temp_fitted)[[1]])
+    #   if(is.matrix(temp[[1]][[1]]$Alpha)){
+    #     cat("\tAlpha is a matrix\nFixing alpha issue\n")
+    #     #pb = txtProgressBar(min = 0, max = samples, initial = 0)
+    #     for(z in 1:samples){
+    #       temp_Alpha_Mat = temp[[1]][[z]]$Alpha
+    #       temp[[1]][[z]]$Alpha = lapply(seq_len(nrow(temp_Alpha_Mat)), function(p) temp_Alpha_Mat[p,])
+    #       #setTxtProgressBar(pb,i)
+    #     }
+    #   } else {
+    #     cat("\tAlpha is not a matrix\nNo fix required\n")
+    #   }
+    #   k = idfold[i]
+    #   m = importPosteriorFromHPC(hM1[[k]], temp[1], samples, thin, transient, alignPost = TRUE)
+    #   message("finished thread ", i, "/", threads)
+    #   attr(m, "fold") <- k
+    #   mods[[i]] = m
+    # }
+    mods <- mclapply(1:threads, function(i) {
+      
+      temp_fitted <- file.path(TempDir, sprintf("Sampled_HPC_samples_%.4d_thin_%.2d_thread_%.1d.rds", samples, thin, i))
+      
+      # Loading the RDS
+      temp <- from_json(readRDS(file = temp_fitted)[[1]])
+      
+      # Alpha fix logic
       if(is.matrix(temp[[1]][[1]]$Alpha)){
-        cat("\tAlpha is a matrix\nFixing alpha issue\n")
-        #pb = txtProgressBar(min = 0, max = samples, initial = 0)
         for(z in 1:samples){
-          temp_Alpha_Mat = temp[[1]][[z]]$Alpha
-          temp[[1]][[z]]$Alpha = lapply(seq_len(nrow(temp_Alpha_Mat)), function(p) temp_Alpha_Mat[p,])
-          #setTxtProgressBar(pb,i)
+          temp_Alpha_Mat <- temp[[1]][[z]]$Alpha
+          temp[[1]][[z]]$Alpha <- lapply(seq_len(nrow(temp_Alpha_Mat)), function(p) temp_Alpha_Mat[p,])
         }
-      } else {
-        cat("\tAlpha is not a matrix\nNo fix required\n")
       }
-      k = idfold[i]
-      m = importPosteriorFromHPC(hM1[[k]], temp[1], samples, thin, transient, alignPost = TRUE)
-      message("finished thread ", i, "/", threads)
+      
+      k <- idfold[i]
+      
+      # THIS IS THE HEAVY PART (CPU and RAM intensive)
+      m <- importPosteriorFromHPC(hM1[[k]], temp[1], samples, thin, transient, alignPost = TRUE)
+      
       attr(m, "fold") <- k
-      mods[[i]] = m
-    }
+      
+      # Clean up 'temp' inside the function to free RAM immediately
+      rm(temp)
+      
+      return(m)
+      
+    }, mc.cores = nParallel)
+
     rm(hM1)
     #Combine predictions: this is still a loop
     idfold <- sapply(mods, attr, which = "fold")
@@ -87,13 +132,14 @@ for(Lst in length(samples_list):1){
       val <- partition == p
       m <- do.call(c.Hmsc, mods[which(idfold == p)])
       m <- alignPosterior(m)
-      postList <- poolMcmcChains(m$postList, start=1, thin=1)
+      postList <- poolMcmcChains(m$postList, start=1, thin=thin2)
       dfPi <- droplevels(hM$dfPi[val,, drop=FALSE])
       Xval <- if (is.matrix(hM$X)){
         hM$X[val, , drop=FALSE]
       } else{
         lapply(hM$X, function(a) a[val, , drop=FALSE])
       }
+      message('starting to predict')
       pred1 <- if (is.null(partition.sp)) {
         predict(m, post=postList, X = Xval,
                 XRRR = hM$XRRR[val,, drop=FALSE],
@@ -133,4 +179,5 @@ for(Lst in length(samples_list):1){
   } else {
     message("Could not find file:", filename.in)
   }
+}
 }

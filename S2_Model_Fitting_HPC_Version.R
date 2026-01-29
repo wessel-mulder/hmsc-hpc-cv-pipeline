@@ -1,5 +1,11 @@
+#### Hmsc analyses on ####
+#General cleaning of the workspace
 remove(list=ls())
-set.seed(369)
+print('loading libraries')
+
+# 1. SET THE LIBPATH GLOBALLY FIRST
+# This ensures any parallel workers created later inherit this path
+.libPaths(c("~/Rlibs", .libPaths()))
 require(Hmsc)
 require(jsonify)
 
@@ -7,24 +13,23 @@ require(jsonify)
 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 #setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
-pattern2match <- "2026-01-20_12-40-41"
+pattern2match <- "2026-01-27"
   
-matching_folders <- list.dirs('Hmsc Outputs', recursive = FALSE, full.names = F)
+matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
 
 for(folders2match in matching_folders){
 model_description = folders2match
-localDir = sprintf("./Hmsc Outputs/%s",model_description)
+localDir = sprintf("./HmscOutputs/%s",model_description)
 ModelDir = file.path(localDir, "Models")
 
 ### Read in the unfitted models ####
 load(file = file.path(ModelDir, "Unfitted/unfitted_models.RData"))
 
 samples_list = 250
-thin_list = 10
+thin_list = 100
 transient = 100000
 nChains = 4
-nParallel = 4
 Lst = 1
 verbose = 1
 
