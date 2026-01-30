@@ -11,10 +11,12 @@ set.seed(369)
 
 
 ### MY FLAGS 
-ngrid <- 3
-skip_covariates <- TRUE # skip the first part of the script which constructs gradients & predicts over them 
+ngrid <- 10
+thin2 <- 50
+overwrite_gradients <- TRUE
+skip_covariates <- FALSE # skip the first part of the script which constructs gradients & predicts over them 
 atlas_subset <- NULL # set to NULL for all atlas rows, or a number for a subset  
-overwrite_prediction <- TRUE # overwrite atlas predictions if they've already been made 
+overwrite_prediction <- FALSE # overwrite atlas predictions if they've already been made 
 
 # # Get arguments from command line
 # args <- commandArgs(trailingOnly = TRUE)
@@ -30,6 +32,7 @@ pattern2match <- "2026-01-27"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+folders2match <- matching_folders[1]
 for(folders2match in matching_folders){
 models_description = folders2match
 
@@ -50,10 +53,7 @@ nfolds = 5
 nParallel = detectCores() - 1
 print(nParallel)
 
-
-
 nst = length(thin_list)
-
 #Note that changing the species and traits only effect the graphical outputs and
 #don't require now predictions to be calculated
 #If you want to make predictions for certain species you can pass a list here,
@@ -96,7 +96,6 @@ if(file.exists(filename)){
   load(filename)
   #If you are using R fitted models you don't need to run the following two lines as the model is saved differently.
   m = fitted_model$posteriors
-  m$postList = m$postList[1:2]
   rm(fitted_model)
   
   modelnames = models_description
@@ -136,33 +135,38 @@ if(file.exists(filename)){
 
     #outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_R_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",model_description, m$samples, m$thin, nChains))
     cli_h1("Making predictions")
-    if(file.exists(file.path(outfile))){
+    if(file.exists(file.path(outfile)) & !overwrite_gradients){
       cli_alert_success("Predictions already calculated")
       load(outfile)
     } else {
       Preds = vector("list", length(covariates))
+      k <- 1
+      
+      # thin2 posterior 
+      postlist <- poolMcmcChains(m$postList,thin=thin2)
+      ptm_tot = proc.time()
+      ptm = ptm_tot
       for(k in 1:(length(covariates))){
         covariate = covariates[[k]]
+
+        
         cli_h2("Calculating predictions for {covariate}")
+
         cli_progress_step("Starting to construction Gradient:")
-        sprintf('Making predictions for %s ngrids',ngrid)
-        ptm_tot = proc.time()
-        ptm = ptm_tot
         Gradient = constructGradient(m,focalVariable = covariate, ngrid=ngrid)
-        computational.time = proc.time() - ptm
-        
+
         cli_progress_step("Starting to construction Gradient2:")
-        Gradient2 = constructGradient(m,focalVariable = covariate,non.focalVariables = 1, ngrid=ngrid)
-        computational.time = proc.time() - ptm
-        
+        Gradient2 = constructGradient(m,focalVariable = covariate,non.focalVariables = 1,ngrid=ngrid)
+
         cli_progress_step("Making predictions based on Gradient 1:")
-        predY = predict(m, Gradient=Gradient, expected = TRUE,nParallel = nParallel,useSocket=F)
-        computational.time = proc.time() - ptm
+        predY = predict(m, Gradient=Gradient, expected = TRUE,nParallel = nParallel,useSocket=F,
+                        post = postlist)
+
         cli_progress_step("Making predictions based on Gradient2:")
-        ptm = proc.time()
-        predY2 = predict(m, Gradient=Gradient2, expected = TRUE,nParallel = nParallel,useSocket=F)
+        predY2 = predict(m, Gradient=Gradient2, expected = TRUE,nParallel = nParallel,useSocket=F,
+                         post = postlist)
         cli_process_done()
-        computational.time = proc.time() - ptm
+        
         Preds[[k]]$predY = predY 
         Preds[[k]]$predY2 = predY2 
         Preds[[k]]$Gradient = Gradient
@@ -312,3 +316,4 @@ if(file.exists(filename)){
   }
 
 }
+
