@@ -1,0 +1,129 @@
+Loading cuda/11.4
+Loading cudnn/8.2.2
+Loading anaconda3/2021.05
+Loading tensorflow/2.7.0
+Loading gcc/13.2.0
+Loading openjdk/20.0.0
+Loading R/4.4.2
+running
+  '/opt/software/R/4.4.2/lib64/R/bin/R --no-echo --no-restore --file=S4b_HPC_Post_Processing.R --args 10'
+
+[1] "loading libraries"
+Loading required package: coda
+Loading required package: sm
+Package 'sm', version 2.2-6.0: type help(sm) for summary information
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+[1] 511
+[1] "starting"
+Reading in Fold information
+predictions for partition 1
+starting to predict
+current mermory usage Ncels: 149.2 MB Ncels: 1757.5 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.2 MB Ncels: 2723.5 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 148.7 MB Ncels: 2637.0 MB
+predictions for partition 2
+starting to predict
+current mermory usage Ncels: 149.2 MB Ncels: 2723.6 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.2 MB Ncels: 2723.6 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 148.7 MB Ncels: 2637.0 MB
+predictions for partition 3
+starting to predict
+current mermory usage Ncels: 149.2 MB Ncels: 2723.6 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.2 MB Ncels: 2723.6 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 148.7 MB Ncels: 2637.0 MB
+predictions for partition 4
+starting to predict
+current mermory usage Ncels: 149.2 MB Ncels: 2723.6 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.2 MB Ncels: 2723.6 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 148.7 MB Ncels: 2637.0 MB
+predictions for partition 5
+starting to predict
+current mermory usage Ncels: 149.2 MB Ncels: 2723.5 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.2 MB Ncels: 2723.5 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 148.7 MB Ncels: 2637.0 MB
+Calculating MF
+Calculating MFCV
+Calculating WAIC
+Time taken: 4384.108 s 
+
+max mermory usage
+	Ncels: 250.10 MB
+	Ncels: 14946.00 MB
+	Total: 15196.10 MB
+[1] 511
+[1] "starting"
+Reading in Fold information
+predictions for partition 1
+starting to predict
+current mermory usage Ncels: 149.6 MB Ncels: 3917.3 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.6 MB Ncels: 5057.6 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 149.2 MB Ncels: 4963.3 MB
+predictions for partition 2
+starting to predict
+current mermory usage Ncels: 149.5 MB Ncels: 5041.6 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.5 MB Ncels: 5041.6 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 149.2 MB Ncels: 4963.3 MB
+predictions for partition 3
+starting to predict
+current mermory usage Ncels: 149.6 MB Ncels: 5057.6 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.6 MB Ncels: 5057.6 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 149.2 MB Ncels: 4963.3 MB
+predictions for partition 4
+starting to predict
+current mermory usage Ncels: 149.6 MB Ncels: 5057.5 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.6 MB Ncels: 5057.5 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 149.2 MB Ncels: 4963.3 MB
+predictions for partition 5
+starting to predict
+current mermory usage Ncels: 149.6 MB Ncels: 5057.6 MB
+High memory use section, writing predictions to array
+current mermory usage Ncels: 149.6 MB Ncels: 5057.6 MB
+Cleaning up memory
+Memory clean complete
+current mermory usage Ncels: 149.2 MB Ncels: 4963.3 MB
+Calculating MF
+Calculating MFCV
+Calculating WAIC
+Time taken: 4851.309 s 
+
+max mermory usage
+	Ncels: 250.10 MB
+	Ncels: 14946.00 MB
+	Total: 15196.10 MB
+Warning messages:
+1: In rm(pred) : object 'pred' not found
+2: In rm(pred) : object 'pred' not found

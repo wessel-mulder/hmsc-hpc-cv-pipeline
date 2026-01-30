@@ -1,0 +1,12 @@
+Loading cuda/11.4
+Loading cudnn/8.2.2
+Loading anaconda3/2021.05
+Loading tensorflow/2.7.0
+Loading gcc/13.2.0
+Loading openjdk/20.0.0
+Loading R/4.4.2
+running
+  '/opt/software/R/4.4.2/lib64/R/bin/R --no-echo --no-restore --file=S4_HPC_Post_Processing.R --args 10'
+
+Fatal error: cannot open file 'S4_HPC_Post_Processing.R': No such file or directory
+srun: error: mjolnirgpu02fl: task 0: Exited with exit code 2
