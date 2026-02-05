@@ -1,6 +1,6 @@
 #### Hmsc analyses on ####
 #General cleaning of the workspace
-remove(list=ls())
+#remove(list=ls())
 print('loading libraries')
 
 # 1. SET THE LIBPATH GLOBALLY FIRST
@@ -17,7 +17,7 @@ pattern2match <- "2026-02-05"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
-
+folders2match <- matching_folders[1]
 for(folders2match in matching_folders){
 model_description = folders2match
 localDir = sprintf("./HmscOutputs/%s",model_description)
@@ -39,8 +39,8 @@ while(Lst <= length(samples_list)){
   transient = transient
   
   filename = file.path(ModelDir,sprintf("INITS/HPC_INIT_samples_%.4d_thin_%.2d_chains_%.1d.rds",samples,thin,nChains))
-  print('make the model')
-  print(models[[1]]$ranLevels)
+  
+  # Check if there is a mismatch in the study design
   m = sampleMcmc(models[[1]], samples = samples, thin=thin,
                  #adaptNf=rep(transient,models[[1]]$nr), 
                  transient = transient,

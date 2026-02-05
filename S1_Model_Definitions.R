@@ -1,6 +1,6 @@
 #### Hmsc analyses on ####
 #General cleaning of the workspace
-remove(list=ls())
+#remove(list=ls())
 print('loading libraries')
 
 # 1. SET THE LIBPATH GLOBALLY FIRST
@@ -19,7 +19,7 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 #### Model specs ####
 guild_models <- c('All')
 variable_models <- c('All')
-atlas_models <- c(1,2)
+atlas_models <- c(1)
 min_occs2run <- c(5)
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
@@ -68,20 +68,6 @@ Y <- Y %>%
 XFormula <- as.formula(paste("~", paste(colnames(X), collapse = "+"), sep = " "))
 TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " "))
 
-# get random effects for space
-proj_xycoords_unique <- unique(
-  data.frame(
-    site = Design$site,
-    X    = Design$lon,
-    Y    = Design$lat,
-    stringsAsFactors = FALSE
-  )
-)
-rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
-proj_xycoords_unique$site <- NULL
-
-struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
-struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
 
 ### GET PHYLOGENY
 phy <- read.tree(file.path('Data/data/1_preprocessing/Taxonomy/tree_fromPD.tre'))
@@ -102,6 +88,43 @@ Y_sub <- Y[rownames(Y)[grep(pattern, rownames(Y))],,drop=F]
 X_sub <- X[rownames(X)[grep(pattern, rownames(X))],,drop=F]
 Design_sub <- Design[rownames(Design)[grep(pattern, rownames(Design))],,drop=F]
 Design_sub$atlas <- droplevels(Design_sub$atlas)
+Design_sub$site <- droplevels(Design_sub$site)
+
+# Are the rownames identical (including order)?
+identical(rownames(Y_sub), rownames(X_sub))
+identical(rownames(Y_sub), rownames(Design_sub))
+
+setequal(rownames(Y_sub), rownames(X_sub))
+setequal(rownames(Y_sub), rownames(Design_sub))
+
+# set identical
+X_sub      <- X_sub[rownames(Y_sub), , drop = FALSE]
+Design_sub <- Design_sub[rownames(Y_sub), , drop = FALSE]
+
+stopifnot(
+  identical(rownames(Y_sub), rownames(X_sub)),
+  identical(rownames(Y_sub), rownames(Design_sub))
+)
+
+identical(Design_sub$site,rownames(proj_xycoords_unique))
+setequal(Design_sub$site,rownames(proj_xycoords_unique))
+
+# get random effects for space
+proj_xycoords_unique <- unique(
+  data.frame(
+    site = Design_sub$site,
+    X    = Design_sub$lon,
+    Y    = Design_sub$lat,
+    stringsAsFactors = FALSE
+  )
+)
+rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
+proj_xycoords_unique$site <- NULL
+
+struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
+struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
+nrow(struc_space$s)
+
 
 model = Hmsc(Y = Y_sub,
                      XData = X_sub,
