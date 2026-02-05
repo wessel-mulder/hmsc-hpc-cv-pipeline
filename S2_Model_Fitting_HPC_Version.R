@@ -13,7 +13,7 @@ require(jsonify)
 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 #setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
-pattern2match <- "2026-01-27"
+pattern2match <- "2026-02-05"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
@@ -39,6 +39,8 @@ while(Lst <= length(samples_list)){
   transient = transient
   
   filename = file.path(ModelDir,sprintf("INITS/HPC_INIT_samples_%.4d_thin_%.2d_chains_%.1d.rds",samples,thin,nChains))
+  print('make the model')
+  print(models[[1]]$ranLevels)
   m = sampleMcmc(models[[1]], samples = samples, thin=thin,
                  #adaptNf=rep(transient,models[[1]]$nr), 
                  transient = transient,

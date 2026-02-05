@@ -19,18 +19,19 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 #### Model specs ####
 guild_models <- c('All')
 variable_models <- c('All')
-atlas_models <- 3
-min_occs2run <- c(5,20)
+atlas_models <- c(1,2)
+min_occs2run <- c(5)
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
 
 for(min_occs in min_occs2run){
+for(atlas_model in atlas_models){
 for(guild2run in guild_models){
 for(variable2run in variable_models){
 # assign correct names 
 guild <- guild2run
 variables <- variable2run
-atlas <- atlas_models
+atlas <- atlas_model
 # make description
 model_description = paste(as.character(date),
                           guild,
@@ -195,6 +196,7 @@ names(testing_list) <- paste0("atlas_", tests)
 save(testing_list,
      file = file.path(test.dir,'test_atlases.RData'))
 
+}
 }
 }
 }
