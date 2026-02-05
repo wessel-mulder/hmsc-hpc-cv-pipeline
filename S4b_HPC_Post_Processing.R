@@ -25,7 +25,7 @@ c.Hmsc = getS3method("c","Hmsc")
 # Get arguments from command line
 args <- commandArgs(trailingOnly = TRUE)
 # Default value if no argument is provided, otherwise use the first argument
-thin2 <- if(length(args) > 0) as.numeric(args[1]) else 250
+thin2 <- if(length(args) > 0) as.numeric(args[1]) else 50
 models_description <- args[2]
 
 # ### Set up directories ####

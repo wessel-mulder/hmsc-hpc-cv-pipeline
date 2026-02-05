@@ -15,7 +15,7 @@ pattern2match <- "2026-01-27"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
-
+folders2match <- matching_folders[1]
 for(folders2match in matching_folders){
 models_description = folders2match
 
@@ -98,11 +98,27 @@ if(file.exists(filename)){
   }
   print('variance partitioning')
   if(m$nr+length(covariates)>1 & m$ns>1){
-    preds = computePredictedValues(m)
-    VP = computeVariancePartitioning(m)
+    ### Get model fit 
+    filename = file.path(ResultDir, paste0(models_description,"MF.rds"))
+    if(!file.exists(filename)){
+      preds = computePredictedValues(m)
+      MF = evaluateModelFit(hM=m, predY=preds)
+      saveRDS(MF,filename)
+    }else{
+      MF <- readRDS(filename)
+    }
+    
+    ### Get variance partitioning 
+    filename = file.path(ResultDir, paste0(models_description,"VP.rds"))
+    if(!file.exists(filename)){
+      VP = computeVariancePartitioning(m)
+      saveRDS(VP,filename)
+    }else{
+      VP <- readRDS(filename)
+    }
+    
     vals = VP$vals
     mycols = rainbow(nrow(VP$vals))
-    MF = evaluateModelFit(hM=m, predY=preds)
     R2 = NULL
     if(!is.null(MF$TjurR2)){
       TjurR2 = MF$TjurR2
@@ -189,8 +205,12 @@ if(file.exists(filename)){
     if(!is.null(plotTree)){
       c.plotTree = c.plotTree & plotTree
     }
-    plotBeta(m, post=postBeta, supportLevel = support.level.beta, param="Sign",
+    for(plotting_var in c('Sign','Mean')){
+      
+    plotBeta(m, post=postBeta, supportLevel = support.level.beta, param=plotting_var,
              plotTree = c.plotTree,
+             covOrder = 'Vector',
+             covVector = m$covNames[-1], # get rid of the intercept
              covNamesNumbers = c(TRUE,FALSE),
              spNamesNumbers=c(c.show.sp.names,FALSE),
              cex=c(0.6,0.6,0.8))
@@ -201,16 +221,22 @@ if(file.exists(filename)){
       mymain = paste0(mymain,", E[rho] = ",round(mean(rhovals),2),", Pr[rho>0] = ",round(mean(rhovals>0),2))
     }
     title(main=mymain, line=2.5, cex.main=0.8)
+    }
   }
   
   print('plotting gamma')
   if(m$nt>1 & m$nc>1){
     postGamma = getPostEstimate(m, parName="Gamma")
-    plotGamma(m, post=postGamma, supportLevel = support.level.gamma, param="Sign",
+    for(plotting_var in c('Sign','Mean')){
+    plotGamma(m, post=postGamma, supportLevel = support.level.gamma, param=plotting_var,
+              covOrder = 'Vector',
+              covVector = m$covNames[-1], # get rid of the intercept
               covNamesNumbers = c(TRUE,FALSE),
-              trNamesNumbers=c(m$nt<21,FALSE),
+              trNamesNumbers=c(TRUE,FALSE),
               cex=c(0.6,0.6,0.8))
+
     title(main=paste0("GammaPlot ",models_description), line=2.5,cex.main=0.8)
+    }
     filename = file.path(ResultDir, paste0(models_description,"parameter_estimates_Gamma_.xlsx"))
     writexl::write_xlsx(as.data.frame(t(postGamma$mean)),path = filename)
   }

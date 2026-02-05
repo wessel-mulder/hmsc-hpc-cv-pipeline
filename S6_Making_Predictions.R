@@ -11,12 +11,12 @@ set.seed(369)
 
 
 ### MY FLAGS 
-ngrid <- 10
+ngrid <- 30
 thin2 <- 50
-overwrite_gradients <- TRUE
-skip_covariates <- FALSE # skip the first part of the script which constructs gradients & predicts over them 
+overwrite_gradients <- FALSE
+skip_covariates <- TRUE # skip the first part of the script which constructs gradients & predicts over them 
 atlas_subset <- NULL # set to NULL for all atlas rows, or a number for a subset  
-overwrite_prediction <- FALSE # overwrite atlas predictions if they've already been made 
+overwrite_prediction <- TRUE # overwrite atlas predictions if they've already been made 
 
 # # Get arguments from command line
 # args <- commandArgs(trailingOnly = TRUE)
@@ -32,7 +32,7 @@ pattern2match <- "2026-01-27"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
-folders2match <- matching_folders[1]
+folders2match <- matching_folders[2]
 for(folders2match in matching_folders){
 models_description = folders2match
 
@@ -60,7 +60,7 @@ nst = length(thin_list)
 #where the numbers relate to the position of the species in the Y matrix.
 #Alternatively if you set this to NULL no species predictions will be plotted.
 species.list = NULL
-trait.list = NULL
+trait.list = 0
 #Changing this does not always require recalculation of the predictions, unless
 #you add a new factor since predictions are calculate for each covariant
 #separately. However, the checker currently only checks for the presence of a
@@ -177,7 +177,7 @@ if(file.exists(filename)){
       computational.time = proc.time() - ptm_tot
       cat(sprintf("Total Time taken: %.2f s \nCurrent time: %s\n\n", computational.time[3],format(Sys.time(), "%H:%M:%S")))
     }
-    
+    str(Preds)
     cli_h1("Plotting graphs")
     for(k in 1:(length(covariates))){
       par(mfrow=c(2,1))
@@ -247,7 +247,7 @@ if(file.exists(filename)){
       cli_alert_success("Predictions already calculated")
     } else {
       Atlases = testing_list
-      atlas_test <- Atlases[[1]]
+      atlas_test <- Atlases[[2]]
       tests<-lapply(Atlases,function(atlas_test){
 
         cli_h2(sprintf('Starting test for Atlas'))
@@ -281,25 +281,53 @@ if(file.exists(filename)){
         struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
         struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
         
-        ### GET PREDICTIONS 
+        ### GET SPATIAL PREDICTIONS 
         preds <- predict(m,
                 XData = X_sub,
                 studyDesign = Design_sub,
                 ranLevels = list('site'=struc_space),
                 nParallel = nParallel,useSocket=F)
+        
+        ### GET NON-SPATIAL PREDICTIONS 
+        Design_dummy <- data.frame(site = factor(rep("dummy", nrow(X_sub))))
+        struc_nospatial <- HmscRandomLevel(
+          units = "dummy"
+        )
+        preds_nospatial <- predict(
+          m,
+          XData = X_sub,
+          studyDesign = Design_dummy,
+          ranLevels = list(site = struc_nospatial),
+          expected = TRUE,
+          nParallel = nParallel,
+          useSocket = FALSE
+        )
+        
+
+        # reduce dimentions
         EpredY = Reduce('+', preds)/length(preds) # convert to 2d 
-        ### get fid 
-        str(Design_sub)
-        predArray = abind::abind(preds, along=3)
+        predArray = abind::abind(EpredY, along=3)
+        # also for spatial
+        Epreds_nospatialY = Reduce('+', preds_nospatial)/length(preds_nospatial)
+        predArray_nonspatial = abind::abind(Epreds_nospatialY,along=3)
+        
+        
+        ### get fake model for the fit  
         hM_test <- Hmsc(Y = Y_sub, 
                 XData = X_sub, 
                 studyDesign = Design_sub[,'site',drop=F],
                 ranLevels = list('site'=struc_space),
                 distr = m$distr) # Ensure distribution matches
-
+        
+        ### 
         test_fit = evaluateModelFit(hM_test, predArray)
+        test_fit_nonspatial = evaluateModelFit(hM_test, predArray_nonspatial)
+        # spatial 
         atlas_data$Ypred = predArray
         atlas_data$fit_test = test_fit
+        #nonspatial
+        atlas_data$Ypred_nonspatial = predArray_nonspatial
+        atlas_data$fit_test_nonspatial = test_fit_nonspatial
         atlas_data
         
         })
@@ -316,4 +344,80 @@ if(file.exists(filename)){
   }
 
 }
+
+
+plot(tests$atlas_1$fit_test_nonspatial$AUC~tests$atlas_1$fit_test$AUC)
+plot(tests$atlas_2$fit_test_nonspatial$AUC~tests$atlas_2$fit_test$AUC)
+
+plot(tests$atlas_1$fit_test_nonspatial$TjurR2~tests$atlas_1$fit_test$TjurR2)
+plot(tests$atlas_2$fit_test_nonspatial$TjurR2~tests$atlas_2$fit_test$TjurR2)
+
+plot(tests$atlas_1$fit_test_nonspatial$TjurR2~tests$atlas_1$fit_test$RMSE)
+plot(tests$atlas_2$fit_test_nonspatial$TjurR2~tests$atlas_2$fit_test$RMSE)
+
+# 1️⃣ AUC
+plot_comparison <- function(x, y, xlab = "Spatial", ylab = "Non-spatial", 
+                            main = NULL, lim = c(0,1),
+                            col_points = "black", col_line = "red") {
+  plot(y ~ x,
+       xlab = xlab, ylab = ylab,
+       xlim = lim, ylim = lim,
+       pch = 16, col = col_points,
+       main = main)
+  abline(a = 0, b = 1, col = col_line, lty = 2, lwd = 2)
+}
+
+plot_comparison(
+  x = tests$atlas_1$fit_test$AUC,
+  y = tests$atlas_1$fit_test_nonspatial$AUC,
+  lim = c(0.3,1),
+  xlab = "Spatial AUC",
+  ylab = "Non-spatial AUC",
+  main = "Atlas 1: AUC"
+)
+
+plot_comparison(
+  x = tests$atlas_2$fit_test$AUC,
+  y = tests$atlas_2$fit_test_nonspatial$AUC,
+  lim = c(0.3,1),
+  xlab = "Spatial AUC",
+  ylab = "Non-spatial AUC",
+  main = "Atlas 2: AUC"
+)
+
+# 2️⃣ TjurR2
+plot_comparison(
+  x = tests$atlas_1$fit_test$TjurR2,
+  y = tests$atlas_1$fit_test_nonspatial$TjurR2,
+  lim = c(0,0.5),
+  xlab = "Spatial Tjur R2",
+  ylab = "Non-spatial Tjur R2",
+  main = "Atlas 1: Tjur R2"
+)
+
+plot_comparison(
+  x = tests$atlas_2$fit_test$TjurR2,
+  y = tests$atlas_2$fit_test_nonspatial$TjurR2,
+  lim=c(0,0.5),
+  xlab = "Spatial Tjur R2",
+  ylab = "Non-spatial Tjur R2",
+  main = "Atlas 2: Tjur R2"
+)
+
+# 3️⃣ TjurR2 vs RMSE
+plot_comparison(
+  x = tests$atlas_1$fit_test$RMSE,
+  y = tests$atlas_1$fit_test_nonspatial$RMSE,
+  xlab = "Spatial RMSE",
+  ylab = "Non-spatial RMSE",
+  main = "Atlas 1: RMSE vs RMSE"
+)
+
+plot_comparison(
+  x = tests$atlas_2$fit_test$RMSE,
+  y = tests$atlas_2$fit_test_nonspatial$RMSE,
+  xlab = "Spatial RMSE",
+  ylab = "Non-spatial RMSE",
+  main = "Atlas 2: RMSE vs RMSE"
+)
 
