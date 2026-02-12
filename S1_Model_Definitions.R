@@ -1,6 +1,6 @@
 #### Hmsc analyses on ####
 #General cleaning of the workspace
-#remove(list=ls())
+remove(list=ls())
 print('loading libraries')
 
 # 1. SET THE LIBPATH GLOBALLY FIRST
