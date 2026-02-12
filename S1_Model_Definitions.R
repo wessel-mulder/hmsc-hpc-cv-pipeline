@@ -18,8 +18,8 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 
 #### Model specs ####
 guild_models <- c('All')
-variable_models <- c('All')
-atlas_models <- c(1)
+variable_models <- c('All')   # exclude dominant, exclude ocean 
+atlas_models <- c(1,2,3)
 min_occs2run <- c(5)
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
@@ -46,6 +46,8 @@ model_description = paste(as.character(date),
 # at least 25% of the atlas grid cell is land 
 load(file.path(dataDir,sprintf("preprocessed_data_minoccs%s_atlasrichnessfilterbyeffort.RData",min_occs)))
 
+print(head(X))
+
 # Subset environmental data 
 X <- X %>%
   {
@@ -54,7 +56,7 @@ X <- X %>%
     } else if (variables == 'Climate') {
       select(., tmean_year,prec_year)
     } else if (variables == 'All') {
-      select(., tmean_year,prec_year, hh, dominant,matches("^perc_"))
+      select(., tmean_year,prec_year, hh,matches("^perc_"),-perc_fresh_saltwater)
       
     }
   }
@@ -106,8 +108,6 @@ stopifnot(
   identical(rownames(Y_sub), rownames(Design_sub))
 )
 
-identical(Design_sub$site,rownames(proj_xycoords_unique))
-setequal(Design_sub$site,rownames(proj_xycoords_unique))
 
 # get random effects for space
 proj_xycoords_unique <- unique(

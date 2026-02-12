@@ -3,7 +3,7 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem-per-cpu=1GB
 #SBATCH --gpus-per-node=1
-#SBATCH --time=12:00:00
+#SBATCH --time=04:00:00
 #SBATCH --array=0-3
 #SBATCH --output=HmscOutputs/%x/Models/Logs/%x_%A_%a.log
 #SBATCH --error=HmscOutputs/%x/Models/Logs/%x_%A_%a.log
@@ -96,14 +96,18 @@ fi
 # Run sampling for all array tasks
 echo "Run metadata saved to: $logs_dir"
 
-srun python3 -m hmsc.run_gibbs_sampler \
+# Capture the path of the python executable in the active conda env
+CONDA_PYTHON=$(which python3)
+
+echo "Using Python from: $CONDA_PYTHON"
+
+# Update the srun command to use that specific path
+srun $CONDA_PYTHON -m hmsc.run_gibbs_sampler \
   --input $input_path \
   --output $output_path \
   --samples $samples \
   --transient $transient \
   --thin $thin \
   --verbose $verbose \
-  --chain $SLURM_ARRAY_TASK_ID
-
-kill $NVIDIA_MONITOR_PID
+  --chain $SLURM_ARRAY_TASK_ID \
 

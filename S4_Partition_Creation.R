@@ -16,7 +16,7 @@ require(colorspace)
 
 
 ### Set up directories ####
-pattern2match <- "2026-01-27"
+pattern2match <- "2026-02-10"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
