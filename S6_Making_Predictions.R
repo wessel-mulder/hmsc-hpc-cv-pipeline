@@ -11,8 +11,8 @@ set.seed(369)
 ### MY FLAGS 
 ngrid <- 30
 thin2 <- 50
-overwrite_gradients <- FALSE
-skip_covariates <- TRUE # skip the first part of the script which constructs gradients & predicts over them 
+overwrite_gradients <- TRUE
+skip_covariates <- FALSE # skip the first part of the script which constructs gradients & predicts over them 
 atlas_subset <- NULL # set to NULL for all atlas rows, or a number for a subset  
 overwrite_prediction <- TRUE # overwrite atlas predictions if they've already been made 
 
@@ -30,7 +30,7 @@ pattern2match <- "2026-02-10"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
-folders2match <- matching_folders[2]
+folders2match <- matching_folders[1]
 for(folders2match in matching_folders){
 models_description = folders2match
 
@@ -260,40 +260,69 @@ if(file.exists(filename)){
         Design_sub <- atlas_data$Design[1:subset,]
         Y_sub <- atlas_data$Y[1:subset,]
         
-        #rownames(X_sub) <- gsub("_2", "_3", rownames(X_sub))
-        #rownames(Design_sub) <- gsub("_2", "_3", rownames(Design_sub))
+        # 1. IDENTIFY TRAINING SITES
+        # Get the list of sites the model was actually trained on
+        train_sites <- unique(as.character(m$studyDesign$site))
         
-        # get ranlevels 
-  
+        # 2. FILTER ATLAS TO MATCH MODEL
+        # Only keep rows in the Atlas that correspond to sites in the model
+        keep_rows <- as.character(Design_sub$site) %in% train_sites
+        
+        if(sum(keep_rows) == 0) {
+          cli_alert_danger("No matching sites found between Model and Atlas! Check your site naming.")
+          stop("Stopping to prevent crash.")
+        }
+        table(keep_rows)
+        # Apply the filter
+        X_sub_filtered <- X_sub[keep_rows, , drop=FALSE]
+        Design_sub_filtered <- Design_sub[keep_rows, , drop=FALSE]
+        Y_sub_filtered <- Y_sub[keep_rows, , drop=FALSE] # If you need Y for testing
+        
+        cli_alert_info(paste("Filtered prediction set from", nrow(Design_sub), "to", nrow(Design_sub_filtered), "sites matching the model."))
+        
+        # 1. First, make sure you are working with clean, unique data
         proj_xycoords_unique <- unique(
           data.frame(
-            site = Design_sub$site,
-            X    = Design_sub$lon,
-            Y    = Design_sub$lat,
+            site = as.character(Design_sub_filtered$site), # Convert to character immediately
+            X = Design_sub_filtered$lon,
+            Y = Design_sub_filtered$lat,
             stringsAsFactors = FALSE
           )
         )
+        
+        # 2. Filter out any NAs that might have slipped in (Critical for the 'leading minor' error)
+        proj_xycoords_unique <- proj_xycoords_unique[!is.na(proj_xycoords_unique$X), ]
+        
+        # 3. Set rownames using the character vector
         rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
+        
+        # 4. Remove the site column so only X and Y remain for sData
         proj_xycoords_unique$site <- NULL
+        
+        # 5. NOW Ensure your Design_sub matches these sites exactly
+        Design_sub_filtered$site <- factor(as.character(Design_sub_filtered$site), 
+                                  levels = rownames(proj_xycoords_unique))
         
         struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
         struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
         
         ### GET SPATIAL PREDICTIONS 
+        cli_h3('Spatial predictions')
         preds <- predict(m,
-                XData = X_sub,
-                studyDesign = Design_sub,
+                XData = X_sub_filtered,
+                studyDesign = Design_sub_filtered,
                 ranLevels = list('site'=struc_space),
                 nParallel = nParallel,useSocket=F)
         
         ### GET NON-SPATIAL PREDICTIONS 
-        Design_dummy <- data.frame(site = factor(rep("dummy", nrow(X_sub))))
+        cli_h3('Non-spatial predictions')
+        Design_dummy <- data.frame(site = factor(rep("dummy", nrow(X_sub_filtered))))
         struc_nospatial <- HmscRandomLevel(
           units = "dummy"
         )
         preds_nospatial <- predict(
           m,
-          XData = X_sub,
+          XData = X_sub_filtered,
           studyDesign = Design_dummy,
           ranLevels = list(site = struc_nospatial),
           expected = TRUE,
@@ -311,9 +340,9 @@ if(file.exists(filename)){
         
         
         ### get fake model for the fit  
-        hM_test <- Hmsc(Y = Y_sub, 
-                XData = X_sub, 
-                studyDesign = Design_sub[,'site',drop=F],
+        hM_test <- Hmsc(Y = Y_sub_filtered, 
+                XData = X_sub_filtered, 
+                studyDesign = Design_sub_filtered[,'site',drop=F],
                 ranLevels = list('site'=struc_space),
                 distr = m$distr) # Ensure distribution matches
         
@@ -343,79 +372,79 @@ if(file.exists(filename)){
 
 }
 
-
-plot(tests$atlas_1$fit_test_nonspatial$AUC~tests$atlas_1$fit_test$AUC)
-plot(tests$atlas_2$fit_test_nonspatial$AUC~tests$atlas_2$fit_test$AUC)
-
-plot(tests$atlas_1$fit_test_nonspatial$TjurR2~tests$atlas_1$fit_test$TjurR2)
-plot(tests$atlas_2$fit_test_nonspatial$TjurR2~tests$atlas_2$fit_test$TjurR2)
-
-plot(tests$atlas_1$fit_test_nonspatial$TjurR2~tests$atlas_1$fit_test$RMSE)
-plot(tests$atlas_2$fit_test_nonspatial$TjurR2~tests$atlas_2$fit_test$RMSE)
-
-# 1️⃣ AUC
-plot_comparison <- function(x, y, xlab = "Spatial", ylab = "Non-spatial", 
-                            main = NULL, lim = c(0,1),
-                            col_points = "black", col_line = "red") {
-  plot(y ~ x,
-       xlab = xlab, ylab = ylab,
-       xlim = lim, ylim = lim,
-       pch = 16, col = col_points,
-       main = main)
-  abline(a = 0, b = 1, col = col_line, lty = 2, lwd = 2)
-}
-
-plot_comparison(
-  x = tests$atlas_1$fit_test$AUC,
-  y = tests$atlas_1$fit_test_nonspatial$AUC,
-  lim = c(0.3,1),
-  xlab = "Spatial AUC",
-  ylab = "Non-spatial AUC",
-  main = "Atlas 1: AUC"
-)
-
-plot_comparison(
-  x = tests$atlas_2$fit_test$AUC,
-  y = tests$atlas_2$fit_test_nonspatial$AUC,
-  lim = c(0.3,1),
-  xlab = "Spatial AUC",
-  ylab = "Non-spatial AUC",
-  main = "Atlas 2: AUC"
-)
-
-# 2️⃣ TjurR2
-plot_comparison(
-  x = tests$atlas_1$fit_test$TjurR2,
-  y = tests$atlas_1$fit_test_nonspatial$TjurR2,
-  lim = c(0,0.5),
-  xlab = "Spatial Tjur R2",
-  ylab = "Non-spatial Tjur R2",
-  main = "Atlas 1: Tjur R2"
-)
-
-plot_comparison(
-  x = tests$atlas_2$fit_test$TjurR2,
-  y = tests$atlas_2$fit_test_nonspatial$TjurR2,
-  lim=c(0,0.5),
-  xlab = "Spatial Tjur R2",
-  ylab = "Non-spatial Tjur R2",
-  main = "Atlas 2: Tjur R2"
-)
-
-# 3️⃣ TjurR2 vs RMSE
-plot_comparison(
-  x = tests$atlas_1$fit_test$RMSE,
-  y = tests$atlas_1$fit_test_nonspatial$RMSE,
-  xlab = "Spatial RMSE",
-  ylab = "Non-spatial RMSE",
-  main = "Atlas 1: RMSE vs RMSE"
-)
-
-plot_comparison(
-  x = tests$atlas_2$fit_test$RMSE,
-  y = tests$atlas_2$fit_test_nonspatial$RMSE,
-  xlab = "Spatial RMSE",
-  ylab = "Non-spatial RMSE",
-  main = "Atlas 2: RMSE vs RMSE"
-)
+# 
+# plot(tests$atlas_1$fit_test_nonspatial$AUC~tests$atlas_1$fit_test$AUC)
+# plot(tests$atlas_2$fit_test_nonspatial$AUC~tests$atlas_2$fit_test$AUC)
+# 
+# plot(tests$atlas_1$fit_test_nonspatial$TjurR2~tests$atlas_1$fit_test$TjurR2)
+# plot(tests$atlas_2$fit_test_nonspatial$TjurR2~tests$atlas_2$fit_test$TjurR2)
+# 
+# plot(tests$atlas_1$fit_test_nonspatial$TjurR2~tests$atlas_1$fit_test$RMSE)
+# plot(tests$atlas_2$fit_test_nonspatial$TjurR2~tests$atlas_2$fit_test$RMSE)
+# 
+# # 1️⃣ AUC
+# plot_comparison <- function(x, y, xlab = "Spatial", ylab = "Non-spatial", 
+#                             main = NULL, lim = c(0,1),
+#                             col_points = "black", col_line = "red") {
+#   plot(y ~ x,
+#        xlab = xlab, ylab = ylab,
+#        xlim = lim, ylim = lim,
+#        pch = 16, col = col_points,
+#        main = main)
+#   abline(a = 0, b = 1, col = col_line, lty = 2, lwd = 2)
+# }
+# 
+# plot_comparison(
+#   x = tests$atlas_1$fit_test$AUC,
+#   y = tests$atlas_1$fit_test_nonspatial$AUC,
+#   lim = c(0.3,1),
+#   xlab = "Spatial AUC",
+#   ylab = "Non-spatial AUC",
+#   main = "Atlas 1: AUC"
+# )
+# 
+# plot_comparison(
+#   x = tests$atlas_2$fit_test$AUC,
+#   y = tests$atlas_2$fit_test_nonspatial$AUC,
+#   lim = c(0.3,1),
+#   xlab = "Spatial AUC",
+#   ylab = "Non-spatial AUC",
+#   main = "Atlas 2: AUC"
+# )
+# 
+# # 2️⃣ TjurR2
+# plot_comparison(
+#   x = tests$atlas_1$fit_test$TjurR2,
+#   y = tests$atlas_1$fit_test_nonspatial$TjurR2,
+#   lim = c(0,0.5),
+#   xlab = "Spatial Tjur R2",
+#   ylab = "Non-spatial Tjur R2",
+#   main = "Atlas 1: Tjur R2"
+# )
+# 
+# plot_comparison(
+#   x = tests$atlas_2$fit_test$TjurR2,
+#   y = tests$atlas_2$fit_test_nonspatial$TjurR2,
+#   lim=c(0,0.5),
+#   xlab = "Spatial Tjur R2",
+#   ylab = "Non-spatial Tjur R2",
+#   main = "Atlas 2: Tjur R2"
+# )
+# 
+# # 3️⃣ TjurR2 vs RMSE
+# plot_comparison(
+#   x = tests$atlas_1$fit_test$RMSE,
+#   y = tests$atlas_1$fit_test_nonspatial$RMSE,
+#   xlab = "Spatial RMSE",
+#   ylab = "Non-spatial RMSE",
+#   main = "Atlas 1: RMSE vs RMSE"
+# )
+# 
+# plot_comparison(
+#   x = tests$atlas_2$fit_test$RMSE,
+#   y = tests$atlas_2$fit_test_nonspatial$RMSE,
+#   xlab = "Spatial RMSE",
+#   ylab = "Non-spatial RMSE",
+#   main = "Atlas 2: RMSE vs RMSE"
+# )
 

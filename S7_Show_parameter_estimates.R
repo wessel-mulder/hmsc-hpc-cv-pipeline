@@ -209,8 +209,8 @@ if(file.exists(filename)){
       
     plotBeta(m, post=postBeta, supportLevel = support.level.beta, param=plotting_var,
              plotTree = c.plotTree,
-             covOrder = 'Vector',
-             covVector = m$covNames[-1], # get rid of the intercept
+             #covOrder = 'Vector',
+             #covVector = m$covNames[-1], # get rid of the intercept
              covNamesNumbers = c(TRUE,FALSE),
              spNamesNumbers=c(c.show.sp.names,FALSE),
              cex=c(0.6,0.6,0.8))
@@ -229,8 +229,8 @@ if(file.exists(filename)){
     postGamma = getPostEstimate(m, parName="Gamma")
     for(plotting_var in c('Sign','Mean')){
     plotGamma(m, post=postGamma, supportLevel = support.level.gamma, param=plotting_var,
-              covOrder = 'Vector',
-              covVector = m$covNames[-1], # get rid of the intercept
+              #covOrder = 'Vector',
+              #covVector = m$covNames[-1], # get rid of the intercept
               covNamesNumbers = c(TRUE,FALSE),
               trNamesNumbers=c(TRUE,FALSE),
               cex=c(0.6,0.6,0.8))
@@ -238,7 +238,17 @@ if(file.exists(filename)){
     title(main=paste0("GammaPlot ",models_description), line=2.5,cex.main=0.8)
     }
     filename = file.path(ResultDir, paste0(models_description,"parameter_estimates_Gamma_.xlsx"))
-    writexl::write_xlsx(as.data.frame(t(postGamma$mean)),path = filename)
+    me = as.data.frame(t(postGamma$mean))
+    me = cbind(m$trNames,me)
+    colnames(me) = c("Traits",m$covNames)
+    po = as.data.frame(t(postGamma$support))
+    po = cbind(m$trNames,po)
+    colnames(po) = c("Traits",m$covNames)
+    ne = as.data.frame(t(postGamma$supportNeg))
+    ne = cbind(m$trNames,ne)
+    colnames(ne) = c("Traits",m$covNames)
+    vals = list("Posterior mean"=me,"Pr(x>0)"=po,"Pr(x<0)"=ne)
+    writexl::write_xlsx(vals,path = filename)
   }
   
   #Compute Species Associations for the models

@@ -3,10 +3,21 @@ remove(list=ls())
 .libPaths(c("~/Rlibs", .libPaths()))
 require(Hmsc)
 require(cli)
+require(tidyverse)
+
 
 #Define the plotting function
 type <- 'AUC'
-plot_CV = function(type){
+modelled_atlas <- '1'
+plot_CV = function(type,modelled_atlas){
+  
+  testing_atlases <- list(
+    '1' = c(2,3),
+    '2' = c(1,3),
+    '3' = c(1,2)
+  )
+  
+  tested_atlases <- testing_atlases[[modelled_atlas]]
   #This sets the limits and values that change based on the metric, it outputs a
   #list where item 1 is abs(lower limit), item 2 is upper limit, item 3 is vline
   #value and item 4 is hline value
@@ -21,17 +32,22 @@ plot_CV = function(type){
   plot(cMF[[type]],cMFCV[[type]],xlim=c(-limit[1],limit[2]),ylim=c(-limit[1],limit[2]),pch=pch,cex=cex,
        xlab = "explanatory power",
        ylab = "predictive power",
-       main=sprintf("%s:\n%s\nmean(explanatory) = %.2f, mean(cross-validated) = %.2f\n mean(test atlas1) = %.2f, mean(test atlas2) = %.2f",
-                    type,modelnames,
+       main=sprintf("Atlas %d\nTraining = %.2f, Cross-validation = %.2f\n Testing: Atlas %d = %.2f, Atlas %d = %.2f",
+                    modelled_atlas,
                     mean(cMF[[type]],na.rm=TRUE),
                     mean(cMFCV[[type]],na.rm=TRUE),
+                    tested_atlases[1],
                     mean(tMF[[1]][[type]],na.rm=T),
+                    tested_atlases[2],
                     mean(tMF[[2]][[type]],na.rm=T)))
 
   points(cMF[[type]],tMF[[1]][[type]],col = 'red',pch=pch,cex=cex)
   points(cMF[[type]],tMF[[2]][[type]],col = 'blue',pch=pch,cex=cex)
   
-  legend('topleft',legend = c('Cross validation on atlas 3','Test atlas 1','Test atlas 2'),
+  legend('topleft',
+         legend = c(sprintf('Cross validation on Atlas %d',modelled_atlas),
+                    sprintf('Test Atlas %d',tested_atlases[1]),
+                    sprintf('Test Atlas %d',tested_atlases[2])),
          fill = c('black','red','blue'))
   
   # 
@@ -49,7 +65,7 @@ plot_CV = function(type){
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 
-pattern2match <- "2026-01-27"
+pattern2match <- "2026-02-10"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
@@ -99,6 +115,8 @@ if(file.exists(filename)){
   load(filename)
   #cli_progress_done()
   modelnames = models_description
+  atlas_num <- as.numeric(str_extract(modelnames, "(?<=Atlas)\\d+"))
+  
 
   pdf(file = file.path(TestDir,paste0("/",models_description,"_model_fit_nfolds_",nfolds,".pdf")))
 
@@ -117,7 +135,7 @@ if(file.exists(filename)){
   
   for(x in names(cMF)){
     cli_progress_step("Plotting {x}")
-    plot_CV(x)
+    plot_CV(x,modelled_atlas=atlas_num)
     cli_progress_done()
   }
   dev.off()
