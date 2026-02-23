@@ -160,6 +160,7 @@ colnames(sites) <- c('empirical','predicted')
 plot(sites$empirical,sites$predicted)
 
 ### THIS IS AN ILLUSTRATION HOW TO PUSH WITH GIT FROM R! 
+# stop typing useless comments!
 
 
 ```
