@@ -1,0 +1,166 @@
+---
+title: "z-spatial-predictions"
+output: html_document
+---
+
+```{r setup, include=TRUE,echo=FALSE}
+# Global chunk options
+knitr::opts_chunk$set(
+	echo = FALSE,
+	fig.align = "center",
+	fig.height = 5,
+	fig.width = 10,
+	message = FALSE,
+	warning = FALSE
+)
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(readxl, tidyverse, cowplot,Hmsc, PresenceAbsence)
+
+```
+
+```{r helper-functions,include=TRUE}
+# HELPER FUNCTIONS  -------------------------------------------------------
+merge_by_rownames <- function(x,y) {
+  merge <- merge(x,y,by='row.names')
+  rownames(merge) <- merge$Row.names
+  merge[,!colnames(merge) %in% c('Row.names')]
+}
+
+## FUNCTION TO MAKE THE COMPARISON LIST 
+dir <- './HmscOutputs'
+pattern <- '2026-02-10'
+get_preds <- function(dir,pattern){
+  pattern2match <- pattern
+  
+  matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F)
+  matching_folders <- matching_folders[grepl(pattern2match,
+                                             basename(matching_folders))]
+  model <- matching_folders[1]
+  models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
+  
+  outputs <- lapply(matching_folders,function(model){
+    # read objects
+    load(file.path(dir,model,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
+    m <- fitted_model$posteriors
+    preds <- pcomputePredictedValues(m)
+    
+    # 1. Flatten the list and reshape it into a 3D array (sites x species x samples)
+    # unlist() is incredibly fast compared to binding functions
+
+    # 2. Calculate the mean across the 3rd dimension (the samples)
+    # dims = 2 tells R to keep the first two dimensions and average across the rest
+    EpredY <- rowMeans(preds, dims = 2)
+    empirical <- m$Y
+    comparison_list <- list(predictions = EpredY,
+                            empirical = empirical)
+    
+    saveRDS(comparison_list,
+            file=file.path(dir,model,'Tests','comparisonlist.RData'))
+  })
+}
+
+# FUNCTION TO LOAD THE COMPARISON LIST AND GET SPECIES-THRESHOLDS BASED ON DIFFERENT METRICS 
+dir <- './HmscOutputs'
+pattern <- '2026-02-10'
+
+get_thresholds <- function(dir,pattern,methods){
+  
+  pattern2match <- pattern # get pattern 
+  matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F) # get dirs 
+  matching_folders <- matching_folders[grepl(pattern2match,
+                                             basename(matching_folders))] # get folders
+  model <- matching_folders[1]
+  models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+")) # get atlas
+  
+  ### LOOP OVER DIFFERENT MODELS 
+  lapply(matching_folders,function(model){ 
+    # READ OBJECTS 
+    readRDS(file.path(dir,model,'Tests','comparisonlist.Rdata'))
+    method <- methods[[1]]
+    
+    ### LOOP OVER DIFFERENT OPTIMIZATION THRESHOLDS 
+    vects <- lapply(methods,function(method){
+      threshold_vect <- get_species_thresholds(preds = comparison_list$predictions,
+                                               obs = comparison_list$empirical,
+                                               method = method)
+      return(threshold_vect)
+    })
+    
+    names(vects) <- methods
+    saveRDS(vects,
+            file = file.path(dir,model,'Tests','optimized-species-thresholds.Rdata'))
+  })
+}
+get_species_thresholds <- function(preds, obs, method = "MaxSens+Spec") {
+  # Create a named vector to store results
+  thresh_vector <- setNames(numeric(ncol(preds)), colnames(preds))
+  
+  sp <- colnames(preds)[[1]]
+  for (sp in colnames(preds)) {
+    # PresenceAbsence package requires a specific data frame format:
+    # Col 1: Site ID, Col 2: Observed (0/1), Col 3: Predicted probability
+    data_prep <- data.frame(
+      ID = 1:nrow(preds), 
+      obs = obs[, sp], 
+      pred = preds[, sp]
+    )
+    
+    # optimal.thresholds returns a data frame; we pull the second column (the value)
+    # Common methods: "MaxSens+Spec", "Sens=Spec", "ObsPrev"
+    opt <- optimal.thresholds(data_prep, opt.methods = method)
+    thresh_vector[sp] <- opt[1, 2]
+  }
+  
+  return(thresh_vector)
+}
+
+
+```
+
+```{r writing-predictions-files,eval=F,include=F}
+dir <- './HmscOutputs'
+pattern <- '2026-02-10'
+methods <- c("MaxSens+Spec","Sens=Spec","ObsPrev") # check PresenceAbsence documentation for more info 
+#get_preds(dir,pattern)
+#get_thresholds(dir,pattern,methods)
+```
+
+
+```{r community-comparisons}
+dir <- './HmscOutputs'
+pattern <- '2026-02-10'
+
+get_thresholds <- function(dir,pattern){
+  
+  pattern2match <- pattern # get pattern 
+  matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F) # get dirs 
+  matching_folders <- matching_folders[grepl(pattern2match,
+                                             basename(matching_folders))] # get folders
+  model <- matching_folders[1]
+  models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+")) # get atlas
+  
+  ### LOOP OVER DIFFERENT MODELS 
+  lapply(matching_folders,function(model){ 
+    # READ OBJECTS 
+    comparison <- readRDS(file.path(dir,model,'Tests','comparisonlist.Rdata'))
+    thresholds <- readRDS(file.path(dir,model,'Tests','optimized-species-thresholds.Rdata'))
+  })
+}
+
+get_thresholds(dir,pattern)
+
+binary_preds <- t(t(EpredY) >= thresholds_sss) * 1
+site_richness_pred <- rowSums(binary_preds)
+site_richness_empirical <- rowSums(empirical)
+
+
+sites <- merge_by_rownames(site_richness_empirical,site_richness_pred)
+colnames(sites) <- c('empirical','predicted')
+
+plot(sites$empirical,sites$predicted)
+
+### THIS IS AN ILLUSTRATION HOW TO PUSH WITH GIT FROM R! 
+
+
+```
+
