@@ -15,6 +15,7 @@ library(Hmsc)
 library(cli)
 library(vioplot)
 library(parallel)
+library(ecospat)
 
 # 3. (OPTIONAL BUT RECOMMENDED) 
 # Force parallel processes to use this path
@@ -162,12 +163,34 @@ for(Lst in length(samples_list):1){
       cat("Memory clean complete\n")
       cat(sprintf("current mermory usage Ncels: %.1f MB Ncels: %.1f MB\n", gc()[3], gc()[4]))
     }
+    ### MF FOR NORMAL 
     preds = computePredictedValues(hM)
     cat("Calculating MF\n")
     MF = evaluateModelFit(hM, predY=preds)
+    # --- NEW: Add Boyce Index to MF ---
+    cat("Calculating Boyce Index for MF\n")
+    # We calculate the mean prediction across posterior samples
+    mean_preds = apply(preds, c(1,2), mean) 
+    # Loop through each species to get Boyce
+    MF$Boyce = sapply(1:ncol(hM$Y), function(i) {
+      ecospat.boyce(fit = mean_preds[,i], 
+                    obs = mean_preds[hM$Y[,i] == 1, i], 
+                    nclass = 0, plot.main = FALSE)$Cor
+    })
     rm(pred)
+    
+    ### MF FOR CV 
     cat("Calculating MFCV\n")
     MFCV = evaluateModelFit(hM, predY=predArray)
+    cat("Calculating Boyce Index for MFCV\n")
+    mean_predCV = apply(predArray, c(1,2), mean)
+    MFCV$Boyce = sapply(1:ncol(hM$Y), function(i) {
+      # We use the actual observations from hM$Y
+      ecospat.boyce(fit = mean_predCV[,i], 
+                    obs = mean_predCV[hM$Y[,i] == 1, i], 
+                    nclass = 0, plot.main = FALSE)$Cor
+    })
+    
     rm(predArray)
     cat("Calculating WAIC\n")
     WAIC = computeWAIC(hM)

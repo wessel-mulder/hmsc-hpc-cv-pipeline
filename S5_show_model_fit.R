@@ -59,7 +59,6 @@ nfolds = 5
 
 nst = length(thin_list)
 
-
 for (Lst in nst:1) {
   thin = thin_list[Lst]
   samples = samples_list[Lst]

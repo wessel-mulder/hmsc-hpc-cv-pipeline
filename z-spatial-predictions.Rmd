@@ -14,10 +14,11 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 if(!require("pacman")) install.packages("pacman")
-pacman::p_load(readxl, tidyverse, cowplot,Hmsc, PresenceAbsence)
+pacman::p_load(readxl, tidyverse, cowplot,Hmsc, PresenceAbsence,vegan,patchwork)
 
 ```
 
+### WRITE SOME HELPER FUNCTIONS TO MAKE COMPARISON LIST AND SPECIES THRESHOLDS 
 ```{r helper-functions,include=TRUE}
 # HELPER FUNCTIONS  -------------------------------------------------------
 merge_by_rownames <- function(x,y) {
@@ -114,9 +115,9 @@ get_species_thresholds <- function(preds, obs, method = "MaxSens+Spec") {
   return(thresh_vector)
 }
 
-
 ```
 
+### 
 ```{r writing-predictions-files,eval=F,include=F}
 dir <- './HmscOutputs'
 pattern <- '2026-02-10'
@@ -125,46 +126,346 @@ methods <- c("MaxSens+Spec","Sens=Spec","ObsPrev") # check PresenceAbsence docum
 #get_thresholds(dir,pattern,methods)
 ```
 
-
-```{r community-comparisons}
+```{r functions-for-visualising}
 dir <- './HmscOutputs'
 pattern <- '2026-02-10'
 
-get_thresholds <- function(dir,pattern){
+make_richness_jaccard_df <- function(dir,pattern){
   
   pattern2match <- pattern # get pattern 
   matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F) # get dirs 
   matching_folders <- matching_folders[grepl(pattern2match,
                                              basename(matching_folders))] # get folders
-  model <- matching_folders[1]
+  model_folder <- matching_folders[1]
   models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+")) # get atlas
   
-  ### LOOP OVER DIFFERENT MODELS 
-  lapply(matching_folders,function(model){ 
+  # Helper to make threshold names "clean" for column headers
+  clean_name <- function(x) {
+    x <- gsub("\\+", "_plus_", x)
+    x <- gsub("=", "_equal_", x)
+    return(tolower(x))
+  }
+  # Helper function for Jaccard Similarity
+  calc_jaccard <- function(m1, m2) {
+    intersect <- rowSums((m1 == 1) & (m2 == 1))
+    union <- rowSums((m1 == 1) | (m2 == 1))
+    return(ifelse(union == 0, 1, intersect / union))
+  }
+  ### LOOP OVER DIFFERENT MODELS (Inside your make_richness_jaccard_df function)
+  all_results <- lapply(matching_folders, function(model_folder) {
+    
+    cat("Processing:", model_folder, "\n")
+    
     # READ OBJECTS 
-    comparison <- readRDS(file.path(dir,model,'Tests','comparisonlist.Rdata'))
-    thresholds <- readRDS(file.path(dir,model,'Tests','optimized-species-thresholds.Rdata'))
-  })
+    comparison <- readRDS(file.path(dir, model_folder, 'Tests', 'comparisonlist.Rdata'))
+    thresholds <- readRDS(file.path(dir, model_folder, 'Tests', 'optimized-species-thresholds.Rdata'))
+    load(file.path(dir,model_folder,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
+    m <- fitted_model$posteriors
+    xycoords <- m$ranLevels$site$s
+    
+    # Extract matrices for readability
+    pred_mat <- comparison$predictions
+    emp_mat <- comparison$empirical
+
+        # Ensure site_meta is built from the exact rows we are analyzing
+    site_meta <- data.frame(full_id = rownames(pred_mat), stringsAsFactors = FALSE) %>%
+      separate(full_id, into = c("site", "atlas"), sep = "_", remove = FALSE) %>%
+      left_join(
+        xycoords %>%
+          rownames_to_column("site"),
+        by = "site"
+        )
+    
+    # --- FIX 1: MATCH BY ROWNAME FOR EMPIRICAL RICHNESS ---
+    # We extract the rows from emp_mat in the exact order of pred_mat's rownames
+    emp_aligned <- emp_mat[site_meta$full_id, , drop = FALSE]
+    
+    res_df <- site_meta %>%
+      mutate(
+        folder = model_folder,
+        rich_empirical = rowSums(emp_aligned)
+      )
+    
+    # 2. Loop through the three threshold types
+    for (t_name in names(thresholds)) {
+      
+      thresh_vals <- thresholds[[t_name]]
+      
+      # --- FIX 2: MATCH BY SPECIES NAMES FOR THRESHOLDS ---
+      # We index the threshold vector using the exact column (species) names of pred_mat.
+      # This guarantees that Species A's probability is tested against Species A's threshold.
+      aligned_thresh <- thresh_vals[colnames(pred_mat)]
+      
+      # Binarize predictions: Compare each species column to its specific threshold
+      bin_mat <- sweep(pred_mat, 2, aligned_thresh, ">") * 1
+      
+      # Calculate Richness
+      rich_col_name <- paste0("rich_pred_", clean_name(t_name))
+      res_df[[rich_col_name]] <- rowSums(bin_mat)
+      
+      # --- FIX 3: MAKE SURE ROWS & COLS ARE ALIGNED FOR JACCARD ---
+      # We force the empirical matrix to match BOTH the rows and columns of the binarized matrix
+      # before running the jaccard calculation.
+      emp_for_jaccard <- emp_mat[rownames(bin_mat), colnames(bin_mat), drop = FALSE]
+      
+      jacc_col_name <- paste0("jaccard_", clean_name(t_name))
+      res_df[[jacc_col_name]] <- calc_jaccard(emp_for_jaccard, bin_mat)
+    }
+    
+    return(res_df)
+})
+  # Combine all folders into one master dataframe
+  final_df <- bind_rows(all_results)
+  return(final_df)
+
 }
 
-get_thresholds(dir,pattern)
+df <- make_richness_jaccard_df(dir,pattern)
+atlas_idx <- 1
+metric <- 'jaccard'
 
-binary_preds <- t(t(EpredY) >= thresholds_sss) * 1
-site_richness_pred <- rowSums(binary_preds)
-site_richness_empirical <- rowSums(empirical)
+plot_atlas_dashboard <- function(df, atlas_idx, 
+                                 rich_palette = c("blue", "white", "red"),
+                                 rich_limits = c(0, 50),
+                                 diff_palette = c("purple", "white", "orange"), # New
+                                 diff_limits = c(-20, 20),                      # New
+                                 jacc_palette = c("black", "green"),
+                                 jacc_limits = c(0, 1),
+                                 rel_widths = c(1.5, 1, 1),
+                                 overarching_title = NULL) {
+  
+  # 1. Filter data
+  df_sub <- df %>% filter(atlas == atlas_idx)
+  
+  thresh_names <- c("maxsens_plus_spec", "sens_equal_spec", "obsprev")
+  thresh_labels <- c("MaxSens + Spec", "Sens = Spec", "Obs Prev")
+  
+  theme_map <- function() {
+    theme_minimal() +
+      theme(
+        axis.text = element_blank(), 
+        axis.title = element_blank(),
+        panel.grid = element_blank(), 
+        legend.position = "none",
+        plot.title = element_text(size = 9, face = "bold", hjust = 0.5)
+      )
+  }
+
+  # --- Column 1: Empirical ---
+  avg_emp <- mean(df_sub$rich_empirical, na.rm = TRUE)
+  p_emp <- ggplot(df_sub, aes(X, Y, color = rich_empirical)) +
+    geom_point(size = 0.7) +
+    scale_color_gradientn(colors = rich_palette, limits = rich_limits) +
+    coord_fixed() + 
+    labs(title = sprintf("Empirical Richness\n(Mean: %.2f)", avg_emp)) + 
+    theme_map()
+
+  # --- Column 2: Richness Difference (Pred - Emp) ---
+  p_diff_list <- lapply(1:3, function(i) {
+    col_name <- paste0("rich_pred_", thresh_names[i])
+    # Calculate difference locally for plotting
+    df_sub$diff_val <- df_sub[[col_name]] - df_sub$rich_empirical
+    avg_diff <- mean(df_sub$diff_val, na.rm = TRUE)
+    
+    ggplot(df_sub, aes(X, Y, color = diff_val)) +
+      geom_point(size = 0.5) +
+      scale_color_gradientn(colors = diff_palette, limits = diff_limits) +
+      coord_fixed() + 
+      labs(title = sprintf("Richness difference: %s\n(Mean difference: %.2f)", thresh_labels[i], avg_diff)) +
+      theme_map()
+  })
+
+  # --- Column 3: Jaccard ---
+  p_jacc_list <- lapply(1:3, function(i) {
+    col_name <- paste0("jaccard_", thresh_names[i])
+    avg <- mean(df_sub[[col_name]], na.rm = TRUE)
+    ggplot(df_sub, aes(X, Y, color = .data[[col_name]])) +
+      geom_point(size = 0.5) +
+      scale_color_gradientn(colors = jacc_palette, limits = jacc_limits) +
+      coord_fixed() + 
+      labs(title = sprintf("Jaccard similarity: %s\n(Mean: %.2f)", thresh_labels[i], avg)) +
+      theme_map()
+  })
+
+  # 3. LEGEND EXTRACTION
+  # Richness Legend
+  p_leg_rich <- p_emp + 
+    theme(legend.position = "bottom") + 
+    guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
+    labs(color = "Species Richness")
+  leg_rich <- get_legend(p_leg_rich)
+    
+  # Difference Legend (Extracted from a dummy plot)
+  tmp_diff <- ggplot(df_sub, aes(X, Y, color = rich_empirical)) + 
+    geom_point() + 
+    scale_color_gradientn(colors = diff_palette, limits = diff_limits, name = "Richness difference (Pred-Obs)") +
+    theme(legend.position = "bottom") +
+    guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5))
+  leg_diff <- get_legend(tmp_diff)
+  
+  # Jaccard Legend
+  tmp_jacc <- ggplot(df_sub, aes(X, Y, color = jaccard_obsprev)) +
+    geom_point() + 
+    scale_color_gradientn(colors = jacc_palette, limits = jacc_limits, name = "Jaccard similarity") +
+    theme(legend.position = "bottom") +
+    guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5)) 
+  leg_jacc <- get_legend(tmp_jacc)
+
+  # 4. ASSEMBLY
+  col2 <- plot_grid(plotlist = p_diff_list, ncol = 1)
+  col3 <- plot_grid(plotlist = p_jacc_list, ncol = 1)
+ top_row <- plot_grid(p_emp, col2, col3, ncol = 3, rel_widths = rel_widths)
+  
+  # Legend Row with 3 legends
+  legend_row <- plot_grid(leg_rich, leg_diff, leg_jacc, ncol = 3)
+  
+  # 5. TITLE & FINAL STACK
+  if (is.null(overarching_title)) overarching_title <- paste("Atlas Analysis:", atlas_idx)
+  title_label <- ggdraw() + draw_label(overarching_title, fontface = 'bold', size = 14)
+
+  final_dash <- plot_grid(
+    title_label, 
+    top_row, 
+    legend_row, 
+    ncol = 1, 
+    rel_heights = c(0.1, 1, 0.15) # Adjusted for 3 legends
+  )
+
+  return(final_dash)
+}
+
+### MAKE SUMMARY DATAFRAME
+create_global_summary_table <- function(df) {
+  
+  # 1. Define the threshold names and labels as they appear in your data
+  thresh_lookup <- data.frame(
+    suffix = c("maxsens_plus_spec", "sens_equal_spec", "obsprev"),
+    Label = c("MaxSens + Spec", "Sens = Spec", "Obs Prev")
+  )
+  
+  # 2. Iterate through each unique Atlas
+  summary_list <- lapply(unique(df$atlas), function(a_idx) {
+    df_sub <- df %>% filter(atlas == a_idx)
+    
+    # Calculate empirical mean once per atlas
+    avg_emp <- mean(df_sub$rich_empirical, na.rm = TRUE)
+    
+    # Calculate metrics for each threshold
+    lapply(1:nrow(thresh_lookup), function(i) {
+      suff <- thresh_lookup$suffix[i]
+      
+      pred_col <- paste0("rich_pred_", suff)
+      jacc_col <- paste0("jaccard_", suff)
+      
+      # Calculations
+      avg_pred <- mean(df_sub[[pred_col]], na.rm = TRUE)
+      avg_diff <- mean(df_sub[[pred_col]] - df_sub$rich_empirical, na.rm = TRUE)
+      avg_jacc <- mean(df_sub[[jacc_col]], na.rm = TRUE)
+      
+      # Return a single row for this Atlas/Threshold combination
+      data.frame(
+        Atlas = a_idx,
+        Threshold = thresh_lookup$Label[i],
+        `Empirical Rich.` = round(avg_emp, 2),
+        `Pred. Rich.` = round(avg_pred, 2),
+        `Mean Bias` = round(avg_diff, 2),
+        `Mean Jaccard` = round(avg_jacc, 2),
+        stringsAsFactors = FALSE
+      )
+    }) %>% bind_rows()
+  }) %>% bind_rows()
+  
+  # 3. Format as a Kable Table
+  # We use 'collapse_rows' logic so Atlas names only appear once per group
+  return(knitr::kable(summary_list, 
+                      format = "markdown", 
+                      caption = "Summary Metrics of Community Prediction Performance across Atlases"))
+}
+```
+
+```{r plotting-dashboards,fig.height=10,fig.width=7.5}
+dir <- './HmscOutputs'
+pattern <- '2026-02-10'
+
+df <- make_richness_jaccard_df(dir,pattern)
+create_global_summary_table(df)
+
+# We select all richness-related columns and find the global range
+# Calculate global ranges
+rich_lims <- range(df %>% select(rich_empirical), na.rm = TRUE)
+jacc_lims <- range(df %>% select(starts_with("jaccard_")), na.rm = TRUE)
+
+# Calculate global Difference range
+diff_vals <- df %>% 
+  mutate(d1 = rich_pred_maxsens_plus_spec - rich_empirical,
+         d2 = rich_pred_sens_equal_spec - rich_empirical,
+         d3 = rich_pred_obsprev - rich_empirical) %>%
+  select(d1, d2, d3)
+
+# To make the 0 point "white" or neutral, we make the limits symmetrical
+diff_max <- max(abs(range(diff_vals, na.rm = TRUE)))
+diff_lims <- c(-diff_max, diff_max)
+
+# Palettes
+my_rich_pal <- c("maroon4","dodgerblue",'ivory','goldenrod1',"firebrick1","hotpink")
+my_diff_pal <- c("purple4", "white", "darkorange") # Diverging palette for bias
+my_jacc_pal <- c("maroon4", "goldenrod1")
+
+# Dashboard call
+dashboard1 <- plot_atlas_dashboard(
+  df, 
+  atlas_idx = "1",
+  rich_palette = my_rich_pal,
+  rich_limits = rich_lims,
+  diff_palette = my_diff_pal,
+  diff_limits = diff_lims,
+  jacc_palette = my_jacc_pal,
+  jacc_limits = jacc_lims,
+  rel_widths = c(1, 1, 1),
+  overarching_title = 'Atlas 1: Empirical Richness vs. Predicted Bias & Community Similarity'
+)
+
+dashboard2 <- plot_atlas_dashboard(
+  df, 
+  atlas_idx = "2",
+  rich_palette = my_rich_pal,
+  rich_limits = rich_lims,    
+  diff_palette = my_diff_pal,
+  diff_limits = diff_lims,
+  jacc_palette = my_jacc_pal,
+  jacc_limits = jacc_lims,   # Usually best to keep 0-1 for Jaccard
+  rel_widths = c(1, 1, 1),
+  overarching_title = 'Atlas 2: comparing empirical richness / community composition to \n predicted richness & community composition using different thresholds'
+)
+dashboard3 <- plot_atlas_dashboard(
+  df, 
+  atlas_idx = "3",
+  rich_palette = my_rich_pal,
+  rich_limits = rich_lims,  
+  diff_palette = my_diff_pal,
+  diff_limits = diff_lims,
+  jacc_palette = my_jacc_pal,
+  jacc_limits = jacc_lims,   # Usually best to keep 0-1 for Jaccard
+  rel_widths = c(1, 1, 1),
+  overarching_title = 'Atlas 3: comparing empirical richness / community composition to \n predicted richness & community composition using different thresholds'
+)
 
 
-sites <- merge_by_rownames(site_richness_empirical,site_richness_pred)
-colnames(sites) <- c('empirical','predicted')
 
-plot(sites$empirical,sites$predicted)
-
-### THIS IS AN ILLUSTRATION HOW TO PUSH WITH GIT FROM R! 
-# stop typing useless comments!
-
-
-#### make another useluss comment
+dashboard1
+dashboard2
+dashboard3
 
 
 ```
+
+
+```{r comparisons-table}
+
+
+
+
+
+```
+
 

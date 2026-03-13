@@ -2,7 +2,7 @@
 title: "WM-2026-02-19-supervisor-meeting"
 author: "WM"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=TRUE,echo=FALSE}
@@ -271,12 +271,9 @@ make_VP_effect_sizes <- function(dir,pattern){
     
     combined
     # adding effect sizes 
-    
-    
   })
   merged <- do.call(rbind,outputs)
   return(merged)
-  
 }
 # PLOTTING FUNCTIONS  -----------------------------------------------------
 # Guild vs environment VP across species 
@@ -1046,7 +1043,7 @@ species_vp_effect_plots(dir = path2HmscOutputs,
 
 ```
 
-Some things are clear from here - the climatic space (temperature, precipitation) is completely disjuct from one atlas to the next. The temperature in atlas 3 does not overlap with the temperature in the previous atlases at all. So the fact that this species occurs in all three atlases already signals that temperature is not 'really' influencing this species' distributions in a way. But there is a clear pattern of the species occupping warmer grid cells rather than colder grid cells. So what is driving this? 
+Some things are clear from here - the climatic space (temperature, precipitation) is completely disjunct from one atlas to the next. The temperature in atlas 3 does not overlap with the temperature in the previous atlases at all. So the fact that this species occurs in all three atlases already signals that temperature is not 'really' influencing this species' distributions in a way. But there is a clear pattern of the species occupping warmer grid cells rather than colder grid cells. So what is driving this? 
 
 ```{r oystercatcher-environmental space,fig.height = 5, fig.width = 10}
 # ### LOOK INTO VARIANCE EXPLAINED BY DIFFERENT VARIABLES AND ESTIMATES OF 

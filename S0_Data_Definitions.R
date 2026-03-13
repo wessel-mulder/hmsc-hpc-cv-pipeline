@@ -1,54 +1,73 @@
-rm(list = ls())
 
-# GETTING STARTED ---------------------------------------------------------
-if (interactive() && Sys.getenv("RSTUDIO") == "1") {
-  message("Running in RStudio")
-  library(Hmsc)
-  library(jsonify)
-  library(knitr)
-  library(corrplot)
-  library(ape)
-  library(dplyr)
-  library(sp)
-  library(sf)
-  library(terra)
-  library(tidyverse)
-  input <- '.'
-  python <- file.path(getwd(), 'hmsc-hpc-main',"hmsc-venv", "bin", "python3.11")
-  flagInit = 0
-  flagFitR = 1
-} else {
-  message("Running from terminal or non-interactive environment")
-  library(RColorBrewer,lib="~/Rlibs")
-  library(farver,lib="~/Rlibs")
-  library(scales,lib="~/Rlibs")
-  library(jsonify,lib="~/Rlibs")
-  library(ape,lib="~/Rlibs")
-  library(dplyr,lib="~/Rlibs")
-  library(Hmsc,lib="~/Rlibs")
-  library(dplyr,lib="~/Rlibs")
-  library(withr,lib="~/Rlibs")
-  library(sp,lib="~/Rlibs")
-  library(terra,lib="~/Rlibs")
-  library(sf,lib="~/Rlibs")
-  library(tidyverse,lib="~/Rlibs")
-  
-  
-  input <- '~/home/projects/hmsc-danishbirds'
-  python <- '/maps/projects/cmec/people/bhr597/projects/hmsc-danishbirds/hmsc-venv'
-  flagInit = 1
-  flagFitR = 0
-}
+#### Hmsc analyses on ####
+#General cleaning of the workspace
+remove(list=ls())
+print('loading libraries')
 
-# check if accurately installed
-summary(TD)
+# 1. SET THE LIBPATH GLOBALLY FIRST
+# This ensures any parallel workers created later inherit this path
+.libPaths(c("~/Rlibs", .libPaths()))
+
+require(Hmsc)
+require(dplyr)
+require(ape)
+input <- '.'
+coveragelevels <- 'good_and_average'
+min_occs <- 5
+
+
+#### support scripts  ######
+get_effort <- function(dir){
+  atlas1 <- read_excel(file.path(dir, 'effort', 'dækning atlas1+2.xlsx'), sheet = 'kvadrater atlas1')
+  atlas2 <- read_excel(file.path(dir, 'effort', 'dækning atlas1+2.xlsx'), sheet = 'kvadrater atlas2')
+  
+  atlas2 <- atlas2 %>% 
+    select(-UNDS_KODE_) %>% 
+    rename(UNDS_KODE_ = UNDS_KOD_1)
+  
+  # Load design (Note: 'design' object is overwritten here in original code)
+  # load('HmscOutputs/2026-02-10_07-03-53_All_All_Atlas3_MinOccs5/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata')
+  # design <- read.csv('Data/data/1_preprocessing/design/studyDesign.csv')
+  # xycoords <- design[design$atlas == 2, c('site', 'lat', 'lon')]
+  
+  key <- read_excel(file.path(dir, 'effort', 'dækning atlas1+2.xlsx'), sheet = 'dækning') %>% 
+    mutate(coverage = case_when(
+      UNDSKODE == 0 ~ 'Not understood',
+      UNDSKODE == 1 ~ 'Good',
+      UNDSKODE == 2 ~ 'Average',
+      UNDSKODE == 3 ~ 'Bad'
+    ))
+  
+  effort <- rbind(
+    atlas1 %>% mutate(atlas = 1),
+    atlas2 %>% mutate(atlas = 2)
+  ) %>% 
+    left_join(key %>% rename(UNDS_KODE_ = UNDSKODE), by = "UNDS_KODE_") %>% 
+    rename(site = KVADRATKOD) #%>% 
+  #left_join(xycoords, by = 'site') 
+  
+  effort$coverage <- factor(effort$coverage, levels = c('Good','Average','Bad','Not understood'))
+  
+  effort <- effort %>% 
+    mutate(survey = paste(.$site, .$atlas, sep='_')) %>% 
+    select(survey, coverage) 
+  
+  return(effort)
+} ### PREPARE COVERAGE 
 
 # LOADING DATA -----------------------------------------------------
-
 #### ENVIRONMENT ####
 # OCEAN THRESHOLD
 grids_thresholds <- st_read(file.path(input,'Data/data/1_preprocessing/atlas-grids/grids-ocean-thresholds/grids_ocean_thresholds.shp'))
-thresholds <- grids_thresholds$kvdrtkd[grids_thresholds$pct_lnd>=25]
+thresholds <- grids_thresholds$kvdrtkd[grids_thresholds$pct_lnd>=25] ### FILTERING GRID CELLS WITH LESS
+
+effort <- get_effort(file.path(input,'Data')) %>% 
+  ### MODIFY THIS TO EDIT THE ATLAS THRESHOLD FOR 3 WHEN I GET IT
+  rbind(., data.frame(
+    survey = paste(thresholds, 3, sep='_'),
+    coverage = 'Good'
+  ))
+
 # NAMES TO MATCH LANDUSE 
 lulc_lookup <- c(
   "0"  = "ocean",
@@ -60,6 +79,7 @@ lulc_lookup <- c(
   "66" = "other",
   "77" = "water"
 )
+
 # GET ENVIRONMENTAL VALUES 
 X <- read.csv(file.path(input,'Data/data/1_preprocessing/X_environmental/X_Environmental.csv'),row.names=1) %>%
   rename_with(
@@ -86,36 +106,28 @@ X <- read.csv(file.path(input,'Data/data/1_preprocessing/X_environmental/X_Envir
   ) %>%
   # drop rows with any NA
   drop_na()
+X_inter <- X
 
-#### OCCURRENCES ####  
+### GET LIST OF SURVEYS WITH BAD / UNKOWN SURVEYS
+if(coveragelevels=='good_and_average'){surveys2keep <- effort$survey[effort$coverage%in%c('Good','Average')]}
+if(coveragelevels=='good'){surveys2keep <- effort$survey[effort$coverage%in%c('Good')]}
+
+X <- X_inter %>% 
+  rownames_to_column(.,var='survey') %>% 
+  filter(survey %in% surveys2keep) %>% 
+  column_to_rownames(.,var = 'survey')
+
+# get rid of it 
+rm(X_inter)
+  
+#### OCCURRENCEcoverage#### OCCURRENCES ####  
 Y <- read.csv(
   file.path(input, "Data/data/1_preprocessing/Y_occurrences/Y_occurrences.csv"),
   row.names = 1
 ) %>%
   filter(row.names(.) %in% row.names(X))
 
-### filter based on richness per atlas 
-effort_list <- c(
-  '1' = .03,
-  '2' = .01,
-  '3' = 0
-)
-number='1'
-for(number in c('1','2','3')){
-quantile <- effort_list[[number]]
-Y_sub <- Y[rownames(Y)[grep(paste0("_",number,"$"), rownames(Y))],,drop=F]
-if(quantile > 0){
-  print(sprintf('In atlas %s the quantile is %s percent',
-          number,quantile))
-  th = quantile(rowSums(Y_sub),quantile)
-  tofilter = rownames(Y_sub)[rowSums(Y_sub)<th]
-  Y <- Y[!rownames(Y) %in% tofilter,]
-  print(sprintf("Removed %s sites from atlas %s",
-                length(tofilter),number))
-}
-}
-
-min_occs <- 5
+### filter based on coverage per atlas 
 for(number in c('1','2','3')){
   Y_sub <- Y[rownames(Y)[grep(paste0("_",number,"$"), rownames(Y))],,drop=F]
   if(any(colSums(Y_sub, na.rm =T)<min_occs)){
@@ -128,17 +140,93 @@ for(number in c('1','2','3')){
   }
 }
 
+# get rid of it 
+rm(Y_sub)
+
 # now refilter X again 
 X <- X %>%
   filter(rownames(.) %in% rownames(Y))
 
+#### MERGE IN THE STI ####
+sti <- read.csv('Data/sti/STI_Devictor.csv')
+
+my_list <- colnames(Y)
+sti$SPECIES <- gsub(" ", "_", sti$SPECIES)
+
+setdiff(my_list,sti$SPECIES)
+# astur_gentilis missing 
+grep('gentilis',sti$SPECIES,value=T)  # accipiter gentilis --> astur gentilis
+# Anarhynchus_alexandrinus missing 
+grep('alexandrinus',sti$SPECIES,value=T)  # charadrius alexandrinus --> Anarhynchus_alexandrinus
+# Chroicocephalus_ridibundus
+grep("ridibundus", sti$SPECIES, value = TRUE) # Larus ridibundus --> Chroicocephalus_ridibundus
+# Coloeus_monedula
+grep("monedula", sti$SPECIES, value = TRUE)  # corvus monedula --> coloeus_monedula
+# corvus cornix
+grep("cornix", sti$SPECIES, value = TRUE)    # nada
+grep("corone", sti$SPECIES, value = TRUE)    # corvus corone --> subspecies designation now corvus cornix
+# Curruca_communis
+grep("communis", sti$SPECIES, value = TRUE)  #  Sylvia communis
+# Curruca_curruca
+grep("curruca", sti$SPECIES, value = TRUE)   # often Sylvia curruca
+
+# 1. Create the translation mapping
+# Format: "Their Name" = "Your Name"
+name_map <- c(
+  "Accipiter_gentilis"       = "Astur_gentilis",
+  "Charadrius_alexandrinus"  = "Anarhynchus_alexandrinus",
+  "Larus_ridibundus"         = "Chroicocephalus_ridibundus",
+  "Corvus_monedula"          = "Coloeus_monedula",
+  "Sylvia_communis"          = "Curruca_communis",
+  "Sylvia_curruca"           = "Curruca_curruca"
+)
+
+# 2. Perform the replacement
+# We use 'match' to find which indices in their_data need updating
+sti$SPECIES <- ifelse(sti$SPECIES %in% names(name_map), 
+                      name_map[sti$SPECIES], 
+                      sti$SPECIES)
+
+sti_inter <- sti
+
+# 3. Add Corvus_cornix using the value from Corvus corone
+# This keeps 'Corvus corone' intact and creates a new entry for 'Corvus_cornix'
+if ("Corvus_corone" %in% sti_inter$SPECIES) {
+  corone_data <- sti_inter[sti_inter$SPECIES == "Corvus_corone", ]
+  corone_data$SPECIES <- "Corvus_cornix"
+  # Append this new row to the dataframe
+  sti <- rbind(sti_inter, corone_data)
+}
+
+### CHECK IF THIS IS RIHT 
+sti[sti$SPECIES == 'Corvus_cornix',]
+sti[sti$SPECIES == 'Corvus_corone',]
+
+
+their_final_list <- unique(sti$SPECIES)
+missing <- setdiff(my_list, their_final_list)
+print(paste("Still missing:", paste(missing, collapse=", ")))
+
+#### MERGE WITH Tr
 ##### TRAITS #####
 Tr <- read.csv(
   file.path(input, "Data/data/1_preprocessing/Tr_aits/traits-guild_migration.csv"),
   row.names = 2
 ) %>%
   dplyr::select(2, 3) %>%
-  .[colnames(Y), , drop = FALSE]
+  .[colnames(Y), , drop = FALSE] %>% 
+  rownames_to_column(.,var = 'SPECIES') %>% 
+  left_join(sti %>% 
+              select(SPECIES,STI) %>% 
+              rename(species_thermal_index = STI),
+            by = 'SPECIES') %>% 
+  column_to_rownames(.,var = 'SPECIES')
+
+sti$STI[sti$SPECIES == 'Accipiter_nisus']
+Tr$species_thermal_index[Tr$SPECIES == 'Accipiter_nisus']
+
+sti$STI[sti$SPECIES == 'Picus_viridis']
+Tr$species_thermal_index[Tr$SPECIES == 'Picus_viridis']
 
 #### DESIGN ####
 Design <- read.csv(
@@ -170,131 +258,10 @@ Design <- Design %>%
     lon = proj_xycoords[, 1],
     lat = proj_xycoords[, 2]
   )
-
 save(
   X,
   Y,
   Tr,
   Design,
-  file = file.path(sprintf("Data/preprocessed_data_minoccs%s_atlasrichnessfilterbyeffort.RData",min_occs))
+  file = file.path(sprintf("Data/preprocessed_data_min_occs_is_%s_coverage_is_%s.RData",min_occs,coveragelevels))
 )
-
-# 
-# 
-# # TAKE A LOOK AT LANDUSE VARS -------------------------------------------------
-# 
-# 
-# # PREPARING MODEL BUILD ---------------------------------------------------
-# Define model types:
-# date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
-# 
-# #atlasnr <- c('1')
-# # loop over different atlases
-# for(atlasnr in atlases){
-# 
-#   ### SAME ACROSS ALL MODELS
-#   # Define model formulas for environmental and trait data
-#   XFormula <- as.formula(paste("~", paste(colnames(X), collapse = "+"), sep = " "))
-#   TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " "))
-# 
-#   # get random effects for space
-#   proj_xycoords_unique <- distinct(data.frame(X = Design$lon,
-#                                               Y = Design$lat))
-#   rownames(proj_xycoords_unique) <- unique(Design$site)
-#   struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
-#   struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
-# 
-#   # keep only atlas 1,2,3
-#   pattern <- paste0("_(", paste(atlasnr, collapse = "|"), ")$")
-# 
-#   Y_sub <- Y[rownames(Y)[grep(pattern, rownames(Y))],,drop=F]
-#   X_sub <- X[rownames(X)[grep(pattern, rownames(X))],,drop=F]
-#   Design_sub <- Design[rownames(Design)[grep(pattern, rownames(Design))],,drop=F]
-#   Design_sub$atlas <- droplevels(Design_sub$atlas)
-#   #Design_sub <- Design_sub[,c('site','year'),drop=F]
-# 
-#   # if it's just 1 atlas
-#   if(length(atlasnr)==1){
-# 
-#     m <-Hmsc(Y = Y_sub,
-#              XData = X_sub,
-#              XFormula = XFormula,
-#              TrData = Tr,
-#              TrFormula = TrFormula,
-#              phyloTree = phy,
-#              studyDesign = Design_sub[,c('site'),drop=F],
-#              ranLevels = list('site'=struc_space),
-#              distr='probit')
-# 
-#   }else{
-#     # and time
-#     years_unique <- distinct(data.frame(Year = Design_sub$year))
-#     rownames(years_unique) <- unique(Design_sub$atlas)
-#     struc_time <- HmscRandomLevel(sData = years_unique, sMethod = "Full")
-# 
-#     m <-Hmsc(Y = Y_sub,
-#              XData = X_sub,
-#              XFormula = XFormula,
-#              TrData = Tr,
-#              TrFormula = TrFormula,
-#              phyloTree = phy,
-#              studyDesign = Design_sub[,c('site','atlas'),drop=F],
-#              ranLevels = list('site'=struc_space,
-#                               'atlas'=struc_time),
-#              distr='probit')
-#   }
-# 
-#   print(head(Y_sub[,1:5]))
-#   print(tail(Y_sub[,1:5]))
-# 
-#   summary(m)
-#   m$rLNames
-#   m$ranLevels
-#   m$ranLevels$site
-#   m$ranLevels$atlas
-#   m$studyDesign
-#   ### IN RSTUDIO START SAMPLING
-#   if(flagFitR){
-#     print('Rstudio stuff executed')
-#     init_obj <- sampleMcmc(m, samples=nSamples, thin=thin,
-#                            transient=transient, nChains=nChains,
-#                            verbose = verbose,
-#                            engine="HPC")
-#   }
-#   ### IN HPC ENVIORNMENT SET UP INIT
-#   if(flagInit){
-#     # initiate mcmc sampling
-#     init_obj <- sampleMcmc(m, samples=nSamples, thin=thin,
-#                            transient=transient, nChains=nChains,
-#                            verbose = verbose,
-#                            engine="HPC")
-# 
-#     dir_name <- paste0(date,name_of_dir,paste(atlasnr, collapse = ""))
-#     dir.create(file.path(input,'tmp_rds',dir_name))
-# 
-#     init_file_path = file.path(input,'tmp_rds',dir_name, "init_file.rds")
-#     m_file_path = file.path(input,'tmp_rds',dir_name, "m_object.rds")
-#     param_file_path = file.path(input,'tmp_rds',dir_name, "params.rds")
-#     lines <- paste(names(params), format(unlist(params), scientific = FALSE, trim=T), sep = "=")
-#     writeLines(lines, file.path(input,'tmp_rds',dir_name, "params.txt"))
-# 
-#     # save as json
-#     saveRDS(to_json(init_obj), file=init_file_path)
-#     saveRDS(m,file=m_file_path)
-#     saveRDS(params,file=param_file_path)
-# 
-#     # operates in python, so formulate the required call
-#     post_file_path = file.path(input,'tmp_rds',dir_name, "post_file.rds")
-#     python_cmd_args = paste("-m hmsc.run_gibbs_sampler",
-#                             "--input", shQuote(init_file_path),
-#                             "--output", shQuote(post_file_path),
-#                             "--samples", nSamples,
-#                             "--transient", format(transient,scientific=F),
-#                             "--thin", thin,
-#                             "--verbose", verbose)
-#     cat(paste(shQuote(python), python_cmd_args), "\n")
-#     print('Init files created')
-# 
-
-
-

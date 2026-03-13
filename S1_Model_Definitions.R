@@ -9,7 +9,7 @@ print('loading libraries')
 
 require(Hmsc)
 require(dplyr)
-library(ape)
+require(ape)
 #### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 localDir = "./HmscOutputs"
@@ -19,11 +19,16 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 #### Model specs ####
 guild_models <- c('All')
 variable_models <- c('All')   # exclude dominant, exclude ocean 
-atlas_models <- c(1,2,3)
+coverages <- c('GoodAverage','Good')
+atlas_models <- c(1,2)
 min_occs2run <- c(5)
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
+atlas_model <- atlas_models[[1]]
+min_occs <- min_occs2run[[1]]
+coverage <- coverages[[1]]
 
+for(coverage in coverages){
 for(min_occs in min_occs2run){
 for(atlas_model in atlas_models){
 for(guild2run in guild_models){
@@ -34,19 +39,22 @@ variables <- variable2run
 atlas <- atlas_model
 # make description
 model_description = paste(as.character(date),
-                          guild,
-                          variables,
+                          #guild,
+                          #variables,
                           paste('Atlas',atlas,sep=''),
                           paste('MinOccs',min_occs,sep=''),
+                          paste('Coverage',coverage,sep=''),
                           sep='_')
 
 #### Edit the data ####
 # If the data are saved as an RData file
 # These files contain the preprocessed data values. Filtered for >5 occurrences in each atlas and 
 # at least 25% of the atlas grid cell is land 
-load(file.path(dataDir,sprintf("preprocessed_data_minoccs%s_atlasrichnessfilterbyeffort.RData",min_occs)))
-
-print(head(X))
+if(coverage=='Good'){coveragerename='good'}
+if(coverage=='GoodAverage'){coveragerename='good_and_average'}
+load(file.path(dataDir,sprintf("preprocessed_data_min_occs_is_%s_coverage_is_%s.RData",
+                               min_occs,
+                               coveragerename)))
 
 # Subset environmental data 
 X <- X %>%
@@ -54,9 +62,9 @@ X <- X %>%
     if (variables == "LandusePercs") {
       select(., matches("^perc_"))
     } else if (variables == 'Climate') {
-      select(., tmean_year,prec_year)
+      select(., tmean_breeding,prec_breeding)
     } else if (variables == 'All') {
-      select(., tmean_year,prec_year, hh,matches("^perc_"),-perc_fresh_saltwater)
+      select(., tmean_breeding,prec_breeding, hh,matches("^perc_"),-perc_fresh_saltwater)
       
     }
   }
@@ -70,7 +78,7 @@ Y <- Y %>%
 XFormula <- as.formula(paste("~", paste(colnames(X), collapse = "+"), sep = " "))
 TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " "))
 
-
+print(XFormula)
 ### GET PHYLOGENY
 phy <- read.tree(file.path('Data/data/1_preprocessing/Taxonomy/tree_fromPD.tre'))
 phy <- keep.tip(phy,colnames(Y))
@@ -108,6 +116,8 @@ stopifnot(
   identical(rownames(Y_sub), rownames(Design_sub))
 )
 
+setdiff(colnames(Y_sub),
+        rownames(Tr))
 
 # get random effects for space
 proj_xycoords_unique <- unique(
@@ -219,6 +229,7 @@ names(testing_list) <- paste0("atlas_", tests)
 save(testing_list,
      file = file.path(test.dir,'test_atlases.RData'))
 
+}
 }
 }
 }

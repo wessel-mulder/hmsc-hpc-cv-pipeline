@@ -640,9 +640,4 @@ species_spatial_comparison(dir = path2HmscOutputs,
                            col_low = 'purple',col_high = 'yellow',
                            legend_name = title)
 
-
-### USELESS COMMENT
-
-# and another one 
-
 ```
