@@ -6,147 +6,67 @@ output: html_document
 ---
 
 ```{r}
-traits <- readxl::read_excel('Data/data/birdTraits-merged-all.xlsx')
 
-ggplot2::ggplot(data=traits,
-                aes(x=Family2_AVONET,y=trend_))
+library(tidyverse)
 
-str(traits)
-
-# Load required libraries
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(scales)
-data <- traits
-group_col <- 'Family2_AVONET'
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(scales)
-
-To achieve this, we need to add a "mode" to your function. Since the trend_a1a2a3_DOF column contains two-character codes (like +- or ++), we can map those codes into four categories: Declining, Fluctuating, Stable, and Increasing.
-
-I have added a merge_periods argument. When TRUE, it uses the 3-period trend column; when FALSE, it keeps the side-by-side "timeline" view you had before.
-
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(scales)
-
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(scales)
-
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(scales)
-
-plot_bird_trends <- function(data, group_col, min_species = 3, sort_type = "decline", merge_periods = FALSE) {
-  
-  # 1. Initial Cleaning & Filtering
-  df_clean <- data %>%
-    mutate(remove = replace_na(remove, 0)) %>% 
-    filter(!is.na({{ group_col }}), remove == 0) %>%
-    group_by({{ group_col }}) %>%
-    mutate(n_species = n()) %>%
-    ungroup() %>%
-    filter(n_species >= min_species) %>%
-    mutate(group_label = paste0({{ group_col }}, " (n=", n_species, ")"))
-
-  if (merge_periods) {
-    # --- MODE: MERGED PERIODS ---
-    processed_data <- df_clean %>%
-      mutate(trend_display = case_when(
-        trend_a1a2_DOF == "-" & tend_a2a3_DOF == "-" ~ "Declining (-- )",
-        trend_a1a2_DOF == "+" & tend_a2a3_DOF == "+" ~ "Increasing (++)",
-        trend_a1a2_DOF == "=" & tend_a2a3_DOF == "=" ~ "Stable (==)",
-        TRUE ~ "Fluctuating (mix)"
-      )) %>%
-      mutate(trend_display = fct_relevel(trend_display, "Declining (-- )", "Fluctuating (mix)", "Stable (==)", "Increasing (++)")) %>%
-      filter(!is.na(trend_display)) %>%
-      select(group_label, trend_display)
-    
-    fill_colors <- c("Declining (-- )" = "#e41a1c", "Fluctuating (mix)" = "#ff7f00", 
-                     "Stable (==)" = "#999999", "Increasing (++)" = "#4daf4a")
-    facet_logic <- NULL
-    
-  } else {
-    # --- MODE: TIMELINE (Side-by-side) ---
-    processed_data <- df_clean %>%
-      select(group_label, trend_a1a2_DOF, tend_a2a3_DOF) %>%
-      pivot_longer(cols = c(trend_a1a2_DOF, tend_a2a3_DOF),
-                   names_to = "period", values_to = "trend_display") %>%
-      mutate(
-        period = if_else(period == "trend_a1a2_DOF", "Period 1 (a1-a2)", "Period 2 (a2-a3)"),
-        trend_display = fct_relevel(factor(trend_display), "-", "=", "+")
-      ) %>%
-      filter(!is.na(trend_display))
-    
-    fill_colors <- c("-" = "#e41a1c", "=" = "#999999", "+" = "#4daf4a")
-    facet_logic <- facet_wrap(~ period)
-  }
-
-  # 2. Calculate Sorting & Labels
-  plot_ready <- processed_data %>%
-    group_by(group_label, across(any_of("period")), trend_display) %>%
-    summarise(count = n(), .groups = "drop_last") %>%
-    mutate(prop = count / sum(count),
-           label = percent(prop, accuracy = 1)) %>%
-    ungroup()
-
-  # Dynamic Sorting Logic
-  if (sort_type == "decline") {
-    # Calculate score based on Red segments
-    sort_scores <- plot_ready %>%
-      filter(trend_display %in% c("Declining (-- )", "-")) %>%
-      group_by(group_label) %>%
-      summarise(score = sum(prop), .groups = "drop")
-  } else if (sort_type == "increase") {
-    # Calculate score based on Green segments
-    sort_scores <- plot_ready %>%
-      filter(trend_display %in% c("Increasing (++)", "+")) %>%
-      group_by(group_label) %>%
-      summarise(score = sum(prop), .groups = "drop")
-  } else {
-    # Default to alphabetical if sort_type is anything else
-    sort_scores <- data.frame(group_label = unique(plot_ready$group_label), score = 1)
-  }
-
-  plot_ready <- plot_ready %>%
-    left_join(sort_scores, by = "group_label") %>%
-    mutate(score = replace_na(score, 0)) %>%
-    mutate(group_label = fct_reorder(group_label, score))
-
-  # 3. Create Plot
-  p <- ggplot(plot_ready, aes(y = group_label, x = count, fill = trend_display)) +
-    geom_bar(stat = "identity", position = "fill", color = "white", linewidth = 0.2) +
-    geom_text(aes(label = label), 
-              position = position_fill(vjust = 0.5), 
-              color = "white", fontface = "bold", size = 3) +
-    scale_fill_manual(values = fill_colors) +
-    scale_x_continuous(labels = percent_format(), expand = c(0,0)) +
-    theme_minimal() +
-    labs(x = "Relative Proportion of Species", y = NULL, fill = "Trend",
-         title = if(merge_periods) "Overall Trajectory (a1-a3)" else "Temporal Population Trends",
-         subtitle = paste("Sorted by:", sort_type, "| Minimum species:", min_species)) +
-    theme(legend.position = "bottom", 
-          strip.background = element_rect(fill = "gray95", color = NA),
-          strip.text = element_text(face = "bold"))
-
-  if (!is.null(facet_logic)) p <- p + facet_logic
-  return(p)
-}
+load('Data/preprocessed_data_min_occs_is_5_coverage_is_good_and_average.RData')
+head(Design)
+head(Tr)
+head(Y[,1:5])
+threshold <- 0.1
 
 
-traits <- traits %>%
+# 1. Calculate Occupancy per species per Atlas period
+# We use colMeans grouped by the 'atlas' column in Design
+occ_summary <- as.data.frame(Y) %>%
+  rownames_to_column(var = 'survey') %>% 
+  left_join(Design %>% rownames_to_column('survey'), by = 'survey') %>% 
+  relocate(c('survey','atlas','site')) %>% 
+  select(-survey, -site, -lat, -lon, -year) %>% # Ensure only species and atlas remain
+  group_by(atlas) %>%
+  # Calculate both mean (occupancy) and sum (total count)
+  summarise(across(everything(), list(occ = \(x) mean(x, na.rm = TRUE), 
+                                      count = \(x) sum(x, na.rm = TRUE)))) %>%
+  # Pivot into a long format to handle the two different metrics
+  pivot_longer(cols = -atlas, 
+               names_to = c("species", ".value"), 
+               names_sep = "_(?!.*_)") %>% # Regex to split at the last underscore
+  # Pivot wider to get the Atlas periods as columns
+  pivot_wider(names_from = atlas, 
+              values_from = c(occ, count),
+              names_glue = "{.value}_atlas{atlas}") %>% 
+  mutate(
+    # Change from Atlas 1 to 2
+    changea12 = case_when(
+      (occ_atlas2 - occ_atlas1) / occ_atlas1 <= -threshold ~ "decrease",
+      (occ_atlas2 - occ_atlas1) / occ_atlas1 >=  threshold ~ "increase",
+      TRUE ~ "stable"
+    ),
+    # Change from Atlas 2 to 3
+    changea23 = case_when(
+      (occ_atlas3 - occ_atlas2) / occ_atlas2 <= -threshold ~ "decrease",
+      (occ_atlas3 - occ_atlas2) / occ_atlas2 >=  threshold ~ "increase",
+      TRUE ~ "stable"
+    )
+  ) %>% 
+  mutate(
+    # Create the overall trajectory column
+    overall_trajectory = case_when(
+      changea12 == "increase" & changea23 == "increase" ~ "increase",
+
+      changea12 == "decrease" & changea23 == "decrease" ~ "decrease",
+
+      
+      changea12 == "stable" & changea23 == "stable" ~ "stable",
+      TRUE ~ "fluctuating"
+    )
+  ) %>% 
+  left_join(.,Tr %>% 
+              rownames_to_column(.,var='species'),
+            by = 'species') %>% 
+  relocate(c('species','Migration_a3_DOF','foraging_guild_consensus','species_thermal_index'))
+
+traits <- occ_summary %>%
   mutate(habitat_class = case_when(
     # WETLAND
     foraging_guild_consensus %in% c(
@@ -154,42 +74,143 @@ traits <- traits %>%
       "Aquatic pursuers", "Scolopacids", "Plovers", "Wading birds", "Rails", 
       "Marsh warblers", "Marsh wablers", "Dippers", "Kingfishers", "Reedlings"
     ) ~ "Wetland",
-    
     # MARINE
     foraging_guild_consensus %in% c(
-      "Terns", "Gulls", "Marine \"something\""
+      "Terns", "Gulls"
     ) ~ "Marine",
-    
     # OPEN-LAND
     foraging_guild_consensus %in% c(
       "Gallinaceous birds", "Passerine seedeaters", "Open-land insectivores", 
       "Buntings", "Shrikes", "Hoopoes", "Beeeaters"
     ) ~ "Open-land",
-    
     # FOREST
     foraging_guild_consensus %in% c(
       "Foliage gleaners", "Woodpeckers", "Orioles", "Thrushes", 
       "Cuckoos", "Tit-like birds", "Owls"
     ) ~ "Forest",
-    
     # URBAN / GENERALIST (Species that bridge many habitats)
     foraging_guild_consensus %in% c(
       "Diurnal raptors", "Aerial insectivores", "Nigthjars", 
       "Low flycatching feeders", "Omnivorous corvids", 
       "Flycatchers", "Starlings", "Columbids"
-    ) ~ "Generalist/Urban",
-    
-    TRUE ~ "Other/Unknown"
+    ) ~ "Generalist/Urban"
   ))
 
-plot_bird_trends(traits, foraging_guild_consensus, min_species = 3,merge_periods = T,sort_type = 'increase')
-plot_bird_trends(traits, Migration_a3_DOF_description, min_species = 3,merge_periods = T,sort_type = 'increase')
+data <- occ_summary
+head(occ_summary)
+plot_bird_trends <- function(data, group_col, min_species = 3, sort_type = "decline", merge_periods = FALSE) {
+  
+  # 1. Initial Cleaning & Filtering
+  df_clean <- data %>%
+    group_by({{ group_col }}) %>%
+    mutate(n_species = n()) %>%
+    ungroup() %>%
+    filter(n_species >= min_species) %>%
+    mutate(group_label = paste0({{ group_col }}, " (n=", n_species, ")"))
+  
+  if (merge_periods) {
+    # --- MODE: MERGED PERIODS (Overall Trajectory) ---
+    processed_data <- df_clean %>%
+      mutate(trend_display = case_when(
+        overall_trajectory == "decrease"    ~ "Declining (--)",
 
-plot_bird_trends(traits, Migration_a3_DOF_description, min_species = 3,merge_periods = T,sort_type = 'increase')
+        overall_trajectory == "increase"    ~ "Increasing (++)",
 
-plot_bird_trends(traits, habitat_class, min_species = 3,merge_periods = T,sort_type = 'increase')
+
+        overall_trajectory == "stable"      ~ "Stable (==)",
+        overall_trajectory == "fluctuating" ~ "Fluctuating (mix)"
+      )) %>%
+      # Ensure logical order in the legend
+      mutate(trend_display = fct_relevel(factor(trend_display), 
+                                         "Declining (--)",
+                                         "Fluctuating (mix)", 
+                                         "Stable (==)",
+                                         "Increasing (++)")) %>%
+      filter(!is.na(trend_display)) %>%
+      select(group_label, trend_display)
+    
+    fill_colors <- c("Declining (--)"    = "#e41a1c", 
+                     "Fluctuating (mix)" = "#ff7f00", 
+                     "Stable (==)"       = "#999999", 
+                     "Increasing (++)"   = "#4daf4a")
+    facet_logic <- NULL
+    
+  } else {
+    # --- MODE: TIMELINE (Side-by-side) ---
+    processed_data <- df_clean %>%
+      select(group_label, changea12, changea23) %>%
+      pivot_longer(cols = c(changea12, changea23),
+                   names_to = "period", values_to = "trend_display") %>%
+      mutate(
+        period = if_else(period == "changea12", "Period 1 (a1-a2)", "Period 2 (a2-a3)"),
+        # Use your new labels: "-", "stable", "+"
+        trend_display = fct_relevel(factor(trend_display), "decrease", "stable", "increase")
+      ) %>%
+      filter(!is.na(trend_display))
+    
+    fill_colors <- c("decrease" = "#e41a1c", "stable" = "#999999", "increase" = "#4daf4a")
+    facet_logic <- facet_wrap(~ period)
+  }
+  
+  # 2. Calculate Sorting & Labels
+  plot_ready <- processed_data %>%
+    group_by(group_label, across(any_of("period")), trend_display) %>%
+    summarise(count = n(), .groups = "drop_last") %>%
+    mutate(prop = count / sum(count),
+           label = scales::percent(prop, accuracy = 1)) %>%
+    ungroup()
+  
+  # Dynamic Sorting Logic
+  if (sort_type == "decline") {
+    sort_scores <- plot_ready %>%
+      filter(trend_display %in% c("Declining (--)", "decrease")) %>%
+      group_by(group_label) %>%
+      summarise(score = sum(prop), .groups = "drop")
+  } else if (sort_type == "increase") {
+    sort_scores <- plot_ready %>%
+      filter(trend_display %in% c("Increasing (++)", "increase")) %>%
+      group_by(group_label) %>%
+      summarise(score = sum(prop), .groups = "drop")
+  } else {
+    sort_scores <- data.frame(group_label = unique(plot_ready$group_label), score = 1)
+  }
+  
+  plot_ready <- plot_ready %>%
+    left_join(sort_scores, by = "group_label") %>%
+    mutate(score = replace_na(score, 0)) %>%
+    mutate(group_label = fct_reorder(group_label, score))
+  
+  # 3. Create Plot
+  p <- ggplot(plot_ready, aes(y = group_label, x = count, fill = trend_display)) +
+    geom_bar(stat = "identity", position = "fill", color = "white", linewidth = 0.2) +
+    geom_text(aes(label = label), 
+              position = position_fill(vjust = 0.5), 
+              color = "white", fontface = "bold", size = 3) +
+    scale_fill_manual(values = fill_colors) +
+    scale_x_continuous(labels = scales::percent_format(), expand = c(0,0)) +
+    theme_minimal() +
+    labs(x = "Relative Proportion of Species", y = NULL, fill = "Trend",
+         title = if(merge_periods) "Overall Trajectory (a1-a3)" else "Temporal Population Trends",
+         subtitle = paste("Sorted by:", sort_type, "| Min species per group:", min_species)) +
+    theme(legend.position = "bottom", 
+          strip.background = element_rect(fill = "gray95", color = NA),
+          strip.text = element_text(face = "bold"))
+  
+  if (!is.null(facet_logic)) p <- p + facet_logic
+  return(p)
+}
+
+plot_bird_trends(traits, habitat_class, min_species = 1,merge_periods = T,sort_type = 'decline')
+plot_bird_trends(traits, foraging_guild_consensus, min_species = 5,merge_periods = F,sort_type = 'decline')
+
+plot_bird_trends(traits, Migration_a3_DOF, min_species = 3,merge_periods = T,sort_type = 'decline')
+
+
+plot_bird_trends(traits, habitat_class, min_species = 3,merge_periods = T,sort_type = 'decline')
 
 str(traits)
+
+Tr[Tr$foraging_guild_consensus=='Diving ducks',]
 ```
 
 
