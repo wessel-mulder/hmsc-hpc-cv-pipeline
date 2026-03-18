@@ -244,11 +244,11 @@ for(Lst in length(samples_list):1){
     # We calculate the mean prediction across posterior samples
     mean_preds = apply(preds, c(1,2), mean) 
     # Loop through each species to get Boyce
-    MF$Boyce = sapply(1:ncol(hM$Y), function(i) {
-      ecospat.boyce(fit = mean_preds[,i], 
-                    obs = mean_preds[hM$Y[,i] == 1, i], 
-                    nclass = 0, plot.main = FALSE)$Cor
-    })
+    # MF$Boyce = sapply(1:ncol(hM$Y), function(i) {
+    #   ecospat.boyce(fit = mean_preds[,i], 
+    #                 obs = mean_preds[hM$Y[,i] == 1, i], 
+    #                 nclass = 0, plot.main = FALSE)$Cor
+    # })
     rm(pred)
     
     ### MF FOR CV 
@@ -256,12 +256,12 @@ for(Lst in length(samples_list):1){
     MFCV = evaluateModelFit(hM, predY=predArray)
     cat("Calculating Boyce Index for MFCV\n")
     mean_predCV = apply(predArray, c(1,2), mean)
-    MFCV$Boyce = sapply(1:ncol(hM$Y), function(i) {
-      # We use the actual observations from hM$Y
-      ecospat.boyce(fit = mean_predCV[,i], 
-                    obs = mean_predCV[hM$Y[,i] == 1, i], 
-                    nclass = 0, plot.main = FALSE)$Cor
-    })
+    # MFCV$Boyce = sapply(1:ncol(hM$Y), function(i) {
+    #   # We use the actual observations from hM$Y
+    #   ecospat.boyce(fit = mean_predCV[,i], 
+    #                 obs = mean_predCV[hM$Y[,i] == 1, i], 
+    #                 nclass = 0, plot.main = FALSE)$Cor
+    # })
     
     rm(predArray)
     cat("Calculating WAIC\n")
