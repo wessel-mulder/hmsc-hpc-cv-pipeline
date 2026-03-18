@@ -13,7 +13,7 @@ require(jsonify)
 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 #setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path)))
-pattern2match <- "2026-02-10"
+pattern2match <- "2026-03-13_06-58-56"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]

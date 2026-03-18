@@ -16,7 +16,7 @@ require(colorspace)
 
 
 ### Set up directories ####
-pattern2match <- "2026-02-10"
+pattern2match <- "2026-03-13_06-58-56"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
@@ -32,7 +32,7 @@ TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
 samples_list = c(250)
 thin_list = c(100)
 nChains = 4
-nfolds = 5
+nfolds = 10
 
 #Only run for the longest model run
 for(Lst in length(samples_list):1){

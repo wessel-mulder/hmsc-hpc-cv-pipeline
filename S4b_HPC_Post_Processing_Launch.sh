@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=20
 #SBATCH --mem-per-cpu=2GB
 #SBATCH --time=03:00:00
-#SBATCH --array=0-2
+#SBATCH --array=0-1
 #SBATCH --mail-type=BEGIN,END,FAIL   # Alerts for start, finish, and crashes
 #SBATCH --mail-user=bhr597@sund.ku.dk
 
@@ -14,9 +14,8 @@ source /opt/software/anaconda3/2021.05/etc/profile.d/conda.sh
 conda activate my_hmsc_env
 
 MODELS=(
-  "2026-02-10_07-03-53_All_All_Atlas1_MinOccs5"
-  "2026-02-10_07-03-53_All_All_Atlas2_MinOccs5"
-  "2026-02-10_07-03-53_All_All_Atlas3_MinOccs5"
+  "2026-03-13_06-58-56_Atlas1_MinOccs5_CoverageGoodAverage"
+  "2026-03-13_06-58-56_Atlas2_MinOccs5_CoverageGoodAverage"
 )
 THIN_VAL=10
 
