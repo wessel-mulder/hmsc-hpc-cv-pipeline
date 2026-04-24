@@ -18,3 +18,8 @@ prefixes).
 Some scripts still save to paths like `misc-figures/<filename>.png`. If you
 rerun them, they may recreate files at the top level unless their `ggsave()`
 paths are updated.
+
+## Current Main-Figure Scripts
+
+- `scripts/fig5-trait-influence-gamma.R` reads the HMSC Gamma parameter exports
+  and writes the trait-influence figure to `outputs/main/`.
