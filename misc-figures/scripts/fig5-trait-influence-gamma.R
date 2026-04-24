@@ -66,6 +66,27 @@ reference_categories <- paste(
   "foraging guild = aerial insectivores."
 )
 
+migration_order <- c(
+  "sedentary",
+  "sedentary and short-distance",
+  "short-distance",
+  "short-and long-distance"
+)
+
+foraging_order <- c(
+  "Tit-like birds",
+  "Low flycatching feeders",
+  "Dabbling ducks",
+  "Scolopacids",
+  "Plovers"
+)
+
+trait_order_requested <- c(
+  foraging_order,
+  rev(migration_order),
+  "Thermal index"
+)
+
 clean_trait_name <- function(trait) {
   trait |>
     str_remove("^Migration_a3_DOF") |>
@@ -198,28 +219,7 @@ traits_with_supported_effects <- gamma_plot |>
 gamma_plot <- gamma_plot |>
   filter(trait_clean %in% traits_with_supported_effects)
 
-cluster_within_category <- function(df) {
-  map(levels(df$trait_category), function(category) {
-    sub <- df |>
-      filter(trait_category == category) |>
-      group_by(trait_clean, variable) |>
-      summarise(
-        mean_effect = mean(if_else(significant, effect_size, 0), na.rm = TRUE),
-        .groups = "drop"
-      ) |>
-      pivot_wider(names_from = variable, values_from = mean_effect, values_fill = 0) |>
-      column_to_rownames("trait_clean")
-
-    if (nrow(sub) > 1) {
-      rownames(sub)[hclust(dist(sub))$order]
-    } else {
-      rownames(sub)
-    }
-  }) |>
-    unlist(use.names = FALSE)
-}
-
-trait_order <- cluster_within_category(gamma_plot)
+trait_order <- trait_order_requested[trait_order_requested %in% unique(gamma_plot$trait_clean)]
 
 plot_data <- gamma_plot |>
   mutate(
