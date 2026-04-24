@@ -225,7 +225,6 @@ prep_atlas_data <- function(Y, X, sti_df) {
 
 ```
 
-
 ```{r,fig.height=15,fig.width=10}
 get_summary_stats <- function(data, X_full, n_species, mode) {
   
@@ -370,10 +369,9 @@ plot_atlas_comparison <- function(data, X_full, n_species = 100, mode = "high", 
 }
 
 master_df <- prep_atlas_data(Y_sub, X, sti)
-plot_atlas_comparison(master_df, X, n_species = 200, plot_type = "segment",metric="occupancy")
-plot_atlas_comparison(master_df, X, n_species = 200, plot_type = "lollipop",metric = "occupancy")
 
-plot_atlas_comparison(master_df, X, n_species = 200, plot_type = "segment",metric = "temperature")
+#plot_atlas_comparison(master_df, X, n_species = 200, plot_type = "segment",metric = "occupancy")
+#plot_atlas_comparison(master_df, X, n_species = 200, plot_type = "segment",metric = "temperature")
 
 
 ```
@@ -503,7 +501,7 @@ plot_sti_adaptive_trends <- function(data, X_full, n_groups = 3, metric = "tempe
       mutate(deviation = median_temp - atlas_med)
       
     y_label <- "Deviation from median breeding temperatures"
-    plot_title <- paste("How is warming through time influencing relative warmth of sites that species breed in?")
+    plot_title <- paste("Species with warmest & coldest affinities occuppy relatively warmer sites")
     plot_sub <- "Species are grouped by thermal affinity (group 5 high = warm, group 1 low = cold)"
     
   } else if (metric == "occupancy") {
@@ -550,8 +548,8 @@ plot_sti_adaptive_trends <- function(data, X_full, n_groups = 3, metric = "tempe
       strip.background = element_rect(fill = "grey95")
     )
 }
-plot_sti_adaptive_trends(master_df,X,n_groups=5,metric = 'temperature')
 plot_sti_adaptive_trends(master_df,X,n_groups=5,metric = 'occupancy')
+plot_sti_adaptive_trends(master_df,X,n_groups=5,metric = 'temperature')
 ```
 
 # Bring effect sizes into this --> do changes in effect sizes follow expectations? 
@@ -683,7 +681,6 @@ df_final <- df %>%
   select(species, occs, atlas, std_effect_size)
 
 # make any NAs 0 and only select temperature values 
-head(df_final)
 
 # get slopes for each estimate 
 df_slopes <- df_final %>% 
@@ -701,10 +698,10 @@ sti_estimate_slopes <- df_slopes %>%
               rename(species = SPECIES),
             by = 'species'
               )
-  
-ggplot(data=sti_estimate_slopes,
-       aes(x=slope,y=STI)) +
-  geom_point()
+#   
+# ggplot(data=sti_estimate_slopes,
+#        aes(x=slope,y=STI)) +
+#   geom_point()
 
 # 1. Prepare data (Filter out NaNs and pick top/bottom species)
 # 1. Define the number of groups
@@ -766,7 +763,7 @@ plot_modular_slopes <- function(df, n_groups = 3, n_top_bottom = 25) {
     )
 }
 
-plot_modular_slopes(sti_estimate_slopes, n_groups = 5,n_top_bottom = 100)
+#plot_modular_slopes(sti_estimate_slopes, n_groups = 5,n_top_bottom = 100)
 
 plot_thermal_slope_summary <- function(df, n_groups = 3) {
   
@@ -803,7 +800,7 @@ plot_thermal_slope_summary <- function(df, n_groups = 3) {
       axis.text.x = element_text(angle = 15, hjust = 1)
     )
 }
-plot_thermal_slope_summary(sti_estimate_slopes,n_groups = 5)
+#plot_thermal_slope_summary(sti_estimate_slopes,n_groups = 5)
 
 ```
 

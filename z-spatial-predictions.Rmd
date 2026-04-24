@@ -29,7 +29,7 @@ merge_by_rownames <- function(x,y) {
 
 ## FUNCTION TO MAKE THE COMPARISON LIST 
 dir <- './HmscOutputs'
-pattern <- '2026-02-10'
+pattern <- '2026-03-13'
 get_preds <- function(dir,pattern){
   pattern2match <- pattern
   
@@ -62,7 +62,7 @@ get_preds <- function(dir,pattern){
 
 # FUNCTION TO LOAD THE COMPARISON LIST AND GET SPECIES-THRESHOLDS BASED ON DIFFERENT METRICS 
 dir <- './HmscOutputs'
-pattern <- '2026-02-10'
+pattern <- '2026-03-13'
 
 get_thresholds <- function(dir,pattern,methods){
   
@@ -76,7 +76,7 @@ get_thresholds <- function(dir,pattern,methods){
   ### LOOP OVER DIFFERENT MODELS 
   lapply(matching_folders,function(model){ 
     # READ OBJECTS 
-    readRDS(file.path(dir,model,'Tests','comparisonlist.Rdata'))
+    comparison_list <- readRDS(file.path(dir,model,'Tests','comparisonlist.Rdata'))
     method <- methods[[1]]
     
     ### LOOP OVER DIFFERENT OPTIMIZATION THRESHOLDS 
@@ -120,15 +120,15 @@ get_species_thresholds <- function(preds, obs, method = "MaxSens+Spec") {
 ### 
 ```{r writing-predictions-files,eval=F,include=F}
 dir <- './HmscOutputs'
-pattern <- '2026-02-10'
+pattern <- '2026-03-13'
 methods <- c("MaxSens+Spec","Sens=Spec","ObsPrev") # check PresenceAbsence documentation for more info 
 #get_preds(dir,pattern)
-#get_thresholds(dir,pattern,methods)
+get_thresholds(dir,pattern,methods)
 ```
 
 ```{r functions-for-visualising}
 dir <- './HmscOutputs'
-pattern <- '2026-02-10'
+pattern <- '2026-03-13'
 
 make_richness_jaccard_df <- function(dir,pattern){
   
@@ -385,7 +385,7 @@ create_global_summary_table <- function(df) {
 
 ```{r plotting-dashboards,fig.height=10,fig.width=7.5}
 dir <- './HmscOutputs'
-pattern <- '2026-02-10'
+pattern <- '2026-03-13'
 
 df <- make_richness_jaccard_df(dir,pattern)
 create_global_summary_table(df)
@@ -458,14 +458,4 @@ dashboard3
 
 
 ```
-
-
-```{r comparisons-table}
-
-
-
-
-
-```
-
 
