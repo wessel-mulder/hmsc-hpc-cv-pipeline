@@ -43,15 +43,27 @@ atlas_sizes <- c(
   "2010s" = 5.3
 )
 
-direction_colors <- c(
-  "Positive" = "#2F78B7",
-  "Negative" = "#C64B35"
+env_colors <- c(
+  "Temperature" = "firebrick3",
+  "Precipitation" = "dodgerblue3",
+  "Land-use heterogeneity" = "orchid3",
+  "Urban" = "snow3",
+  "Cropland" = "goldenrod1",
+  "Pasture" = "darkorange",
+  "Forest" = "springgreen4",
+  "Grass/shrubland" = "springgreen2"
 )
 
 category_colors <- c(
   "Thermal index" = "#3B6D11",
-  "Foraging guild" = "#D85A30",
-  "Migration" = "#7F77DD"
+  "Migration" = "#7F77DD",
+  "Foraging guild" = "#D85A30"
+)
+
+reference_categories <- paste(
+  "Reference categories:",
+  "migration = long-distance migrants;",
+  "foraging guild = aerial insectivores."
 )
 
 clean_trait_name <- function(trait) {
@@ -171,12 +183,20 @@ gamma_plot <- gamma_raw |>
   mutate(
     trait_category = factor(
       trait_category,
-      levels = c("Thermal index", "Foraging guild", "Migration")
+      levels = c("Foraging guild", "Migration", "Thermal index")
     ),
     variable = factor(variable, levels = var_order),
     atlas = factor(atlas, levels = names(atlas_sizes)),
     direction = factor(direction, levels = c("Positive", "Negative", "Not supported"))
   )
+
+traits_with_supported_effects <- gamma_plot |>
+  filter(significant) |>
+  distinct(trait_clean) |>
+  pull(trait_clean)
+
+gamma_plot <- gamma_plot |>
+  filter(trait_clean %in% traits_with_supported_effects)
 
 cluster_within_category <- function(df) {
   map(levels(df$trait_category), function(category) {
@@ -230,13 +250,24 @@ plot_points <- plot_data |>
   filter(significant) |>
   arrange(desc(atlas))
 
+legend_envs <- intersect(var_order, as.character(unique(plot_points$variable)))
+
 n_envs <- length(var_order)
 divider_lines <- category_bands |>
   filter(trait_category != last(levels(plot_data$trait_category)))
 
-make_direction_panel <- function(direction_label) {
+make_direction_panel <- function(direction_label, show_environment_legend = TRUE) {
   points <- plot_points |>
     filter(direction == direction_label)
+  environment_guide <- if (show_environment_legend) {
+    guide_legend(
+      order = 2,
+      nrow = 2,
+      override.aes = list(shape = 21, fill = NA, size = 3)
+    )
+  } else {
+    "none"
+  }
 
   ggplot() +
     geom_rect(
@@ -254,17 +285,43 @@ make_direction_panel <- function(direction_label) {
       linetype = "dashed"
     ) +
     geom_point(
-      data = points,
+      data = points |> filter(atlas == "2010s"),
       aes(
         x = x,
         y = y,
-        size = atlas
+        size = atlas,
+        color = variable
       ),
       shape = 21,
-      color = "grey20",
-      fill = direction_colors[[direction_label]],
+      fill = NA,
+      stroke = 1.25,
+      alpha = 0.95
+    ) +
+    geom_point(
+      data = points |> filter(atlas == "1990s"),
+      aes(
+        x = x,
+        y = y,
+        size = atlas,
+        color = variable
+      ),
+      shape = 21,
+      fill = NA,
+      stroke = 1.05,
+      alpha = 0.95
+    ) +
+    geom_point(
+      data = points |> filter(atlas == "1970s"),
+      aes(
+        x = x,
+        y = y,
+        size = atlas,
+        color = variable,
+        fill = variable
+      ),
+      shape = 21,
       stroke = 0.35,
-      alpha = 0.92
+      alpha = 0.95
     ) +
     geom_rect(
       data = category_bands,
@@ -291,8 +348,22 @@ make_direction_panel <- function(direction_label) {
     ) +
     scale_size_manual(
       values = atlas_sizes,
+      breaks = names(atlas_sizes),
+      limits = names(atlas_sizes),
       name = "Atlas period",
       guide = guide_legend(override.aes = list(fill = "grey65"))
+    ) +
+    scale_color_manual(
+      values = env_colors,
+      breaks = legend_envs,
+      limits = legend_envs,
+      name = "Environmental variable"
+    ) +
+    scale_fill_manual(
+      values = env_colors,
+      breaks = legend_envs,
+      limits = legend_envs,
+      guide = "none"
     ) +
     scale_x_continuous(
       breaks = seq_along(var_order),
@@ -308,11 +379,11 @@ make_direction_panel <- function(direction_label) {
     labs(
       title = paste(direction_label, "trait moderation"),
       subtitle = paste0(
-        "Filled circles mark Gamma coefficients with Pr(>0) >= ",
+        "Circles mark Gamma coefficients with Pr(>0) >= ",
         support_level,
         " or <= ",
         1 - support_level,
-        ". Blank cells were tested but not supported."
+        ". 1990s and 2010s are rings."
       ),
       x = NULL,
       y = NULL
@@ -327,15 +398,31 @@ make_direction_panel <- function(direction_label) {
       plot.title = element_text(face = "bold", hjust = 0.5),
       plot.subtitle = element_text(size = 8.5, color = "grey35"),
       plot.margin = margin(8, 78, 8, 8)
+    ) +
+    guides(
+      size = guide_legend(
+        order = 1,
+        override.aes = list(
+          shape = 21,
+          color = "grey30",
+          fill = c("grey65", NA, NA),
+          stroke = c(0.35, 1.05, 1.25)
+        )
+      ),
+      color = environment_guide
     )
 }
 
-p_positive <- make_direction_panel("Positive")
-p_negative <- make_direction_panel("Negative")
+p_positive <- make_direction_panel("Positive", show_environment_legend = TRUE)
+p_negative <- make_direction_panel("Negative", show_environment_legend = FALSE)
 
 p_combined <- p_positive + p_negative +
-  plot_layout(guides = "collect") &
-  theme(legend.position = "bottom")
+  plot_layout(guides = "collect") +
+  plot_annotation(caption = reference_categories) &
+  theme(
+    legend.position = "bottom",
+    plot.caption = element_text(size = 8.5, color = "grey35", hjust = 0)
+  )
 
 ggsave(output_png, p_combined, width = 18, height = 10, dpi = 300)
 ggsave(output_pdf, p_combined, width = 18, height = 10)
