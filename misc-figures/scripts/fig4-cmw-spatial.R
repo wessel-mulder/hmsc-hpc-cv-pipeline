@@ -5,78 +5,25 @@ pacman::p_load(tidyverse,Hmsc,RColorBrewer,ggplot2,
                rnaturalearth,rnaturalearthdata,
                gridExtra,patchwork,sf,cowplot,
                terra)
+source(file.path("support_scripts", "figure_data_helpers.R"))
 
 #### LOAD MODELS #### 
 dir <- './HmscOutputs'
 pattern <- '2026-03-13'
 
-matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern,
-                                           basename(matching_folders))]
+matching_folders <- figure_model_folders(pattern = pattern, base_dir = dir)
 model <- matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-
-# load models
-mods <- lapply(matching_folders,function(model){
-  # read objects
-  load(file.path(dir,model,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
-  m <- fitted_model$posteriors
-})
-names(mods) <- models_nums
-#mod <- mods[[1]]
-# load designs
-designs <- lapply(mods,function(mod){
-  mod$studyDesign %>% 
-    rownames_to_column(.,var='survey') %>% 
-    left_join(.,
-              mod$ranLevels$site$s %>% rownames_to_column(.,var='site'),
-              by = 'site')
-})
+models_nums <- atlas_numbers(matching_folders)
+mods <- load_hmsc_posteriors(matching_folders, base_dir = dir)
+designs <- load_hmsc_study_designs(mods)
 
 
 #### GET PREDS #### 
-predsY <- map2(mods, matching_folders, function(mod, folder) {
-  
-  # Define the target file path
-  target_path <- file.path(dir, 
-                           folder, 
-                           'Results', 
-                           'Preds', 
-                           'predicted-values.rdata')
-  
-  if (!file.exists(target_path)) {
-    # If file doesn't exist, compute predictions
-    message(paste("Computing predictions for:", folder))
-    
-    # Compute full predictions
-    pred_temp <- pcomputePredictedValues(mod)
-    
-    # Calculate row means (predsY logic)
-    pred_y <- rowMeans(pred_temp, dims = 2)
-    
-    # Ensure directory exists before saving
-    if (!dir.exists(dirname(target_path))) {
-      dir.create(dirname(target_path), recursive = TRUE)
-    }
-    
-    # Save the object
-    saveRDS(pred_y, target_path)
-    
-    return(pred_y)
-    
-  } else {
-    # If file exists, simply load it
-    message(paste("Loading existing predictions for:", folder))
-    return(readRDS(target_path))
-  }
-})
+predsY <- load_or_compute_site_predictions(mods, matching_folders, base_dir = dir)
 
 str(predsY)
 
-CWMs <- map2(predsY, mods, ~ {
-  S <- rowSums(.x)
-  (.x %*% .y$Tr) / matrix(rep(S, .y$nt), ncol = .y$nt)
-}) 
+CWMs <- community_weighted_means(predsY, mods)
 
 # prepare for plotting 
 dfs <- map2(CWMs, designs, ~ {
@@ -458,4 +405,3 @@ final_draw <- ggdraw(final) +
 
 
 ggsave(sprintf('misc-figures/%s-fig4-cwm-maps-dominance.png',pattern),width = 10,height= 7.5)
- 

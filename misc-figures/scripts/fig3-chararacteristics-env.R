@@ -6,6 +6,7 @@ pacman::p_load(tidyverse,Hmsc,RColorBrewer,ggplot2,
                gridExtra,patchwork,
                readxl,cowplot,abind,
                ggrepel)
+source(file.path("support_scripts", "figure_data_helpers.R"))
 
 devtools::install_github("davidsjoberg/ggbump")
 devtools::install_github("davidsjoberg/ggsankey")
@@ -16,34 +17,11 @@ scaled = F # set to NULL to not scale
 
 #### LOAD VP DATA ####
 pattern <- "2026-03-13"
-# get folders
-matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern, basename(matching_folders))]
-
-# get model numbers
-model<-matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-
-# load preds  for each model
-preds <- lapply(matching_folders,function(model){
-  atlas_num <- as.numeric(str_extract(model, "(?<=Atlas)\\d+"))
-  load(file.path('HmscOutputs',
-                           model,
-                           'Results',
-                           'Preds',
-                           sprintf('Preds_%s_HPC_samples_0250_thin_100_chains_4.Rdata',model))) # load the info
-  Preds
-})
-# load models
-mods <- lapply(matching_folders,function(model){
-  # read objects
-  load(file.path('HmscOutputs',model,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
-  m <- fitted_model$posteriors
-})
-
-# add appropriate atlas name
-names(preds) <- models_nums
-names(mods) <- models_nums
+matching_folders <- figure_model_folders(pattern = pattern)
+model <- matching_folders[1]
+models_nums <- atlas_numbers(matching_folders)
+preds <- load_gradient_predictions(matching_folders)
+mods <- load_hmsc_posteriors(matching_folders)
 
 #### HELPER FUNCTIONS ####
 # Helper to extract category from trName
@@ -628,5 +606,4 @@ tile_sti <- make_tile(
 # PCA plots
 pca_foraging   <- make_pca(trait = 'foraging_guild_consensus',arrow_scale = 3)
 pca_migratory  <- make_pca(trait = 'Migration_a3_DOF',arrow_scale = 3)        # adjust to match your trait name
-
 

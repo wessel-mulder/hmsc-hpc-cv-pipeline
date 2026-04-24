@@ -6,6 +6,7 @@ require(corrplot)
 require(writexl)
 require(cli)
 require(tidyverse)
+source(file.path("support_scripts", "figure_data_helpers.R"))
 
 
 ### Set up directories #### 
@@ -17,37 +18,10 @@ patterns <- c('2026-02-10','2026-03-13','2026-03-24')
 names <- c('all','goodaverage','good')
 VPs <- lapply(patterns,function(pattern){
 pattern2match <- pattern
-matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
-
-model<-matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-VPs_scaled <- lapply(matching_folders,function(model){
-  atlas_num <- as.numeric(str_extract(model, "(?<=Atlas)\\d+"))
-  df <- read.csv(file.path('HmscOutputs',
-                           model,
-                           'Results',
-                           sprintf('%sparameter_estimates_VP_.csv',model)
-  ) # load the info
-  ) %>% column_to_rownames(var='X') # set rownames
-  
-  
-  # # 2. Extract the TjurR2 row as a named vector
-  # r2_values <- df["TjurR2", ] %>% as.numeric()
-  # 
-  # # 3. Filter out the TjurR2 row and multiply the rest
-  # # 3. Clean and Multiply
-  # df_scaled <- df %>%
-  #   filter(rownames(.) != "TjurR2") %>%
-  #   # Use mapply or map2 style logic to multiply columns by the vector
-  #   map2_dfc(r2_values, ~ .x * .y) %>%
-  #   # Put the row names back because map2_dfc drops them
-  #   mutate(Factor = rownames(df)[rownames(df) != "TjurR2"]) %>%
-  #   column_to_rownames(var = "Factor")
-  
-  return(df)
-})
-names(VPs_scaled) <- models_nums
+matching_folders <- figure_model_folders(pattern = pattern2match)
+model <- matching_folders[1]
+models_nums <- atlas_numbers(matching_folders)
+VPs_scaled <- load_vp_estimates(matching_folders)
 
 names(VPs_scaled)
 
@@ -146,4 +120,3 @@ ggplot(plot_data_clean_sub,
 
 plot_data_clean$atlas[plot_data_clean$VP > 0.6]
 ggsave("misc-figures/env-vp-atlas-boxplots.png")
-

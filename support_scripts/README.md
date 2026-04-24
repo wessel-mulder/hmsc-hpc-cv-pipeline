@@ -7,6 +7,10 @@ notebooks do not each need local copies.
 
 - `data_helpers.R`: survey-effort loading, land-use column cleaning, and STI
   taxonomy harmonisation.
+- `figure_data_helpers.R`: figure-script loaders for HMSC model folders,
+  fitted posteriors, study designs, model-fit metrics, cached fitted-site
+  predictions, gradient predictions, variance partitioning tables, and
+  parameter-effect exports.
 - `project_paths.R`: helpers for locating timestamped HMSC output folders.
 - `hmsc_helpers.R`: HMSC postprocessing helpers, including HPC alpha conversion
   and Boyce index calculation.

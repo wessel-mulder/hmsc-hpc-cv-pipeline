@@ -4,52 +4,24 @@ if(!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,Hmsc,RColorBrewer,ggplot2,
                rnaturalearth,rnaturalearthdata,
                gridExtra,patchwork,sf,cowplot)
+source(file.path("support_scripts", "figure_data_helpers.R"))
 
 #### LOAD MODELS #### 
 dir <- './HmscOutputs'
 pattern <- '2026-03-13'
 
-matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern,
-                                           basename(matching_folders))]
+matching_folders <- figure_model_folders(pattern = pattern, base_dir = dir)
 model <- matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-
-# load models
-mods <- lapply(matching_folders,function(model){
-  # read objects
-  load(file.path(dir,model,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
-  m <- fitted_model$posteriors
-})
-names(mods) <- models_nums
-#mod <- mods[[1]]
-# load designs
-designs <- lapply(mods,function(mod){
-  mod$studyDesign %>% 
-    rownames_to_column(.,var='survey') %>% 
-    left_join(.,
-              mod$ranLevels$site$s %>% rownames_to_column(.,var='site'),
-              by = 'site')
-})
+models_nums <- atlas_numbers(matching_folders)
+mods <- load_hmsc_posteriors(matching_folders, base_dir = dir)
+designs <- load_hmsc_study_designs(mods)
 
 #### GET PREDS #### 
-# load preds 
-preds <- lapply(mods,pcomputePredictedValues)
-predsY <- lapply(preds,rowMeans,dims=2)
-rm(preds)
+predsY <- load_or_compute_site_predictions(mods, matching_folders, base_dir = dir)
 
 #### GET RICHNESS ####
 # prepare for plotting 
-dfs <- map2(predsY, designs, ~ {
-  # Calculate row sums and keep it as a data frame
-  .x %>% 
-    as.data.frame() %>% 
-    mutate(richness = rowSums(.)) %>% 
-    rownames_to_column(var = 'survey') %>% 
-    select(survey,richness) %>% 
-    # Now join with .y (the design list element)
-    left_join(.y, by = 'survey')
-})
+dfs <- predicted_richness_frames(predsY, designs)
 
 # Atlas 1 to Atlas 2
 diff_1_2 <- dfs[[1]] %>%

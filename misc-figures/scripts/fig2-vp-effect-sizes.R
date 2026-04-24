@@ -5,6 +5,7 @@ pacman::p_load(tidyverse,Hmsc,RColorBrewer,ggplot2,
                rnaturalearth,rnaturalearthdata,
                gridExtra,patchwork,
                readxl,cowplot)
+source(file.path("support_scripts", "figure_data_helpers.R"))
 
 devtools::install_github("davidsjoberg/ggbump")
 devtools::install_github("davidsjoberg/ggsankey")
@@ -15,39 +16,10 @@ scaled = F # set to NULL to not scale
 
 #### LOAD VP DATA ####
 pattern <- "2026-03-13"
-# get folders
-matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern, basename(matching_folders))]
-# get model numbers
-model<-matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-
-# load VPs for each model
-VPs <- lapply(matching_folders,function(model){
-  atlas_num <- as.numeric(str_extract(model, "(?<=Atlas)\\d+"))
-  df <- read.csv(file.path('HmscOutputs',
-                           model,
-                           'Results',
-                           sprintf('%sparameter_estimates_VP_.csv',model)
-  ) # load the info
-  ) %>% column_to_rownames(var='X') # set rownames
-  if(scaled==T){
-    
-  # 2. Extract the TjurR2 row as a named vector
-  r2_values <- df["TjurR2", ] %>% as.numeric()
-  # multiple with tjur value 
-  df <- df %>%
-    filter(rownames(.) != "TjurR2") %>%
-    # Use mapply or map2 style logic to multiply columns by the vector
-    map2_dfc(r2_values, ~ .x * .y) %>%
-    # Put the row names back because map2_dfc drops them
-    mutate(Factor = rownames(df)[rownames(df) != "TjurR2"]) %>%
-    column_to_rownames(var = "Factor")
-  }
-  return(df)
-})
-# add appropriate atlas name
-names(VPs) <- models_nums
+matching_folders <- figure_model_folders(pattern = pattern)
+model <- matching_folders[1]
+models_nums <- atlas_numbers(matching_folders)
+VPs <- load_vp_estimates(matching_folders, scaled = scaled)
 
 #### PREPARE FOR PLOTTING ####
 # Calculate rowwise medians for each dataframe in the list
@@ -153,68 +125,9 @@ plots[[1]] <- ggplot(plot_data_clean, aes(x = atlas,
 plots[[1]]
 
 
-#### LOAD EFFECT SIZES ####  
-# load effects 
-make_effect_sizes <- function(dir, pattern, effect = "Beta") {
-  # 1. Input Validation and Setup
-  # Standardize effect name to Title case for file matching
-  effect_type <- ifelse(tolower(effect) == "gamma", "Gamma", "Beta")
-  id_col_name <- ifelse(effect_type == "Gamma", "Traits", "Species")
-  rename_to   <- ifelse(effect_type == "Gamma", "traits", "species")
-  
-  matching_folders <- list.dirs(dir, recursive = FALSE, full.names = FALSE)
-  matching_folders <- matching_folders[grepl(pattern, basename(matching_folders))]
-  
-  # 2. Iterate through folders
-  outputs <- lapply(matching_folders, function(model) {
-    
-    # Construct file path
-    file_path <- file.path(dir, model, 'Results', 
-                           sprintf('%sparameter_estimates_%s_.xlsx', model, effect_type))
-    
-    # Read Posterior Mean
-    df_mean <- read_excel(file_path, sheet = 'Posterior mean')
-    
-    # Read Significance values [Pr(x>0)]
-    df_sigs <- read_excel(file_path, sheet = "Pr(x>0)")
-    
-    # Optional: Load model posteriors if needed elsewhere in your script
-    # load(file.path(dir, model, 'Models/Fitted', 'HPC_samples_0250_thin_100_chains_4.Rdata'))
-    
-    # 3. Pivot and Join
-    long_effects <- df_mean %>%
-      pivot_longer(cols = -all_of(id_col_name), 
-                   names_to = "variable", 
-                   values_to = "effect_size")
-    
-    long_sigs <- df_sigs %>%
-      pivot_longer(cols = -all_of(id_col_name), 
-                   names_to = "variable", 
-                   values_to = "sig_val")
-    
-    # 4. Merge and Mask
-    final_df <- long_effects %>%
-      left_join(long_sigs, by = c(id_col_name, "variable")) %>%
-      # Mask: sig <= 0.05 OR sig >= 0.95
-      mutate(effect_size = ifelse(sig_val > 0.05 & sig_val < 0.95, NA, effect_size)) %>%
-      # Standardize the ID column name (traits or species)
-      rename(!!rename_to := all_of(id_col_name)) %>%
-      select(-sig_val)
-    
-    # 5. Add Metadata
-    atlas_num <- as.numeric(sub(".*Atlas([0-9]+).*", "\\1", model))
-    final_df$atlas <- atlas_num
-    
-    return(final_df)
-  })
-  
-  # 6. Combine all models
-  merged <- bind_rows(outputs)
-  return(merged)
-}
-
-beta <- make_effect_sizes('HmscOutputs','2026-03-13',effect='Beta')
-gamma <- make_effect_sizes('HmscOutputs','2026-03-13',effect='Gamma')
+#### LOAD EFFECT SIZES ####
+beta <- read_parameter_effects(pattern, effect = "Beta")
+gamma <- read_parameter_effects(pattern, effect = "Gamma")
 
 n_species_total <- length(unique(beta$species))
 
@@ -360,4 +273,3 @@ final_layout
 name <- if (scaled==T) sprintf('misc-figures/%s-fig2-scaled-vp-effect-sizes.png',pattern) else sprintf('misc-figures/%s-fig2-unscaled-vp-effect-sizes.png',pattern)
 
 ggsave(name, final_layout, width = 10, height = 6)
-

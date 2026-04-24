@@ -4,38 +4,21 @@ if(!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,Hmsc,RColorBrewer,ggplot2,
                rnaturalearth,rnaturalearthdata,
                gridExtra,patchwork,sf,cowplot,parallel)
+source(file.path("support_scripts", "figure_data_helpers.R"))
 
 #### LOAD MODELS #### 
 # GET PATTERNS + MODEL NAMES 
 dir <- './HmscOutputs'
 pattern <- '2026-03-13'
-matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern,
-                                           basename(matching_folders))]
+matching_folders <- figure_model_folders(pattern = pattern, base_dir = dir)
 model <- matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-
-# LOAD MODELS
-mods <- lapply(matching_folders,function(model){
-  load(file.path(dir,model,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
-  m <- fitted_model$posteriors
-})
-names(mods) <- models_nums
-
-# LOAD DESIGNS
-designs <- lapply(mods,function(mod){
-  mod$studyDesign %>% 
-    rownames_to_column(.,var='survey') %>% 
-    left_join(.,
-              mod$ranLevels$site$s %>% rownames_to_column(.,var='site'),
-              by = 'site')
-})
+models_nums <- atlas_numbers(matching_folders)
+mods <- load_hmsc_posteriors(matching_folders, base_dir = dir)
+designs <- load_hmsc_study_designs(mods)
 
 # EMPIRICAL 
 mod <- mods[[1]]
-emps <- lapply(mods,function(mod){
-  mod$Y
-})
+emps <- load_empirical_responses(mods)
 
 #### SIMULATIONS ####
 emp_matrix <- emps[[1]]
@@ -250,5 +233,4 @@ final_layout <- wrap_plots(
 final_layout
 
 ggsave(sprintf('misc-figures/%s-sfig3-sorensen-similarity-simu-nullmodels.png',pattern),final_layout,width=5,height=10)
-
 
