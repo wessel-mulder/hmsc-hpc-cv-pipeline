@@ -4,6 +4,7 @@ remove(list=ls())
 require(Hmsc)
 require(cli)
 require(tidyverse)
+source(file.path("support_scripts", "project_paths.R"))
 
 
 #Define the plotting function
@@ -68,7 +69,7 @@ plot_CV = function(type,modelled_atlas){
 pattern2match <- "2026-02-10"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+matching_folders <- find_model_folders(pattern = pattern2match)
 
 print('starting predictions')
 for(folders2match in matching_folders){

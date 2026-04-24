@@ -5,6 +5,7 @@ require(colorspace)
 require(corrplot)
 require(writexl)
 require(cli)
+source(file.path("support_scripts", "project_paths.R"))
 
 set.seed(369)
 
@@ -14,7 +15,7 @@ set.seed(369)
 pattern2match <- "2026-02-10"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+matching_folders <- find_model_folders(pattern = pattern2match)
 folders2match <- matching_folders[1]
 for(folders2match in matching_folders){
 models_description = folders2match

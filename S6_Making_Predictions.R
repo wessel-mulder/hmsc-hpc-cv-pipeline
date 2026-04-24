@@ -5,6 +5,7 @@ require(Hmsc)
 require(ggplot2)
 require(parallel)
 require(cli)
+source(file.path("support_scripts", "project_paths.R"))
 set.seed(369)
 ### Set up directories #### Because I run this on two difference computers this
 
@@ -29,7 +30,7 @@ overwrite_prediction <- TRUE # overwrite atlas predictions if they've already be
 pattern2match <- "2026-02-10"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+matching_folders <- find_model_folders(pattern = pattern2match)
 folders2match <- matching_folders[1]
 for(folders2match in matching_folders){
 models_description = folders2match
@@ -447,4 +448,3 @@ if(file.exists(filename)){
 #   ylab = "Non-spatial RMSE",
 #   main = "Atlas 2: RMSE vs RMSE"
 # )
-

@@ -69,7 +69,7 @@ X <- X %>%
     }
   }
 # Grab species from the guild 
-if(guild_models != 'All'){
+if(guild != 'All'){
 Y <- Y %>%
   select(any_of(rownames(Tr)[Tr$foraging_guild_consensus == guild]))
 }

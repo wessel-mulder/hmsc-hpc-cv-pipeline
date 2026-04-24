@@ -2,35 +2,8 @@ print('loading packages')
 .libPaths(c("~/Rlibs", .libPaths()))
 require(Hmsc)
 require(cli)
-
-#Define the plotting function
-plot_CV = function(type){
-  #This sets the limits and values that change based on the metric, it outputs a
-  #list where item 1 is abs(lower limit), item 2 is upper limit, item 3 is vline
-  #value and item 4 is hline value
-  limit = switch(type,
-                 "RMSE"= c(rep(max(cMF[[type]],cMFCV[[type]]),2),0,0),
-                 "AUC" = c(0,1,0.5,0.5),
-                 "O.AUC" = c(0,1,0.5,0.5),
-                 c(rep(1,2),0,0))
-  plot(cMF[[type]],cMFCV[[type]],xlim=c(-limit[1],limit[2]),ylim=c(-limit[1],limit[2]),
-       xlab = "explanatory power",
-       ylab = "predictive power",
-       main=sprintf("%s:\n%s thin = %i, samples = %i\nMF: mean(%1$s) = %.4f MFSCV: mean(%1$s) = %.4f",
-                    type,modelnames,thin,samples,mean(cMF[[type]],na.rm=TRUE),
-                    mean(cMFCV[[type]],na.rm=TRUE)))
-  
-  # 
-  # main=paste0(modelnames,", thin = ",
-  #             as.character(thin),
-  #             ", samples = ",as.character(samples),
-  #             ": Tjur R2.\n",
-  #             "mean(MF) = ",as.character(mean(cMF[[type]],na.rm=TRUE)),
-  #             ", mean(MFCV) = ",as.character(mean(cMFCV[[type]],na.rm=TRUE))))
-  abline(0,1)
-  abline(v=limit[3])
-  abline(h=limit[4])
-}
+source(file.path("support_scripts", "project_paths.R"))
+source(file.path("support_scripts", "plot_helpers.R"))
 
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
@@ -38,7 +11,7 @@ plot_CV = function(type){
 pattern2match <- "2026-02-10"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+matching_folders <- find_model_folders(pattern = pattern2match)
 
 for(folders2match in matching_folders){
 models_description = folders2match
@@ -85,7 +58,7 @@ if(file.exists(filename)){
   
   for(x in names(cMF)){
     cli_progress_step("Plotting {x}")
-    plot_CV(x)
+    plot_model_fit_cv(x, cMF, cMFCV, modelnames, thin, samples)
     cli_progress_done()
   }
   dev.off()

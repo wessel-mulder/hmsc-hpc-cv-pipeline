@@ -3,5 +3,20 @@
 .RData
 .Ruserdata
 .DS_Store
-HmscOutputs
-Hmsc
+*.RData
+*.Rdata
+*.rds
+*.Rds
+
+# Large/generated model artifacts. Existing tracked files are left untouched.
+HmscOutputs/
+Hmsc/
+
+# Local notebooks and rendered scratch reports.
+*_cache/
+*_files/
+
+# Python/TensorFlow local noise.
+__pycache__/
+*.pyc
+logdir/

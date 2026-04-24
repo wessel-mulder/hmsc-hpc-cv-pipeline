@@ -7,12 +7,14 @@ require(farver)
 require(scales)
 require(Hmsc)
 require(cli)
+source(file.path("support_scripts", "project_paths.R"))
+source(file.path("support_scripts", "hmsc_helpers.R"))
 
 ### Set up directories ####
 pattern2match <- "2026-03-13_06-58-56"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+matching_folders <- find_model_folders(pattern = pattern2match)
 
 for(folders2match in matching_folders){
 models_description = folders2match
@@ -61,17 +63,7 @@ for (x in 1:length(samples_list)) {
       #There is an issue with how the HPC code outputs the Alpha values, this
       #converts the matrix it outputs into the expected vectors, a vector per
       #random factor (nr) each with elements for each latent variable (nf)
-      if(is.matrix(temp[[1]][[1]]$Alpha)){
-        cli_alert_info("Alpha is a matrix")
-        cli_progress_step("Fixing alpha issue")
-        for(i in 1:samples){
-          temp_Alpha_Mat = temp[[1]][[i]]$Alpha
-          temp[[1]][[i]]$Alpha = lapply(seq_len(nrow(temp_Alpha_Mat)), function(p) temp_Alpha_Mat[p,])
-        }
-        cli_process_done()
-      } else {
-        cli_alert_info("Alpha is not a matrix\nNo fix required")
-      }
+      temp <- fix_hpc_alpha_samples(temp, samples, verbose = TRUE)
       chainList[[y]] = temp[[1]]
       fit_times[y] = temp[[2]]
     }

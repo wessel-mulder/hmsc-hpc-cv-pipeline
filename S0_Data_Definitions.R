@@ -11,49 +11,16 @@ print('loading libraries')
 require(Hmsc)
 require(dplyr)
 require(ape)
+require(readxl)
+require(sf)
+require(stringr)
+require(tibble)
+require(tidyr)
+require(terra)
+source(file.path("support_scripts", "data_helpers.R"))
 input <- '.'
 coveragelevels <- 'good_and_average'
 min_occs <- 5
-
-
-#### support scripts  ######
-get_effort <- function(dir){
-  atlas1 <- read_excel(file.path(dir, 'effort', 'dækning atlas1+2.xlsx'), sheet = 'kvadrater atlas1')
-  atlas2 <- read_excel(file.path(dir, 'effort', 'dækning atlas1+2.xlsx'), sheet = 'kvadrater atlas2')
-  
-  atlas2 <- atlas2 %>% 
-    select(-UNDS_KODE_) %>% 
-    rename(UNDS_KODE_ = UNDS_KOD_1)
-  
-  # Load design (Note: 'design' object is overwritten here in original code)
-  # load('HmscOutputs/2026-02-10_07-03-53_All_All_Atlas3_MinOccs5/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata')
-  # design <- read.csv('Data/data/1_preprocessing/design/studyDesign.csv')
-  # xycoords <- design[design$atlas == 2, c('site', 'lat', 'lon')]
-  
-  key <- read_excel(file.path(dir, 'effort', 'dækning atlas1+2.xlsx'), sheet = 'dækning') %>% 
-    mutate(coverage = case_when(
-      UNDSKODE == 0 ~ 'Not understood',
-      UNDSKODE == 1 ~ 'Good',
-      UNDSKODE == 2 ~ 'Average',
-      UNDSKODE == 3 ~ 'Bad'
-    ))
-  
-  effort <- rbind(
-    atlas1 %>% mutate(atlas = 1),
-    atlas2 %>% mutate(atlas = 2)
-  ) %>% 
-    left_join(key %>% rename(UNDS_KODE_ = UNDSKODE), by = "UNDS_KODE_") %>% 
-    rename(site = KVADRATKOD) #%>% 
-  #left_join(xycoords, by = 'site') 
-  
-  effort$coverage <- factor(effort$coverage, levels = c('Good','Average','Bad','Not understood'))
-  
-  effort <- effort %>% 
-    mutate(survey = paste(.$site, .$atlas, sep='_')) %>% 
-    select(survey, coverage) 
-  
-  return(effort)
-} ### PREPARE COVERAGE 
 
 # LOADING DATA -----------------------------------------------------
 #### ENVIRONMENT ####
@@ -61,38 +28,16 @@ get_effort <- function(dir){
 grids_thresholds <- st_read(file.path(input,'Data/data/1_preprocessing/atlas-grids/grids-ocean-thresholds/grids_ocean_thresholds.shp'))
 thresholds <- grids_thresholds$kvdrtkd[grids_thresholds$pct_lnd>=25] ### FILTERING GRID CELLS WITH LESS
 
-effort <- get_effort(file.path(input,'Data')) %>% 
+effort <- read_effort_coverage(file.path(input,'Data')) %>% 
   ### MODIFY THIS TO EDIT THE ATLAS THRESHOLD FOR 3 WHEN I GET IT
   rbind(., data.frame(
     survey = paste(thresholds, 3, sep='_'),
     coverage = 'Good'
   ))
 
-# NAMES TO MATCH LANDUSE 
-lulc_lookup <- c(
-  "0"  = "ocean",
-  "11" = "urban",
-  "22" = "cropland",
-  "33" = "pasture",
-  "44" = "forest",
-  "55" = "grass_shrub",
-  "66" = "other",
-  "77" = "water"
-)
-
 # GET ENVIRONMENTAL VALUES 
 X <- read.csv(file.path(input,'Data/data/1_preprocessing/X_environmental/X_Environmental.csv'),row.names=1) %>%
-  rename_with(
-    .cols = matches("^LULC_"),
-    .fn = function(col) {
-      lulc_code <- stringr::str_extract(col, "\\d+")
-      paste0("perc_", lulc_lookup[lulc_code])
-    }
-  ) %>%
-  mutate(
-    perc_fresh_saltwater = perc_water + perc_ocean
-  ) %>%
-  select(-perc_other, -perc_ocean, -perc_water) %>%
+  clean_lulc_columns() %>%
   mutate(
     dominant = factor(
       names(select(., starts_with("perc_")))[
@@ -151,7 +96,7 @@ X <- X %>%
 sti <- read.csv('Data/sti/STI_Devictor.csv')
 
 my_list <- colnames(Y)
-sti$SPECIES <- gsub(" ", "_", sti$SPECIES)
+sti <- standardise_sti_species_names(sti)
 
 setdiff(my_list,sti$SPECIES)
 # astur_gentilis missing 
@@ -169,34 +114,6 @@ grep("corone", sti$SPECIES, value = TRUE)    # corvus corone --> subspecies desi
 grep("communis", sti$SPECIES, value = TRUE)  #  Sylvia communis
 # Curruca_curruca
 grep("curruca", sti$SPECIES, value = TRUE)   # often Sylvia curruca
-
-# 1. Create the translation mapping
-# Format: "Their Name" = "Your Name"
-name_map <- c(
-  "Accipiter_gentilis"       = "Astur_gentilis",
-  "Charadrius_alexandrinus"  = "Anarhynchus_alexandrinus",
-  "Larus_ridibundus"         = "Chroicocephalus_ridibundus",
-  "Corvus_monedula"          = "Coloeus_monedula",
-  "Sylvia_communis"          = "Curruca_communis",
-  "Sylvia_curruca"           = "Curruca_curruca"
-)
-
-# 2. Perform the replacement
-# We use 'match' to find which indices in their_data need updating
-sti$SPECIES <- ifelse(sti$SPECIES %in% names(name_map), 
-                      name_map[sti$SPECIES], 
-                      sti$SPECIES)
-
-sti_inter <- sti
-
-# 3. Add Corvus_cornix using the value from Corvus corone
-# This keeps 'Corvus corone' intact and creates a new entry for 'Corvus_cornix'
-if ("Corvus_corone" %in% sti_inter$SPECIES) {
-  corone_data <- sti_inter[sti_inter$SPECIES == "Corvus_corone", ]
-  corone_data$SPECIES <- "Corvus_cornix"
-  # Append this new row to the dataframe
-  sti <- rbind(sti_inter, corone_data)
-}
 
 ### CHECK IF THIS IS RIHT 
 sti[sti$SPECIES == 'Corvus_cornix',]

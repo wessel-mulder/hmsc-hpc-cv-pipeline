@@ -3,71 +3,7 @@ print('loading libraries')
 
 # This ensures any parallel workers created later inherit this path
 .libPaths(c("~/Rlibs", .libPaths()))
-
-#### ECOSPAT BOYCE FUNCTION
-#### Calculating Boyce index as in Hirzel et al. 2006
-# fit: A vector or a SpatRaster containing the predicted suitability values 
-# obs: A vector containing the predicted suitability values or xy-coordinates (if fit is a Raster-Layer) of the validation points (presence records)
-# nclass : number of classes or vector with classes threshold. If nclass=0, Boyce index is calculated with a moving window (see next parameters)
-# windows.w : width of the moving window (by default 1/10 of the suitability range)
-# res : resolution of the moving window (by default 100 focals)
-# PEplot : if True, plot the predicted to expected ratio along the suitability class
-# rm.duplicate : if TRUE, the correlation exclude successive duplicated values
-# method : correlation method used to compute the boyce index
-
-
-ecospat.boyce <- function(fit, obs, nclass = 0, window.w = "default", res = 100, 
-                          PEplot = TRUE, rm.duplicate = TRUE, method = 'spearman') {
-  
-  #### internal function calculating predicted-to-expected ratio for each class-interval
-  boycei <- function(interval, obs, fit) {
-    pi <- sum(as.numeric(obs >= interval[1] & obs <= interval[2])) / length(obs)
-    ei <- sum(as.numeric(fit >= interval[1] & fit <= interval[2])) / length(fit)
-    return(round(pi/ei,10))
-  }
-
-  
-  mini <- min(fit,obs)
-  maxi <- max(fit,obs)
-  
-  if(length(nclass)==1){
-    if (nclass == 0) { #moving window
-      if (window.w == "default") {window.w <- (max(fit) - min(fit))/10}
-      vec.mov <- seq(from = mini, to = maxi - window.w, by = (maxi - mini - window.w)/res)
-      vec.mov[res + 1] <- vec.mov[res + 1] + 1  #Trick to avoid error with closed interval in R
-      interval <- cbind(vec.mov, vec.mov + window.w)
-    } else{ #window based on nb of class
-      vec.mov <- seq(from = mini, to = maxi, by = (maxi - mini)/nclass)
-      interval <- cbind(vec.mov, c(vec.mov[-1], maxi))
-    }
-  } else{ #user defined window
-    vec.mov <- c(mini, sort(nclass[!nclass>maxi|nclass<mini]))
-    interval <- cbind(vec.mov, c(vec.mov[-1], maxi))
-  }
-  
-  f <- apply(interval, 1, boycei, obs, fit)
-  to.keep <- which(f != "NaN")  # index to keep no NaN data
-  f <- f[to.keep]
-  if (length(f) < 2) {
-    b <- NA  #at least two points are necessary to draw a correlation
-  } else {
-    r<-1:length(f)
-    if(rm.duplicate == TRUE){
-      r <- c(1:length(f))[f != c( f[-1],TRUE)]  #index to remove successive duplicates
-    }
-    b <- cor(f[r], vec.mov[to.keep][r], method = method)  # calculation of the correlation (i.e. Boyce index) after removing successive duplicated values
-  }
-  HS <- apply(interval, 1, sum)/2  # mean habitat suitability in the moving window
-  if(length(nclass)==1 & nclass == 0) {
-    HS[length(HS)] <- HS[length(HS)] - 1  #Correction of the 'trick' to deal with closed interval
-  }
-  HS <- HS[to.keep]  #exclude the NaN
-  if (PEplot == TRUE) {
-    plot(HS, f, xlab = "Habitat suitability", ylab = "Predicted/Expected ratio", col = "grey", cex = 0.75)
-    points(HS[r], f[r], pch = 19, cex = 0.75)
-  }
-  return(list(F.ratio = f, cor = round(b, 3), HS = HS))
-}
+source(file.path("support_scripts", "hmsc_helpers.R"))
 
 # Load all required libraries
 library(jsonify)
@@ -79,6 +15,7 @@ library(Hmsc)
 library(cli)
 library(vioplot)
 library(parallel)
+source(file.path("support_scripts", "project_paths.R"))
 #install.packages(c("vegan", "ecodist", "dismo"),repos = "https://cloud.r-project.org")
 #install.packages("ecospat",repos = "https://cloud.r-project.org")
 #library(ecospat)
@@ -162,13 +99,7 @@ for(Lst in length(samples_list):1){
       # Loading the RDS
       temp <- from_json(readRDS(file = temp_fitted)[[1]])
       
-      # Alpha fix logic
-      if(is.matrix(temp[[1]][[1]]$Alpha)){
-        for(z in 1:samples){
-          temp_Alpha_Mat <- temp[[1]][[z]]$Alpha
-          temp[[1]][[z]]$Alpha <- lapply(seq_len(nrow(temp_Alpha_Mat)), function(p) temp_Alpha_Mat[p,])
-        }
-      }
+      temp <- fix_hpc_alpha_samples(temp, samples)
       
       k <- idfold[i]
       
@@ -245,7 +176,7 @@ for(Lst in length(samples_list):1){
     mean_preds = apply(preds, c(1,2), mean) 
     # Loop through each species to get Boyce
     # MF$Boyce = sapply(1:ncol(hM$Y), function(i) {
-    #   ecospat.boyce(fit = mean_preds[,i], 
+    #   ecospat_boyce(fit = mean_preds[,i], 
     #                 obs = mean_preds[hM$Y[,i] == 1, i], 
     #                 nclass = 0, plot.main = FALSE)$Cor
     # })
@@ -258,7 +189,7 @@ for(Lst in length(samples_list):1){
     mean_predCV = apply(predArray, c(1,2), mean)
     # MFCV$Boyce = sapply(1:ncol(hM$Y), function(i) {
     #   # We use the actual observations from hM$Y
-    #   ecospat.boyce(fit = mean_predCV[,i], 
+    #   ecospat_boyce(fit = mean_predCV[,i], 
     #                 obs = mean_predCV[hM$Y[,i] == 1, i], 
     #                 nclass = 0, plot.main = FALSE)$Cor
     # })

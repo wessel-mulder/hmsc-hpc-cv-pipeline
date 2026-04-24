@@ -8,6 +8,7 @@ print('loading libraries')
 .libPaths(c("~/Rlibs", .libPaths()))
 require(Hmsc)
 require(jsonify)
+source(file.path("support_scripts", "project_paths.R"))
 
 ### Set up directories #### 
 
@@ -16,7 +17,7 @@ require(jsonify)
 pattern2match <- "2026-03-13_06-58-56"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+matching_folders <- find_model_folders(pattern = pattern2match)
 folders2match <- matching_folders[1]
 for(folders2match in matching_folders){
 model_description = folders2match
