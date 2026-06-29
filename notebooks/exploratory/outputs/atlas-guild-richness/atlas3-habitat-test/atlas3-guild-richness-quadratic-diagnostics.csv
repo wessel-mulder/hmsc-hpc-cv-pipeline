@@ -1,0 +1,17 @@
+"diagnostic","item","value"
+"variance_inflation_factor","hh_c",4.13004069724993
+"variance_inflation_factor","I(hh_c^2)",1.44649735716803
+"variance_inflation_factor","forest_c",4.07261028363669
+"variance_inflation_factor","I(forest_c^2)",3.87456023706601
+"variance_inflation_factor","agriculture_c",1.20648866130782
+"variance_inflation_factor","I(agriculture_c^2)",3.42293424497882
+"linear_model_residual_Moran_I",,0.19747512689937
+"linear_model_residual_Moran_p_value",,1.63038484729067e-30
+"quadratic_model_residual_Moran_I",,0.194163815571363
+"quadratic_model_residual_Moran_p_value",,1.4588622901272e-29
+"quadratic_spatial_residual_Moran_I",,-0.00863268613904703
+"quadratic_spatial_residual_Moran_p_value",,0.676501754561705
+"quadratic_spatial_lambda",,0.358019566472358
+"quadratic_spatial_lambda_p_value",,0
+"neighbour_graph_components",,17
+"isolated_grid_cells",,6

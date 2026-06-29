@@ -1,0 +1,110 @@
+---
+title: "Predicted richness, observed richness, and probabilistic Sørensen similarity"
+author: "WM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
+)
+```
+
+## Overview
+
+This supplementary figure compares model-predicted richness, observed richness, and model-observation community similarity for the three atlas periods: the 1970s, 1990s, and 2010s.
+
+The first two rows use the same richness colour scale as Figure 1, so predicted and observed maps can be compared directly. The third row shows the difference between predicted and observed richness. The final row shows probabilistic Sørensen similarity between the predicted community and the observed community in each grid cell.
+
+```{r figure, out.width="100%"}
+knitr::include_graphics("outputs/supplementary/2026-03-13-sfig4-richness-sorenson-similarity.png")
+```
+
+## Panel Guide
+
+**Predicted richness**
+
+The first row shows predicted species richness for each atlas period. For each grid cell, predicted richness is calculated as the sum of the modelled species occurrence probabilities across all species:
+
+$$
+\hat{R}_j = \sum_i p_{ij}
+$$
+
+where \(p_{ij}\) is the predicted probability of occurrence for species \(i\) in grid cell \(j\). This is an expected richness measure, rather than a thresholded count of predicted presences.
+
+**Observed richness**
+
+The second row shows empirical richness from the observed presence-absence matrix. For each grid cell, observed richness is the number of species recorded as present:
+
+$$
+R_j = \sum_i y_{ij}
+$$
+
+where \(y_{ij}\) is 1 when species \(i\) was observed in grid cell \(j\), and 0 otherwise.
+
+**Richness difference**
+
+The third row shows predicted minus observed richness:
+
+$$
+\Delta R_j = \hat{R}_j - R_j
+$$
+
+Positive values indicate that the model predicts more species than were observed in that grid cell. Negative values indicate that the model predicts fewer species than were observed. The colour scale is centred on zero, with red indicating overprediction and blue indicating underprediction.
+
+**Community similarity**
+
+The fourth row shows a probabilistic Sørensen index comparing the predicted and observed communities in each grid cell. This index follows Scherrer, Mod, and Guisan's threshold-free framework for evaluating community predictions, where predicted probabilities are compared directly with observed presence-absence communities rather than first converting probabilities into binary presences.
+
+For each grid cell, the observed species are first identified. The predicted probabilities for those observed species are then used to calculate similarity, while accounting for other species that the model predicted with at least as much support as the least-supported observed species. This follows the same logic used in `sfig2-sorensen-similarity.R`.
+
+In simplified notation, if \(S_j\) is the set of species observed in grid cell \(j\), and \(m_j\) is the minimum predicted probability among those observed species:
+
+$$
+m_j = \min_{i \in S_j} p_{ij}
+$$
+
+then the comparison set \(A_j\) contains species with predicted probabilities at least as high as this minimum:
+
+$$
+A_j = \{i : p_{ij} \ge m_j\}
+$$
+
+The plotted index is:
+
+$$
+\frac{2 \sum_{i \in S_j} p_{ij}}
+{2 \sum_{i \in S_j} p_{ij} + \sum_{i \in A_j} p_{ij}}
+$$
+
+Higher values indicate that the model assigns more probability mass to the species that were actually observed, relative to other species with comparable or higher predicted support.
+
+## Quick Checks
+
+The diagnostics below confirm that predicted and observed richness are not identical, although they are highly correlated. They also confirm that the probabilistic Sørensen index is not equal to 1 across all sites.
+
+```{r diagnostics}
+diagnostics <- tibble::tribble(
+  ~atlas, ~n_sites, ~predicted_richness_range, ~observed_richness_range, ~mean_abs_richness_difference, ~max_abs_richness_difference, ~richness_correlation, ~sorensen_range, ~sorensen_mean,
+  "1970s", 1776, "19.11-97.01", "15-102", 1.35, 10.20, 0.994, "0.463-0.656", 0.608,
+  "1990s", 1850, "18.42-102.53", "13-105", 1.46, 9.82, 0.993, "0.391-0.658", 0.616,
+  "2010s", 1904, "13.54-102.38", "8-111", 1.50, 8.62, 0.991, "0.490-0.659", 0.616
+)
+
+knitr::kable(
+  diagnostics,
+  digits = 3,
+  caption = "Quick checks from the data used to generate the figure."
+)
+```
+
+## Reference
+
+Scherrer, D., Mod, H. K., & Guisan, A. (2020). How to evaluate community predictions without thresholding? *Methods in Ecology and Evolution*, 11(1), 51-63. https://doi.org/10.1111/2041-210X.13312

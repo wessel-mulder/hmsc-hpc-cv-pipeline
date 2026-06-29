@@ -1,0 +1,1243 @@
+---
+title: "Empirical Atlas Richness and Turnover"
+author: "WM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  dev = "png"
+)
+knitr::opts_knit$set(root.dir = normalizePath("../.."))
+```
+
+```{r libraries}
+suppressPackageStartupMessages({
+  library(cowplot)
+  library(dplyr)
+  library(ggplot2)
+  library(sf)
+})
+```
+
+## Overview
+
+This report uses empirical atlas presences from the raw occurrence matrix, not
+HMSC predictions. The saved model-input files are used only to define the
+survey rows and retained species for each coverage filter.
+
+First, the analysis is shown for the `Good/Fair` coverage set, which matches
+the current model input. Then the same analysis is repeated for `Good` coverage
+only, so we can see whether stricter sampling coverage changes the spatial
+richness, delta richness, species-level turnover, and guild-level patterns.
+
+Sampling-effort estimates are only available for Atlas 1 and Atlas 2. For Atlas
+3, the visualisations therefore include all available Atlas 3 sites from the
+preprocessed atlas data rather than applying a `Good` or `Fair` effort
+filter. In the shared-site analyses, a site is retained only if it appears in
+all three atlas periods after applying the Atlas 1/2 coverage filter and the
+unfiltered Atlas 3 site set.
+
+All richness maps count observed atlas presences for retained species. Delta
+maps and turnover summaries use only grid cells present in all three atlas
+periods within each coverage filter.
+
+Species-level change classes are based on the change in the proportion of
+shared grid cells occupied by each species. A species is classified as
+`Increase` when the later atlas occupies at least `0.10` more of the shared
+grid-cell set than the earlier atlas, `Decrease` when it occupies at least
+`0.10` less, and `Stable` otherwise. In plain terms, this is a 10
+percentage-point threshold in occupied shared grid cells.
+
+```{r constants-paths}
+grid_threshold_path <- file.path(
+  "Data", "data", "1_preprocessing", "atlas-grids",
+  "grids-ocean-thresholds", "grids_ocean_thresholds.shp"
+)
+
+occurrence_path <- file.path(
+  "Data", "data", "1_preprocessing", "Y_occurrences", "Y_occurrences.csv"
+)
+
+model_input_good_average_path <- file.path(
+  "Data", "preprocessed_data_min_occs_is_5_coverage_is_good_and_average.RData"
+)
+
+model_input_good_path <- file.path(
+  "Data", "preprocessed_data_min_occs_is_5_coverage_is_good.RData"
+)
+
+traits_path <- file.path(
+  "Data", "data", "1_preprocessing", "Tr_aits", "traits-guild_migration.csv"
+)
+
+traits_common_name_path <- file.path(
+  "Data", "data", "0_traits", "birdTraits-merged-subset.csv"
+)
+
+sti_common_name_path <- file.path("Data", "sti", "STI_Devictor.csv")
+
+out_dir <- file.path(
+  "notebooks", "exploratory", "outputs", "shared-site-richness-turnover"
+)
+plot_dir <- file.path(out_dir, "plots")
+
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
+
+atlas_lookup <- c(
+  "1" = "1970s",
+  "2" = "1990s",
+  "3" = "2010s"
+)
+
+comparisons <- data.frame(
+  comparison_id = c("1990s_minus_1970s", "2010s_minus_1990s"),
+  comparison_label = c("1990s minus 1970s", "2010s minus 1990s"),
+  start_atlas = c("1", "2"),
+  end_atlas = c("2", "3"),
+  stringsAsFactors = FALSE
+)
+
+coverage_definitions <- list(
+  good_average = list(
+    coverage_id = "good_average",
+    coverage_label = "Good/Fair",
+    model_input_path = model_input_good_average_path
+  ),
+  good = list(
+    coverage_id = "good",
+    coverage_label = "Good",
+    model_input_path = model_input_good_path
+  )
+)
+
+period_levels <- unname(atlas_lookup)
+species_change_levels <- c("Decrease", "Stable", "Increase")
+species_change_threshold <- 0.10
+
+richness_palette <- rev(grDevices::rainbow(14, start = 0, end = 0.78))
+richness_quantile_probs <- c(0, 0.10, 0.25, 0.50, 0.75, 0.90, 1)
+class_colours <- c(
+  "Decrease" = "#B2182B",
+  "Stable" = "grey72",
+  "Increase" = "#1A9850"
+)
+
+mainland_bbox <- c(
+  xmin = 400000,
+  xmax = 750000,
+  ymin = 6000000,
+  ymax = 6450000
+)
+
+bornholm_bbox <- c(
+  xmin = 855000,
+  xmax = 905000,
+  ymin = 6100000,
+  ymax = 6160000
+)
+
+mainland_width <- mainland_bbox["xmax"] - mainland_bbox["xmin"]
+mainland_height <- mainland_bbox["ymax"] - mainland_bbox["ymin"]
+bornholm_width <- bornholm_bbox["xmax"] - bornholm_bbox["xmin"]
+bornholm_height <- bornholm_bbox["ymax"] - bornholm_bbox["ymin"]
+
+bornholm_inset_width <- bornholm_width / mainland_width
+bornholm_inset_height <- bornholm_height / mainland_height
+```
+
+```{r helpers}
+survey_ids <- function(sites, atlas) {
+  paste(sites, atlas, sep = "_")
+}
+
+percent_label <- function(x, accuracy = 1) {
+  paste0(round(100 * x, accuracy), "%")
+}
+
+plot_sf_panel_with_bornholm <- function(panel_data, fill_col, fill_scale,
+                                        panel_title) {
+  # Match the publication map layout: mainland is the main map and Bornholm is
+  # shown as a small bordered inset using the same fill scale.
+  p_main <- ggplot(panel_data) +
+    geom_sf(
+      aes(fill = .data[[fill_col]]),
+      colour = "white",
+      linewidth = 0.04
+    ) +
+    fill_scale() +
+    coord_sf(
+      xlim = c(mainland_bbox["xmin"], mainland_bbox["xmax"]),
+      ylim = c(mainland_bbox["ymin"], mainland_bbox["ymax"]),
+      expand = FALSE
+    ) +
+    labs(title = panel_title) +
+    theme_void(base_size = 11) +
+    theme(
+      legend.position = "none",
+      plot.title = element_text(
+        hjust = 0.5,
+        face = "bold",
+        colour = "grey15",
+        size = 12
+      ),
+      plot.background = element_rect(fill = "white", colour = NA)
+    )
+
+  p_inset <- ggplot(panel_data) +
+    geom_sf(
+      aes(fill = .data[[fill_col]]),
+      colour = "white",
+      linewidth = 0.04
+    ) +
+    fill_scale() +
+    coord_sf(
+      xlim = c(bornholm_bbox["xmin"], bornholm_bbox["xmax"]),
+      ylim = c(bornholm_bbox["ymin"], bornholm_bbox["ymax"]),
+      expand = FALSE
+    ) +
+    theme_void(base_size = 9) +
+    theme(
+      legend.position = "none",
+      plot.background = element_rect(fill = "white", colour = NA),
+      panel.border = element_rect(colour = "grey35", fill = NA, linewidth = 0.5)
+    )
+
+  ggdraw(p_main) +
+    draw_plot(
+      p_inset,
+      x = 1 - bornholm_inset_width - 0.2,
+      y = 1 - bornholm_inset_height - 0.2,
+      width = bornholm_inset_width,
+      height = bornholm_inset_height
+    )
+}
+
+plot_sf_series_with_bornholm <- function(plot_data, panel_col, fill_col,
+                                         fill_scale, plot_title,
+                                         plot_subtitle = "") {
+  if (is.factor(plot_data[[panel_col]])) {
+    panel_values <- levels(plot_data[[panel_col]])
+    panel_values <- panel_values[panel_values %in% as.character(plot_data[[panel_col]])]
+  } else {
+    panel_values <- unique(plot_data[[panel_col]])
+  }
+  panel_values <- panel_values[!is.na(panel_values)]
+
+  panel_plots <- lapply(panel_values, function(panel_value) {
+    panel_data <- plot_data[plot_data[[panel_col]] == panel_value, ]
+    plot_sf_panel_with_bornholm(
+      panel_data = panel_data,
+      fill_col = fill_col,
+      fill_scale = fill_scale,
+      panel_title = as.character(panel_value)
+    )
+  })
+
+  legend_plot <- ggplot(plot_data) +
+    geom_sf(aes(fill = .data[[fill_col]]), colour = "white", linewidth = 0.04) +
+    fill_scale() +
+    theme_void(base_size = 10) +
+    theme(
+      legend.position = "bottom",
+      legend.key.width = unit(1.7, "cm")
+    )
+
+  title_block <- ggdraw() +
+    draw_label(
+      plot_title,
+      x = 0.02,
+      y = ifelse(plot_subtitle == "", 0.5, 0.72),
+      hjust = 0,
+      fontface = "bold",
+      size = 13,
+      colour = "grey15"
+    ) +
+    draw_label(
+      plot_subtitle,
+      x = 0.02,
+      y = 0.32,
+      hjust = 0,
+      size = 9.5,
+      colour = "grey30"
+    )
+
+  plot_grid(
+    title_block,
+    plot_grid(plotlist = panel_plots, nrow = 1),
+    get_legend(legend_plot),
+    ncol = 1,
+    rel_heights = c(0.12, 0.82, 0.11)
+  )
+}
+
+load_model_input_definition <- function(coverage_definition) {
+  model_env <- new.env(parent = emptyenv())
+  load(coverage_definition$model_input_path, envir = model_env)
+
+  if (!all(c("Y", "Design", "Tr") %in% ls(model_env))) {
+    stop(
+      "Expected Y, Design, and Tr in ",
+      coverage_definition$model_input_path,
+      call. = FALSE
+    )
+  }
+
+  if (!setequal(rownames(model_env$Y), rownames(model_env$Design))) {
+    stop(
+      "Y and Design do not contain the same survey rows in ",
+      coverage_definition$model_input_path,
+      call. = FALSE
+    )
+  }
+
+  if (!setequal(colnames(model_env$Y), rownames(model_env$Tr))) {
+    stop(
+      "Y species columns and Tr rows do not contain the same species in ",
+      coverage_definition$model_input_path,
+      call. = FALSE
+    )
+  }
+
+  design <- model_env$Design[rownames(model_env$Y), , drop = FALSE]
+
+  list(
+    coverage_id = coverage_definition$coverage_id,
+    coverage_label = coverage_definition$coverage_label,
+    surveys = rownames(model_env$Y),
+    species = colnames(model_env$Y),
+    design = data.frame(
+      survey = rownames(model_env$Y),
+      site = as.character(design$site),
+      atlas = as.character(design$atlas),
+      stringsAsFactors = FALSE
+    )
+  )
+}
+
+build_richness_frame <- function(y, sites, species, atlas, species_pool_size) {
+  y_atlas <- y[
+    survey_ids(sites, atlas),
+    species,
+    drop = FALSE
+  ]
+
+  data.frame(
+    site = sites,
+    survey = survey_ids(sites, atlas),
+    atlas = atlas,
+    period = unname(atlas_lookup[[atlas]]),
+    species_richness = rowSums(y_atlas, na.rm = TRUE),
+    retained_species_pool_size = species_pool_size,
+    stringsAsFactors = FALSE
+  )
+}
+
+build_comparison_delta <- function(comparison, richness_df) {
+  start_period <- unname(atlas_lookup[[comparison$start_atlas]])
+  end_period <- unname(atlas_lookup[[comparison$end_atlas]])
+
+  start_df <- richness_df |>
+    filter(.data$atlas == .env$comparison$start_atlas) |>
+    arrange(.data$site)
+
+  end_df <- richness_df |>
+    filter(.data$atlas == .env$comparison$end_atlas) |>
+    arrange(.data$site)
+
+  if (!identical(start_df$site, end_df$site)) {
+    stop("Site order mismatch for ", comparison$comparison_label, call. = FALSE)
+  }
+
+  data.frame(
+    comparison_id = comparison$comparison_id,
+    comparison_label = comparison$comparison_label,
+    start_period = start_period,
+    end_period = end_period,
+    site = start_df$site,
+    start_richness = start_df$species_richness,
+    end_richness = end_df$species_richness,
+    delta_richness = end_df$species_richness - start_df$species_richness,
+    stringsAsFactors = FALSE
+  )
+}
+
+build_species_change <- function(comparison, y, shared_sites, retained_species,
+                                 species_counts_by_atlas, traits) {
+  start_period <- unname(atlas_lookup[[comparison$start_atlas]])
+  end_period <- unname(atlas_lookup[[comparison$end_atlas]])
+
+  start_y <- y[
+    survey_ids(shared_sites, comparison$start_atlas),
+    retained_species,
+    drop = FALSE
+  ]
+
+  end_y <- y[
+    survey_ids(shared_sites, comparison$end_atlas),
+    retained_species,
+    drop = FALSE
+  ]
+
+  data.frame(
+    comparison_id = comparison$comparison_id,
+    comparison_label = comparison$comparison_label,
+    start_period = start_period,
+    end_period = end_period,
+    species = retained_species,
+    occupied_grid_cells_start = as.integer(colSums(start_y > 0, na.rm = TRUE)),
+    occupied_grid_cells_end = as.integer(colSums(end_y > 0, na.rm = TRUE)),
+    n_shared_grid_cells = length(shared_sites),
+    records_1970s = as.integer(species_counts_by_atlas[retained_species, "1"]),
+    records_1990s = as.integer(species_counts_by_atlas[retained_species, "2"]),
+    records_2010s = as.integer(species_counts_by_atlas[retained_species, "3"]),
+    stringsAsFactors = FALSE
+  ) |>
+    mutate(
+      prop_occupied_start = .data$occupied_grid_cells_start / .data$n_shared_grid_cells,
+      prop_occupied_end = .data$occupied_grid_cells_end / .data$n_shared_grid_cells,
+      delta_occupied_grid_cells = .data$occupied_grid_cells_end - .data$occupied_grid_cells_start,
+      delta_occupancy_proportion = .data$prop_occupied_end - .data$prop_occupied_start,
+      delta_occupancy_percentage_points = 100 * .data$delta_occupancy_proportion,
+      change_class = case_when(
+        .data$delta_occupancy_proportion >= species_change_threshold ~ "Increase",
+        .data$delta_occupancy_proportion <= -species_change_threshold ~ "Decrease",
+        TRUE ~ "Stable"
+      ),
+      change_class = factor(.data$change_class, levels = species_change_levels)
+    ) |>
+    left_join(traits, by = "species") |>
+    mutate(
+      foraging_guild_consensus = ifelse(
+        is.na(.data$foraging_guild_consensus) | .data$foraging_guild_consensus == "",
+        "Unknown",
+        .data$foraging_guild_consensus
+      )
+    ) |>
+    arrange(
+      .data$comparison_id,
+      .data$change_class,
+      desc(abs(.data$delta_occupancy_percentage_points)),
+      .data$species
+    )
+}
+
+build_coverage_analysis <- function(coverage_definition, raw_y, traits, grid_thresholds) {
+  definition <- load_model_input_definition(coverage_definition)
+
+  missing_surveys <- setdiff(definition$surveys, rownames(raw_y))
+  if (length(missing_surveys) > 0) {
+    stop(
+      "Some retained surveys are absent from the raw atlas occurrence matrix: ",
+      paste(head(missing_surveys, 10), collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  missing_species <- setdiff(definition$species, colnames(raw_y))
+  if (length(missing_species) > 0) {
+    stop(
+      "Some retained species are absent from the raw atlas occurrence matrix: ",
+      paste(head(missing_species, 10), collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  # This is the key step for keeping the report empirical: counts are
+  # recomputed from Y_occurrences.csv after applying the model-input survey and
+  # species definitions.
+  empirical_y <- raw_y[definition$surveys, definition$species, drop = FALSE]
+
+  all_richness <- definition$design |>
+    mutate(
+      period = unname(atlas_lookup[.data$atlas]),
+      species_richness = rowSums(empirical_y, na.rm = TRUE),
+      retained_species_pool_size = length(definition$species),
+      period = factor(.data$period, levels = period_levels)
+    ) |>
+    arrange(.data$atlas, .data$site)
+
+  sites_by_atlas <- lapply(names(atlas_lookup), function(atlas) {
+    all_richness |>
+      filter(.data$atlas == .env$atlas) |>
+      pull(.data$site)
+  })
+  names(sites_by_atlas) <- names(atlas_lookup)
+
+  grid_sites <- as.character(grid_thresholds$kvdrtkd)
+  shared_sites <- grid_sites[grid_sites %in% Reduce(intersect, sites_by_atlas)]
+
+  shared_surveys <- unlist(
+    lapply(names(atlas_lookup), function(atlas) survey_ids(shared_sites, atlas)),
+    use.names = FALSE
+  )
+
+  missing_shared_surveys <- setdiff(shared_surveys, rownames(empirical_y))
+  if (length(missing_shared_surveys) > 0) {
+    stop(
+      "Some shared-site surveys are absent after coverage filtering: ",
+      paste(head(missing_shared_surveys, 10), collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  shared_richness <- bind_rows(
+    lapply(names(atlas_lookup), function(atlas) {
+      build_richness_frame(
+        y = empirical_y,
+        sites = shared_sites,
+        species = definition$species,
+        atlas = atlas,
+        species_pool_size = length(definition$species)
+      )
+    })
+  ) |>
+    mutate(period = factor(.data$period, levels = period_levels)) |>
+    arrange(.data$atlas, match(.data$site, shared_sites))
+
+  delta_df <- bind_rows(
+    lapply(seq_len(nrow(comparisons)), function(i) {
+      build_comparison_delta(comparisons[i, ], shared_richness)
+    })
+  ) |>
+    mutate(comparison_label = factor(.data$comparison_label, levels = comparisons$comparison_label))
+
+  species_counts_by_atlas <- sapply(
+    names(atlas_lookup),
+    function(atlas) {
+      colSums(
+        empirical_y[survey_ids(shared_sites, atlas), definition$species, drop = FALSE],
+        na.rm = TRUE
+      )
+    }
+  )
+
+  species_occupancy <- bind_rows(
+    lapply(seq_len(nrow(comparisons)), function(i) {
+      build_species_change(
+        comparison = comparisons[i, ],
+        y = empirical_y,
+        shared_sites = shared_sites,
+        retained_species = definition$species,
+        species_counts_by_atlas = species_counts_by_atlas,
+        traits = traits
+      )
+    })
+  )
+
+  species_top_change <- species_occupancy |>
+    filter(.data$change_class != "Stable") |>
+    arrange(.data$comparison_id, desc(abs(.data$delta_occupancy_percentage_points)))
+
+  species_class_proportions <- data.frame(
+    comparison_id = rep(comparisons$comparison_id, each = length(species_change_levels)),
+    change_class = rep(species_change_levels, times = nrow(comparisons)),
+    stringsAsFactors = FALSE
+  ) |>
+    left_join(
+      species_occupancy |>
+        count(.data$comparison_id, .data$change_class, name = "n_species") |>
+        mutate(change_class = as.character(.data$change_class)),
+      by = c("comparison_id", "change_class")
+    ) |>
+    left_join(
+      comparisons |>
+        select("comparison_id", "comparison_label"),
+      by = "comparison_id"
+    ) |>
+    group_by(.data$comparison_id, .data$comparison_label) |>
+    mutate(
+      n_species = ifelse(is.na(.data$n_species), 0L, .data$n_species),
+      total_species = sum(.data$n_species),
+      proportion_species = .data$n_species / .data$total_species,
+      change_class = factor(.data$change_class, levels = species_change_levels)
+    ) |>
+    ungroup()
+
+  guild_class_grid <- expand.grid(
+    comparison_id = comparisons$comparison_id,
+    foraging_guild_consensus = sort(unique(species_occupancy$foraging_guild_consensus)),
+    change_class = species_change_levels,
+    stringsAsFactors = FALSE
+  )
+
+  guild_class_proportions <- guild_class_grid |>
+    left_join(
+      species_occupancy |>
+        count(
+          .data$comparison_id,
+          .data$foraging_guild_consensus,
+          .data$change_class,
+          name = "n_species"
+        ) |>
+        mutate(change_class = as.character(.data$change_class)),
+      by = c("comparison_id", "foraging_guild_consensus", "change_class")
+    ) |>
+    left_join(
+      comparisons |>
+        select("comparison_id", "comparison_label"),
+      by = "comparison_id"
+    ) |>
+    mutate(n_species = ifelse(is.na(.data$n_species), 0L, .data$n_species)) |>
+    group_by(.data$comparison_id, .data$comparison_label, .data$foraging_guild_consensus) |>
+    mutate(
+      guild_species_count = sum(.data$n_species),
+      proportion_within_guild = .data$n_species / .data$guild_species_count
+    ) |>
+    ungroup() |>
+    mutate(change_class = factor(.data$change_class, levels = species_change_levels))
+
+  guild_order <- guild_class_proportions |>
+    group_by(.data$foraging_guild_consensus) |>
+    summarise(
+      mean_increase = mean(
+        ifelse(.data$change_class == "Increase", .data$proportion_within_guild, NA),
+        na.rm = TRUE
+      ),
+      mean_decrease = mean(
+        ifelse(.data$change_class == "Decrease", .data$proportion_within_guild, NA),
+        na.rm = TRUE
+      ),
+      net_change_signal = .data$mean_increase - .data$mean_decrease,
+      .groups = "drop"
+    ) |>
+    arrange(.data$net_change_signal, .data$foraging_guild_consensus) |>
+    pull(.data$foraging_guild_consensus)
+
+  guild_class_proportions <- guild_class_proportions |>
+    mutate(foraging_guild_consensus = factor(.data$foraging_guild_consensus, levels = guild_order))
+
+  guild_label_order <- guild_class_proportions |>
+    distinct(.data$foraging_guild_consensus, .data$guild_species_count) |>
+    arrange(.data$foraging_guild_consensus) |>
+    mutate(
+      foraging_guild_label = paste0(
+        as.character(.data$foraging_guild_consensus),
+        " (n=",
+        .data$guild_species_count,
+        ")"
+      )
+    )
+
+  guild_class_proportions <- guild_class_proportions |>
+    left_join(
+      guild_label_order,
+      by = c("foraging_guild_consensus", "guild_species_count")
+    ) |>
+    mutate(
+      foraging_guild_label = factor(
+        .data$foraging_guild_label,
+        levels = guild_label_order$foraging_guild_label
+      )
+    )
+
+  guild_sum_check <- guild_class_proportions |>
+    group_by(.data$comparison_id, .data$foraging_guild_consensus) |>
+    summarise(total = sum(.data$proportion_within_guild), .groups = "drop")
+
+  if (any(abs(guild_sum_check$total - 1) > 1e-8)) {
+    stop("At least one guild-normalized class proportion does not sum to 1.", call. = FALSE)
+  }
+
+  list(
+    coverage_id = definition$coverage_id,
+    coverage_label = definition$coverage_label,
+    retained_species = definition$species,
+    all_richness = all_richness,
+    shared_sites = shared_sites,
+    shared_richness = shared_richness,
+    delta_df = delta_df,
+    species_occupancy = species_occupancy,
+    species_top_change = species_top_change,
+    species_class_proportions = species_class_proportions,
+    guild_class_proportions = guild_class_proportions
+  )
+}
+
+write_analysis_tables <- function(analysis) {
+  prefix <- file.path(
+    out_dir,
+    paste0("empirical-atlas-", analysis$coverage_id)
+  )
+
+  write.csv(
+    analysis$all_richness,
+    paste0(prefix, "-richness-all-sites.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+  write.csv(
+    analysis$shared_richness,
+    paste0(prefix, "-richness-shared-sites.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+  write.csv(
+    analysis$delta_df,
+    paste0(prefix, "-delta-richness-shared-sites.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+  write.csv(
+    analysis$species_occupancy,
+    paste0(prefix, "-species-occupancy-change.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+  write.csv(
+    analysis$species_top_change,
+    paste0(prefix, "-species-top-gains-losses.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+  write.csv(
+    analysis$species_class_proportions,
+    paste0(prefix, "-species-change-class-proportions.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+  write.csv(
+    analysis$guild_class_proportions,
+    paste0(prefix, "-guild-normalized-change-class-proportions.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+}
+
+build_richness_scale <- function(plot_data, reference_period = "1970s") {
+  # Allocate the colour gradient according to the reference-period
+  # distribution, then preserve that exact mapping for every later period.
+  reference_values <- plot_data$species_richness[
+    as.character(plot_data$period) == reference_period
+  ]
+  all_values <- plot_data$species_richness
+
+  reference_breaks <- reference_values |>
+    quantile(
+      probs = richness_quantile_probs,
+      na.rm = TRUE,
+      names = FALSE
+    ) |>
+    round() |>
+    unique() |>
+    sort()
+
+  scale_limits <- range(all_values, na.rm = TRUE)
+  colour_anchors <- sort(unique(c(scale_limits, reference_breaks)))
+  anchor_colours <- grDevices::colorRampPalette(richness_palette)(
+    length(colour_anchors)
+  )
+
+  scale_fill_gradientn(
+    colours = anchor_colours,
+    values = scales::rescale(colour_anchors, from = scale_limits),
+    limits = scale_limits,
+    breaks = reference_breaks,
+    labels = reference_breaks,
+    oob = scales::squish,
+    name = paste0("Observed richness\n(", reference_period, " quantiles)")
+  )
+}
+
+plot_empirical_richness <- function(plot_data, title, subtitle) {
+  plot_sf_series_with_bornholm(
+    plot_data = plot_data,
+    panel_col = "period",
+    fill_col = "species_richness",
+    fill_scale = function() {
+      build_richness_scale(plot_data)
+    },
+    plot_title = title,
+    plot_subtitle = subtitle
+  )
+}
+
+plot_delta_richness <- function(plot_data, title, subtitle, delta_limit) {
+  plot_sf_series_with_bornholm(
+    plot_data = plot_data,
+    panel_col = "comparison_label",
+    fill_col = "delta_richness",
+    fill_scale = function() {
+      scale_fill_gradient2(
+        low = "#2C7BB6",
+        mid = "white",
+        high = "#D7191C",
+        midpoint = 0,
+        limits = c(-delta_limit, delta_limit),
+        name = "Delta\nrichness"
+      )
+    },
+    plot_title = title,
+    plot_subtitle = subtitle
+  )
+}
+
+plot_species_class_proportions <- function(analysis) {
+  ggplot(
+    analysis$species_class_proportions,
+    aes(x = .data$change_class, y = .data$proportion_species, fill = .data$change_class)
+  ) +
+    geom_col(width = 0.68, colour = "grey25", linewidth = 0.25) +
+    geom_text(
+      aes(label = paste0(.data$n_species, "\n", percent_label(.data$proportion_species))),
+      vjust = -0.25,
+      size = 3.3,
+      lineheight = 0.9
+    ) +
+    facet_wrap(vars(.data$comparison_label), nrow = 1) +
+    scale_fill_manual(values = class_colours, guide = "none") +
+    scale_y_continuous(
+      labels = percent_label,
+      limits = c(0, max(analysis$species_class_proportions$proportion_species) * 1.20),
+      expand = c(0, 0)
+    ) +
+    labs(
+      x = NULL,
+      y = "Proportion of retained species",
+      title = paste0(
+        "Species occupancy-change classes: ",
+        analysis$coverage_label,
+        " coverage"
+      )
+    ) +
+    theme_minimal(base_size = 11) +
+    theme(
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(face = "bold"),
+      strip.text = element_text(face = "bold"),
+      axis.text.x = element_text(colour = "grey20")
+    )
+}
+
+plot_species_top_changes <- function(analysis) {
+  species_top_change_plot_df <- analysis$species_occupancy |>
+    filter(.data$change_class != "Stable") |>
+    group_by(.data$comparison_label, .data$change_class) |>
+    arrange(desc(abs(.data$delta_occupancy_percentage_points)), .by_group = TRUE) |>
+    slice_head(n = 12) |>
+    ungroup() |>
+    group_by(.data$comparison_label) |>
+    arrange(.data$delta_occupancy_percentage_points, .by_group = TRUE) |>
+    mutate(
+      species_label = .data$species_english,
+      species_panel_label = paste(.data$comparison_label, .data$species_label, sep = " | ")
+    ) |>
+    ungroup()
+
+  species_top_change_plot_df$species_panel_label <- factor(
+    species_top_change_plot_df$species_panel_label,
+    levels = species_top_change_plot_df$species_panel_label
+  )
+
+  ggplot(
+    species_top_change_plot_df,
+    aes(
+      x = .data$delta_occupancy_percentage_points,
+      y = .data$species_panel_label,
+      fill = .data$change_class
+    )
+  ) +
+    geom_vline(xintercept = 0, colour = "grey45", linewidth = 0.4) +
+    geom_col(width = 0.72) +
+    facet_wrap(vars(.data$comparison_label), scales = "free_y", nrow = 1) +
+    scale_fill_manual(values = class_colours, name = NULL) +
+    scale_x_continuous(labels = function(x) paste0(x, "%")) +
+    scale_y_discrete(labels = function(x) sub("^.* \\| ", "", x)) +
+    labs(
+      x = "Change in occupied shared sites",
+      y = NULL,
+      title = paste0(
+        "Largest species-level occupancy changes: ",
+        analysis$coverage_label,
+        " coverage"
+      )
+    ) +
+    theme_minimal(base_size = 10.2) +
+    theme(
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(face = "bold"),
+      strip.text = element_text(face = "bold"),
+      legend.position = "bottom",
+      axis.text.y = element_text(colour = "grey20", size = 7.2)
+    )
+}
+
+plot_guild_class_proportions <- function(analysis) {
+  ggplot(
+    analysis$guild_class_proportions,
+    aes(
+      x = .data$foraging_guild_label,
+      y = .data$proportion_within_guild,
+      fill = .data$change_class
+    )
+  ) +
+    geom_col(width = 0.72, colour = "white", linewidth = 0.15) +
+    coord_flip() +
+    facet_wrap(vars(.data$comparison_label), nrow = 1) +
+    scale_fill_manual(values = class_colours, name = NULL) +
+    scale_y_continuous(labels = percent_label, expand = expansion(mult = c(0, 0.02))) +
+    labs(
+      x = NULL,
+      y = "Within-guild proportion of retained species",
+      title = paste0(
+        "Occupancy-change classes by foraging guild: ",
+        analysis$coverage_label,
+        " coverage"
+      )
+    ) +
+    theme_minimal(base_size = 10.2) +
+    theme(
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.spacing.x = unit(1.2, "cm"),
+      plot.title = element_text(face = "bold"),
+      strip.text = element_text(face = "bold"),
+      legend.position = "bottom",
+      axis.text.y = element_text(colour = "grey20", size = 7.2),
+      plot.margin = margin(10, 28, 10, 10)
+    )
+}
+
+build_plot_data <- function(analysis, grid_thresholds) {
+  all_richness_sf <- grid_thresholds |>
+    select("kvdrtkd") |>
+    inner_join(analysis$all_richness, by = c("kvdrtkd" = "site")) |>
+    mutate(period = factor(.data$period, levels = period_levels))
+
+  shared_grid_sf <- grid_thresholds |>
+    select("kvdrtkd") |>
+    filter(.data$kvdrtkd %in% analysis$shared_sites) |>
+    mutate(kvdrtkd = factor(.data$kvdrtkd, levels = analysis$shared_sites)) |>
+    arrange(.data$kvdrtkd)
+
+  if (!identical(as.character(shared_grid_sf$kvdrtkd), analysis$shared_sites)) {
+    stop("Shared grid polygons are not ordered like the shared site vector.", call. = FALSE)
+  }
+
+  shared_richness_sf <- shared_grid_sf |>
+    inner_join(analysis$shared_richness, by = c("kvdrtkd" = "site"))
+
+  delta_sf <- shared_grid_sf |>
+    inner_join(analysis$delta_df, by = c("kvdrtkd" = "site")) |>
+    mutate(comparison_label = factor(.data$comparison_label, levels = comparisons$comparison_label))
+
+  list(
+    all_richness_sf = all_richness_sf,
+    shared_richness_sf = shared_richness_sf,
+    delta_sf = delta_sf
+  )
+}
+
+save_analysis_plots <- function(analysis, plot_data, delta_limit) {
+  plot_prefix <- file.path(
+    plot_dir,
+    paste0("empirical-atlas-", analysis$coverage_id)
+  )
+
+  all_sites_map <- plot_empirical_richness(
+    plot_data = plot_data$all_richness_sf,
+    title = paste0("Empirical atlas richness: ", analysis$coverage_label, " sites"),
+    subtitle = paste(
+      "Observed atlas presences from the raw occurrence matrix;",
+      "colour spacing follows 1970s richness quantiles in every panel."
+    )
+  )
+
+  shared_sites_map <- plot_empirical_richness(
+    plot_data = plot_data$shared_richness_sf,
+    title = paste0("Empirical atlas richness: shared ", analysis$coverage_label, " sites"),
+    subtitle = paste0(
+      length(analysis$shared_sites),
+      " grid cells present in all three atlas periods; ",
+      "colour spacing follows 1970s richness quantiles in every panel."
+    )
+  )
+
+  delta_map <- plot_delta_richness(
+    plot_data = plot_data$delta_sf,
+    title = paste0("Delta empirical richness: shared ", analysis$coverage_label, " sites"),
+    subtitle = "Positive values indicate higher observed richness in the later atlas period.",
+    delta_limit = delta_limit
+  )
+
+  species_class_plot <- plot_species_class_proportions(analysis)
+  species_top_change_plot <- plot_species_top_changes(analysis)
+  guild_class_plot <- plot_guild_class_proportions(analysis)
+
+  ggsave(
+    filename = paste0(plot_prefix, "-richness-all-sites.png"),
+    plot = all_sites_map,
+    width = 11.5,
+    height = 5.4,
+    dpi = 300,
+    bg = "white"
+  )
+  ggsave(
+    filename = paste0(plot_prefix, "-richness-shared-sites.png"),
+    plot = shared_sites_map,
+    width = 11.5,
+    height = 5.4,
+    dpi = 300,
+    bg = "white"
+  )
+  ggsave(
+    filename = paste0(plot_prefix, "-delta-richness-shared-sites.png"),
+    plot = delta_map,
+    width = 10.2,
+    height = 5.4,
+    dpi = 300,
+    bg = "white"
+  )
+  ggsave(
+    filename = paste0(plot_prefix, "-species-change-class-proportions.png"),
+    plot = species_class_plot,
+    width = 9.4,
+    height = 4.8,
+    dpi = 300,
+    bg = "white"
+  )
+  ggsave(
+    filename = paste0(plot_prefix, "-species-top-gains-losses.png"),
+    plot = species_top_change_plot,
+    width = 12.5,
+    height = 7.4,
+    dpi = 300,
+    bg = "white"
+  )
+  ggsave(
+    filename = paste0(plot_prefix, "-guild-normalized-change-class-proportions.png"),
+    plot = guild_class_plot,
+    width = 13.5,
+    height = max(
+      7.6,
+      0.25 * length(unique(analysis$species_occupancy$foraging_guild_consensus)) + 2.4
+    ),
+    dpi = 300,
+    bg = "white"
+  )
+
+  list(
+    all_sites_map = all_sites_map,
+    shared_sites_map = shared_sites_map,
+    delta_map = delta_map,
+    species_class_plot = species_class_plot,
+    species_top_change_plot = species_top_change_plot,
+    guild_class_plot = guild_class_plot
+  )
+}
+```
+
+```{r load-data}
+grid_thresholds <- st_read(grid_threshold_path, quiet = TRUE)
+
+raw_y <- read.csv(
+  occurrence_path,
+  row.names = 1,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+)
+
+traits_raw <- read.csv(
+  traits_path,
+  row.names = 2,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+)
+
+species_common_names <- read.csv(
+  traits_common_name_path,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+) |>
+  transmute(
+    species = gsub(" ", "_", .data$latin_DOF),
+    species_english = .data$english_DOF
+  ) |>
+  filter(!is.na(.data$species), .data$species != "") |>
+  distinct(.data$species, .keep_all = TRUE)
+
+sti_common_names <- read.csv(
+  sti_common_name_path,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+) |>
+  transmute(
+    species = gsub(" ", "_", .data$SPECIES),
+    species_english_sti = .data[["ENGL NAME"]]
+  ) |>
+  filter(!is.na(.data$species), .data$species != "") |>
+  distinct(.data$species, .keep_all = TRUE)
+
+traits <- data.frame(
+  species = rownames(traits_raw),
+  foraging_guild_consensus = traits_raw$foraging_guild_consensus,
+  stringsAsFactors = FALSE
+) |>
+  left_join(species_common_names, by = "species") |>
+  left_join(sti_common_names, by = "species") |>
+  mutate(
+    species_english = coalesce(.data$species_english, .data$species_english_sti),
+    species_english = case_when(
+      .data$species == "Acanthis_flammea" ~ "Lesser Redpoll",
+      .data$species == "Corvus_corax" ~ "Common Raven",
+      TRUE ~ .data$species_english
+    ),
+    species_english = ifelse(
+      is.na(.data$species_english) | .data$species_english == "",
+      gsub("_", " ", .data$species),
+      .data$species_english
+    )
+  ) |>
+  select(-"species_english_sti")
+```
+
+```{r build-analyses}
+analyses <- lapply(
+  coverage_definitions,
+  build_coverage_analysis,
+  raw_y = raw_y,
+  traits = traits,
+  grid_thresholds = grid_thresholds
+)
+
+plot_data <- lapply(analyses, build_plot_data, grid_thresholds = grid_thresholds)
+
+delta_limit <- max(
+  abs(unlist(lapply(plot_data, function(x) x$delta_sf$delta_richness))),
+  na.rm = TRUE
+)
+
+invisible(lapply(analyses, write_analysis_tables))
+
+plots <- Map(
+  save_analysis_plots,
+  analysis = analyses,
+  plot_data = plot_data,
+  MoreArgs = list(
+    delta_limit = delta_limit
+  )
+)
+```
+
+## Good/Fair Coverage
+
+This section uses the `Good/Fair` retained survey rows and species pool from
+the current model input. Richness and turnover values are recalculated from the
+raw atlas occurrence matrix.
+
+For Atlas 3, this section includes all available Atlas 3 sites because there is
+no Atlas 3 sampling-effort table to separate `Good` from `Fair` coverage.
+
+### Richness Across Good/Fair Sites
+
+```{r good-average-all-sites-map-display, out.width="100%"}
+plots$good_average$all_sites_map
+```
+
+### Richness On Shared Good/Fair Sites
+
+```{r good-average-shared-sites-map-display, out.width="100%"}
+plots$good_average$shared_sites_map
+```
+
+### Delta Richness On Shared Good/Fair Sites
+
+```{r good-average-delta-map-display, out.width="100%"}
+plots$good_average$delta_map
+```
+
+### Species-Level Changes
+
+For this `Good/Fair` analysis, the 10 percentage-point rule corresponds to
+about `r ceiling(species_change_threshold * length(analyses$good_average$shared_sites))`
+shared grid cells.
+
+```{r good-average-species-class-display, out.width="100%"}
+plots$good_average$species_class_plot
+```
+
+```{r good-average-species-top-display, out.width="100%"}
+plots$good_average$species_top_change_plot
+```
+
+### Foraging-Guild Changes
+
+```{r good-average-guild-display, out.width="100%"}
+plots$good_average$guild_class_plot
+```
+
+## Good Coverage Only
+
+This section repeats the same empirical atlas analysis using only the `Good`
+coverage retained survey rows and species pool. This is the stricter coverage
+check against the `Good/Fair` patterns above.
+
+As above, the `Good` coverage filter applies to Atlas 1 and Atlas 2 only. Atlas
+3 includes all available Atlas 3 sites because sampling-effort estimates are not
+available for that period.
+
+### Richness Across Good Sites
+
+```{r good-all-sites-map-display, out.width="100%"}
+plots$good$all_sites_map
+```
+
+### Richness On Shared Good Sites
+
+```{r good-shared-sites-map-display, out.width="100%"}
+plots$good$shared_sites_map
+```
+
+### Delta Richness On Shared Good Sites
+
+```{r good-delta-map-display, out.width="100%"}
+plots$good$delta_map
+```
+
+### Species-Level Changes
+
+For this `Good` analysis, the 10 percentage-point rule corresponds to about
+`r ceiling(species_change_threshold * length(analyses$good$shared_sites))`
+shared grid cells.
+
+```{r good-species-class-display, out.width="100%"}
+plots$good$species_class_plot
+```
+
+```{r good-species-top-display, out.width="100%"}
+plots$good$species_top_change_plot
+```
+
+### Foraging-Guild Changes
+
+```{r good-guild-display, out.width="100%"}
+plots$good$guild_class_plot
+```
+
+```{r output-checks}
+non_png_plot_outputs <- list.files(
+  plot_dir,
+  pattern = "\\.(pdf|svg|jpg|jpeg|tif|tiff)$",
+  ignore.case = TRUE,
+  full.names = TRUE
+)
+
+if (length(non_png_plot_outputs) > 0) {
+  stop(
+    "Unexpected non-PNG plot output(s): ",
+    paste(non_png_plot_outputs, collapse = ", "),
+    call. = FALSE
+  )
+}
+```

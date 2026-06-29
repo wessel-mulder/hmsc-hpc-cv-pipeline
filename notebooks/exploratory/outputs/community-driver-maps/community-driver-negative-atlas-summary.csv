@@ -1,0 +1,9 @@
+effect_subset,atlas,period,dominant_variable,dominant_variable_label,n_sites,prop_sites
+negative,1,1970s,prec_breeding,Precipitation,1454,0.8186936936936937
+negative,1,1970s,perc_cropland,Cropland (% coverage),322,0.18130630630630631
+negative,2,1990s,prec_breeding,Precipitation,854,0.4616216216216216
+negative,2,1990s,tmean_breeding,Temperature,629,0.34
+negative,2,1990s,perc_cropland,Cropland (% coverage),367,0.19837837837837838
+negative,3,2010s,prec_breeding,Precipitation,1849,0.9711134453781513
+negative,3,2010s,perc_cropland,Cropland (% coverage),53,0.027836134453781514
+negative,3,2010s,perc_urban,Urban (% coverage),2,0.0010504201680672268

@@ -1,0 +1,2 @@
+"comparison","linear_AIC","nonlinear_AIC","AIC_improvement","F_statistic","p_value"
+"Linear habitat model vs nonlinear habitat GAM",7669.55834718737,7616.27608409121,53.2822630961518,6.15558301167938,1.17045975364451e-10

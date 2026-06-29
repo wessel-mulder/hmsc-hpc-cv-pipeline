@@ -1,0 +1,23 @@
+check,value
+Prediction rows,1776
+Assignment rows,1776
+Shared surveys,1776
+Prediction rows missing assignment,0
+Assignment rows missing prediction,0
+Cluster 1 species weight sum,1
+Cluster 2 species weight sum,1.0000000000000004
+Cluster 3 species weight sum,0.9999999999999999
+Prediction species,157
+VP species,157
+Beta species,157
+Prediction species in VP,157
+Prediction species in Beta,157
+Prediction species with trait rows,157
+Expected environmental variables,8
+VP environmental variables,8
+Driver waffle clusters,3
+Driver waffle species,465
+Driver waffle supported species-variable rows,1821
+Driver waffle tiles,600
+PCA reference features,16
+PCA projected species profiles,465

@@ -1,0 +1,17 @@
+"effect","covariate","Atlas1_median_direction","Atlas2_median_direction","Atlas3_median_direction","Atlas1_supported_direction","Atlas2_supported_direction","Atlas3_supported_direction","Atlas1_delta","Atlas2_delta","Atlas3_delta","median_direction_change","supported_direction_change"
+"marginal","hh","positive","positive","positive","positive","positive","positive",6.448,14.327,11.541,FALSE,FALSE
+"marginal","perc_cropland","positive","positive","positive","positive","positive","positive",4.74,9.994,6.829,FALSE,FALSE
+"marginal","perc_forest","positive","positive","positive","positive","positive","positive",20.029,26.869,20.152,FALSE,FALSE
+"marginal","perc_grass_shrub","positive","positive","positive","positive","positive","positive",7.806,10.63,4.195,FALSE,FALSE
+"marginal","perc_pasture","positive","positive","positive","positive","positive","positive",5.515,6.247,17.599,FALSE,FALSE
+"marginal","perc_urban","positive","positive","positive","positive","positive","positive",7.856,15.556,14.723,FALSE,FALSE
+"marginal","prec_breeding","negative","negative","negative","negative","negative","negative",-9.154,-11.902,-11.591,FALSE,FALSE
+"marginal","tmean_breeding","positive","positive","positive","positive","uncertain","positive",7.86,5.848,11.502,FALSE,FALSE
+"total","hh","positive","positive","positive","positive","positive","positive",10.475,15.579,15.924,FALSE,FALSE
+"total","perc_cropland","negative","negative","negative","negative","negative","negative",-7.941,-9.565,-11.937,FALSE,FALSE
+"total","perc_forest","positive","positive","positive","positive","positive","positive",17.645,21.437,17.546,FALSE,FALSE
+"total","perc_grass_shrub","positive","positive","positive","positive","positive","positive",18.21,14.081,4.664,FALSE,FALSE
+"total","perc_pasture","positive","positive","positive","positive","positive","positive",16.247,10.847,27.177,FALSE,FALSE
+"total","perc_urban","positive","positive","positive","uncertain","positive","positive",4.171,8.871,11.745,FALSE,FALSE
+"total","prec_breeding","negative","negative","negative","negative","negative","negative",-7.374,-9.346,-9.024,FALSE,FALSE
+"total","tmean_breeding","negative","negative","positive","uncertain","uncertain","uncertain",-0.618,-1.679,1.182,TRUE,FALSE

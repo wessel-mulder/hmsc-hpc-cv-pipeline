@@ -1,0 +1,1879 @@
+---
+title: "Modelled trait composition of 1970s avian bioregion clusters"
+author: "WM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  results = "hide",
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
+)
+knitr::opts_knit$set(root.dir = normalizePath("../.."))
+```
+
+## Aim
+
+This notebook summarizes which kinds of species make up the 1970s modelled
+avian bioregion clusters. These are the Atlas 1 reference clusters from the
+avian bioregion PCA analysis, and the composition estimates use HMSC modelled
+species probabilities only.
+
+For each 1970s cluster, predicted species probabilities are summed within
+thermal-affinity, migratory-strategy, and foraging-guild groups. These sums are
+then divided by the total expected richness among species with known values for
+that trait family. The reported percentages therefore describe the expected
+trait composition of the modelled 1970s community, not raw species counts.
+
+## Load Model Outputs And Traits
+
+```{r load-data}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+  tidyverse, Hmsc, scales, patchwork, RColorBrewer, knitr
+)
+
+source(file.path("support_scripts", "figure_data_helpers.R"))
+
+base_dir <- "./HmscOutputs"
+pattern <- "2026-03-13"
+bioregion_assignment_path <- file.path(
+  "notebooks", "exploratory", "outputs", "bioregion-pca",
+  paste0(pattern, "-bioregion-assignments.csv")
+)
+out_dir <- file.path("notebooks", "exploratory", "outputs", "bioregion-trait-composition")
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+
+year_lookup <- c("1" = "1970s", "2" = "1990s", "3" = "2010s")
+focal_atlas <- "1"
+focal_period <- year_lookup[[focal_atlas]]
+output_prefix <- paste0(pattern, "-", focal_period)
+thermal_levels <- c("very cold", "cold", "medium", "warm", "very warm")
+migration_levels <- c(
+  "long-distance",
+  "short-and long-distance",
+  "short-distance",
+  "sedentary and short-distance",
+  "sedentary"
+)
+thermal_palette <- setNames(
+  colorRampPalette(c("blue4", "darkorchid", "red2"))(length(thermal_levels)),
+  thermal_levels
+)
+migration_palette <- setNames(
+  colorRampPalette(c("#542788", "#f2e5ff"))(length(migration_levels)),
+  migration_levels
+)
+cluster2_shift_focal_comparison <- "2010s minus 1970s"
+
+predictor_names <- function(df) {
+  c(
+    "tmean_breeding",
+    "prec_breeding",
+    "hh",
+    grep("^perc_", colnames(df), value = TRUE)
+  )
+}
+
+var_labels <- c(
+  "tmean_breeding" = "Temperature",
+  "prec_breeding" = "Precipitation",
+  "hh" = "Land-use heterogeneity",
+  "perc_urban" = "Urban",
+  "perc_cropland" = "Cropland",
+  "perc_pasture" = "Pasture",
+  "perc_forest" = "Forest",
+  "perc_grass_shrub" = "Grass/Shrubland"
+)
+
+environment_colours <- c(
+  "Temperature" = "firebrick3",
+  "Precipitation" = "dodgerblue3",
+  "Land-use heterogeneity" = "orchid3",
+  "Urban" = "#4d4d4d",
+  "Cropland" = "goldenrod1",
+  "Pasture" = "darkorange",
+  "Forest" = "springgreen4",
+  "Grass/Shrubland" = "springgreen2"
+)
+
+matching_folders <- figure_model_folders(pattern = pattern, base_dir = base_dir)
+model_nums <- as.character(atlas_numbers(matching_folders))
+mods <- load_hmsc_posteriors(matching_folders, base_dir = base_dir)
+predsY <- load_or_compute_site_predictions(mods, matching_folders, base_dir = base_dir)
+names(mods) <- names(predsY) <- model_nums
+predsY_all <- predsY
+predsY <- predsY[focal_atlas]
+
+bioregion_assignments_all <- read_csv(
+  bioregion_assignment_path,
+  show_col_types = FALSE
+) |>
+  mutate(
+    atlas = as.character(atlas),
+    period = recode(atlas, !!!year_lookup),
+    bioregion = factor(bioregion, levels = sort(unique(bioregion)))
+  )
+
+bioregion_assignments <- bioregion_assignments_all |>
+  filter(atlas == focal_atlas) |>
+  select(atlas, period, survey, site, X, Y, bioregion)
+
+bioregion_palette <- setNames(
+  brewer.pal(max(3, length(levels(bioregion_assignments$bioregion))), "Set2")[seq_along(levels(bioregion_assignments$bioregion))],
+  levels(bioregion_assignments$bioregion)
+)
+
+load("Data/preprocessed_data_min_occs_is_5_coverage_is_good_and_average.RData")
+
+thermal_groups <- function(sti) {
+  cut(
+    sti,
+    breaks = quantile(sti, seq(0, 1, 0.2), na.rm = TRUE),
+    include.lowest = TRUE,
+    labels = thermal_levels
+  )
+}
+
+traits <- Tr |>
+  as.data.frame() |>
+  rownames_to_column("species") |>
+  select(species, Migration_a3_DOF, foraging_guild_consensus, species_thermal_index) |>
+  mutate(
+    thermal_group = thermal_groups(species_thermal_index),
+    thermal_group = factor(thermal_group, levels = thermal_levels)
+  )
+
+trait_lookup <- bind_rows(
+  traits |>
+    filter(!is.na(thermal_group)) |>
+    transmute(
+      species,
+      trait_family = "Thermal affinity",
+      trait_value = as.character(thermal_group)
+    ),
+  traits |>
+    filter(!is.na(Migration_a3_DOF), Migration_a3_DOF != "") |>
+    transmute(
+      species,
+      trait_family = "Migratory strategy",
+      trait_value = Migration_a3_DOF
+    ),
+  traits |>
+    filter(!is.na(foraging_guild_consensus), foraging_guild_consensus != "") |>
+    transmute(
+      species,
+      trait_family = "Foraging guild",
+      trait_value = foraging_guild_consensus
+    )
+) |>
+  mutate(
+    trait_family = factor(
+      trait_family,
+      levels = c("Thermal affinity", "Migratory strategy", "Foraging guild")
+    )
+  )
+
+trait_group_sizes <- trait_lookup |>
+  distinct(trait_family, trait_value, species) |>
+  count(trait_family, trait_value, name = "n_species_in_trait_group")
+
+thermal_group_summary <- traits |>
+  filter(!is.na(thermal_group)) |>
+  count(thermal_group, name = "n_species") |>
+  complete(
+    thermal_group = factor(thermal_levels, levels = thermal_levels),
+    fill = list(n_species = 0)
+  )
+```
+
+## Modelled Cluster Composition
+
+```{r composition-functions}
+prediction_frame <- function(pred_y, atlas) {
+  pred_y |>
+    as.data.frame(check.names = FALSE) |>
+    rownames_to_column("survey") |>
+    as_tibble() |>
+    pivot_longer(
+      -survey,
+      names_to = "species",
+      values_to = "predicted_probability"
+    ) |>
+    mutate(atlas = as.character(atlas), .before = 1)
+}
+
+make_trait_palette <- function(values, palette = "Set2") {
+  values <- sort(unique(values))
+  n_values <- length(values)
+  if (n_values <= 8) {
+    colours <- brewer.pal(max(3, n_values), palette)[seq_len(n_values)]
+  } else {
+    colours <- colorRampPalette(brewer.pal(8, palette))(n_values)
+  }
+  setNames(colours, values)
+}
+```
+
+```{r compute-composition}
+prediction_long <- imap_dfr(predsY, prediction_frame)
+
+prediction_assignment_checks <- prediction_long |>
+  distinct(atlas, survey) |>
+  left_join(
+    bioregion_assignments |> distinct(atlas, survey, bioregion),
+    by = c("atlas", "survey")
+  ) |>
+  group_by(atlas) |>
+  summarise(
+    n_prediction_sites = n(),
+    n_sites_without_cluster = sum(is.na(bioregion)),
+    .groups = "drop"
+  )
+
+species_trait_checks <- tibble(
+  trait_family = c("Thermal affinity", "Migratory strategy", "Foraging guild"),
+  n_model_species = length(colnames(predsY[[1]])),
+  n_species_with_trait = c(
+    sum(colnames(predsY[[1]]) %in% (trait_lookup |> filter(trait_family == "Thermal affinity") |> pull(species))),
+    sum(colnames(predsY[[1]]) %in% (trait_lookup |> filter(trait_family == "Migratory strategy") |> pull(species))),
+    sum(colnames(predsY[[1]]) %in% (trait_lookup |> filter(trait_family == "Foraging guild") |> pull(species)))
+  )
+) |>
+  mutate(n_species_missing_trait = n_model_species - n_species_with_trait)
+
+prediction_with_clusters <- prediction_long |>
+  inner_join(
+    bioregion_assignments,
+    by = c("atlas", "survey")
+  )
+
+composition_numerators <- prediction_with_clusters |>
+  inner_join(trait_lookup, by = "species", relationship = "many-to-many") |>
+  group_by(atlas, period, bioregion, trait_family, trait_value) |>
+  summarise(
+    expected_group_richness = sum(predicted_probability, na.rm = TRUE),
+    mean_probability = mean(predicted_probability, na.rm = TRUE),
+    n_species = n_distinct(species),
+    n_sites = n_distinct(survey),
+    .groups = "drop"
+  )
+
+composition_denominators <- composition_numerators |>
+  group_by(atlas, period, bioregion, trait_family) |>
+  summarise(
+    expected_total_richness_known_trait = sum(expected_group_richness, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+cluster_trait_composition <- composition_numerators |>
+  left_join(
+    composition_denominators,
+    by = c("atlas", "period", "bioregion", "trait_family")
+  ) |>
+  mutate(
+    proportion = expected_group_richness / expected_total_richness_known_trait,
+    percent = 100 * proportion
+  ) |>
+  arrange(trait_family, period, bioregion, desc(proportion))
+
+composition_sum_checks <- cluster_trait_composition |>
+  group_by(atlas, period, bioregion, trait_family) |>
+  summarise(
+    n_trait_groups = n(),
+    percent_sum = sum(percent, na.rm = TRUE),
+    max_abs_deviation_from_100 = abs(percent_sum - 100),
+    expected_total_richness_known_trait = first(expected_total_richness_known_trait),
+    .groups = "drop"
+  )
+
+cluster_trait_dominant_groups <- cluster_trait_composition |>
+  group_by(atlas, period, bioregion, trait_family) |>
+  slice_max(proportion, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  select(
+    atlas, period, bioregion, trait_family, dominant_trait_group = trait_value,
+    percent, expected_group_richness, expected_total_richness_known_trait,
+    n_species, n_sites
+  )
+
+species_expected_cluster_richness <- prediction_with_clusters |>
+  group_by(atlas, period, bioregion, species) |>
+  summarise(
+    expected_occurrence_sum = sum(predicted_probability, na.rm = TRUE),
+    mean_predicted_probability = mean(predicted_probability, na.rm = TRUE),
+    n_sites = n_distinct(survey),
+    .groups = "drop"
+  ) |>
+  group_by(atlas, period, bioregion) |>
+  mutate(
+    expected_occurrence_share = expected_occurrence_sum / sum(expected_occurrence_sum, na.rm = TRUE),
+    rank_in_cluster = dense_rank(desc(expected_occurrence_sum))
+  ) |>
+  ungroup()
+
+cluster_top_modelled_species <- species_expected_cluster_richness |>
+  filter(rank_in_cluster <= 15) |>
+  left_join(
+    traits |>
+      select(
+        species,
+        thermal_group,
+        migratory_strategy = Migration_a3_DOF,
+        foraging_guild = foraging_guild_consensus,
+        species_thermal_index
+      ),
+    by = "species"
+  ) |>
+  arrange(period, bioregion, rank_in_cluster)
+
+cluster_trait_composition_checks <- bind_rows(
+  composition_sum_checks |>
+    mutate(check_type = "Composition percentages") |>
+    rename(check_group = trait_family) |>
+    select(check_type, atlas, period, bioregion, check_group, everything()),
+  prediction_assignment_checks |>
+    mutate(
+      check_type = "Prediction-to-cluster join",
+      period = focal_period,
+      bioregion = NA,
+      check_group = "All sites",
+      percent_sum = NA_real_,
+      max_abs_deviation_from_100 = NA_real_,
+      expected_total_richness_known_trait = NA_real_,
+      n_trait_groups = NA_integer_
+    ) |>
+    rename(n_sites_without_cluster = n_sites_without_cluster) |>
+    select(check_type, atlas, period, bioregion, check_group, everything()),
+  species_trait_checks |>
+    mutate(
+      check_type = "Species trait coverage",
+      atlas = NA_character_,
+      period = NA_character_,
+      bioregion = NA,
+      check_group = trait_family,
+      percent_sum = NA_real_,
+      max_abs_deviation_from_100 = NA_real_,
+      expected_total_richness_known_trait = NA_real_,
+      n_trait_groups = NA_integer_
+    ) |>
+    select(check_type, atlas, period, bioregion, check_group, everything())
+  )
+```
+
+## Diagnostics
+
+```{r diagnostics, results='asis'}
+kable(
+  thermal_group_summary,
+  caption = "Thermal-affinity group sizes from STI quintiles."
+)
+
+kable(
+  prediction_assignment_checks,
+  caption = "Checks that model prediction rows join to bioregion cluster assignments."
+)
+
+kable(
+  species_trait_checks,
+  caption = "Modelled species with available trait metadata."
+)
+
+kable(
+  composition_sum_checks |>
+    mutate(percent_sum = round(percent_sum, 4),
+           max_abs_deviation_from_100 = round(max_abs_deviation_from_100, 6)),
+  caption = "Checks that trait percentages sum to 100 within each 1970s cluster-trait family."
+)
+```
+
+## Dominant Trait Groups
+
+```{r dominant-groups, results='asis'}
+kable(
+  cluster_trait_dominant_groups |>
+    mutate(percent = percent(percent / 100, accuracy = 0.1)) |>
+    select(bioregion, trait_family, dominant_trait_group, percent, n_species, n_sites),
+  caption = "Dominant model-weighted trait group within each 1970s cluster."
+)
+```
+
+## Thermal And Migratory Composition
+
+```{r thermal-migration-plot, fig.width=8.5, fig.height=7}
+plot_stacked_trait <- function(df, trait_family_label, palette) {
+  plot_df <- df |>
+    filter(trait_family == trait_family_label) |>
+    mutate(
+      trait_value = if (trait_family_label == "Thermal affinity") {
+        factor(trait_value, levels = thermal_levels)
+      } else {
+        factor(trait_value, levels = names(palette))
+      }
+    )
+
+  ggplot(plot_df, aes(x = bioregion, y = proportion, fill = trait_value)) +
+    geom_col(width = 0.72, colour = "white", linewidth = 0.25) +
+    scale_y_continuous(labels = percent_format(accuracy = 1), expand = expansion(mult = c(0, 0.02))) +
+    scale_fill_manual(values = palette, drop = FALSE, name = NULL) +
+    labs(
+      title = trait_family_label,
+      x = NULL,
+      y = "Expected community composition"
+    ) +
+    theme_minimal(base_size = 11) +
+    theme(
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.text.x = element_text(angle = 35, hjust = 1),
+      legend.position = "bottom",
+      plot.title = element_text(face = "bold")
+    )
+}
+
+p_thermal <- plot_stacked_trait(cluster_trait_composition, "Thermal affinity", thermal_palette)
+p_migration <- plot_stacked_trait(cluster_trait_composition, "Migratory strategy", migration_palette)
+
+thermal_migration_composition_plot <- p_thermal / p_migration +
+  plot_annotation(
+    title = "Model-weighted thermal and migratory composition of 1970s avian clusters",
+    subtitle = "Percentages are expected richness shares within each Atlas 1 reference cluster."
+  )
+
+thermal_migration_composition_plot
+```
+
+## Foraging Guild Composition
+
+```{r foraging-guild-heatmap, fig.width=8.5, fig.height=9.5}
+foraging_order <- cluster_trait_composition |>
+  filter(trait_family == "Foraging guild") |>
+  group_by(trait_value) |>
+  summarise(mean_percent = mean(percent, na.rm = TRUE), .groups = "drop") |>
+  arrange(mean_percent) |>
+  pull(trait_value)
+
+foraging_heatmap_df <- cluster_trait_composition |>
+  filter(trait_family == "Foraging guild") |>
+  mutate(
+    trait_value = factor(trait_value, levels = foraging_order),
+    bioregion = factor(bioregion, levels = levels(bioregion_assignments$bioregion))
+  )
+
+foraging_guild_composition_heatmap <- ggplot(
+  foraging_heatmap_df,
+  aes(x = bioregion, y = trait_value, fill = proportion)
+) +
+  geom_tile(colour = "white", linewidth = 0.25) +
+  scale_fill_distiller(
+    palette = "YlGnBu",
+    direction = 1,
+    labels = percent_format(accuracy = 1),
+    name = "Expected\nshare"
+  ) +
+  labs(
+    title = "Model-weighted foraging-guild composition of 1970s avian clusters",
+    subtitle = "Cells show expected richness share within each Atlas 1 reference cluster.",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold")
+  )
+
+foraging_guild_composition_heatmap
+```
+
+## Atlas 1 Environmental Profiles
+
+This section compares the environmental context of the three Atlas 1 reference
+clusters. Values are centred on the national Atlas 1 median for each predictor
+and scaled by the national Atlas 1 standard deviation, so positive values mean
+that a cluster is above the national median for that variable and negative
+values mean that it is below the national median.
+
+```{r atlas1-environment-profiles}
+reference_environment_predictors <- predictor_names(mods[[focal_atlas]]$XData)
+
+reference_environment_values <- mods[[focal_atlas]]$XData |>
+  as_tibble(rownames = "survey") |>
+  select(survey, all_of(reference_environment_predictors)) |>
+  inner_join(
+    bioregion_assignments |> select(survey, site, bioregion),
+    by = "survey"
+  ) |>
+  pivot_longer(
+    cols = all_of(reference_environment_predictors),
+    names_to = "variable",
+    values_to = "value_raw"
+  ) |>
+  mutate(
+    variable_label = recode(variable, !!!var_labels),
+    variable_label = factor(variable_label, levels = names(environment_colours))
+  )
+
+reference_environment_national <- reference_environment_values |>
+  group_by(variable, variable_label) |>
+  summarise(
+    national_mean = mean(value_raw, na.rm = TRUE),
+    national_median = median(value_raw, na.rm = TRUE),
+    national_sd = sd(value_raw, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+reference_environment_values <- reference_environment_values |>
+  left_join(reference_environment_national, by = c("variable", "variable_label")) |>
+  mutate(
+    value_relative_to_national = if_else(
+      national_sd > 0,
+      (value_raw - national_median) / national_sd,
+      NA_real_
+    )
+  )
+
+reference_environment_plot_data <- bind_rows(
+  reference_environment_values |>
+    mutate(
+      group = "All Atlas 1 cells",
+      group_type = "National distribution"
+    ),
+  reference_environment_values |>
+    mutate(
+      group = as.character(bioregion),
+      group_type = "Reference cluster"
+    )
+) |>
+  mutate(
+    group = factor(group, levels = c("All Atlas 1 cells", names(bioregion_palette))),
+    group_type = factor(group_type, levels = c("National distribution", "Reference cluster"))
+  )
+
+reference_environment_summary <- reference_environment_plot_data |>
+  group_by(group, group_type, bioregion, variable, variable_label) |>
+  summarise(
+    n_sites = n_distinct(site),
+    mean_raw = mean(value_raw, na.rm = TRUE),
+    median_raw = median(value_raw, na.rm = TRUE),
+    q025_raw = unname(quantile(value_raw, 0.025, na.rm = TRUE)),
+    q975_raw = unname(quantile(value_raw, 0.975, na.rm = TRUE)),
+    mean_relative = mean(value_relative_to_national, na.rm = TRUE),
+    median_relative = median(value_relative_to_national, na.rm = TRUE),
+    q25_relative = unname(quantile(value_relative_to_national, 0.25, na.rm = TRUE)),
+    q75_relative = unname(quantile(value_relative_to_national, 0.75, na.rm = TRUE)),
+    q025_relative = unname(quantile(value_relative_to_national, 0.025, na.rm = TRUE)),
+    q975_relative = unname(quantile(value_relative_to_national, 0.975, na.rm = TRUE)),
+    .groups = "drop"
+  )
+
+reference_safe_wilcox_two_sample <- function(x, y) {
+  x <- x[is.finite(x)]
+  y <- y[is.finite(y)]
+  if (length(x) < 2 || length(y) < 2 || length(unique(c(x, y))) < 2) {
+    return(NA_real_)
+  }
+  suppressWarnings(wilcox.test(x, y, exact = FALSE)$p.value)
+}
+
+reference_safe_cliffs_delta <- function(x, y) {
+  x <- x[is.finite(x)]
+  y <- y[is.finite(y)]
+  if (length(x) < 1 || length(y) < 1) {
+    return(NA_real_)
+  }
+  ranks <- rank(c(x, y), ties.method = "average")
+  n_x <- length(x)
+  n_y <- length(y)
+  rank_sum_x <- sum(ranks[seq_len(n_x)])
+  u_statistic <- rank_sum_x - n_x * (n_x + 1) / 2
+  2 * u_statistic / (n_x * n_y) - 1
+}
+
+reference_safe_bootstrap_median_difference <- function(x, y, n_boot = 2000) {
+  x <- x[is.finite(x)]
+  y <- y[is.finite(y)]
+  if (length(x) < 2 || length(y) < 2) {
+    return(tibble(
+      median_difference_ci_low = NA_real_,
+      median_difference_ci_high = NA_real_
+    ))
+  }
+  bootstrap_differences <- replicate(
+    n_boot,
+    median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+      median(sample(y, length(y), replace = TRUE), na.rm = TRUE)
+  )
+  tibble(
+    median_difference_ci_low = unname(quantile(bootstrap_differences, 0.025, na.rm = TRUE)),
+    median_difference_ci_high = unname(quantile(bootstrap_differences, 0.975, na.rm = TRUE))
+  )
+}
+
+set.seed(20260505)
+reference_environment_tests <- reference_environment_values |>
+  group_by(bioregion, variable, variable_label) |>
+  summarise(
+    n_cluster = n_distinct(site),
+    n_other_cells = n_distinct(reference_environment_values$site[
+      reference_environment_values$variable == first(variable) &
+        reference_environment_values$bioregion != first(bioregion)
+    ]),
+    median_cluster = median(value_relative_to_national, na.rm = TRUE),
+    median_other_cells = median(
+      reference_environment_values$value_relative_to_national[
+        reference_environment_values$variable == first(variable) &
+          reference_environment_values$bioregion != first(bioregion)
+      ],
+      na.rm = TRUE
+    ),
+    median_difference_cluster_minus_other = median_cluster - median_other_cells,
+    p_cluster_vs_other = reference_safe_wilcox_two_sample(
+      value_relative_to_national,
+      reference_environment_values$value_relative_to_national[
+        reference_environment_values$variable == first(variable) &
+          reference_environment_values$bioregion != first(bioregion)
+      ]
+    ),
+    cliffs_delta_cluster_vs_other = reference_safe_cliffs_delta(
+      value_relative_to_national,
+      reference_environment_values$value_relative_to_national[
+        reference_environment_values$variable == first(variable) &
+          reference_environment_values$bioregion != first(bioregion)
+      ]
+    ),
+    bootstrap = list(reference_safe_bootstrap_median_difference(
+      value_relative_to_national,
+      reference_environment_values$value_relative_to_national[
+        reference_environment_values$variable == first(variable) &
+          reference_environment_values$bioregion != first(bioregion)
+      ]
+    )),
+    .groups = "drop"
+  ) |>
+  unnest(bootstrap) |>
+  mutate(
+    p_cluster_vs_other_adj = p.adjust(p_cluster_vs_other, method = "BH"),
+    bootstrap_ci_excludes_zero = replace_na(
+      median_difference_ci_low > 0 | median_difference_ci_high < 0,
+      FALSE
+    ),
+    non_trivial_effect_size = replace_na(abs(cliffs_delta_cluster_vs_other) >= 0.147, FALSE),
+    highlighted = replace_na(p_cluster_vs_other_adj < 0.05, FALSE) &
+      bootstrap_ci_excludes_zero &
+      non_trivial_effect_size,
+    significance_status = if_else(
+      highlighted,
+      "Different from other Atlas 1 cells",
+      "Not different from other Atlas 1 cells"
+    )
+  )
+
+reference_environment_summary <- reference_environment_summary |>
+  left_join(
+    reference_environment_tests |>
+      select(
+        bioregion, variable, n_cluster, n_other_cells,
+        median_difference_cluster_minus_other,
+        median_difference_ci_low, median_difference_ci_high,
+        p_cluster_vs_other, p_cluster_vs_other_adj,
+        cliffs_delta_cluster_vs_other,
+        bootstrap_ci_excludes_zero, non_trivial_effect_size,
+        highlighted, significance_status
+      ),
+    by = c("bioregion", "variable")
+  ) |>
+  mutate(
+    highlighted = if_else(group_type == "Reference cluster", replace_na(highlighted, FALSE), FALSE),
+    significance_status = case_when(
+      group_type == "Reference cluster" & highlighted ~ "Different from other Atlas 1 cells",
+      group_type == "Reference cluster" ~ "Not different from other Atlas 1 cells",
+      TRUE ~ "National distribution"
+    )
+  )
+```
+
+```{r atlas1-environment-profile-plot, fig.width=10.5, fig.height=6.3}
+reference_environment_national_summary <- reference_environment_summary |>
+  filter(group == "All Atlas 1 cells")
+
+reference_environment_cluster_summary <- reference_environment_summary |>
+  filter(group != "All Atlas 1 cells") |>
+  mutate(
+    significance_status = factor(
+      significance_status,
+      levels = c(
+        "Different from other Atlas 1 cells",
+        "Not different from other Atlas 1 cells"
+      )
+    )
+  )
+
+reference_environment_profile_plot <- ggplot() +
+  geom_linerange(
+    data = reference_environment_national_summary,
+    aes(x = variable_label, ymin = q025_relative, ymax = q975_relative),
+    colour = "grey82",
+    linewidth = 1.1
+  ) +
+  geom_linerange(
+    data = reference_environment_national_summary,
+    aes(x = variable_label, ymin = q25_relative, ymax = q75_relative),
+    colour = "grey62",
+    linewidth = 3.2
+  ) +
+  geom_point(
+    data = reference_environment_national_summary,
+    aes(x = variable_label, y = median_relative),
+    colour = "grey25",
+    size = 1.7
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "grey35", linewidth = 0.35) +
+  geom_pointrange(
+    data = reference_environment_cluster_summary,
+    aes(
+      x = variable_label,
+      y = median_relative,
+      ymin = q25_relative,
+      ymax = q75_relative,
+      colour = group,
+      alpha = significance_status
+    ),
+    position = position_dodge(width = 0.62),
+    linewidth = 0.65,
+    fatten = 2.2
+  ) +
+  coord_flip() +
+  scale_colour_manual(values = bioregion_palette, drop = FALSE, name = "Atlas 1 cluster") +
+  scale_alpha_manual(
+    values = c(
+      "Different from other Atlas 1 cells" = 1,
+      "Not different from other Atlas 1 cells" = 0.24
+    ),
+    guide = "none"
+  ) +
+  labs(
+    title = "Environmental profiles of Atlas 1 reference clusters",
+    subtitle = str_wrap(
+      "Grey intervals show all Atlas 1 Danish cells centred on the national median. Coloured points show cluster medians and interquartile ranges; full opacity marks clusters that differ from all other Atlas 1 cells after BH-adjusted Wilcoxon testing, bootstrap support, and a non-trivial Cliff's delta.",
+      width = 100
+    ),
+    x = NULL,
+    y = "Environmental value relative to national Atlas 1 median (SD units)"
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 10, lineheight = 1.05)
+  )
+
+reference_environment_profile_plot
+```
+
+```{r atlas1-environment-profile-table, results='asis'}
+kable(
+  reference_environment_tests |>
+    filter(highlighted) |>
+    mutate(
+      median_difference_cluster_minus_other = round(median_difference_cluster_minus_other, 3),
+      median_difference_ci_low = round(median_difference_ci_low, 3),
+      median_difference_ci_high = round(median_difference_ci_high, 3),
+      p_cluster_vs_other_adj = signif(p_cluster_vs_other_adj, 3),
+      cliffs_delta_cluster_vs_other = round(cliffs_delta_cluster_vs_other, 3)
+    ) |>
+    select(
+      bioregion, variable_label, n_cluster, n_other_cells,
+      median_difference_cluster_minus_other,
+      median_difference_ci_low, median_difference_ci_high,
+      p_cluster_vs_other_adj, cliffs_delta_cluster_vs_other
+    ),
+  caption = "Atlas 1 environmental predictors where a cluster differs from all other Atlas 1 cells."
+)
+```
+
+## Drivers Of Shifts Into Cluster 2
+
+This section asks what changed in the sites that were part of `Cluster 1` or
+`Cluster 3` in the 1970s, but were assigned to `Cluster 2` in a later atlas
+period. The analysis is paired by grid cell: for each focal site and species,
+the 1970s predicted probability is subtracted from the later predicted
+probability. Positive values indicate modelled increases, while negative values
+indicate modelled losses.
+
+Trait-driver plots are shown as a size-normalized version. For each trait group,
+the summed expected-richness delta is divided by the number of modelled species
+in that group. This asks whether the average species in a trait group increased
+or decreased, rather than giving larger trait groups more weight simply because
+they contain more species.
+
+```{r cluster2-shift-drivers}
+reference_species <- colnames(predsY_all[[focal_atlas]])
+mismatched_species <- names(predsY_all)[map_lgl(predsY_all, ~ !identical(colnames(.x), reference_species))]
+if (length(mismatched_species) > 0) {
+  stop("Species columns do not align for atlas: ", paste(mismatched_species, collapse = ", "), call. = FALSE)
+}
+
+assignments_wide <- bioregion_assignments_all |>
+  select(site, atlas, survey, bioregion, assignment_margin, low_confidence) |>
+  pivot_wider(
+    names_from = atlas,
+    values_from = c(survey, bioregion, assignment_margin, low_confidence),
+    names_sep = "_"
+  )
+
+make_focal_transition <- function(source_cluster, target_atlas) {
+  target_period <- year_lookup[[target_atlas]]
+
+  assignments_wide |>
+    filter(
+      bioregion_1 == source_cluster,
+      .data[[paste0("bioregion_", target_atlas)]] == "Cluster 2"
+    ) |>
+    transmute(
+      comparison = paste0(target_period, " minus 1970s"),
+      source_cluster = source_cluster,
+      target_cluster = "Cluster 2",
+      transition = paste(source_cluster, "to Cluster 2"),
+      target_atlas = target_atlas,
+      target_period = target_period,
+      site,
+      survey_from = survey_1,
+      survey_to = .data[[paste0("survey_", target_atlas)]],
+      assignment_margin_target = .data[[paste0("assignment_margin_", target_atlas)]],
+      low_confidence_target = .data[[paste0("low_confidence_", target_atlas)]]
+    )
+}
+
+cluster2_shift_focal_sites <- bind_rows(
+  make_focal_transition("Cluster 1", "2"),
+  make_focal_transition("Cluster 3", "2"),
+  make_focal_transition("Cluster 1", "3"),
+  make_focal_transition("Cluster 3", "3")
+) |>
+  mutate(
+    transition = factor(transition, levels = c("Cluster 1 to Cluster 2", "Cluster 3 to Cluster 2")),
+    comparison = factor(comparison, levels = c("1990s minus 1970s", "2010s minus 1970s"))
+  )
+
+cluster2_shift_site_counts <- cluster2_shift_focal_sites |>
+  group_by(comparison, transition) |>
+  summarise(
+    n_sites = n(),
+    n_low_confidence = sum(low_confidence_target, na.rm = TRUE),
+    pct_low_confidence = mean(low_confidence_target, na.rm = TRUE),
+    median_assignment_margin = median(assignment_margin_target, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+environment_predictors <- predictor_names(mods[[focal_atlas]]$XData)
+environment_predictors <- environment_predictors[environment_predictors %in% colnames(mods[["3"]]$XData)]
+
+environment_frame <- function(model, atlas) {
+  model$XData |>
+    as_tibble(rownames = "survey") |>
+    select(survey, all_of(environment_predictors)) |>
+    mutate(atlas = atlas, .before = 1)
+}
+
+environment_from <- environment_frame(mods[[focal_atlas]], focal_atlas) |>
+  rename_with(~ paste0(.x, "_from"), all_of(environment_predictors))
+
+environment_to <- environment_frame(mods[["3"]], "3") |>
+  rename_with(~ paste0(.x, "_to"), all_of(environment_predictors))
+
+environment_matched_sites <- assignments_wide |>
+  filter(!is.na(survey_1), !is.na(survey_3)) |>
+  select(site, survey_from = survey_1, survey_to = survey_3, bioregion_1, bioregion_3) |>
+  left_join(environment_from, by = c("survey_from" = "survey")) |>
+  left_join(environment_to, by = c("survey_to" = "survey")) |>
+  pivot_longer(
+    cols = matches(paste0("^(", paste(environment_predictors, collapse = "|"), ")_(from|to)$")),
+    names_to = c("variable", "timepoint"),
+    names_pattern = "(.+)_(from|to)",
+    values_to = "value"
+  ) |>
+  pivot_wider(names_from = timepoint, values_from = value) |>
+  mutate(
+    delta_raw = to - from,
+    variable_label = recode(variable, !!!var_labels)
+  )
+
+environment_delta_reference <- environment_matched_sites |>
+  group_by(variable, variable_label) |>
+  summarise(
+    national_mean_delta = mean(delta_raw, na.rm = TRUE),
+    national_median_delta = median(delta_raw, na.rm = TRUE),
+    national_sd_delta = sd(delta_raw, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+environment_matched_sites <- environment_matched_sites |>
+  left_join(environment_delta_reference, by = c("variable", "variable_label")) |>
+  mutate(
+    delta_relative_to_national = if_else(
+      national_sd_delta > 0,
+      (delta_raw - national_median_delta) / national_sd_delta,
+      NA_real_
+    )
+  )
+
+environment_retained_comparison_groups <- assignments_wide |>
+  filter(
+    (bioregion_1 == "Cluster 1" & bioregion_3 %in% c("Cluster 1", "Cluster 2")) |
+      (bioregion_1 == "Cluster 3" & bioregion_3 %in% c("Cluster 3", "Cluster 2"))
+  ) |>
+  transmute(
+    site,
+    source_cluster = bioregion_1,
+    target_cluster = bioregion_3,
+    group_status = if_else(
+      target_cluster == "Cluster 2",
+      "Shifted into Cluster 2",
+      "Retained source cluster"
+    ),
+    group = case_when(
+      source_cluster == "Cluster 1" & target_cluster == "Cluster 1" ~ "Cluster 1 to Cluster 1",
+      source_cluster == "Cluster 1" & target_cluster == "Cluster 2" ~ "Cluster 1 to Cluster 2",
+      source_cluster == "Cluster 3" & target_cluster == "Cluster 3" ~ "Cluster 3 to Cluster 3",
+      source_cluster == "Cluster 3" & target_cluster == "Cluster 2" ~ "Cluster 3 to Cluster 2"
+    )
+  ) |>
+  distinct()
+
+environment_retained_comparison_counts <- environment_retained_comparison_groups |>
+  count(source_cluster, group_status, group, name = "n_sites")
+
+environment_delta_plot_data <- bind_rows(
+  environment_matched_sites |>
+    mutate(
+      source_cluster = NA_character_,
+      target_cluster = NA_character_,
+      group_status = "National distribution",
+      group = "All matched cells"
+    ),
+  environment_matched_sites |>
+    inner_join(environment_retained_comparison_groups, by = "site")
+) |>
+  mutate(
+    group = factor(
+      group,
+      levels = c(
+        "All matched cells",
+        "Cluster 1 to Cluster 1", "Cluster 1 to Cluster 2",
+        "Cluster 3 to Cluster 3", "Cluster 3 to Cluster 2"
+      )
+    ),
+    group_status = factor(
+      group_status,
+      levels = c("National distribution", "Retained source cluster", "Shifted into Cluster 2")
+    ),
+    source_cluster = factor(source_cluster, levels = c("Cluster 1", "Cluster 3")),
+    variable_label = factor(variable_label, levels = names(environment_colours))
+  )
+
+environment_delta_summary <- environment_delta_plot_data |>
+  group_by(source_cluster, target_cluster, group_status, group, variable, variable_label) |>
+  summarise(
+    n_sites = n_distinct(site),
+    mean_delta_raw = mean(delta_raw, na.rm = TRUE),
+    median_delta_raw = median(delta_raw, na.rm = TRUE),
+    q025_delta_raw = quantile(delta_raw, 0.025, na.rm = TRUE),
+    q975_delta_raw = quantile(delta_raw, 0.975, na.rm = TRUE),
+    mean_delta_relative = mean(delta_relative_to_national, na.rm = TRUE),
+    median_delta_relative = median(delta_relative_to_national, na.rm = TRUE),
+    q25_delta_relative = quantile(delta_relative_to_national, 0.25, na.rm = TRUE),
+    q75_delta_relative = quantile(delta_relative_to_national, 0.75, na.rm = TRUE),
+    q025_delta_relative = quantile(delta_relative_to_national, 0.025, na.rm = TRUE),
+    q975_delta_relative = quantile(delta_relative_to_national, 0.975, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+safe_wilcox_one_sample <- function(x, mu = 0) {
+  x <- x[is.finite(x)]
+  if (length(x) < 2 || length(unique(x)) < 2) {
+    return(NA_real_)
+  }
+  suppressWarnings(wilcox.test(x, mu = mu, exact = FALSE)$p.value)
+}
+
+safe_wilcox_two_sample <- function(x, y) {
+  x <- x[is.finite(x)]
+  y <- y[is.finite(y)]
+  if (length(x) < 2 || length(y) < 2 || length(unique(c(x, y))) < 2) {
+    return(NA_real_)
+  }
+  suppressWarnings(wilcox.test(x, y, exact = FALSE)$p.value)
+}
+
+safe_cliffs_delta <- function(x, y) {
+  x <- x[is.finite(x)]
+  y <- y[is.finite(y)]
+  if (length(x) < 1 || length(y) < 1) {
+    return(NA_real_)
+  }
+  ranks <- rank(c(x, y), ties.method = "average")
+  n_x <- length(x)
+  n_y <- length(y)
+  rank_sum_x <- sum(ranks[seq_len(n_x)])
+  u_statistic <- rank_sum_x - n_x * (n_x + 1) / 2
+  2 * u_statistic / (n_x * n_y) - 1
+}
+
+safe_bootstrap_median_difference <- function(x, y, n_boot = 2000) {
+  x <- x[is.finite(x)]
+  y <- y[is.finite(y)]
+  if (length(x) < 2 || length(y) < 2) {
+    return(tibble(
+      median_difference_ci_low = NA_real_,
+      median_difference_ci_high = NA_real_
+    ))
+  }
+  bootstrap_differences <- replicate(
+    n_boot,
+    median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+      median(sample(y, length(y), replace = TRUE), na.rm = TRUE)
+  )
+  tibble(
+    median_difference_ci_low = unname(quantile(bootstrap_differences, 0.025, na.rm = TRUE)),
+    median_difference_ci_high = unname(quantile(bootstrap_differences, 0.975, na.rm = TRUE))
+  )
+}
+
+set.seed(20260505)
+environment_delta_tests <- environment_delta_plot_data |>
+  filter(group_status %in% c("Retained source cluster", "Shifted into Cluster 2")) |>
+  group_by(source_cluster, variable, variable_label) |>
+  summarise(
+    n_changed = n_distinct(site[group_status == "Shifted into Cluster 2"]),
+    n_retained = n_distinct(site[group_status == "Retained source cluster"]),
+    median_changed = median(delta_relative_to_national[group_status == "Shifted into Cluster 2"], na.rm = TRUE),
+    median_retained = median(delta_relative_to_national[group_status == "Retained source cluster"], na.rm = TRUE),
+    median_difference_changed_minus_retained = median_changed - median_retained,
+    p_changed_vs_retained = safe_wilcox_two_sample(
+      delta_relative_to_national[group_status == "Shifted into Cluster 2"],
+      delta_relative_to_national[group_status == "Retained source cluster"]
+    ),
+    cliffs_delta_changed_vs_retained = safe_cliffs_delta(
+      delta_relative_to_national[group_status == "Shifted into Cluster 2"],
+      delta_relative_to_national[group_status == "Retained source cluster"]
+    ),
+    bootstrap = list(safe_bootstrap_median_difference(
+      delta_relative_to_national[group_status == "Shifted into Cluster 2"],
+      delta_relative_to_national[group_status == "Retained source cluster"]
+    )),
+    .groups = "drop"
+  ) |>
+  unnest(bootstrap) |>
+  mutate(
+    p_changed_vs_retained_adj = p.adjust(p_changed_vs_retained, method = "BH"),
+    sample_size_ratio = pmax(n_changed, n_retained) / pmax(pmin(n_changed, n_retained), 1),
+    bootstrap_ci_excludes_zero = replace_na(
+      median_difference_ci_low > 0 | median_difference_ci_high < 0,
+      FALSE
+    ),
+    non_trivial_effect_size = replace_na(abs(cliffs_delta_changed_vs_retained) >= 0.147, FALSE),
+    significant_changed_vs_retained = replace_na(p_changed_vs_retained_adj < 0.05, FALSE) &
+      bootstrap_ci_excludes_zero,
+    highlighted = significant_changed_vs_retained & non_trivial_effect_size,
+    significance_status = if_else(
+      highlighted,
+      "Different from retained cells",
+      "Not different from retained cells"
+    )
+  )
+
+environment_delta_summary <- environment_delta_summary |>
+  left_join(
+    environment_delta_tests |>
+      select(
+        source_cluster, variable, n_changed, n_retained,
+        median_difference_changed_minus_retained,
+        median_difference_ci_low, median_difference_ci_high,
+        p_changed_vs_retained, p_changed_vs_retained_adj,
+        cliffs_delta_changed_vs_retained, sample_size_ratio,
+        bootstrap_ci_excludes_zero, non_trivial_effect_size,
+        significant_changed_vs_retained, highlighted, significance_status
+      ),
+    by = c("source_cluster", "variable")
+  ) |>
+  mutate(
+    highlighted = if_else(group_status == "Shifted into Cluster 2", replace_na(highlighted, FALSE), FALSE),
+    significance_status = case_when(
+      group_status == "Shifted into Cluster 2" & highlighted ~ "Different from retained cells",
+      group_status == "Shifted into Cluster 2" ~ "Not different from retained cells",
+      group_status == "Retained source cluster" ~ "Retained source-cluster cells",
+      TRUE ~ "National distribution"
+    )
+  )
+
+make_species_delta_frame <- function(focal_df) {
+  target_atlas <- unique(focal_df$target_atlas)
+  if (length(target_atlas) != 1) {
+    stop("Expected one target atlas per focal transition group.", call. = FALSE)
+  }
+
+  missing_from <- setdiff(focal_df$survey_from, rownames(predsY_all[[focal_atlas]]))
+  missing_to <- setdiff(focal_df$survey_to, rownames(predsY_all[[target_atlas]]))
+  if (length(missing_from) > 0 || length(missing_to) > 0) {
+    stop("Missing prediction rows for focal transition sites.", call. = FALSE)
+  }
+
+  from_pred <- predsY_all[[focal_atlas]][focal_df$survey_from, reference_species, drop = FALSE]
+  to_pred <- predsY_all[[target_atlas]][focal_df$survey_to, reference_species, drop = FALSE]
+
+  from_long <- as_tibble(from_pred, .name_repair = "minimal") |>
+    mutate(site = focal_df$site, .before = 1) |>
+    pivot_longer(-site, names_to = "species", values_to = "probability_from")
+
+  to_long <- as_tibble(to_pred, .name_repair = "minimal") |>
+    mutate(site = focal_df$site, .before = 1) |>
+    pivot_longer(-site, names_to = "species", values_to = "probability_to")
+
+  focal_df |>
+    select(
+      comparison, transition, source_cluster, target_cluster, target_atlas,
+      target_period, site, low_confidence_target
+    ) |>
+    left_join(from_long, by = "site", relationship = "one-to-many") |>
+    left_join(to_long, by = c("site", "species")) |>
+    mutate(
+      probability_delta = probability_to - probability_from,
+      probability_gain = pmax(probability_delta, 0),
+      probability_loss = pmin(probability_delta, 0)
+    )
+}
+
+cluster2_shift_species_site_deltas <- cluster2_shift_focal_sites |>
+  group_split(comparison, transition) |>
+  map_dfr(make_species_delta_frame)
+
+species_trait_table <- traits |>
+  select(
+    species,
+    thermal_group,
+    migratory_strategy = Migration_a3_DOF,
+    foraging_guild = foraging_guild_consensus,
+    species_thermal_index
+  )
+
+cluster2_shift_species_deltas <- cluster2_shift_species_site_deltas |>
+  group_by(comparison, transition, source_cluster, target_cluster, species) |>
+  summarise(
+    n_sites = n(),
+    mean_probability_from = mean(probability_from, na.rm = TRUE),
+    mean_probability_to = mean(probability_to, na.rm = TRUE),
+    mean_probability_delta = mean(probability_delta, na.rm = TRUE),
+    median_probability_delta = median(probability_delta, na.rm = TRUE),
+    q10_probability_delta = quantile(probability_delta, 0.10, na.rm = TRUE),
+    q90_probability_delta = quantile(probability_delta, 0.90, na.rm = TRUE),
+    mean_probability_gain = mean(probability_gain, na.rm = TRUE),
+    mean_probability_loss = mean(probability_loss, na.rm = TRUE),
+    prop_sites_increase = mean(probability_delta > 0, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  left_join(species_trait_table, by = "species") |>
+  mutate(
+    driver_direction = if_else(mean_probability_delta >= 0, "Gain", "Loss"),
+    species_label = str_replace_all(species, "_", " ")
+  )
+
+cluster2_shift_top_species_drivers <- bind_rows(
+  cluster2_shift_species_deltas |>
+    filter(mean_probability_delta < 0) |>
+    group_by(comparison, transition) |>
+    slice_min(mean_probability_delta, n = 12, with_ties = FALSE) |>
+    ungroup(),
+  cluster2_shift_species_deltas |>
+    filter(mean_probability_delta > 0) |>
+    group_by(comparison, transition) |>
+    slice_max(mean_probability_delta, n = 12, with_ties = FALSE) |>
+    ungroup()
+) |>
+  arrange(comparison, transition, mean_probability_delta)
+
+cluster2_shift_site_trait_deltas <- cluster2_shift_species_site_deltas |>
+  inner_join(trait_lookup, by = "species", relationship = "many-to-many") |>
+  group_by(comparison, transition, source_cluster, target_cluster, site, trait_family, trait_value) |>
+  summarise(
+    expected_richness_delta = sum(probability_delta, na.rm = TRUE),
+    expected_richness_gain = sum(probability_gain, na.rm = TRUE),
+    expected_richness_loss = sum(probability_loss, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+cluster2_shift_trait_deltas <- cluster2_shift_site_trait_deltas |>
+  group_by(comparison, transition, source_cluster, target_cluster, trait_family, trait_value) |>
+  summarise(
+    n_sites = n_distinct(site),
+    mean_expected_richness_delta = mean(expected_richness_delta, na.rm = TRUE),
+    median_expected_richness_delta = median(expected_richness_delta, na.rm = TRUE),
+    q10_expected_richness_delta = quantile(expected_richness_delta, 0.10, na.rm = TRUE),
+    q90_expected_richness_delta = quantile(expected_richness_delta, 0.90, na.rm = TRUE),
+    mean_expected_richness_gain = mean(expected_richness_gain, na.rm = TRUE),
+    mean_expected_richness_loss = mean(expected_richness_loss, na.rm = TRUE),
+    prop_sites_increase = mean(expected_richness_delta > 0, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  left_join(trait_group_sizes, by = c("trait_family", "trait_value")) |>
+  mutate(
+    mean_expected_richness_delta_per_species = mean_expected_richness_delta / n_species_in_trait_group,
+    median_expected_richness_delta_per_species = median_expected_richness_delta / n_species_in_trait_group,
+    q10_expected_richness_delta_per_species = q10_expected_richness_delta / n_species_in_trait_group,
+    q90_expected_richness_delta_per_species = q90_expected_richness_delta / n_species_in_trait_group,
+    mean_expected_richness_gain_per_species = mean_expected_richness_gain / n_species_in_trait_group,
+    mean_expected_richness_loss_per_species = mean_expected_richness_loss / n_species_in_trait_group
+  ) |>
+  group_by(comparison, transition, trait_family) |>
+  mutate(
+    total_absolute_trait_change = sum(abs(mean_expected_richness_delta), na.rm = TRUE),
+    total_absolute_trait_change_per_species = sum(abs(mean_expected_richness_delta_per_species), na.rm = TRUE),
+    absolute_change_share = ifelse(
+      total_absolute_trait_change > 0,
+      abs(mean_expected_richness_delta) / total_absolute_trait_change,
+      NA_real_
+    ),
+    absolute_change_share_per_species = ifelse(
+      total_absolute_trait_change_per_species > 0,
+      abs(mean_expected_richness_delta_per_species) / total_absolute_trait_change_per_species,
+      NA_real_
+    ),
+    driver_direction = if_else(mean_expected_richness_delta >= 0, "Gain", "Loss"),
+    driver_direction_per_species = if_else(mean_expected_richness_delta_per_species >= 0, "Gain", "Loss")
+  ) |>
+  ungroup()
+
+cluster2_shift_trait_drivers <- bind_rows(
+  cluster2_shift_trait_deltas |>
+    filter(mean_expected_richness_delta < 0) |>
+    group_by(comparison, transition, trait_family) |>
+    slice_min(mean_expected_richness_delta, n = 5, with_ties = FALSE) |>
+    ungroup(),
+  cluster2_shift_trait_deltas |>
+    filter(mean_expected_richness_delta > 0) |>
+    group_by(comparison, transition, trait_family) |>
+    slice_max(mean_expected_richness_delta, n = 5, with_ties = FALSE) |>
+    ungroup()
+)
+
+cluster2_shift_trait_drivers_size_normalized <- bind_rows(
+  cluster2_shift_trait_deltas |>
+    filter(mean_expected_richness_delta_per_species < 0) |>
+    group_by(comparison, transition, trait_family) |>
+    slice_min(mean_expected_richness_delta_per_species, n = 5, with_ties = FALSE) |>
+    ungroup(),
+  cluster2_shift_trait_deltas |>
+    filter(mean_expected_richness_delta_per_species > 0) |>
+    group_by(comparison, transition, trait_family) |>
+    slice_max(mean_expected_richness_delta_per_species, n = 5, with_ties = FALSE) |>
+    ungroup()
+)
+
+cluster2_shift_checks <- bind_rows(
+  cluster2_shift_site_counts |>
+    mutate(
+      check_type = "Focal transition counts",
+      expected_n_sites = case_when(
+        comparison == "1990s minus 1970s" & transition == "Cluster 1 to Cluster 2" ~ 142L,
+        comparison == "1990s minus 1970s" & transition == "Cluster 3 to Cluster 2" ~ 219L,
+        comparison == "2010s minus 1970s" & transition == "Cluster 1 to Cluster 2" ~ 245L,
+        comparison == "2010s minus 1970s" & transition == "Cluster 3 to Cluster 2" ~ 392L,
+        TRUE ~ NA_integer_
+      ),
+      passed = n_sites == expected_n_sites
+    ) |>
+    select(check_type, comparison, transition, n_sites, expected_n_sites, passed, everything()),
+  cluster2_shift_focal_sites |>
+    group_by(comparison, transition, target_atlas) |>
+    summarise(
+      check_type = "Prediction row matches",
+      n_sites = n(),
+      n_missing_from = sum(!survey_from %in% rownames(predsY_all[[focal_atlas]])),
+      n_missing_to = sum(!survey_to %in% rownames(predsY_all[[unique(target_atlas)]])),
+      passed = n_missing_from == 0 & n_missing_to == 0,
+      .groups = "drop"
+    ) |>
+    mutate(expected_n_sites = NA_integer_) |>
+    select(check_type, comparison, transition, n_sites, expected_n_sites, passed, everything()),
+  tibble(
+    check_type = "Species metadata coverage",
+    comparison = NA,
+    transition = NA,
+    n_sites = NA_integer_,
+    expected_n_sites = NA_integer_,
+    passed = all(reference_species %in% species_trait_table$species),
+    n_model_species = length(reference_species),
+    n_species_missing_metadata = sum(!reference_species %in% species_trait_table$species)
+  )
+)
+```
+
+```{r cluster2-shift-tables, results='asis'}
+kable(
+  cluster2_shift_site_counts |>
+    mutate(
+      pct_low_confidence = percent(pct_low_confidence, accuracy = 0.1),
+      median_assignment_margin = round(median_assignment_margin, 3)
+    ),
+  caption = "Focal sites that shifted from Cluster 1 or Cluster 3 into Cluster 2."
+)
+
+kable(
+  cluster2_shift_trait_drivers_size_normalized |>
+    filter(comparison == cluster2_shift_focal_comparison) |>
+    mutate(
+      n_species_in_trait_group = as.integer(n_species_in_trait_group),
+      mean_expected_richness_delta = round(mean_expected_richness_delta, 3),
+      mean_expected_richness_delta_per_species = round(mean_expected_richness_delta_per_species, 4),
+      mean_expected_richness_loss_per_species = round(mean_expected_richness_loss_per_species, 4),
+      mean_expected_richness_gain_per_species = round(mean_expected_richness_gain_per_species, 4),
+      absolute_change_share_per_species = percent(absolute_change_share_per_species, accuracy = 0.1),
+      prop_sites_increase = percent(prop_sites_increase, accuracy = 1)
+    ) |>
+    select(
+      comparison, transition, trait_family, driver_direction_per_species, trait_value,
+      n_species_in_trait_group, mean_expected_richness_delta,
+      mean_expected_richness_delta_per_species,
+      mean_expected_richness_loss_per_species,
+      mean_expected_richness_gain_per_species,
+      absolute_change_share_per_species, prop_sites_increase
+    ),
+  caption = "Strongest size-normalized trait-group losses and gains among sites shifting into Cluster 2 by the 2010s."
+)
+```
+
+```{r cluster2-shift-environment-plot, fig.width=10.5, fig.height=6.5}
+environment_national_summary <- environment_delta_summary |>
+  filter(group == "All matched cells") |>
+  mutate(
+    national_direction = case_when(
+      mean_delta_raw > 0 ~ "Increasing nationally",
+      mean_delta_raw < 0 ~ "Decreasing nationally",
+      TRUE ~ "No national mean change"
+    ),
+    national_direction = factor(
+      national_direction,
+      levels = c("Increasing nationally", "Decreasing nationally", "No national mean change")
+    )
+  )
+
+environment_focal_summary <- environment_delta_summary |>
+  filter(group != "All matched cells") |>
+  mutate(
+    significance_status = factor(
+      significance_status,
+      levels = c(
+        "Different from retained cells",
+        "Not different from retained cells",
+        "Retained source-cluster cells"
+      )
+    )
+  )
+
+cluster2_shift_environment_plot <- ggplot() +
+  geom_linerange(
+    data = environment_national_summary,
+    aes(
+      x = variable_label,
+      ymin = q025_delta_relative,
+      ymax = q975_delta_relative,
+      colour = national_direction
+    ),
+    linewidth = 1.1,
+    alpha = 0.28
+  ) +
+  geom_linerange(
+    data = environment_national_summary,
+    aes(
+      x = variable_label,
+      ymin = q25_delta_relative,
+      ymax = q75_delta_relative,
+      colour = national_direction
+    ),
+    linewidth = 3.2,
+    alpha = 0.68
+  ) +
+  geom_point(
+    data = environment_national_summary,
+    aes(x = variable_label, y = median_delta_relative),
+    colour = "grey25",
+    size = 1.7
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "grey35", linewidth = 0.35) +
+  geom_pointrange(
+    data = environment_focal_summary,
+    aes(
+      x = variable_label,
+      y = median_delta_relative,
+      ymin = q25_delta_relative,
+      ymax = q75_delta_relative,
+      colour = group,
+      alpha = significance_status
+    ),
+    position = position_dodge(width = 0.58),
+    linewidth = 0.65,
+    fatten = 2.2
+  ) +
+  coord_flip() +
+  scale_colour_manual(
+    values = c(
+      "Increasing nationally" = "#3b88c3",
+      "Decreasing nationally" = "#c65a32",
+      "No national mean change" = "grey70",
+      "Cluster 1 to Cluster 1" = "#8dd3c7",
+      "Cluster 1 to Cluster 2" = "#1b9e77",
+      "Cluster 3 to Cluster 3" = "#bebada",
+      "Cluster 3 to Cluster 2" = "#7570b3"
+    ),
+    breaks = c(
+      "Increasing nationally",
+      "Decreasing nationally",
+      "Cluster 1 to Cluster 1",
+      "Cluster 1 to Cluster 2",
+      "Cluster 3 to Cluster 3",
+      "Cluster 3 to Cluster 2"
+    ),
+    name = NULL
+  ) +
+  scale_alpha_manual(
+    values = c(
+      "Different from retained cells" = 1,
+      "Not different from retained cells" = 0.22,
+      "Retained source-cluster cells" = 0.46
+    ),
+    guide = "none"
+  ) +
+  labs(
+    title = "Environmental context of cells shifting into Cluster 2",
+    subtitle = str_wrap(
+      "National intervals are centred so each median Danish change equals zero; blue/orange bars show whether the mean national change increased or decreased. Shifted cells are tested against cells that started in the same cluster and remained there; full opacity requires BH-adjusted Wilcoxon support, a bootstrap median-difference interval excluding zero, and a non-trivial Cliff's delta.",
+      width = 95
+    ),
+    x = NULL,
+    y = "Environmental change anomaly from national median (SD units)"
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 10, lineheight = 1.05)
+  )
+
+cluster2_shift_environment_plot
+```
+
+```{r cluster2-shift-thermal-migration-plot, fig.width=10.5, fig.height=6.5}
+thermal_migration_driver_df <- cluster2_shift_trait_deltas |>
+  filter(
+    comparison == cluster2_shift_focal_comparison,
+    trait_family %in% c("Thermal affinity", "Migratory strategy")
+  ) |>
+  mutate(
+    trait_value = factor(trait_value, levels = c(thermal_levels, rev(migration_levels))),
+    trait_colour_group = as.character(trait_value)
+  )
+
+cluster2_shift_thermal_migration_plot <- ggplot(
+  thermal_migration_driver_df,
+  aes(
+    x = mean_expected_richness_delta_per_species,
+    y = trait_value,
+    fill = trait_colour_group
+  )
+) +
+  geom_vline(xintercept = 0, colour = "grey35", linewidth = 0.35) +
+  geom_col(width = 0.72, colour = "white", linewidth = 0.2) +
+  facet_grid(trait_family ~ transition, scales = "free_y", space = "free_y") +
+  scale_fill_manual(
+    values = c(thermal_palette, migration_palette),
+    breaks = c(rev(thermal_levels), migration_levels),
+    name = NULL
+  ) +
+  labs(
+    title = "Size-normalized thermal and migratory drivers of shifts into Cluster 2 by the 2010s",
+    subtitle = "Bars show mean expected-richness delta per species in each trait group.",
+    x = "Mean expected richness delta per species",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold"),
+    legend.position = "top"
+  )
+
+cluster2_shift_thermal_migration_plot
+```
+
+```{r cluster2-shift-foraging-plot, fig.width=12.5, fig.height=8.5}
+aquatic_wetland_guilds <- c(
+  "Aquatic pursuers", "Dabbling ducks", "Dippers", "Diving ducks",
+  "Grazing waterfowl", "Gulls", "Kingfishers", "Marsh warblers",
+  "Plovers", "Rails", "Reedlings", "Scolopacids", "Terns", "Wading birds"
+)
+
+foraging_driver_order <- cluster2_shift_trait_deltas |>
+  filter(
+    comparison == cluster2_shift_focal_comparison,
+    trait_family == "Foraging guild"
+  ) |>
+  group_by(trait_value) |>
+  summarise(mean_delta = mean(mean_expected_richness_delta_per_species, na.rm = TRUE), .groups = "drop") |>
+  arrange(mean_delta) |>
+  pull(trait_value)
+
+foraging_driver_df <- cluster2_shift_trait_deltas |>
+  filter(
+    comparison == cluster2_shift_focal_comparison,
+    trait_family == "Foraging guild"
+  ) |>
+  mutate(
+    trait_value = factor(trait_value, levels = foraging_driver_order),
+    transition = factor(transition, levels = c("Cluster 1 to Cluster 2", "Cluster 3 to Cluster 2"))
+  )
+
+guild_driver_annotations <- species_trait_table |>
+  filter(!is.na(foraging_guild), foraging_guild != "") |>
+  mutate(
+    foraging_habitat = if_else(
+      foraging_guild %in% aquatic_wetland_guilds,
+      "Aquatic/wetland",
+      "Terrestrial/aerial"
+    ),
+    is_long_distance = str_detect(replace_na(migratory_strategy, ""), "long-distance")
+  ) |>
+  group_by(foraging_guild) |>
+  summarise(
+    trait_value = first(foraging_guild),
+    foraging_habitat = if_else(
+      mean(foraging_habitat == "Aquatic/wetland", na.rm = TRUE) >= 0.5,
+      "Aquatic/wetland",
+      "Terrestrial/aerial"
+    ),
+    n_species = n(),
+    .groups = "drop"
+  ) |>
+  filter(trait_value %in% foraging_driver_order) |>
+  mutate(
+    trait_value = factor(trait_value, levels = foraging_driver_order),
+    foraging_habitat = factor(foraging_habitat, levels = c("Aquatic/wetland", "Terrestrial/aerial"))
+  )
+
+guild_migration_composition <- species_trait_table |>
+  filter(
+    !is.na(foraging_guild), foraging_guild != "",
+    !is.na(migratory_strategy), migratory_strategy != "",
+    foraging_guild %in% foraging_driver_order
+  ) |>
+  count(foraging_guild, migratory_strategy, name = "n_species") |>
+  group_by(foraging_guild) |>
+  mutate(proportion = n_species / sum(n_species, na.rm = TRUE)) |>
+  ungroup() |>
+  complete(
+    foraging_guild = foraging_driver_order,
+    migratory_strategy = migration_levels,
+    fill = list(n_species = 0, proportion = 0)
+  ) |>
+  mutate(
+    trait_value = factor(foraging_guild, levels = foraging_driver_order),
+    migratory_strategy = factor(migratory_strategy, levels = migration_levels)
+  )
+
+overall_mean_sti <- mean(species_trait_table$species_thermal_index, na.rm = TRUE)
+
+guild_sti_summary <- species_trait_table |>
+  filter(
+    !is.na(foraging_guild), foraging_guild != "",
+    !is.na(species_thermal_index),
+    foraging_guild %in% foraging_driver_order
+  ) |>
+  group_by(foraging_guild) |>
+  summarise(
+    trait_value = first(foraging_guild),
+    mean_sti = mean(species_thermal_index, na.rm = TRUE),
+    sti_q025 = quantile(species_thermal_index, 0.025, na.rm = TRUE),
+    sti_q975 = quantile(species_thermal_index, 0.975, na.rm = TRUE),
+    n_species = n(),
+    .groups = "drop"
+  ) |>
+  mutate(
+    trait_value = factor(trait_value, levels = foraging_driver_order)
+  )
+
+guild_habitat_strip <- ggplot(
+  guild_driver_annotations,
+  aes(x = "Habitat", y = trait_value, fill = foraging_habitat)
+) +
+  geom_tile(colour = "white", linewidth = 0.25) +
+  scale_fill_manual(
+    values = c("Aquatic/wetland" = "#2b8cbe", "Terrestrial/aerial" = "#7f8f3a"),
+    name = "Guild habitat"
+  ) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.ticks = element_blank(),
+    legend.position = "bottom"
+  )
+
+guild_migration_bar <- ggplot(
+  guild_migration_composition,
+  aes(x = proportion, y = trait_value, fill = migratory_strategy)
+) +
+  geom_col(width = 0.72, colour = "white", linewidth = 0.15) +
+  scale_x_continuous(
+    labels = percent_format(accuracy = 1),
+    breaks = c(0, 0.5, 1),
+    limits = c(0, 1),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  scale_fill_manual(
+    values = migration_palette,
+    breaks = migration_levels,
+    drop = FALSE,
+    name = "Migratory strategy"
+  ) +
+  labs(x = "Migration", y = NULL) +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(5.5, 14, 5.5, 5.5),
+    legend.position = "bottom"
+  )
+
+guild_sti_forest_plot <- ggplot(
+  guild_sti_summary,
+  aes(y = trait_value)
+) +
+  geom_vline(xintercept = overall_mean_sti, colour = "grey35", linewidth = 0.35, linetype = "dashed") +
+  geom_segment(
+    aes(x = sti_q025, xend = sti_q975, yend = trait_value),
+    colour = "grey45",
+    linewidth = 0.55
+  ) +
+  geom_point(aes(x = mean_sti, colour = mean_sti), size = 2.4) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.04, 0.04))
+  ) +
+  scale_colour_gradientn(
+    colours = c("blue4", "darkorchid", "red2"),
+    name = "Mean STI"
+  ) +
+  labs(x = "STI", y = NULL) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(5.5, 14, 5.5, 5.5),
+    legend.position = "bottom"
+  )
+
+cluster2_shift_foraging_heatmap <- ggplot(
+  foraging_driver_df,
+  aes(x = transition, y = trait_value, fill = mean_expected_richness_delta_per_species)
+) +
+  geom_tile(colour = "white", linewidth = 0.25) +
+  scale_fill_gradient2(
+    low = "#d95f02",
+    mid = "white",
+    high = "#1b9e77",
+    midpoint = 0,
+    name = "Mean expected\nrichness delta\nper species"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(5.5, 5.5, 5.5, 5.5)
+  )
+
+cluster2_shift_foraging_plot <- (
+  guild_habitat_strip + guild_migration_bar + guild_sti_forest_plot + cluster2_shift_foraging_heatmap +
+    plot_layout(widths = c(1.05, 2.1, 2.1, 3.4), guides = "collect")
+) +
+  plot_annotation(
+    title = "Foraging-guild drivers of shifts into Cluster 2 by the 2010s",
+    subtitle = "The STI forest plot shows guild mean and central 95% species interval; the dashed line is the overall mean STI."
+  ) &
+  theme(
+    legend.position = "right",
+    legend.text = element_text(size = 9),
+    legend.title = element_text(size = 10),
+    plot.title = element_text(face = "bold")
+  )
+
+cluster2_shift_foraging_plot
+```
+
+## Export Results
+
+```{r export-results}
+write_csv(
+  cluster_trait_composition,
+  file.path(out_dir, paste0(output_prefix, "-cluster-trait-composition.csv"))
+)
+write_csv(
+  cluster_trait_dominant_groups,
+  file.path(out_dir, paste0(output_prefix, "-cluster-trait-composition-dominant-groups.csv"))
+)
+write_csv(
+  cluster_top_modelled_species,
+  file.path(out_dir, paste0(output_prefix, "-cluster-top-modelled-species.csv"))
+)
+write_csv(
+  cluster_trait_composition_checks,
+  file.path(out_dir, paste0(output_prefix, "-cluster-trait-composition-checks.csv"))
+)
+write_csv(
+  reference_environment_values,
+  file.path(out_dir, paste0(output_prefix, "-reference-cluster-environment-values.csv"))
+)
+write_csv(
+  reference_environment_summary,
+  file.path(out_dir, paste0(output_prefix, "-reference-cluster-environment-summary.csv"))
+)
+write_csv(
+  reference_environment_tests,
+  file.path(out_dir, paste0(output_prefix, "-reference-cluster-environment-tests.csv"))
+)
+write_csv(
+  cluster2_shift_focal_sites,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-focal-sites.csv"))
+)
+write_csv(
+  cluster2_shift_species_deltas,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-species-deltas.csv"))
+)
+write_csv(
+  cluster2_shift_top_species_drivers,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-top-species-drivers.csv"))
+)
+write_csv(
+  cluster2_shift_trait_deltas,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-trait-deltas.csv"))
+)
+write_csv(
+  cluster2_shift_trait_deltas |>
+    select(
+      comparison, transition, source_cluster, target_cluster, trait_family,
+      trait_value, n_species_in_trait_group,
+      mean_expected_richness_delta_per_species,
+      median_expected_richness_delta_per_species,
+      q10_expected_richness_delta_per_species,
+      q90_expected_richness_delta_per_species,
+      mean_expected_richness_gain_per_species,
+      mean_expected_richness_loss_per_species,
+      absolute_change_share_per_species,
+      prop_sites_increase,
+      everything()
+    ),
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-trait-deltas-size-normalized.csv"))
+)
+write_csv(
+  environment_matched_sites,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-environment-deltas.csv"))
+)
+write_csv(
+  environment_retained_comparison_counts,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-environment-retained-comparison-counts.csv"))
+)
+write_csv(
+  environment_delta_summary,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-environment-delta-summary.csv"))
+)
+write_csv(
+  environment_delta_tests,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-environment-delta-tests.csv"))
+)
+write_csv(
+  cluster2_shift_checks,
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-checks.csv"))
+)
+
+ggsave(
+  file.path(out_dir, paste0(output_prefix, "-cluster-thermal-migration-composition.png")),
+  thermal_migration_composition_plot,
+  width = 8.5,
+  height = 7,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  file.path(out_dir, paste0(output_prefix, "-cluster-foraging-guild-composition-heatmap.png")),
+  foraging_guild_composition_heatmap,
+  width = 8.5,
+  height = 9.5,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  file.path(out_dir, paste0(output_prefix, "-reference-cluster-environment-profile.png")),
+  reference_environment_profile_plot,
+  width = 10.5,
+  height = 6.3,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+obsolete_species_plot_path <- file.path(out_dir, paste0(pattern, "-cluster2-shift-species-drivers.png"))
+if (file.exists(obsolete_species_plot_path)) {
+  unlink(obsolete_species_plot_path)
+}
+
+ggsave(
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-thermal-migration-drivers-size-normalized.png")),
+  cluster2_shift_thermal_migration_plot,
+  width = 10.5,
+  height = 6.5,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-environment-context.png")),
+  cluster2_shift_environment_plot,
+  width = 10.5,
+  height = 6.5,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  file.path(out_dir, paste0(pattern, "-cluster2-shift-foraging-guild-drivers-size-normalized.png")),
+  cluster2_shift_foraging_plot,
+  width = 16,
+  height = 8.8,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+```

@@ -1,0 +1,1070 @@
+---
+title: "Species association Omega exploration"
+author: "WM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+# This notebook is exploratory, but the outputs are intended to be reusable.
+# All rendered and manually saved plots are PNGs, following the project rule.
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  dev = "png",
+  dpi = 300
+)
+project_root <- normalizePath(file.path("..", ".."))
+knitr::opts_knit$set(root.dir = project_root)
+
+required_packages <- c(
+  "tidyverse", "readxl", "knitr", "patchwork", "viridis", "scales"
+)
+missing_packages <- required_packages[
+  !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
+]
+if (length(missing_packages) > 0) {
+  stop(
+    "Install required packages before rendering: ",
+    paste(missing_packages, collapse = ", "),
+    call. = FALSE
+  )
+}
+
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(readxl)
+  library(knitr)
+  library(patchwork)
+  library(viridis)
+  library(scales)
+})
+
+old_wd <- setwd(project_root)
+source(file.path("support_scripts", "figure_data_helpers.R"))
+setwd(old_wd)
+
+theme_set(theme_minimal(base_size = 11))
+```
+
+## Aim
+
+This notebook explores residual species associations from the HMSC `Omega`
+estimates. The values are not raw co-occurrence counts. They are residual
+associations after the fitted environmental, trait, phylogenetic, and spatial
+structure in each atlas-period model.
+
+The main questions are:
+
+- Which species pairs show supported positive or negative residual association?
+- Do those pairwise association patterns change across atlas periods?
+- Do foraging guilds show stronger or weaker residual association than expected
+  from the atlas-wide average, or from a guild-label permutation null?
+
+## Load Omega Estimates
+
+```{r configuration}
+# The March 2026 models are the current publication-facing atlas comparison
+# model family documented in the project README.
+base_dir <- "HmscOutputs"
+pattern <- "2026-03-13"
+omega_random_level <- "site"
+support_level <- 0.95
+negative_support_cutoff <- 0.05
+expected_species_count <- 157
+
+# This is high enough for a stable exploratory null while still rendering
+# comfortably on a laptop. Increase if the guild null becomes manuscript-facing.
+n_permutations <- 999
+set.seed(20260518)
+
+period_order <- c("1970s", "1990s", "2010s")
+year_lookup <- c("1" = "1970s", "2" = "1990s", "3" = "2010s")
+support_levels <- c("Supported positive", "Supported negative", "Unsupported")
+min_pairs_for_stable_guild_summary <- 10
+
+out_dir <- file.path(
+  "notebooks", "exploratory", "outputs", "species-associations-omega"
+)
+plot_dir <- file.path(out_dir, "plots")
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
+
+matching_folders <- figure_model_folders(pattern = pattern, base_dir = base_dir)
+model_metadata <- tibble(
+  model_folder = matching_folders,
+  atlas = as.character(atlas_numbers(matching_folders)),
+  period = unname(year_lookup[atlas])
+) |>
+  arrange(as.numeric(.data$atlas))
+
+kable(model_metadata, caption = "Model folders used for the Omega exploration.")
+```
+
+```{r omega-reader}
+read_numeric_matrix_sheet <- function(path, sheet) {
+  # The S7 Omega workbooks use a blank first column for row species names.
+  # readxl imports that column as ...1, so we rename it immediately.
+  df <- readxl::read_excel(path, sheet = sheet)
+  names(df)[1] <- "species"
+
+  matrix_values <- as.matrix(df[, -1])
+  storage.mode(matrix_values) <- "numeric"
+
+  list(
+    species = df$species,
+    column_species = colnames(df)[-1],
+    matrix = matrix_values
+  )
+}
+
+read_omega_pairs <- function(model_folder, atlas, period) {
+  omega_path <- file.path(
+    base_dir, model_folder, "Results",
+    paste0("parameter_estimates_Omega_", omega_random_level, ".xlsx")
+  )
+  if (!file.exists(omega_path)) {
+    stop(
+      "Missing Omega workbook: ", omega_path,
+      "\nRun S7_Show_parameter_estimates.R for this model first.",
+      call. = FALSE
+    )
+  }
+
+  mean_sheet <- read_numeric_matrix_sheet(omega_path, "Posterior mean")
+  positive_sheet <- read_numeric_matrix_sheet(omega_path, "Pr(x>0)")
+  negative_sheet <- read_numeric_matrix_sheet(omega_path, "Pr(x<0)")
+
+  species_names <- mean_sheet$species
+  if (!identical(species_names, mean_sheet$column_species)) {
+    stop("Row and column species names do not match in: ", omega_path, call. = FALSE)
+  }
+  if (!identical(species_names, positive_sheet$species) ||
+      !identical(species_names, positive_sheet$column_species) ||
+      !identical(species_names, negative_sheet$species) ||
+      !identical(species_names, negative_sheet$column_species)) {
+    stop("Omega workbook sheets have inconsistent species names: ", omega_path, call. = FALSE)
+  }
+
+  pair_index <- which(upper.tri(mean_sheet$matrix), arr.ind = TRUE)
+
+  tibble(
+    model_folder = model_folder,
+    atlas = atlas,
+    period = period,
+    species_a = species_names[pair_index[, "row"]],
+    species_b = species_names[pair_index[, "col"]],
+    omega_mean = as.numeric(mean_sheet$matrix[pair_index]),
+    pr_positive = as.numeric(positive_sheet$matrix[pair_index]),
+    pr_negative = as.numeric(negative_sheet$matrix[pair_index])
+  ) |>
+    mutate(
+      # Rounding avoids Excel floating-point boundary artifacts where values
+      # that print as 0.05 can otherwise behave as just below 0.05.
+      pr_positive = round(.data$pr_positive, 10),
+      pr_negative = round(.data$pr_negative, 10),
+      pair_id = paste(.data$species_a, .data$species_b, sep = "__"),
+      support_class = case_when(
+        .data$pr_positive > support_level ~ "Supported positive",
+        .data$pr_positive < negative_support_cutoff ~ "Supported negative",
+        TRUE ~ "Unsupported"
+      ),
+      support_class = factor(.data$support_class, levels = support_levels),
+      is_supported_positive = .data$support_class == "Supported positive",
+      is_supported_negative = .data$support_class == "Supported negative",
+      period = factor(.data$period, levels = period_order)
+    )
+}
+
+omega_pairs_raw <- pmap_dfr(
+  model_metadata,
+  function(model_folder, atlas, period) {
+    read_omega_pairs(
+      model_folder = model_folder,
+      atlas = atlas,
+      period = period
+    )
+  }
+)
+
+validation_checks <- omega_pairs_raw |>
+  group_by(.data$atlas, .data$period, .data$model_folder) |>
+  summarise(
+    n_species = n_distinct(c(.data$species_a, .data$species_b)),
+    n_pairs = n(),
+    expected_pairs = .data$n_species * (.data$n_species - 1) / 2,
+    pair_count_ok = .data$n_pairs == .data$expected_pairs,
+    .groups = "drop"
+  )
+
+stopifnot(
+  all(validation_checks$n_species == expected_species_count),
+  all(validation_checks$pair_count_ok)
+)
+
+kable(
+  validation_checks,
+  caption = "Omega workbook validation. Each atlas should have 157 species and 12,246 unique non-self pairs."
+)
+```
+
+## Add Species Traits
+
+```{r trait-joins}
+load(file.path("Data", "preprocessed_data_min_occs_is_5_coverage_is_good_and_average.RData"))
+if (!exists("Tr")) {
+  stop("Expected object `Tr` in the preprocessed data file.", call. = FALSE)
+}
+
+species_traits <- Tr |>
+  as.data.frame() |>
+  rownames_to_column(var = "species") |>
+  transmute(
+    species = .data$species,
+    guild = .data$foraging_guild_consensus,
+    migration_group = .data$Migration_a3_DOF,
+    species_thermal_index = as.numeric(.data$species_thermal_index)
+  )
+
+guild_sizes <- species_traits |>
+  count(.data$guild, name = "n_species") |>
+  arrange(desc(.data$n_species), .data$guild)
+
+traits_a <- species_traits |>
+  rename(
+    species_a = species,
+    guild_a = guild,
+    migration_group_a = migration_group,
+    species_thermal_index_a = species_thermal_index
+  )
+traits_b <- species_traits |>
+  rename(
+    species_b = species,
+    guild_b = guild,
+    migration_group_b = migration_group,
+    species_thermal_index_b = species_thermal_index
+  )
+
+omega_pairs <- omega_pairs_raw |>
+  left_join(traits_a, by = "species_a") |>
+  left_join(traits_b, by = "species_b") |>
+  mutate(
+    guild_1 = pmin(.data$guild_a, .data$guild_b),
+    guild_2 = pmax(.data$guild_a, .data$guild_b),
+    guild_pair = if_else(
+      .data$guild_1 == .data$guild_2,
+      .data$guild_1,
+      paste(.data$guild_1, .data$guild_2, sep = " | ")
+    ),
+    guild_pair_type = if_else(
+      .data$guild_1 == .data$guild_2,
+      "Within guild",
+      "Between guild"
+    )
+  )
+
+if (any(is.na(omega_pairs$guild_a)) || any(is.na(omega_pairs$guild_b))) {
+  missing_species <- omega_pairs |>
+    filter(is.na(.data$guild_a) | is.na(.data$guild_b)) |>
+    summarise(species = paste(unique(c(.data$species_a, .data$species_b)), collapse = ", "))
+  stop("Some Omega species were not found in the trait table: ", missing_species$species, call. = FALSE)
+}
+
+kable(guild_sizes, caption = "Foraging guild sizes in the modelled species set.")
+```
+
+## Overall Association Patterns
+
+```{r overall-summaries}
+support_summary <- omega_pairs |>
+  count(.data$atlas, .data$period, .data$support_class, name = "n_pairs") |>
+  complete(
+    atlas,
+    period,
+    support_class = factor(support_levels, levels = support_levels),
+    fill = list(n_pairs = 0)
+  ) |>
+  group_by(.data$atlas, .data$period) |>
+  mutate(prop_pairs = .data$n_pairs / sum(.data$n_pairs)) |>
+  ungroup()
+
+top_supported_pairs <- omega_pairs |>
+  filter(.data$support_class != "Unsupported") |>
+  group_by(.data$atlas, .data$period, .data$support_class) |>
+  arrange(desc(abs(.data$omega_mean)), .by_group = TRUE) |>
+  slice_head(n = 25) |>
+  ungroup() |>
+  arrange(.data$atlas, .data$support_class, desc(abs(.data$omega_mean)))
+
+temporal_change <- omega_pairs |>
+  select(
+    pair_id, species_a, species_b,
+    guild_a, guild_b, guild_1, guild_2,
+    guild_pair, guild_pair_type,
+    period, omega_mean, pr_positive,
+    pr_negative, support_class
+  ) |>
+  pivot_wider(
+    names_from = .data$period,
+    values_from = c(
+      omega_mean, pr_positive, pr_negative,
+      support_class
+    ),
+    names_glue = "{.value}_{period}"
+  ) |>
+  mutate(
+    delta_1990s_minus_1970s = .data$omega_mean_1990s - .data$omega_mean_1970s,
+    delta_2010s_minus_1970s = .data$omega_mean_2010s - .data$omega_mean_1970s,
+    abs_delta_2010s_minus_1970s = abs(.data$delta_2010s_minus_1970s),
+    raw_sign_flip_1970s_to_2010s =
+      sign(.data$omega_mean_1970s) != sign(.data$omega_mean_2010s),
+    support_transition_1970s_to_2010s = paste(
+      .data$support_class_1970s, "->", .data$support_class_2010s
+    ),
+    newly_supported_2010s =
+      .data$support_class_1970s == "Unsupported" &
+      .data$support_class_2010s != "Unsupported",
+    lost_supported_2010s =
+      .data$support_class_1970s != "Unsupported" &
+      .data$support_class_2010s == "Unsupported",
+    supported_positive_to_negative_2010s =
+      .data$support_class_1970s == "Supported positive" &
+      .data$support_class_2010s == "Supported negative",
+    supported_negative_to_positive_2010s =
+      .data$support_class_1970s == "Supported negative" &
+      .data$support_class_2010s == "Supported positive"
+  ) |>
+  arrange(desc(.data$abs_delta_2010s_minus_1970s))
+
+support_transitions <- temporal_change |>
+  count(
+    .data$support_transition_1970s_to_2010s,
+    name = "n_pairs"
+  ) |>
+  mutate(prop_pairs = .data$n_pairs / sum(.data$n_pairs)) |>
+  arrange(desc(.data$n_pairs))
+
+kable(support_summary, digits = 3, caption = "Supported Omega association classes by atlas period.")
+```
+
+```{r write-main-csvs}
+write_csv(
+  omega_pairs,
+  file.path(out_dir, paste0(pattern, "-omega-species-pairs.csv"))
+)
+write_csv(
+  top_supported_pairs,
+  file.path(out_dir, paste0(pattern, "-omega-top-supported-pairs.csv"))
+)
+write_csv(
+  temporal_change,
+  file.path(out_dir, paste0(pattern, "-omega-temporal-change.csv"))
+)
+write_csv(
+  support_transitions,
+  file.path(out_dir, paste0(pattern, "-omega-support-transitions.csv"))
+)
+```
+
+## Guild-Level Observed Summaries
+
+```{r guild-observed-summary}
+atlas_averages <- omega_pairs |>
+  group_by(.data$atlas, .data$period) |>
+  summarise(
+    atlas_mean_omega = mean(.data$omega_mean, na.rm = TRUE),
+    atlas_median_omega = median(.data$omega_mean, na.rm = TRUE),
+    atlas_prop_supported_positive = mean(.data$is_supported_positive, na.rm = TRUE),
+    atlas_prop_supported_negative = mean(.data$is_supported_negative, na.rm = TRUE),
+    atlas_net_support_prop =
+      .data$atlas_prop_supported_positive - .data$atlas_prop_supported_negative,
+    .groups = "drop"
+  )
+
+guild_pair_summary <- omega_pairs |>
+  group_by(
+    .data$atlas, .data$period, .data$guild_pair_type,
+    .data$guild_1, .data$guild_2, .data$guild_pair
+  ) |>
+  summarise(
+    n_pairs = n(),
+    mean_omega = mean(.data$omega_mean, na.rm = TRUE),
+    median_omega = median(.data$omega_mean, na.rm = TRUE),
+    mean_abs_omega = mean(abs(.data$omega_mean), na.rm = TRUE),
+    prop_supported_positive = mean(.data$is_supported_positive, na.rm = TRUE),
+    prop_supported_negative = mean(.data$is_supported_negative, na.rm = TRUE),
+    net_support_prop =
+      .data$prop_supported_positive - .data$prop_supported_negative,
+    .groups = "drop"
+  ) |>
+  left_join(atlas_averages, by = c("atlas", "period")) |>
+  left_join(
+    guild_sizes |> rename(guild_1 = guild, n_species_guild_1 = n_species),
+    by = "guild_1"
+  ) |>
+  left_join(
+    guild_sizes |> rename(guild_2 = guild, n_species_guild_2 = n_species),
+    by = "guild_2"
+  ) |>
+  mutate(
+    mean_omega_minus_atlas_average = .data$mean_omega - .data$atlas_mean_omega,
+    prop_positive_minus_atlas_average =
+      .data$prop_supported_positive - .data$atlas_prop_supported_positive,
+    prop_negative_minus_atlas_average =
+      .data$prop_supported_negative - .data$atlas_prop_supported_negative,
+    net_support_minus_atlas_average =
+      .data$net_support_prop - .data$atlas_net_support_prop,
+    unstable_small_pair_count =
+      .data$n_pairs < min_pairs_for_stable_guild_summary
+  ) |>
+  arrange(.data$atlas, .data$guild_pair_type, desc(abs(.data$mean_omega_minus_atlas_average)))
+
+within_guild_summary <- guild_pair_summary |>
+  filter(.data$guild_pair_type == "Within guild") |>
+  arrange(.data$atlas, desc(abs(.data$mean_omega_minus_atlas_average)))
+
+write_csv(
+  guild_pair_summary,
+  file.path(out_dir, paste0(pattern, "-omega-guild-pair-observed-summary.csv"))
+)
+write_csv(
+  within_guild_summary,
+  file.path(out_dir, paste0(pattern, "-omega-within-guild-observed-summary.csv"))
+)
+
+kable(
+  within_guild_summary |>
+    select(
+      period, guild = guild_1, n_species_guild_1,
+      n_pairs, mean_omega, mean_omega_minus_atlas_average,
+      prop_supported_positive, prop_supported_negative,
+      unstable_small_pair_count
+    ),
+  digits = 3,
+  caption = "Within-guild observed Omega summaries. Small pair counts are flagged because they are unstable."
+)
+```
+
+## Guild Permutation Null
+
+The null keeps the Omega matrix fixed and randomly shuffles guild labels among
+species. This preserves the observed guild-size distribution, while asking
+whether a named guild or guild pair has stronger or weaker association than
+expected if guild identity were unrelated to the Omega structure.
+
+```{r guild-permutation-null}
+observed_guild_counts <- sort(table(species_traits$guild))
+permuted_guild_counts <- sort(table(sample(species_traits$guild)))
+stopifnot(identical(observed_guild_counts, permuted_guild_counts))
+
+guild_size_check <- tibble(
+  guild = names(sort(table(species_traits$guild), decreasing = TRUE)),
+  observed_n_species = as.integer(sort(table(species_traits$guild), decreasing = TRUE)),
+  null_preserves_size = TRUE
+)
+
+omega_pair_core <- omega_pairs |>
+  select(
+    atlas, period, species_a, species_b,
+    omega_mean, is_supported_positive,
+    is_supported_negative
+  )
+
+species_for_permutation <- species_traits$species
+guild_labels_for_permutation <- species_traits$guild
+
+summarise_permuted_guild_pairs <- function(iteration) {
+  # Sampling the guild-label vector without replacement preserves the exact
+  # number of species in every guild for each null iteration.
+  permuted_guilds <- sample(guild_labels_for_permutation)
+  names(permuted_guilds) <- species_for_permutation
+
+  permuted_guild_a <- unname(permuted_guilds[omega_pair_core$species_a])
+  permuted_guild_b <- unname(permuted_guilds[omega_pair_core$species_b])
+  permuted_guild_1 <- pmin(permuted_guild_a, permuted_guild_b)
+  permuted_guild_2 <- pmax(permuted_guild_a, permuted_guild_b)
+
+  omega_pair_core |>
+    transmute(
+      permutation = iteration,
+      atlas = .data$atlas,
+      period = .data$period,
+      guild_1 = permuted_guild_1,
+      guild_2 = permuted_guild_2,
+      guild_pair = if_else(
+        .data$guild_1 == .data$guild_2,
+        .data$guild_1,
+        paste(.data$guild_1, .data$guild_2, sep = " | ")
+      ),
+      guild_pair_type = if_else(
+        .data$guild_1 == .data$guild_2,
+        "Within guild",
+        "Between guild"
+      ),
+      omega_mean = .data$omega_mean,
+      is_supported_positive = .data$is_supported_positive,
+      is_supported_negative = .data$is_supported_negative
+    ) |>
+    group_by(
+      .data$permutation, .data$atlas, .data$period,
+      .data$guild_pair_type, .data$guild_1, .data$guild_2, .data$guild_pair
+    ) |>
+    summarise(
+      n_pairs = n(),
+      mean_omega = mean(.data$omega_mean, na.rm = TRUE),
+      prop_supported_positive = mean(.data$is_supported_positive, na.rm = TRUE),
+      prop_supported_negative = mean(.data$is_supported_negative, na.rm = TRUE),
+      net_support_prop =
+        .data$prop_supported_positive - .data$prop_supported_negative,
+      .groups = "drop"
+    )
+}
+
+permutation_summaries <- map_dfr(
+  seq_len(n_permutations),
+  summarise_permuted_guild_pairs
+)
+
+observed_guild_metrics <- guild_pair_summary |>
+  select(
+    atlas, period, guild_pair_type,
+    guild_1, guild_2, guild_pair,
+    n_pairs, unstable_small_pair_count,
+    mean_omega, prop_supported_positive,
+    prop_supported_negative, net_support_prop
+  ) |>
+  pivot_longer(
+    cols = c(
+      mean_omega, prop_supported_positive,
+      prop_supported_negative, net_support_prop
+    ),
+    names_to = "metric",
+    values_to = "observed_value"
+  )
+
+permuted_guild_metrics <- permutation_summaries |>
+  # The observed pair count is the one we want to report and flag, so the
+  # permutation-side count is dropped before joining to avoid .x/.y suffixes.
+  select(-n_pairs) |>
+  pivot_longer(
+    cols = c(
+      mean_omega, prop_supported_positive,
+      prop_supported_negative, net_support_prop
+    ),
+    names_to = "metric",
+    values_to = "permuted_value"
+  )
+
+guild_null_results <- permuted_guild_metrics |>
+  inner_join(
+    observed_guild_metrics,
+    by = c(
+      "atlas", "period", "guild_pair_type", "guild_1",
+      "guild_2", "guild_pair", "metric"
+    )
+  ) |>
+  group_by(
+    .data$atlas, .data$period, .data$guild_pair_type,
+    .data$guild_1, .data$guild_2, .data$guild_pair,
+    .data$n_pairs, .data$unstable_small_pair_count,
+    .data$metric, .data$observed_value
+  ) |>
+  summarise(
+    expected_null_mean = mean(.data$permuted_value, na.rm = TRUE),
+    expected_null_sd = sd(.data$permuted_value, na.rm = TRUE),
+    null_lower_95 = quantile(.data$permuted_value, 0.025, na.rm = TRUE),
+    null_upper_95 = quantile(.data$permuted_value, 0.975, na.rm = TRUE),
+    empirical_p_upper =
+      (sum(.data$permuted_value >= .data$observed_value, na.rm = TRUE) + 1) /
+      (n() + 1),
+    empirical_p_lower =
+      (sum(.data$permuted_value <= .data$observed_value, na.rm = TRUE) + 1) /
+      (n() + 1),
+    .groups = "drop"
+  ) |>
+  mutate(
+    observed_minus_expected = .data$observed_value - .data$expected_null_mean,
+    permutation_z = if_else(
+      .data$expected_null_sd > 0,
+      .data$observed_minus_expected / .data$expected_null_sd,
+      NA_real_
+    ),
+    empirical_p_two_sided = pmin(
+      1,
+      2 * pmin(.data$empirical_p_lower, .data$empirical_p_upper)
+    )
+  ) |>
+  group_by(.data$metric) |>
+  mutate(
+    fdr_p = p.adjust(.data$empirical_p_two_sided, method = "fdr"),
+    fdr_0_05 = .data$fdr_p < 0.05
+  ) |>
+  ungroup() |>
+  arrange(.data$metric, .data$atlas, .data$fdr_p)
+
+write_csv(
+  guild_null_results,
+  file.path(out_dir, paste0(pattern, "-omega-guild-permutation-null-results.csv"))
+)
+write_csv(
+  guild_size_check,
+  file.path(out_dir, paste0(pattern, "-omega-guild-null-size-check.csv"))
+)
+
+kable(
+  guild_null_results |>
+    filter(.data$metric == "mean_omega", .data$guild_pair_type == "Within guild") |>
+    arrange(.data$period, .data$fdr_p) |>
+    select(
+      period, guild = guild_1, n_pairs,
+      observed_value, expected_null_mean,
+      observed_minus_expected, permutation_z,
+      empirical_p_two_sided, fdr_p,
+      unstable_small_pair_count
+    ),
+  digits = 3,
+  caption = "Within-guild mean Omega compared with the guild-label permutation null."
+)
+```
+
+## Plots
+
+```{r plotting-helpers}
+save_png <- function(plot, filename, width, height, dpi = 300) {
+  # This guard prevents accidental PDF/SVG output from this notebook.
+  if (tolower(tools::file_ext(filename)) != "png") {
+    stop("Plot filename must end in .png: ", filename, call. = FALSE)
+  }
+
+  path <- file.path(plot_dir, filename)
+  ggsave(
+    filename = path,
+    plot = plot,
+    width = width,
+    height = height,
+    dpi = dpi,
+    bg = "white"
+  )
+  path
+}
+
+species_names <- omega_pairs |>
+  filter(.data$atlas == "1") |>
+  summarise(species = list(unique(c(.data$species_a, .data$species_b)))) |>
+  pull(species) |>
+  pluck(1)
+
+omega_matrix_from_pairs <- function(df, species_order) {
+  mat <- matrix(
+    NA_real_,
+    nrow = length(species_order),
+    ncol = length(species_order),
+    dimnames = list(species_order, species_order)
+  )
+  mat[cbind(df$species_a, df$species_b)] <- df$omega_mean
+  mat[cbind(df$species_b, df$species_a)] <- df$omega_mean
+  diag(mat) <- 1
+  mat
+}
+
+atlas1_matrix <- omega_matrix_from_pairs(
+  omega_pairs |> filter(.data$atlas == "1"),
+  species_names
+)
+species_plot_order <- rownames(atlas1_matrix)[hclust(dist(atlas1_matrix))$order]
+
+make_symmetric_species_tiles <- function(df, value_col, value_name = "value") {
+  value_col <- rlang::ensym(value_col)
+
+  bind_rows(
+    df |>
+      transmute(
+        atlas = .data$atlas,
+        period = .data$period,
+        species_row = .data$species_a,
+        species_col = .data$species_b,
+        value = !!value_col
+      ),
+    df |>
+      transmute(
+        atlas = .data$atlas,
+        period = .data$period,
+        species_row = .data$species_b,
+        species_col = .data$species_a,
+        value = !!value_col
+      )
+  ) |>
+    mutate(
+      species_row = factor(.data$species_row, levels = rev(species_plot_order)),
+      species_col = factor(.data$species_col, levels = species_plot_order)
+    ) |>
+    rename(!!value_name := value)
+}
+
+guild_order <- guild_sizes$guild
+
+make_symmetric_guild_tiles <- function(df, value_col, value_name = "value") {
+  value_col <- rlang::ensym(value_col)
+
+  bind_rows(
+    df |>
+      transmute(
+        atlas = .data$atlas,
+        period = .data$period,
+        guild_row = .data$guild_1,
+        guild_col = .data$guild_2,
+        value = !!value_col
+      ),
+    df |>
+      filter(.data$guild_1 != .data$guild_2) |>
+      transmute(
+        atlas = .data$atlas,
+        period = .data$period,
+        guild_row = .data$guild_2,
+        guild_col = .data$guild_1,
+        value = !!value_col
+      )
+  ) |>
+    mutate(
+      guild_row = factor(.data$guild_row, levels = rev(guild_order)),
+      guild_col = factor(.data$guild_col, levels = guild_order)
+    ) |>
+    rename(!!value_name := value)
+}
+
+support_colours <- c(
+  "Supported positive" = "#b2182b",
+  "Supported negative" = "#2166ac",
+  "Unsupported" = "grey80"
+)
+```
+
+```{r species-omega-heatmaps, fig.width=12, fig.height=4}
+omega_heatmap_data <- make_symmetric_species_tiles(
+  omega_pairs,
+  omega_mean,
+  value_name = "omega_mean"
+)
+
+p_omega_heatmaps <- ggplot(
+  omega_heatmap_data,
+  aes(x = .data$species_col, y = .data$species_row, fill = .data$omega_mean)
+) +
+  geom_tile() +
+  facet_wrap(~ period, nrow = 1) +
+  scale_fill_gradient2(
+    low = "#2166ac",
+    mid = "white",
+    high = "#b2182b",
+    midpoint = 0,
+    limits = c(-1, 1),
+    oob = squish,
+    name = "Mean Omega"
+  ) +
+  coord_equal(expand = FALSE) +
+  labs(x = NULL, y = NULL) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  )
+
+p_omega_heatmaps
+```
+
+```{r species-difference-heatmaps, fig.width=9, fig.height=4}
+difference_pairs <- temporal_change |>
+  select(
+    pair_id, species_a, species_b,
+    delta_1990s_minus_1970s, delta_2010s_minus_1970s
+  ) |>
+  pivot_longer(
+    cols = starts_with("delta_"),
+    names_to = "comparison",
+    values_to = "omega_delta"
+  ) |>
+  mutate(
+    period = recode(
+      .data$comparison,
+      "delta_1990s_minus_1970s" = "1990s - 1970s",
+      "delta_2010s_minus_1970s" = "2010s - 1970s"
+    ),
+    atlas = .data$period
+  )
+
+difference_heatmap_data <- make_symmetric_species_tiles(
+  difference_pairs,
+  omega_delta,
+  value_name = "omega_delta"
+)
+delta_limit <- max(abs(difference_heatmap_data$omega_delta), na.rm = TRUE)
+
+p_difference_heatmaps <- ggplot(
+  difference_heatmap_data,
+  aes(x = .data$species_col, y = .data$species_row, fill = .data$omega_delta)
+) +
+  geom_tile() +
+  facet_wrap(~ period, nrow = 1) +
+  scale_fill_gradient2(
+    low = "#2166ac",
+    mid = "white",
+    high = "#b2182b",
+    midpoint = 0,
+    limits = c(-delta_limit, delta_limit),
+    oob = squish,
+    name = "Delta mean Omega"
+  ) +
+  coord_equal(expand = FALSE) +
+  labs(x = NULL, y = NULL) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  )
+
+p_difference_heatmaps
+```
+
+```{r support-class-bars, fig.width=7, fig.height=4}
+p_support_bars <- ggplot(
+  support_summary,
+  aes(x = .data$period, y = .data$prop_pairs, fill = .data$support_class)
+) +
+  geom_col(width = 0.75, colour = "white", linewidth = 0.2) +
+  scale_fill_manual(values = support_colours, name = NULL) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(x = NULL, y = "Species-pair proportion") +
+  theme(legend.position = "bottom")
+
+p_support_bars
+```
+
+```{r top-changing-trajectories, fig.width=12, fig.height=8}
+top_changing_pair_ids <- temporal_change |>
+  slice_max(.data$abs_delta_2010s_minus_1970s, n = 20, with_ties = FALSE) |>
+  pull(pair_id)
+
+top_changing_long <- omega_pairs |>
+  filter(.data$pair_id %in% top_changing_pair_ids) |>
+  mutate(
+    pair_label = paste(.data$species_a, .data$species_b, sep = " - "),
+    pair_label = fct_reorder(
+      .data$pair_label,
+      abs(.data$omega_mean),
+      .fun = max,
+      .desc = TRUE
+    )
+  )
+
+p_top_changing <- ggplot(
+  top_changing_long,
+  aes(x = .data$period, y = .data$omega_mean, group = .data$pair_id)
+) +
+  geom_hline(yintercept = 0, colour = "grey75", linewidth = 0.3) +
+  geom_line(colour = "grey35", linewidth = 0.5) +
+  geom_point(aes(fill = .data$support_class), shape = 21, size = 2.4, colour = "grey20") +
+  facet_wrap(~ pair_label, ncol = 4) +
+  scale_fill_manual(values = support_colours, name = NULL) +
+  labs(x = NULL, y = "Mean Omega") +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(size = 7)
+  )
+
+p_top_changing
+```
+
+```{r guild-heatmaps, fig.width=13, fig.height=10}
+guild_mean_heatmap_data <- make_symmetric_guild_tiles(
+  guild_pair_summary,
+  mean_omega,
+  value_name = "mean_omega"
+)
+
+p_guild_mean_heatmaps <- ggplot(
+  guild_mean_heatmap_data,
+  aes(x = .data$guild_col, y = .data$guild_row, fill = .data$mean_omega)
+) +
+  geom_tile(colour = "white", linewidth = 0.1) +
+  facet_wrap(~ period, nrow = 1) +
+  scale_fill_gradient2(
+    low = "#2166ac",
+    mid = "white",
+    high = "#b2182b",
+    midpoint = 0,
+    name = "Mean Omega"
+  ) +
+  coord_equal(expand = FALSE) +
+  labs(x = NULL, y = NULL) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 6),
+    axis.text.y = element_text(size = 6),
+    panel.grid = element_blank()
+  )
+
+p_guild_mean_heatmaps
+```
+
+```{r guild-null-z-heatmaps, fig.width=13, fig.height=10}
+guild_z_heatmap_data <- guild_null_results |>
+  filter(.data$metric == "mean_omega") |>
+  make_symmetric_guild_tiles(permutation_z, value_name = "permutation_z")
+
+z_limit <- quantile(abs(guild_z_heatmap_data$permutation_z), 0.99, na.rm = TRUE)
+
+p_guild_z_heatmaps <- ggplot(
+  guild_z_heatmap_data,
+  aes(x = .data$guild_col, y = .data$guild_row, fill = .data$permutation_z)
+) +
+  geom_tile(colour = "white", linewidth = 0.1) +
+  facet_wrap(~ period, nrow = 1) +
+  scale_fill_gradient2(
+    low = "#2166ac",
+    mid = "white",
+    high = "#b2182b",
+    midpoint = 0,
+    limits = c(-z_limit, z_limit),
+    oob = squish,
+    name = "Null z"
+  ) +
+  coord_equal(expand = FALSE) +
+  labs(x = NULL, y = NULL) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 6),
+    axis.text.y = element_text(size = 6),
+    panel.grid = element_blank()
+  )
+
+p_guild_z_heatmaps
+```
+
+```{r within-guild-lollipop, fig.width=10, fig.height=9}
+within_guild_null <- guild_null_results |>
+  filter(
+    .data$metric == "mean_omega",
+    .data$guild_pair_type == "Within guild"
+  ) |>
+  mutate(
+    guild = .data$guild_1,
+    guild = fct_reorder(.data$guild, .data$observed_minus_expected),
+    fdr_flag = if_else(.data$fdr_0_05, "FDR < 0.05", "Not FDR flagged")
+  )
+
+p_within_lollipop <- ggplot(
+  within_guild_null,
+  aes(y = .data$guild)
+) +
+  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.3) +
+  geom_segment(
+    aes(
+      x = .data$expected_null_mean,
+      xend = .data$observed_value,
+      yend = .data$guild
+    ),
+    colour = "grey55",
+    linewidth = 0.4
+  ) +
+  geom_point(
+    aes(x = .data$expected_null_mean),
+    shape = 21,
+    fill = "white",
+    colour = "grey30",
+    size = 2
+  ) +
+  geom_point(
+    aes(x = .data$observed_value, colour = .data$fdr_flag),
+    size = 2.4
+  ) +
+  facet_wrap(~ period, nrow = 1) +
+  scale_colour_manual(
+    values = c("FDR < 0.05" = "#b2182b", "Not FDR flagged" = "grey35"),
+    name = NULL
+  ) +
+  labs(x = "Mean Omega: open point = null expectation, filled point = observed", y = NULL) +
+  theme(legend.position = "bottom")
+
+p_within_lollipop
+```
+
+```{r save-plots-and-checks}
+saved_plot_paths <- c(
+  save_png(
+    p_omega_heatmaps,
+    paste0(pattern, "-omega-heatmaps-by-atlas.png"),
+    width = 12,
+    height = 4
+  ),
+  save_png(
+    p_difference_heatmaps,
+    paste0(pattern, "-omega-difference-heatmaps.png"),
+    width = 9,
+    height = 4
+  ),
+  save_png(
+    p_support_bars,
+    paste0(pattern, "-omega-support-class-bars.png"),
+    width = 7,
+    height = 4
+  ),
+  save_png(
+    p_top_changing,
+    paste0(pattern, "-omega-top-changing-trajectories.png"),
+    width = 12,
+    height = 8
+  ),
+  save_png(
+    p_guild_mean_heatmaps,
+    paste0(pattern, "-omega-guild-mean-heatmaps.png"),
+    width = 13,
+    height = 10
+  ),
+  save_png(
+    p_guild_z_heatmaps,
+    paste0(pattern, "-omega-guild-null-z-heatmaps.png"),
+    width = 13,
+    height = 10
+  ),
+  save_png(
+    p_within_lollipop,
+    paste0(pattern, "-omega-within-guild-observed-vs-null.png"),
+    width = 10,
+    height = 9
+  )
+)
+
+plot_output_check <- tibble(
+  path = saved_plot_paths
+) |>
+  mutate(
+    exists = file.exists(.data$path),
+    extension = tools::file_ext(.data$path),
+    is_png = tolower(.data$extension) == "png"
+  )
+
+stopifnot(all(plot_output_check$exists), all(plot_output_check$is_png))
+
+kable(
+  plot_output_check,
+  caption = "Saved plot check. Every manually saved plot from this notebook is a PNG."
+)
+```
+
+## Reusable Outputs
+
+```{r output-listing}
+output_files <- tibble(
+  path = list.files(out_dir, recursive = TRUE, full.names = TRUE)
+) |>
+  mutate(
+    file = basename(.data$path),
+    extension = tools::file_ext(.data$path)
+  ) |>
+  arrange(.data$extension, .data$file)
+
+kable(output_files, caption = "Reusable CSV and PNG outputs written by this notebook.")
+```

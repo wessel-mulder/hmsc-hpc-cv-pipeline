@@ -1,0 +1,9 @@
+"comparison","distribution_class","distribution_label","model_variant","model_variant_label","n_species","intercept_km","intercept_se","intercept_p_value","slope_km_per_log10_ratio","slope_se","slope_p_value","r_squared","adjusted_r_squared","strongest_decline_species"
+"1970s to 1990s","southerly","Southerly species
+northern margin","main","Main model",85,2.58765691826746,1.98444078961356,0.195847692369861,161.789360718874,9.16416647529031,7.73416109286106e-30,0.789704978938977,0.787171303986435,"Oriolus_oriolus"
+"1990s to 2010s","southerly","Southerly species
+northern margin","main","Main model",69,2.30970454184925,2.19089182812611,0.295564477011803,157.051867817184,12.1533805263389,7.30136204862296e-20,0.713663708677913,0.709390032688031,"Oenanthe_oenanthe"
+"1970s to 1990s","northerly","Northerly species
+southern margin","main","Main model",31,13.1441909807678,2.80513817559933,6.07116351795683e-05,-118.679892914449,8.58249535321035,2.68524967642745e-14,0.868311878535237,0.863770908829555,"Athene_noctua"
+"1990s to 2010s","northerly","Northerly species
+southern margin","main","Main model",46,-1.63819128571043,2.25136940373629,0.470687108184629,-75.9917144135293,11.6498669596525,5.73885087795144e-08,0.491618153459442,0.48006402058352,"Anas_crecca"

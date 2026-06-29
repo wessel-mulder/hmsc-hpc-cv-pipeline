@@ -1,0 +1,14 @@
+check_type,atlas,period,bioregion,check_group,n_trait_groups,percent_sum,max_abs_deviation_from_100,expected_total_richness_known_trait,n_prediction_sites,n_sites_without_cluster,trait_family,n_model_species,n_species_with_trait,n_species_missing_trait
+Composition percentages,1,1970s,Cluster 1,Thermal affinity,5,100,0,21445.770077790967,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 1,Migratory strategy,5,100,0,21445.770077790985,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 1,Foraging guild,34,100.00000000000006,5.684341886080802e-14,21445.77007779097,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 2,Thermal affinity,5,100,0,51968.2674618508,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 2,Migratory strategy,5,100.00000000000001,1.4210854715202004e-14,51968.26746185086,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 2,Foraging guild,34,99.99999999999997,2.842170943040401e-14,51968.26746185065,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 3,Thermal affinity,5,100,0,21994.070171491745,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 3,Migratory strategy,5,100,0,21994.070171491832,NA,NA,NA,NA,NA,NA
+Composition percentages,1,1970s,Cluster 3,Foraging guild,34,100.00000000000003,2.842170943040401e-14,21994.070171491814,NA,NA,NA,NA,NA,NA
+Prediction-to-cluster join,1,1970s,NA,All sites,NA,NA,NA,NA,1776,0,NA,NA,NA,NA
+Species trait coverage,NA,NA,NA,Thermal affinity,NA,NA,NA,NA,NA,NA,Thermal affinity,157,157,0
+Species trait coverage,NA,NA,NA,Migratory strategy,NA,NA,NA,NA,NA,NA,Migratory strategy,157,157,0
+Species trait coverage,NA,NA,NA,Foraging guild,NA,NA,NA,NA,NA,NA,Foraging guild,157,157,0

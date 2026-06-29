@@ -1,0 +1,7 @@
+"coverage_id","coverage_filter","atlas","period","n_surveys","n_sites","modelled_species_pool_size","mean_richness","median_richness","min_richness","max_richness"
+"good","Good coverage","1","1970s",1246,1246,156,59.2182985553772,59,15,102
+"good","Good coverage","2","1990s",1282,1282,156,66.6716068642746,66,18,105
+"good","Good coverage","3","2010s",1904,1904,156,62.8398109243697,62,8,111
+"good_average","Good/Average coverage","1","1970s",1776,1776,157,53.713963963964,53,15,102
+"good_average","Good/Average coverage","2","1990s",1850,1850,157,61.1227027027027,61,13,105
+"good_average","Good/Average coverage","3","2010s",1904,1904,157,62.8524159663865,62,8,111

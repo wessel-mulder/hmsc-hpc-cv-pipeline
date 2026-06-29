@@ -1,407 +1,564 @@
-rm(list=ls())
-#### GETTING STARTED ####
-if(!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,Hmsc,RColorBrewer,ggplot2,
-               rnaturalearth,rnaturalearthdata,
-               gridExtra,patchwork,sf,cowplot,
-               terra)
+rm(list = ls())
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, Hmsc, cowplot, ggbeeswarm, scales)
+
 source(file.path("support_scripts", "figure_data_helpers.R"))
 
-#### LOAD MODELS #### 
-dir <- './HmscOutputs'
-pattern <- '2026-03-13'
+base_dir <- "./HmscOutputs"
+pattern <- "2026-03-13"
+out_dir <- file.path("misc-figures", "outputs", "main")
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
-matching_folders <- figure_model_folders(pattern = pattern, base_dir = dir)
-model <- matching_folders[1]
-models_nums <- atlas_numbers(matching_folders)
-mods <- load_hmsc_posteriors(matching_folders, base_dir = dir)
+matching_folders <- figure_model_folders(pattern = pattern, base_dir = base_dir)
+mods <- load_hmsc_posteriors(matching_folders, base_dir = base_dir)
 designs <- load_hmsc_study_designs(mods)
+preds_y <- load_or_compute_site_predictions(mods, matching_folders, base_dir = base_dir)
 
+period_lookup <- c("1" = "1970s", "2" = "1990s", "3" = "2010s")
+period_levels <- unname(period_lookup)
+thermal_levels <- c("very cold", "cold", "medium", "warm", "very warm")
 
-#### GET PREDS #### 
-predsY <- load_or_compute_site_predictions(mods, matching_folders, base_dir = dir)
+thermal_palette_options <- list(
+  "Blue-teal-gold" = c("#244C7A", "#2F86A6", "#5BB98C", "#F0D96A", "#E9913C"),
+  "Navy-mint-apricot" = c("#263C6A", "#3E8CBF", "#8FD2B3", "#F6E0A6", "#D9895B"),
+  "Cividis thermal" = c("#31446B", "#496C89", "#829E82", "#D2C56F", "#F28E2B"),
+  "Blue-cream-copper" = c("#2C7BB6", "#ABD9E9", "#FFFFBF", "#FDAE61", "#A6611A"),
+  "Blue-purple-rose" = c("#313695", "#74ADD1", "#FEE090", "#F46D43", "#9E0142")
+)
+selected_thermal_palette_name <- "Blue-purple-rose"
+use_quantile_colour_stops <- TRUE
+cwm_colour_reference_period <- "1970s"
+thermal_colours <- thermal_palette_options[[selected_thermal_palette_name]]
+thermal_palette <- setNames(
+  colorRampPalette(thermal_colours)(length(thermal_levels)),
+  thermal_levels
+)
+delta_colours <- c("blue4", "white", "red2")
 
-str(predsY)
+base_site <- function(x) sub("_[123]$", "", x)
 
-CWMs <- community_weighted_means(predsY, mods)
+sti_sp <- mods[[1]]$Tr[, "species_thermal_index"]
+species <- Reduce(intersect, c(list(names(sti_sp)), map(preds_y, colnames)))
+sti_sp <- sti_sp[species]
+preds_y <- map(preds_y, ~ .x[, species, drop = FALSE])
 
-# prepare for plotting 
-dfs <- map2(CWMs, designs, ~ {
-  # Calculate row sums and keep it as a data frame
-  .x %>% 
-    as.data.frame() %>% 
-    rownames_to_column(var = 'survey') %>% 
-    # Now join with .y (the design list element)
-    left_join(.y, by = 'survey')
+shared_sites <- Reduce(intersect, map(preds_y, ~ base_site(rownames(.x))))
+
+preds_shared <- imap(preds_y, function(pred, atlas_id) {
+  base <- base_site(rownames(pred))
+  keep <- base %in% shared_sites
+  out <- pred[keep, species, drop = FALSE]
+  rownames(out) <- base[keep]
+  out[order(rownames(out)), , drop = FALSE]
 })
 
-var <- 'species_thermal_index'
+design_shared <- imap_dfr(designs, function(design, atlas_id) {
+  design |>
+    mutate(
+      site = base_site(.data$survey),
+      atlas_id = atlas_id
+    ) |>
+    filter(.data$site %in% shared_sites) |>
+    select(site, atlas_id, X, Y) |>
+    arrange(.data$site)
+})
 
-# get richness limits & aesthetics 
-lims <- dfs %>%
-  imap_dfr(~ data.frame(
-    name = .y,
-    min = min(.x %>% pull(var), na.rm = TRUE),
-    max = max(.x %>% pull(var), na.rm = TRUE)
-  ))
-lim <- c(min(lims$min),max(lims$max))
-my_breaks <- seq(lim[1], lim[2], length.out = 5)
+thermal_breaks <- quantile(sti_sp, seq(0, 1, 0.2), na.rm = TRUE)
+sp_group <- cut(
+  sti_sp,
+  breaks = thermal_breaks,
+  include.lowest = TRUE,
+  labels = thermal_levels
+)
+names(sp_group) <- names(sti_sp)
 
-# colors 
-pal <- colorRampPalette(c("#313695", "#4575b4", "#74add1", "#abd9e9", 
-                          "#ffffbf", 
-                          "#fdae61", "#f46d43", "#d73027", "#a50026"))
-#pal <- colorRampPalette(colorRamps::blue2red(n=10))
+rel_abund <- map(preds_shared, function(pred) {
+  richness <- rowSums(pred)
+  sweep(pred, 1, richness, "/")
+})
 
-#background 
-denmark <- ne_countries(scale = "large", country = "denmark", returnclass = "sf")
-# positions for annotation 
-inset <- 12
-df <- dfs[[3]]
-x_pos <- max(df$X) - (diff(range(df$X)) / inset)
-y_pos <- max(df$Y) - (diff(range(df$Y)) / inset)
-# years 
-year_lookup <- c("1" = "1970s", "2" = "1990s", "3" = "2010s")
-
-#### READ ATLAS POLYGON ####
-shape <- vect('~/box/PhD/logistics/data/distributions/DK5km_ED50grid_approx_kvadrkod_DOF/DK5km_ED50grid_approx_kvadrkod_DOF.shp')
-shape_sf <- st_as_sf(shape)
-str(dfs[[1]])
-
-# Define a bounding box for Bornholm (approximate UTM 32N)
-# You might need to tweak these numbers based on your specific grid extent
-# Increase the range between min and max to "zoom out"
-mainland_bbox <- st_bbox(c(xmin = 400000,
-                           xmax = 750000,
-                           ymin = 6000000,
-                           ymax = 6450000),
-                         crs = st_crs(25832))
-bornholm_bbox <- st_bbox(c(xmin = 855000, xmax = 905000, 
-                           ymin = 6100000, ymax = 6160000), 
-                         crs = st_crs(25832))
-
-# Compute inset size as fraction of main plot dimensions
-mainland_width  <- as.numeric(mainland_bbox["xmax"] - mainland_bbox["xmin"])
-mainland_height <- as.numeric(mainland_bbox["ymax"] - mainland_bbox["ymin"])
-bornholm_width  <- as.numeric(bornholm_bbox["xmax"] - bornholm_bbox["xmin"])
-bornholm_height <- as.numeric(bornholm_bbox["ymax"] - bornholm_bbox["ymin"])
-
-inset_w <- bornholm_width  / mainland_width
-inset_h <- bornholm_height / mainland_height
-
-#### MAPS ####
-plots <- imap(dfs, function(df, name) {
-  
-  year_label <- year_lookup[[name]]
-  
-  plot_data <- shape_sf %>%
-    left_join(df, by = c("kvadratkod" = "site"))
-  
-  # --- shared geom builder to keep fill scale consistent ---
-  make_geom <- function(data) {
-    list(
-      geom_sf(data = data, aes(fill = .data[[var]]), color = 'grey30', size = 0.1),
-      scale_fill_gradientn(
-        colors = pal(10),
-        limits = lim,
-        breaks = my_breaks,
-        labels = round(my_breaks, 1),
-        na.value = "transparent",
-        name = expression(CWM[STI])
-      )
+group_probability <- imap_dfr(rel_abund, function(rel, atlas_id) {
+  map_dfc(thermal_levels, function(group) {
+    group_species <- names(sp_group)[sp_group == group]
+    tibble(!!group := rowSums(rel[, group_species, drop = FALSE]))
+  }) |>
+    mutate(
+      site = rownames(rel),
+      atlas_id = atlas_id
     )
+})
+
+dominant_group <- group_probability |>
+  pivot_longer(
+    cols = all_of(thermal_levels),
+    names_to = "group",
+    values_to = "probability"
+  ) |>
+  group_by(.data$site, .data$atlas_id) |>
+  slice_max(.data$probability, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  mutate(
+    period = factor(unname(period_lookup[.data$atlas_id]), levels = period_levels),
+    group = factor(.data$group, levels = thermal_levels)
+  )
+
+cwm_sti <- imap_dfr(rel_abund, function(rel, atlas_id) {
+  tibble(
+    site = rownames(rel),
+    atlas_id = atlas_id,
+    sti = as.numeric(rel %*% sti_sp)
+  )
+}) |>
+  left_join(design_shared, by = c("site", "atlas_id")) |>
+  mutate(period = factor(unname(period_lookup[.data$atlas_id]), levels = period_levels))
+
+plot_df <- cwm_sti |>
+  left_join(
+    dominant_group |> select(site, atlas_id, group),
+    by = c("site", "atlas_id")
+  )
+
+pct_df <- plot_df |>
+  count(.data$period, .data$group, name = "n") |>
+  complete(
+    period = factor(period_levels, levels = period_levels),
+    group = factor(thermal_levels, levels = thermal_levels),
+    fill = list(n = 0)
+  ) |>
+  group_by(.data$period) |>
+  mutate(
+    pct = 100 * .data$n / sum(.data$n),
+    pct_label = case_when(
+      .data$n == 0 ~ "0%",
+      .data$pct < 1 ~ "<1%",
+      TRUE ~ paste0(round(.data$pct), "%")
+    )
+  ) |>
+  ungroup()
+
+delta_df <- cwm_sti |>
+  select(site, period, sti, X, Y) |>
+  pivot_wider(names_from = period, values_from = sti) |>
+  mutate(
+    `1990s minus 1970s` = .data$`1990s` - .data$`1970s`,
+    `2010s minus 1970s` = .data$`2010s` - .data$`1970s`
+  ) |>
+  select(site, X, Y, `1990s minus 1970s`, `2010s minus 1970s`) |>
+  pivot_longer(
+    cols = c(`1990s minus 1970s`, `2010s minus 1970s`),
+    names_to = "contrast",
+    values_to = "delta_sti"
+  ) |>
+  mutate(contrast = factor(.data$contrast, levels = c("1990s minus 1970s", "2010s minus 1970s")))
+
+period_summary <- cwm_sti |>
+  group_by(.data$period) |>
+  summarise(
+    median_sti = median(.data$sti, na.rm = TRUE),
+    mean_sti = mean(.data$sti, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(
+    median_delta = .data$median_sti - .data$median_sti[.data$period == "1970s"],
+    mean_delta = .data$mean_sti - .data$mean_sti[.data$period == "1970s"]
+  )
+
+mainland_bbox <- c(xmin = 400000, xmax = 750000, ymin = 6000000, ymax = 6450000)
+bornholm_bbox <- c(xmin = 855000, xmax = 905000, ymin = 6100000, ymax = 6160000)
+mainland_width <- mainland_bbox[["xmax"]] - mainland_bbox[["xmin"]]
+mainland_height <- mainland_bbox[["ymax"]] - mainland_bbox[["ymin"]]
+bornholm_width <- bornholm_bbox[["xmax"]] - bornholm_bbox[["xmin"]]
+bornholm_height <- bornholm_bbox[["ymax"]] - bornholm_bbox[["ymin"]]
+bornholm_inset_width <- bornholm_width / mainland_width
+bornholm_inset_height <- bornholm_height / mainland_height
+
+cwm_limits <- range(cwm_sti$sti, na.rm = TRUE)
+cwm_breaks <- pretty(cwm_limits, n = 5)
+delta_limit <- max(abs(delta_df$delta_sti), na.rm = TRUE)
+delta_limits <- c(-delta_limit, delta_limit)
+delta_breaks <- pretty(delta_limits, n = 5)
+
+cwm_colour_values <- function(n) {
+  if (!use_quantile_colour_stops) {
+    return(seq(0, 1, length.out = n))
   }
-  
-  # --- Main plot (mainland) ---
-  p_main <- ggplot() +
-    make_geom(plot_data) +
-    coord_sf(
-      xlim = c(mainland_bbox["xmin"], mainland_bbox["xmax"]),
-      ylim = c(mainland_bbox["ymin"], mainland_bbox["ymax"]),
-      expand = FALSE
-    ) +
-    labs(x = NULL, y = NULL, title = year_label, fill = var) +
-    theme_minimal() +
+
+  reference_sti <- cwm_sti |>
+    filter(.data$period == cwm_colour_reference_period) |>
+    pull(.data$sti)
+
+  values <- quantile(
+    reference_sti,
+    probs = seq(0, 1, length.out = n),
+    na.rm = TRUE,
+    names = FALSE
+  )
+  values <- c(cwm_limits[[1]], values[-c(1, n)], cwm_limits[[2]])
+  values <- rescale(values, from = cwm_limits)
+
+  if (anyDuplicated(round(values, 8)) > 0) {
+    seq(0, 1, length.out = n)
+  } else {
+    values
+  }
+}
+
+map_theme <- function(legend_position = "none") {
+  theme_minimal(base_size = 10) +
     theme(
-      legend.position  = "none",
-      plot.background  = element_rect(fill = "white", color = NA),
-      plot.title       = element_text(hjust = 0.5, face = "bold", size = 14),
-      axis.text        = element_blank(),
-      panel.grid       = element_blank(),
-      plot.margin      = margin(0, 0, 0, 0)  # remove all map margins
+      legend.position = legend_position,
+      legend.title = element_text(face = "bold"),
+      axis.text = element_blank(),
+      axis.title = element_blank(),
+      panel.grid = element_blank(),
+      plot.title = element_text(face = "bold", hjust = 0.5, size = 10),
+      plot.background = element_rect(fill = "white", colour = NA),
+      plot.margin = margin(0, 0, 0, 0)
     )
-  
-  # --- Inset plot (Bornholm) ---
-  p_inset <- ggplot() +
-    make_geom(plot_data) +
-    coord_sf(
-      xlim = c(bornholm_bbox["xmin"], bornholm_bbox["xmax"]),
-      ylim = c(bornholm_bbox["ymin"], bornholm_bbox["ymax"]),
+}
+
+plot_cwm_base <- function(df, title = NULL, bbox = mainland_bbox, show_legend = FALSE,
+                          border = FALSE, cwm_colours = thermal_colours) {
+  ggplot(df) +
+    geom_point(aes(x = .data$X, y = .data$Y, colour = .data$sti), size = 1.25, alpha = 0.95) +
+    scale_colour_gradientn(
+      colours = cwm_colours,
+      values = cwm_colour_values(length(cwm_colours)),
+      limits = cwm_limits,
+      breaks = cwm_breaks,
+      labels = label_number(accuracy = 0.1),
+      name = expression(CWM[STI]),
+      guide = guide_colourbar(barwidth = 8, barheight = 0.7)
+    ) +
+    coord_fixed(
+      xlim = c(bbox[["xmin"]], bbox[["xmax"]]),
+      ylim = c(bbox[["ymin"]], bbox[["ymax"]]),
       expand = FALSE
     ) +
+    labs(title = title) +
+    map_theme(if (show_legend) "bottom" else "none") +
+    theme(
+      panel.border = if (border) {
+        element_rect(colour = "grey35", fill = NA, linewidth = 0.45)
+      } else {
+        element_blank()
+      }
+    )
+}
+
+plot_delta_base <- function(df, title = NULL, bbox = mainland_bbox, show_legend = FALSE, border = FALSE) {
+  ggplot(df) +
+    geom_point(aes(x = .data$X, y = .data$Y, colour = .data$delta_sti), size = 1.25, alpha = 0.95) +
+    scale_colour_gradient2(
+      low = delta_colours[[1]],
+      mid = delta_colours[[2]],
+      high = delta_colours[[3]],
+      midpoint = 0,
+      limits = delta_limits,
+      breaks = delta_breaks,
+      labels = label_number(accuracy = 0.01),
+      name = expression(Delta~CWM[STI]),
+      guide = guide_colourbar(barwidth = 8, barheight = 0.7)
+    ) +
+    coord_fixed(
+      xlim = c(bbox[["xmin"]], bbox[["xmax"]]),
+      ylim = c(bbox[["ymin"]], bbox[["ymax"]]),
+      expand = FALSE
+    ) +
+    labs(title = title) +
+    map_theme(if (show_legend) "bottom" else "none") +
+    theme(
+      panel.border = if (border) {
+        element_rect(colour = "grey35", fill = NA, linewidth = 0.45)
+      } else {
+        element_blank()
+      }
+    )
+}
+
+plot_map_with_inset <- function(df, title, base_fun) {
+  p_main <- base_fun(df, title = title, bbox = mainland_bbox)
+  p_inset <- base_fun(df, bbox = bornholm_bbox, border = TRUE) +
     theme_void() +
     theme(
       legend.position = "none",
-      panel.border = element_rect(color = "grey30", fill = NA, linewidth = 0.5)
+      plot.background = element_rect(fill = "white", colour = NA),
+      panel.border = element_rect(colour = "grey35", fill = NA, linewidth = 0.7)
     )
-  
-  # --- Combine with cowplot ---
-  p_final <- ggdraw(p_main) +
+
+  ggdraw(p_main) +
     draw_plot(
       p_inset,
-      x = 1 - inset_w - 0.2,
-      y = 1 - inset_h - 0.2,
-      width  = inset_w,
-      height = inset_h
+      x = 1 - bornholm_inset_width - 0.2,
+      y = 1 - bornholm_inset_height - 0.2,
+      width = bornholm_inset_width,
+      height = bornholm_inset_height
     )
-  
-  p_final <- as_grob(p_final)  # convert the complete object, not mid-pipe  
-  
-  list(
-    grob = as_grob(p_final),
-    ggplot = p_main  # keep original for legend extraction
-  )
-  
-})
-
-# WARMING DRIVEN BY?  -----------------------------------------------------
-
-# ── 0. Extract species thermal indices ────────────────────────────────────────
-# Assuming STI per species is a named vector from mods[[1]]$Tr
-# ── 0. Species STI vector ─────────────────────────────────────────────────────
-sti_sp <- mods[[1]]$Tr[, 'species_thermal_index']  # named numeric vector, length 157
-
-# ── 1. Classify species into 5 thermal groups ─────────────────────────────────
-breaks <- quantile(sti_sp, c(0, 0.2, 0.4, 0.6, 0.8, 1))
-sp_group <- cut(sti_sp, breaks = breaks, include.lowest = TRUE,
-                labels = c("very cold", "cold", "medium", "warm", "very warm"))
-names(sp_group) <- names(sti_sp)
-
-# ── 2. Shared sites only ──────────────────────────────────────────────────────
-get_base_site <- function(x) sub("_[123]$", "", x)
-
-preds_shared <- map(predsY, ~ {
-  base <- get_base_site(rownames(.x))
-  shared <- Reduce(intersect, map(predsY, ~ get_base_site(rownames(.x))))
-  out <- .x[base %in% shared, ]
-  rownames(out) <- get_base_site(rownames(out))
-  out[order(rownames(out)), ]
-})
-
-# ── 3. Relative abundance (rows sum to 1) ─────────────────────────────────────
-rel_abund <- map(preds_shared, ~ .x / rowSums(.x))
-
-# ── 4. Contribution of each species to CWM = rel_abund * STI ─────────────────
-# Result: cells x species matrix of STI contributions, per atlas
-contrib <- map(rel_abund, ~ sweep(.x, 2, sti_sp, "*"))
-
-# ── 5. Sum contributions by thermal group, per cell, per atlas ───────────────
-groups <- c("very cold", "cold", "medium", "warm", "very warm")
-
-contrib_by_group <- imap(contrib, ~ {
-  map_dfc(groups, function(g) {
-    sp <- names(sp_group)[sp_group == g]
-    tibble(!!g := rowSums(.x[, sp]))
-  }) %>%
-    mutate(
-      site  = rownames(.x),
-      atlas = .y
-    )
-}) %>%
-  bind_rows()
-
-# ── 1. Find dominant thermal group per cell per atlas ─────────────────────────
-dominant_group <- contrib_by_group %>%
-  pivot_longer(all_of(groups), names_to = "group", values_to = "contribution") %>%
-  group_by(site, atlas) %>%
-  slice_max(contribution, n = 1) %>%
-  ungroup() %>%
-  mutate(
-    group = factor(group, levels = groups),
-    atlas = factor(atlas, labels = c("1970s", "1990s", "2010s"))
-  )
-
-# ── 2. Join to CWM STI values ─────────────────────────────────────────────────
-cwm_sti <- imap(preds_shared, ~ {
-  # recompute CWM STI per cell
-  rel <- .x / rowSums(.x)
-  cwm <- rel %*% sti_sp
-  tibble(site = rownames(.x), sti = as.numeric(cwm), atlas = .y)
-}) %>%
-  bind_rows() %>%
-  mutate(atlas = factor(atlas, labels = c("1970s", "1990s", "2010s")))
-
-# ── 3. Join dominant group to CWM STI ─────────────────────────────────────────
-plot_df <- cwm_sti %>%
-  left_join(dominant_group %>% select(site, atlas, group), 
-            by = c("site", "atlas"))
-
-
-library(patchwork)
-library(ggbeeswarm)
-
-
-
-# ── BEES WITH SQUARES ────────────────────────────────────────────────────────
-atlas_name <- '1970s'
-
-pal <- c(
-  "very cold" = "#313695",
-  "cold"      = "#abd9e9",
-  "medium"    = "#d9d9d9",
-  "warm"      = "#fdae61",
-  "very warm" = "#a50026"
-)
-
-make_bee_with_squares <- function(atlas_name, show_x = FALSE) {
-  d <- plot_df %>% filter(atlas == atlas_name)
-  
-  # ensure all groups present, fill 0 if missing
-  p <- tibble(group = factor(groups, levels = groups)) %>%
-    left_join(
-      pct_df %>% filter(atlas == atlas_name),
-      by = "group"
-    ) %>%
-    mutate(pct = replace_na(pct, 0))
-  
-  sti_range <- range(plot_df$sti)
-  sti_span  <- diff(sti_range)
-  n_groups  <- nrow(p)
-  
-  # max box half-width — for 100%
-  box_hw_max <- sti_span * 0.09
-  
-  # scale hw by sqrt(pct/100) so area proportional to pct
-  # all boxes coloured regardless, even 0%
-  p <- p %>%
-    mutate(
-      xcentre = seq(sti_range[1] + sti_span * 0.1,
-                    sti_range[2] - sti_span * 0.1,
-                    length.out = n_groups),
-      hw      = box_hw_max * sqrt(pct / 100),
-      # minimum visible size even for 0%
-      hw      = pmax(hw, box_hw_max * 0.75),
-      ycentre = 1.62 + box_hw_max
-    )
-  
-  ggplot() +
-    # ── scaled coloured squares, centred on fixed positions ───────────────────
-    geom_rect(data = p,
-              aes(xmin = xcentre - hw, xmax = xcentre + hw,
-                  ymin = ycentre - hw, ymax = ycentre + hw,
-                  fill = group),
-              colour = "white", linewidth = 0.4) +
-    # ── percentage label — always white ───────────────────────────────────────
-    geom_text(data = p,
-              aes(x = xcentre, y = ycentre,
-                  label = paste0(round(pct), "%")),
-              size = 2.8, fontface = "bold", colour = "white") +
-    # ── group name below ──────────────────────────────────────────────────────
-    # geom_text(data = p,
-    #           aes(x = xcentre, y = 1.57, label = group),
-    #           size = 2.2, colour = "grey40", hjust = 0.5) +
-    # ── beeswarm coloured by group ────────────────────────────────────────────
-    geom_beeswarm(data = d,
-                  aes(x = sti, y = 1, colour = group),
-                  size = 0.7, alpha = 0.6, cex = 0.4, orientation = "y") +
-    geom_boxplot(data = d,
-                 aes(x = sti, y = 1),
-                 width = 0.1, outlier.shape = NA,
-                 fill = NA, linewidth = 0.3) +
-    #coord_fixed(ratio = diff(c(0.7, 2.2)) / diff(range(plot_df$sti))) +
-    scale_fill_manual(values = pal) +
-    scale_colour_manual(values = pal) +
-    scale_x_continuous(limits = c(sti_range[1] - 0.02, sti_range[2] + 0.02)) +
-    scale_y_continuous(limits = c(0.7, 2.2)) +
-    labs(x = if (show_x) expression(CWM[STI]) else NULL, y = NULL) +
-    theme_minimal() +
-    theme(
-      legend.position    = "none",
-      axis.text.y        = element_blank(),
-      axis.ticks.y       = element_blank(),
-      panel.grid.minor   = element_blank(),
-      panel.grid.major.y = element_blank(),
-      axis.text.x        = if (show_x) element_text() else element_blank(),
-      axis.ticks.x       = if (show_x) element_line() else element_blank(),
-      plot.margin        = margin(2, 5, 2, 5)
-    )
-    
 }
 
-# ── BUILD ROWS ────────────────────────────────────────────────────────────────
-# ── BUILD ROWS ────────────────────────────────────────────────────────────────
-# ── LEFT COLUMN: maps stacked ─────────────────────────────────────────────────
-left_col <- plot_grid(
-  plots[[1]]$grob,
-  plots[[2]]$grob,
-  plots[[3]]$grob,
-  ncol        = 1,
-  labels      = c("A", "B", "C"),
-  label_size  = 12,
-  align       = "v",
-  axis        = "lr"
+cwm_period_maps <- map(period_levels, function(period_name) {
+  plot_map_with_inset(
+    cwm_sti |> filter(.data$period == period_name),
+    title = period_name,
+    base_fun = plot_cwm_base
+  )
+})
+
+delta_maps <- levels(delta_df$contrast) |>
+  map(function(contrast_name) {
+    plot_map_with_inset(
+      delta_df |> filter(.data$contrast == contrast_name),
+      title = contrast_name,
+      base_fun = plot_delta_base
+    )
+  })
+
+dominance_tiles <- function(period_name) {
+  tile_df <- pct_df |>
+    filter(.data$period == period_name) |>
+    mutate(pct_text_colour = if_else(.data$group == "medium", "grey20", "white"))
+
+  ggplot(tile_df, aes(x = .data$group, y = 1, fill = .data$group)) +
+    geom_tile(width = 0.92, height = 0.82, colour = "white", linewidth = 0.35) +
+    geom_text(
+      aes(label = .data$pct_label, colour = .data$pct_text_colour),
+      size = 2.45,
+      fontface = "bold"
+    ) +
+    scale_fill_manual(values = thermal_palette, drop = FALSE, guide = "none") +
+    scale_colour_identity() +
+    scale_x_discrete(expand = expansion(add = 0.08)) +
+    scale_y_continuous(limits = c(0.45, 1.55), expand = expansion(mult = c(0, 0))) +
+    coord_cartesian(clip = "off") +
+    theme_void() +
+    theme(plot.margin = margin(0, 4, 0, 4))
+}
+
+bee_plot <- function(period_name, show_x_axis = TRUE) {
+  bee_df <- plot_df |> filter(.data$period == period_name)
+  summary_row <- period_summary |> filter(.data$period == period_name)
+  title <- if (period_name == "1970s") {
+    period_name
+  } else {
+    paste0(period_name, " (median ", label_number(accuracy = 0.01, style_positive = "plus")(summary_row$median_delta), ")")
+  }
+  ref_median <- period_summary$median_sti[period_summary$period == "1970s"]
+
+  ggplot(bee_df, aes(x = .data$sti)) +
+    geom_vline(xintercept = ref_median, colour = "grey35", linewidth = 0.35, linetype = "dashed") +
+    geom_boxplot(
+      aes(y = 0.78),
+      width = 0.08,
+      outlier.shape = NA,
+      fill = NA,
+      linewidth = 0.3,
+      colour = "grey20"
+    ) +
+    geom_beeswarm(
+      aes(y = 1, colour = .data$group),
+      size = 0.58,
+      alpha = 0.62,
+      cex = 0.45,
+      orientation = "y"
+    ) +
+    scale_colour_manual(values = thermal_palette, drop = FALSE, guide = "none") +
+    scale_x_continuous(
+      limits = cwm_limits,
+      breaks = cwm_breaks,
+      labels = label_number(accuracy = 0.1),
+      expand = expansion(mult = c(0.015, 0.015))
+    ) +
+    scale_y_continuous(limits = c(0.66, 1.24), expand = expansion(mult = c(0, 0))) +
+    labs(title = title, x = if (show_x_axis) expression(CWM[STI]) else NULL, y = NULL) +
+    theme_minimal(base_size = 9) +
+    theme(
+      legend.position = "none",
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.text.x = if (show_x_axis) element_text(size = 7) else element_blank(),
+      axis.ticks.x = if (show_x_axis) element_line(linewidth = 0.25) else element_blank(),
+      axis.title.x = if (show_x_axis) element_text(size = 8, margin = margin(t = 2)) else element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid.major.y = element_blank(),
+      plot.title = element_text(face = "bold", hjust = 0.5, size = 9),
+      plot.margin = if (show_x_axis) margin(1, 4, 2, 4) else margin(1, 4, 0, 4)
+    )
+}
+
+bee_row <- function(period_name) {
+  plot_grid(
+    dominance_tiles(period_name),
+    bee_plot(period_name, show_x_axis = period_name == tail(period_levels, 1)),
+    ncol = 1,
+    rel_heights = c(0.2, 1),
+    align = "v"
+  )
+}
+
+map_panel_a <- plot_grid(
+  plotlist = cwm_period_maps,
+  nrow = 1,
+  align = "h",
+  rel_widths = c(1, 1, 1)
 )
 
-# ── RIGHT COLUMN: beeswarm plots stacked ─────────────────────────────────────
-# bottom row shows x axis, others don't
-bee_70 <- make_bee_with_squares("1970s", show_x = FALSE)
-bee_90 <- make_bee_with_squares("1990s", show_x = FALSE)
-bee_10 <- make_bee_with_squares("2010s", show_x = TRUE)
-
-right_col <- plot_grid(
-  bee_70, bee_90, bee_10,
-  ncol        = 1,
-  align       = "v",
-  axis        = "lr",
+change_panel_b <- plot_grid(
+  plotlist = delta_maps,
+  nrow = 1,
+  align = "h",
+  rel_widths = c(1, 1)
 )
 
-# ── COMBINE COLUMNS ───────────────────────────────────────────────────────────
-main <- plot_grid(
-  left_col, right_col,
-  ncol       = 2,
-  rel_widths = c(0.5, 1),
-  greedy = T
+beeswarm_panel_c_body <- plot_grid(
+  plotlist = map(period_levels, bee_row),
+  ncol = 1,
+  align = "v",
+  rel_heights = c(1, 1, 1)
 )
 
-# ── LEGENDS ───────────────────────────────────────────────────────────────────
-map_legend <- get_legend(
-  plots[[1]]$ggplot + 
-    guides(fill = guide_colourbar(barwidth = 8, barheight = 0.8)) +
-    theme(legend.position = "bottom")
+beeswarm_panel_c <- plot_grid(
+  NULL,
+  beeswarm_panel_c_body,
+  nrow = 1,
+  rel_widths = c(0.045, 1)
 )
 
-bee_legend <- get_legend(
-  ggplot(pct_df, aes(x = "", y = pct, fill = group)) +
+cwm_legend <- get_legend(plot_cwm_base(cwm_sti, show_legend = TRUE))
+delta_legend <- get_legend(plot_delta_base(delta_df, show_legend = TRUE))
+group_legend <- get_legend(
+  ggplot(pct_df, aes(x = .data$group, y = .data$pct, fill = .data$group)) +
     geom_col() +
     scale_fill_manual(
-      values = pal,
-      breaks = groups,
-      name   = "Dominant thermal affinity"
+      values = thermal_palette,
+      breaks = thermal_levels,
+      name = "Dominant thermal group",
+      guide = guide_legend(nrow = 1, byrow = TRUE)
     ) +
-    guides(fill = guide_legend(nrow = 2)) +
-    theme_minimal() +
-    theme(legend.position = "bottom")
+    theme_minimal(base_size = 9) +
+    theme(
+      legend.position = "bottom",
+      legend.title = element_text(face = "bold"),
+      legend.margin = margin(0, 0, 0, 0)
+    )
 )
 
-both_legends <- plot_grid(map_legend, bee_legend, ncol = 2)
-
-# ── 3. Reduce rel_widths gap and add negative margins ─────────────────────────
-main <- plot_grid(
-  left_col, right_col,
-  ncol       = 2,
-  rel_widths = c(0.5, 1)  # shrink map column
+legend_row <- plot_grid(
+  cwm_legend,
+  delta_legend,
+  group_legend,
+  nrow = 1,
+  rel_widths = c(0.9, 0.9, 1.25)
 )
 
-final <- plot_grid(
-  main, both_legends,
-  ncol        = 1,
-  rel_heights = c(1, 0.1)
+top_row <- plot_grid(
+  map_panel_a,
+  labels = "A",
+  label_size = 15,
+  label_fontface = "bold"
 )
 
-final_draw <- ggdraw(final) + 
-  theme(
-    plot.background = element_rect(fill = "white", colour = NA)
+bottom_row <- plot_grid(
+  change_panel_b,
+  beeswarm_panel_c,
+  labels = c("B", "C"),
+  label_size = 15,
+  label_fontface = "bold",
+  nrow = 1,
+  rel_widths = c(1.18, 1)
+)
+
+fig4_cwm_sti <- plot_grid(
+  top_row,
+  bottom_row,
+  legend_row,
+  ncol = 1,
+  rel_heights = c(1.08, 1, 0.13)
+) +
+  theme(plot.background = element_rect(fill = "white", colour = NA))
+
+png_path <- file.path(out_dir, paste0(pattern, "-fig4-cwm-maps-dominance.png"))
+pdf_path <- file.path(out_dir, paste0(pattern, "-fig4-cwm-maps-dominance.pdf"))
+
+ggsave(png_path, fig4_cwm_sti, width = 13.5, height = 10.2, units = "in", dpi = 300, bg = "white")
+ggsave(pdf_path, fig4_cwm_sti, width = 13.5, height = 10.2, units = "in", bg = "white")
+
+message("Saved: ", png_path)
+message("Saved: ", pdf_path)
+
+palette_swatch <- function(palette_name, colours) {
+  swatch_df <- tibble(
+    group = factor(thermal_levels, levels = thermal_levels),
+    x = seq_along(thermal_levels),
+    label = c("VC", "C", "M", "W", "VW")
   )
 
+  ggplot(swatch_df, aes(x = .data$x, y = 1, fill = .data$group)) +
+    geom_tile(width = 0.96, height = 0.5, colour = "white", linewidth = 0.35) +
+    geom_text(aes(label = .data$label), colour = "white", size = 2.5, fontface = "bold") +
+    scale_fill_manual(values = setNames(colours, thermal_levels), guide = "none") +
+    scale_x_continuous(limits = c(0.45, length(thermal_levels) + 0.55), expand = expansion(mult = c(0, 0))) +
+    scale_y_continuous(limits = c(0.72, 1.28), expand = expansion(mult = c(0, 0))) +
+    labs(title = palette_name) +
+    theme_void(base_size = 9) +
+    theme(
+      plot.title = element_text(face = "bold", size = 10, hjust = 0),
+      plot.margin = margin(0, 4, 0, 2)
+    )
+}
 
-ggsave(sprintf('misc-figures/%s-fig4-cwm-maps-dominance.png',pattern),width = 10,height= 7.5)
+palette_comparison_row <- function(colours, palette_name) {
+  palette_base_fun <- function(df, title = NULL, bbox = mainland_bbox, show_legend = FALSE, border = FALSE) {
+    plot_cwm_base(
+      df = df,
+      title = title,
+      bbox = bbox,
+      show_legend = show_legend,
+      border = border,
+      cwm_colours = colours
+    )
+  }
+
+  palette_maps <- map(period_levels, function(period_name) {
+    plot_map_with_inset(
+      cwm_sti |> filter(.data$period == period_name),
+      title = period_name,
+      base_fun = palette_base_fun
+    )
+  })
+
+  plot_grid(
+    plotlist = c(list(palette_swatch(palette_name, colours)), palette_maps),
+    nrow = 1,
+    rel_widths = c(0.58, 1, 1, 1),
+    align = "h"
+  )
+}
+
+palette_comparison_title <- ggdraw() +
+  draw_label(
+    expression("CWM"[STI] * " palette comparison: 1970s-reference quantile stops over the observed STI range"),
+    x = 0,
+    hjust = 0,
+    fontface = "bold",
+    size = 13
+  )
+
+palette_comparison <- plot_grid(
+  plotlist = c(
+    list(palette_comparison_title),
+    imap(thermal_palette_options, palette_comparison_row)
+  ),
+  ncol = 1,
+  rel_heights = c(0.12, rep(1, length(thermal_palette_options)))
+) +
+  theme(plot.background = element_rect(fill = "white", colour = NA))
+
+palette_png_path <- file.path(out_dir, paste0(pattern, "-fig4-cwm-palette-comparison.png"))
+palette_pdf_path <- file.path(out_dir, paste0(pattern, "-fig4-cwm-palette-comparison.pdf"))
+
+ggsave(palette_png_path, palette_comparison, width = 13.5, height = 10.8, units = "in", dpi = 300, bg = "white")
+ggsave(palette_pdf_path, palette_comparison, width = 13.5, height = 10.8, units = "in", bg = "white")
+
+message("Saved: ", palette_png_path)
+message("Saved: ", palette_pdf_path)

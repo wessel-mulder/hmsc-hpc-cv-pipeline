@@ -1,0 +1,94 @@
+thermal_group,trait_value,n_species,thermal_group_n,prop_species,trait_total_n,weighted_thermal_position,trait_family
+very cold,Aquatic pursuers,2,32,0.0625,6,3.1666666666666665,Foraging guild
+very cold,Dabbling ducks,2,32,0.0625,7,2.4285714285714284,Foraging guild
+very cold,Diving ducks,2,32,0.0625,3,2,Foraging guild
+very cold,Flycatchers,1,32,0.03125,3,2,Foraging guild
+very cold,Foliage gleaners,1,32,0.03125,9,2.5555555555555554,Foraging guild
+very cold,Gulls,4,32,0.125,5,1.2,Foraging guild
+very cold,Low flycatching feeders,1,32,0.03125,9,2.4444444444444446,Foraging guild
+very cold,Open-land insectivores,1,32,0.03125,6,3.1666666666666665,Foraging guild
+very cold,Owls,1,32,0.03125,5,3.6,Foraging guild
+very cold,Passerine seedeaters,5,32,0.15625,12,3,Foraging guild
+very cold,Plovers,2,32,0.0625,6,3,Foraging guild
+very cold,Scolopacids,7,32,0.21875,9,1.3333333333333333,Foraging guild
+very cold,Terns,1,32,0.03125,5,3.2,Foraging guild
+very cold,Thrushes,1,32,0.03125,4,2.5,Foraging guild
+very cold,Tit-like birds,1,32,0.03125,12,3.4166666666666665,Foraging guild
+cold,Buntings,2,31,0.06451612903225806,3,3,Foraging guild
+cold,Dabbling ducks,2,31,0.06451612903225806,7,2.4285714285714284,Foraging guild
+cold,Dippers,1,31,0.03225806451612903,1,2,Foraging guild
+cold,Diurnal raptors,1,31,0.03225806451612903,7,3.7142857142857144,Foraging guild
+cold,Flycatchers,1,31,0.03225806451612903,3,2,Foraging guild
+cold,Foliage gleaners,4,31,0.12903225806451613,9,2.5555555555555554,Foraging guild
+cold,Grazing waterfowl,1,31,0.03225806451612903,2,2.5,Foraging guild
+cold,Gulls,1,31,0.03225806451612903,5,1.2,Foraging guild
+cold,Low flycatching feeders,5,31,0.16129032258064516,9,2.4444444444444446,Foraging guild
+cold,Marsh warblers,2,31,0.06451612903225806,6,3.6666666666666665,Foraging guild
+cold,Omnivorous corvids,1,31,0.03225806451612903,7,3.2857142857142856,Foraging guild
+cold,Plovers,1,31,0.03225806451612903,6,3,Foraging guild
+cold,Scolopacids,1,31,0.03225806451612903,9,1.3333333333333333,Foraging guild
+cold,Shrikes,1,31,0.03225806451612903,2,3,Foraging guild
+cold,Starlings,1,31,0.03225806451612903,1,2,Foraging guild
+cold,Terns,1,31,0.03225806451612903,5,3.2,Foraging guild
+cold,Thrushes,1,31,0.03225806451612903,4,2.5,Foraging guild
+cold,Tit-like birds,2,31,0.06451612903225806,12,3.4166666666666665,Foraging guild
+cold,Woodpeckers,2,31,0.06451612903225806,5,2.8,Foraging guild
+medium,Aerial insectivores,1,31,0.03225806451612903,4,3.75,Foraging guild
+medium,Aquatic pursuers,1,31,0.03225806451612903,6,3.1666666666666665,Foraging guild
+medium,Columbids,1,31,0.03225806451612903,4,4,Foraging guild
+medium,Cuckoos,1,31,0.03225806451612903,1,3,Foraging guild
+medium,Dabbling ducks,1,31,0.03225806451612903,7,2.4285714285714284,Foraging guild
+medium,Diurnal raptors,2,31,0.06451612903225806,7,3.7142857142857144,Foraging guild
+medium,Flycatchers,1,31,0.03225806451612903,3,2,Foraging guild
+medium,Foliage gleaners,2,31,0.06451612903225806,9,2.5555555555555554,Foraging guild
+medium,Grazing waterfowl,1,31,0.03225806451612903,2,2.5,Foraging guild
+medium,Low flycatching feeders,2,31,0.06451612903225806,9,2.4444444444444446,Foraging guild
+medium,Marsh warblers,1,31,0.03225806451612903,6,3.6666666666666665,Foraging guild
+medium,Omnivorous corvids,3,31,0.0967741935483871,7,3.2857142857142856,Foraging guild
+medium,Open-land insectivores,3,31,0.0967741935483871,6,3.1666666666666665,Foraging guild
+medium,Owls,1,31,0.03225806451612903,5,3.6,Foraging guild
+medium,Passerine seedeaters,1,31,0.03225806451612903,12,3,Foraging guild
+medium,Rails,1,31,0.03225806451612903,5,4.2,Foraging guild
+medium,Scolopacids,1,31,0.03225806451612903,9,1.3333333333333333,Foraging guild
+medium,Terns,1,31,0.03225806451612903,5,3.2,Foraging guild
+medium,Thrushes,1,31,0.03225806451612903,4,2.5,Foraging guild
+medium,Tit-like birds,3,31,0.0967741935483871,12,3.4166666666666665,Foraging guild
+medium,Woodpeckers,2,31,0.06451612903225806,5,2.8,Foraging guild
+warm,Aerial insectivores,3,31,0.0967741935483871,4,3.75,Foraging guild
+warm,Aquatic pursuers,1,31,0.03225806451612903,6,3.1666666666666665,Foraging guild
+warm,Columbids,2,31,0.06451612903225806,4,4,Foraging guild
+warm,Dabbling ducks,2,31,0.06451612903225806,7,2.4285714285714284,Foraging guild
+warm,Diurnal raptors,2,31,0.06451612903225806,7,3.7142857142857144,Foraging guild
+warm,Diving ducks,1,31,0.03225806451612903,3,2,Foraging guild
+warm,Foliage gleaners,2,31,0.06451612903225806,9,2.5555555555555554,Foraging guild
+warm,Gallinaceous birds,1,31,0.03225806451612903,2,4.5,Foraging guild
+warm,Omnivorous corvids,3,31,0.0967741935483871,7,3.2857142857142856,Foraging guild
+warm,Open-land insectivores,1,31,0.03225806451612903,6,3.1666666666666665,Foraging guild
+warm,Owls,1,31,0.03225806451612903,5,3.6,Foraging guild
+warm,Passerine seedeaters,2,31,0.06451612903225806,12,3,Foraging guild
+warm,Plovers,1,31,0.03225806451612903,6,3,Foraging guild
+warm,Rails,2,31,0.06451612903225806,5,4.2,Foraging guild
+warm,Shrikes,1,31,0.03225806451612903,2,3,Foraging guild
+warm,Thrushes,1,31,0.03225806451612903,4,2.5,Foraging guild
+warm,Tit-like birds,3,31,0.0967741935483871,12,3.4166666666666665,Foraging guild
+warm,Wading birds,1,31,0.03225806451612903,2,4.5,Foraging guild
+warm,Woodpeckers,1,31,0.03225806451612903,5,2.8,Foraging guild
+very warm,Aquatic pursuers,2,32,0.0625,6,3.1666666666666665,Foraging guild
+very warm,Buntings,1,32,0.03125,3,3,Foraging guild
+very warm,Columbids,1,32,0.03125,4,4,Foraging guild
+very warm,Diurnal raptors,2,32,0.0625,7,3.7142857142857144,Foraging guild
+very warm,Gallinaceous birds,1,32,0.03125,2,4.5,Foraging guild
+very warm,Kingfishers,1,32,0.03125,1,5,Foraging guild
+very warm,Low flycatching feeders,1,32,0.03125,9,2.4444444444444446,Foraging guild
+very warm,Marsh warblers,3,32,0.09375,6,3.6666666666666665,Foraging guild
+very warm,Nigthjars,1,32,0.03125,1,5,Foraging guild
+very warm,Open-land insectivores,1,32,0.03125,6,3.1666666666666665,Foraging guild
+very warm,Orioles,1,32,0.03125,1,5,Foraging guild
+very warm,Owls,2,32,0.0625,5,3.6,Foraging guild
+very warm,Passerine seedeaters,4,32,0.125,12,3,Foraging guild
+very warm,Plovers,2,32,0.0625,6,3,Foraging guild
+very warm,Rails,2,32,0.0625,5,4.2,Foraging guild
+very warm,Reedlings,1,32,0.03125,1,5,Foraging guild
+very warm,Terns,2,32,0.0625,5,3.2,Foraging guild
+very warm,Tit-like birds,3,32,0.09375,12,3.4166666666666665,Foraging guild
+very warm,Wading birds,1,32,0.03125,2,4.5,Foraging guild

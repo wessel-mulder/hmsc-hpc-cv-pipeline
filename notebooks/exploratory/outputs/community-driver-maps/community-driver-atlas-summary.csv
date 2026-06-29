@@ -1,0 +1,17 @@
+atlas,period,dominant_variable,dominant_variable_label,dominant_direction,n_sites,prop_sites
+1,1970s,perc_forest,Forest (% coverage),Mostly positive,1482,0.8344594594594594
+1,1970s,perc_cropland,Cropland (% coverage),Mostly negative,132,0.07432432432432433
+1,1970s,perc_cropland,Cropland (% coverage),Mixed,96,0.05405405405405406
+1,1970s,perc_cropland,Cropland (% coverage),Mostly positive,38,0.021396396396396396
+1,1970s,tmean_breeding,Temperature,Mostly positive,28,0.015765765765765764
+2,1990s,perc_forest,Forest (% coverage),Mostly positive,1805,0.9756756756756757
+2,1990s,perc_cropland,Cropland (% coverage),Mostly negative,25,0.013513513513513514
+2,1990s,tmean_breeding,Temperature,Mostly positive,9,0.004864864864864865
+2,1990s,perc_forest,Forest (% coverage),Mixed,7,0.0037837837837837837
+2,1990s,perc_cropland,Cropland (% coverage),Mixed,3,0.0016216216216216215
+2,1990s,perc_cropland,Cropland (% coverage),Mostly positive,1,5.405405405405405e-4
+3,2010s,perc_forest,Forest (% coverage),Mostly positive,1841,0.9669117647058824
+3,2010s,perc_urban,Urban (% coverage),Mostly positive,39,0.020483193277310924
+3,2010s,perc_cropland,Cropland (% coverage),Mixed,14,0.007352941176470588
+3,2010s,perc_cropland,Cropland (% coverage),Mostly negative,7,0.003676470588235294
+3,2010s,perc_cropland,Cropland (% coverage),Mostly positive,3,0.0015756302521008404

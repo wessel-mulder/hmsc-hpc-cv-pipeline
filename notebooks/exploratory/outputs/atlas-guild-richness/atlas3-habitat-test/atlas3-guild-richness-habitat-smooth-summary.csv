@@ -1,0 +1,8 @@
+"model","smooth","effective_df","reference_df","statistic","p.value"
+"Habitat GAM","s(hh)",3.57545634866122,6,35.2560580342126,0
+"Habitat GAM","s(forest_percent)",3.13320027003731,6,10.806462118294,0
+"Habitat GAM","s(agriculture_percent)",3.85446992211473,6,11.4675242678956,0
+"Spatial habitat GAM","s(hh)",3.75070531794629,6,36.2747645439326,0
+"Spatial habitat GAM","s(forest_percent)",3.27411499542855,6,14.3336406185264,0
+"Spatial habitat GAM","s(agriculture_percent)",3.97895944897115,6,15.3369226854119,0
+"Spatial habitat GAM","s(easting_km,northing_km)",55.8390768896642,249,0.894116462862867,0

@@ -1,0 +1,29 @@
+trait_family,trait_value,n_species
+Thermal,CWM STI,157
+Thermal,Thermal group: cold,31
+Thermal,Thermal group: medium,31
+Thermal,Thermal group: very cold,32
+Thermal,Thermal group: very warm,32
+Thermal,Thermal group: warm,31
+Migration,long-distance,44
+Migration,sedentary,35
+Migration,sedentary and short-distance,31
+Migration,short-and long-distance,8
+Migration,short-distance,39
+Foraging guild,Aquatic pursuers,6
+Foraging guild,Dabbling ducks,7
+Foraging guild,Diurnal raptors,7
+Foraging guild,Foliage gleaners,9
+Foraging guild,Gulls,5
+Foraging guild,Low flycatching feeders,9
+Foraging guild,Marsh warblers,6
+Foraging guild,Omnivorous corvids,7
+Foraging guild,Open-land insectivores,6
+Foraging guild,Owls,5
+Foraging guild,Passerine seedeaters,12
+Foraging guild,Plovers,6
+Foraging guild,Rails,5
+Foraging guild,Scolopacids,9
+Foraging guild,Terns,5
+Foraging guild,Tit-like birds,12
+Foraging guild,Woodpeckers,5

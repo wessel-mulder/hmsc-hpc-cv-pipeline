@@ -1,5 +1,9 @@
 rm(list = ls())
 
+
+# GETTING STARTED ---------------------------------------------------------
+
+
 library(tidyverse)
 library(readxl)
 library(patchwork)
@@ -17,6 +21,8 @@ dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 figure_slug <- paste0(model_pattern, "-fig5-trait-influence-gamma")
 output_png <- file.path(output_dir, paste0(figure_slug, ".png"))
 output_pdf <- file.path(output_dir, paste0(figure_slug, ".pdf"))
+output_atlas_r2t_png <- file.path(output_dir, paste0(figure_slug, "-atlas-r2t.png"))
+output_atlas_r2t_pdf <- file.path(output_dir, paste0(figure_slug, "-atlas-r2t.pdf"))
 
 var_rename <- c(
   "tmean_breeding" = "Temperature",
@@ -37,35 +43,6 @@ atlas_rename <- c(
   "3" = "2010s"
 )
 
-atlas_sizes <- c(
-  "1970s" = 1.8,
-  "1990s" = 3.4,
-  "2010s" = 5.3
-)
-
-env_colors <- c(
-  "Temperature" = "firebrick3",
-  "Precipitation" = "dodgerblue3",
-  "Land-use heterogeneity" = "orchid3",
-  "Urban" = "snow3",
-  "Cropland" = "goldenrod1",
-  "Pasture" = "darkorange",
-  "Forest" = "springgreen4",
-  "Grass/shrubland" = "springgreen2"
-)
-
-category_colors <- c(
-  "Thermal index" = "#3B6D11",
-  "Migration" = "#7F77DD",
-  "Foraging guild" = "#D85A30"
-)
-
-reference_categories <- paste(
-  "Reference categories:",
-  "migration = long-distance migrants;",
-  "foraging guild = aerial insectivores."
-)
-
 migration_order <- c(
   "sedentary",
   "sedentary and short-distance",
@@ -81,10 +58,12 @@ foraging_order <- c(
   "Plovers"
 )
 
-trait_order_requested <- c(
-  foraging_order,
-  rev(migration_order),
-  "Thermal index"
+figure_caption <- paste0(
+  "Top bars show VP$R2T$Beta, the fraction of species-environment responses ",
+  "explained by traits for each environmental variable and atlas period. ",
+  "Tiles show atlas-specific supported Gamma coefficients ",
+  "(green = positive; red = negative).\nSupported Gamma coefficients have ",
+  "Pr(x > 0) >= ", support_level, " or Pr(x > 0) <= ", 1 - support_level, "."
 )
 
 clean_trait_name <- function(trait) {
@@ -147,12 +126,39 @@ read_gamma_effects <- function(model_folder) {
     )
 }
 
+read_r2t_beta <- function(model_folder) {
+  atlas_num <- str_extract(model_folder, "(?<=Atlas)\\d+")
+  file_path <- file.path(
+    model_dir,
+    model_folder,
+    "Results",
+    sprintf("%sparameter_estimates_VP_R2T_Beta.csv", model_folder)
+  )
+
+  if (!file.exists(file_path)) {
+    stop("Missing VP R2T Beta export: ", file_path, call. = FALSE)
+  }
+
+  read.csv(file_path, check.names = FALSE) |>
+    as_tibble() |>
+    rename(variable_raw = 1, r2t_beta = 2) |>
+    filter(.data$variable_raw %in% names(var_rename)) |>
+    mutate(
+      atlas = atlas_rename[atlas_num],
+      variable = var_rename[.data$variable_raw]
+    ) |>
+    select(.data$atlas, .data$variable, .data$r2t_beta)
+}
+
+
+# LOADING DATA  -----------------------------------------------------------
 model_folders <- find_model_folders(base_dir = model_dir, pattern = model_pattern)
 if (length(model_folders) == 0) {
   stop("No model folders found for pattern: ", model_pattern, call. = FALSE)
 }
 
 gamma_raw <- map_dfr(model_folders, read_gamma_effects)
+r2t_beta <- map_dfr(model_folders, read_r2t_beta)
 
 preprocessed_file <- "Data/preprocessed_data_min_occs_is_5_coverage_is_good_and_average.RData"
 if (!file.exists(preprocessed_file)) {
@@ -163,7 +169,7 @@ load(preprocessed_file)
 
 migration_keep <- names(which(table(Tr$Migration_a3_DOF) >= min_species_per_trait_level))
 foraging_keep <- names(which(table(Tr$foraging_guild_consensus) >= min_species_per_trait_level))
-
+# CLEAN AND PROCESS  ------------------------------------------------------
 trait_counts <- bind_rows(
   tibble(
     trait_category = "Migration",
@@ -204,233 +210,188 @@ gamma_plot <- gamma_raw |>
   mutate(
     trait_category = factor(
       trait_category,
-      levels = c("Foraging guild", "Migration", "Thermal index")
+      levels = c("Thermal index", "Migration", "Foraging guild")
     ),
     variable = factor(variable, levels = var_order),
-    atlas = factor(atlas, levels = names(atlas_sizes)),
+    atlas = factor(atlas, levels = unname(atlas_rename)),
     direction = factor(direction, levels = c("Positive", "Negative", "Not supported"))
   )
 
-traits_with_supported_effects <- gamma_plot |>
-  filter(significant) |>
-  distinct(trait_clean) |>
-  pull(trait_clean)
+# ---- Temporal sign check and atlas-specific signed tile plot ----
+# Keep only coefficients with posterior support for a positive or negative
+# Gamma effect. Unsupported coefficients become white zero-count tiles below.
+supported_gamma <- gamma_plot |>
+  filter(.data$significant, .data$direction %in% c("Positive", "Negative"))
 
-gamma_plot <- gamma_plot |>
-  filter(trait_clean %in% traits_with_supported_effects)
-
-trait_order <- trait_order_requested[trait_order_requested %in% unique(gamma_plot$trait_clean)]
-
-plot_data <- gamma_plot |>
-  mutate(
-    trait_clean = factor(trait_clean, levels = trait_order),
-    x = as.numeric(variable),
-    y = as.numeric(trait_clean)
-  )
-
-grid_cells <- plot_data |>
-  distinct(trait_clean, variable, x, y)
-
-category_bands <- plot_data |>
-  distinct(trait_clean, trait_category) |>
-  mutate(y = as.numeric(trait_clean)) |>
-  group_by(trait_category) |>
+# Atlas-specific panels can show temporal sign changes directly. Still write an
+# audit table if a trait-variable pair has supported positive and negative Gamma
+# coefficients in different atlas periods, because those are useful to inspect.
+conflict_check <- supported_gamma |>
+  group_by(.data$trait_category, .data$trait_clean, .data$variable) |>
   summarise(
-    ymin = min(y) - 0.5,
-    ymax = max(y) + 0.5,
-    ymid = mean(y),
+    n_positive = sum(.data$direction == "Positive", na.rm = TRUE),
+    n_negative = sum(.data$direction == "Negative", na.rm = TRUE),
+    has_positive = n_positive > 0,
+    has_negative = n_negative > 0,
+    has_both = has_positive & has_negative,
     .groups = "drop"
-  ) |>
-  mutate(
-    category_fill = category_colors[as.character(trait_category)],
-    category_text = category_colors[as.character(trait_category)]
   )
 
-plot_points <- plot_data |>
-  filter(significant) |>
-  arrange(desc(atlas))
+conflicting_effects <- conflict_check |>
+  filter(.data$has_both)
 
-legend_envs <- intersect(var_order, as.character(unique(plot_points$variable)))
-
-n_envs <- length(var_order)
-divider_lines <- category_bands |>
-  filter(trait_category != last(levels(plot_data$trait_category)))
-
-make_direction_panel <- function(direction_label, show_environment_legend = TRUE) {
-  points <- plot_points |>
-    filter(direction == direction_label)
-  environment_guide <- if (show_environment_legend) {
-    guide_legend(
-      order = 2,
-      nrow = 2,
-      override.aes = list(shape = 21, fill = NA, size = 3)
-    )
-  } else {
-    "none"
-  }
-
-  ggplot() +
-    geom_rect(
-      data = grid_cells,
-      aes(xmin = x - 0.5, xmax = x + 0.5, ymin = y - 0.5, ymax = y + 0.5),
-      fill = "grey98",
-      color = "grey88",
-      linewidth = 0.18
-    ) +
-    geom_hline(
-      data = divider_lines,
-      aes(yintercept = ymax),
-      color = "grey55",
-      linewidth = 0.35,
-      linetype = "dashed"
-    ) +
-    geom_point(
-      data = points |> filter(atlas == "2010s"),
-      aes(
-        x = x,
-        y = y,
-        size = atlas,
-        color = variable
-      ),
-      shape = 21,
-      fill = NA,
-      stroke = 1.25,
-      alpha = 0.95
-    ) +
-    geom_point(
-      data = points |> filter(atlas == "1990s"),
-      aes(
-        x = x,
-        y = y,
-        size = atlas,
-        color = variable
-      ),
-      shape = 21,
-      fill = NA,
-      stroke = 1.05,
-      alpha = 0.95
-    ) +
-    geom_point(
-      data = points |> filter(atlas == "1970s"),
-      aes(
-        x = x,
-        y = y,
-        size = atlas,
-        color = variable,
-        fill = variable
-      ),
-      shape = 21,
-      stroke = 0.35,
-      alpha = 0.95
-    ) +
-    geom_rect(
-      data = category_bands,
-      aes(
-        xmin = n_envs + 0.58,
-        xmax = n_envs + 0.83,
-        ymin = ymin,
-        ymax = ymax
-      ),
-      fill = category_bands$category_fill,
-      color = NA
-    ) +
-    geom_text(
-      data = category_bands,
-      aes(
-        x = n_envs + 1.0,
-        y = ymid,
-        label = trait_category
-      ),
-      color = category_bands$category_text,
-      hjust = 0,
-      size = 3,
-      fontface = "bold"
-    ) +
-    scale_size_manual(
-      values = atlas_sizes,
-      breaks = names(atlas_sizes),
-      limits = names(atlas_sizes),
-      name = "Atlas period",
-      guide = guide_legend(override.aes = list(fill = "grey65"))
-    ) +
-    scale_color_manual(
-      values = env_colors,
-      breaks = legend_envs,
-      limits = legend_envs,
-      name = "Environmental variable"
-    ) +
-    scale_fill_manual(
-      values = env_colors,
-      breaks = legend_envs,
-      limits = legend_envs,
-      guide = "none"
-    ) +
-    scale_x_continuous(
-      breaks = seq_along(var_order),
-      labels = var_order,
-      expand = expansion(add = c(0.5, 3.15))
-    ) +
-    scale_y_continuous(
-      breaks = seq_along(levels(plot_data$trait_clean)),
-      labels = levels(plot_data$trait_clean),
-      expand = expansion(add = 0.5)
-    ) +
-    coord_fixed(clip = "off") +
-    labs(
-      title = paste(direction_label, "trait moderation"),
-      subtitle = paste0(
-        "Circles mark Gamma coefficients with Pr(>0) >= ",
-        support_level,
-        " or <= ",
-        1 - support_level,
-        ". 1990s and 2010s are rings."
-      ),
-      x = NULL,
-      y = NULL
-    ) +
-    theme_minimal(base_size = 10) +
-    theme(
-      axis.text.x = element_text(angle = 35, hjust = 1, size = 8),
-      axis.text.y = element_text(size = 8),
-      panel.grid = element_blank(),
-      legend.position = "bottom",
-      legend.box = "vertical",
-      plot.title = element_text(face = "bold", hjust = 0.5),
-      plot.subtitle = element_text(size = 8.5, color = "grey35"),
-      plot.margin = margin(8, 78, 8, 8)
-    ) +
-    guides(
-      size = guide_legend(
-        order = 1,
-        override.aes = list(
-          shape = 21,
-          color = "grey30",
-          fill = c("grey65", NA, NA),
-          stroke = c(0.35, 1.05, 1.25)
-        )
-      ),
-      color = environment_guide
-    )
+if (nrow(conflicting_effects) > 0) {
+  conflict_path <- file.path(output_dir, paste0(figure_slug, "-conflicting-effects.csv"))
+  write_csv(conflicting_effects, conflict_path)
+  message("Temporal Gamma sign-change audit written to: ", conflict_path)
 }
 
-p_positive <- make_direction_panel("Positive", show_environment_legend = TRUE)
-p_negative <- make_direction_panel("Negative", show_environment_legend = FALSE)
+thermal_order <- "Thermal index"
+trait_level_order <- c(
+  thermal_order,
+  rev(migration_order),
+  foraging_order
+)
+trait_level_order <- trait_level_order[trait_level_order %in% unique(gamma_plot$trait_clean)]
 
-p_combined <- p_positive + p_negative +
-  plot_layout(guides = "collect") +
-  plot_annotation(caption = reference_categories) &
-  theme(
-    legend.position = "bottom",
-    plot.caption = element_text(size = 8.5, color = "grey35", hjust = 0)
+trait_lookup <- gamma_plot |>
+  distinct(.data$trait_clean, .data$trait_category)
+
+tile_values <- supported_gamma |>
+  mutate(
+    signed_gamma = case_when(
+      .data$direction == "Positive" ~ 1,
+      .data$direction == "Negative" ~ -1,
+      TRUE ~ 0
+    )
+  ) |>
+  group_by(.data$atlas, .data$trait_clean, .data$variable) |>
+  summarise(signed_gamma = first(.data$signed_gamma), .groups = "drop")
+
+tile_df <- expand_grid(
+  atlas = unname(atlas_rename),
+  trait_clean = trait_level_order,
+  variable = var_order
+) |>
+  left_join(tile_values, by = c("atlas", "trait_clean", "variable")) |>
+  left_join(trait_lookup, by = "trait_clean") |>
+  mutate(
+    signed_gamma = replace_na(.data$signed_gamma, 0),
+    gamma_support = case_when(
+      .data$signed_gamma > 0 ~ "Positive",
+      .data$signed_gamma < 0 ~ "Negative",
+      TRUE ~ "No supported effect"
+    ),
+    gamma_support = factor(
+      .data$gamma_support,
+      levels = c("Negative", "No supported effect", "Positive")
+    ),
+    trait_clean = factor(.data$trait_clean, levels = rev(trait_level_order)),
+    variable = factor(.data$variable, levels = var_order),
+    atlas = factor(.data$atlas, levels = unname(atlas_rename)),
+    trait_category = factor(
+      .data$trait_category,
+      levels = c("Thermal index", "Migration", "Foraging guild")
+    )
   )
 
-ggsave(output_png, p_combined, width = 18, height = 10, dpi = 300)
-ggsave(output_pdf, p_combined, width = 18, height = 10)
+r2t_beta <- r2t_beta |>
+  mutate(
+    atlas = factor(.data$atlas, levels = unname(atlas_rename)),
+    variable = factor(.data$variable, levels = var_order)
+  )
+
+r2t_limit <- max(r2t_beta$r2t_beta, na.rm = TRUE) * 1.08
+gamma_colors <- c(
+  "Negative" = "#d95f02",
+  "No supported effect" = "grey98",
+  "Positive" = "#1b9e77"
+)
+trait_category_labels <- c(
+  "Thermal index" = "Species thermal index",
+  "Migration" = "Migratory strategy",
+  "Foraging guild" = "Foraging guild"
+)
+
+driver_panel_theme <- theme_minimal(base_size = 10) +
+  theme(
+    panel.grid = element_blank(),
+    axis.ticks = element_blank(),
+    plot.title = element_text(face = "bold", hjust = 0),
+    plot.background = element_rect(fill = "white", colour = NA)
+  )
+
+r2t_strip <- ggplot(r2t_beta, aes(x = variable, y = r2t_beta)) +
+  geom_col(width = 0.82, fill = "grey40", colour = "white", linewidth = 0.18) +
+  facet_grid(. ~ atlas) +
+  scale_x_discrete(drop = FALSE) +
+  scale_y_continuous(
+    limits = c(0, r2t_limit),
+    labels = scales::label_number(accuracy = 0.01),
+    expand = expansion(mult = c(0, 0.08))
+  ) +
+  labs(x = NULL, y = "Trait-explained\nBeta variation") +
+  driver_panel_theme +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(size = 7.5),
+    axis.title.y = element_text(size = 8.2, face = "bold"),
+    strip.text.x = element_text(size = 10, face = "bold"),
+    strip.background = element_rect(fill = "grey92", colour = "white"),
+    plot.margin = margin(5.5, 5.5, 1.5, 5.5)
+  )
+
+gamma_heatmap <- ggplot(tile_df, aes(x = variable, y = trait_clean, fill = gamma_support)) +
+  geom_tile(colour = "grey90", linewidth = 0.25) +
+  facet_grid(
+    trait_category ~ atlas,
+    scales = "free_y",
+    space = "free_y",
+    labeller = labeller(trait_category = as_labeller(trait_category_labels))
+  ) +
+  scale_x_discrete(drop = FALSE) +
+  scale_fill_manual(
+    values = gamma_colors,
+    drop = FALSE,
+    name = "Supported\nGamma sign"
+  ) +
+  labs(x = NULL, y = NULL) +
+  driver_panel_theme +
+  theme(
+    axis.text.x = element_text(size = 8.2, angle = 35, hjust = 1),
+    axis.text.y = element_text(size = 8.8),
+    legend.position = "right",
+    legend.title = element_text(size = 8.8, face = "bold"),
+    legend.text = element_text(size = 8),
+    strip.text.x = element_blank(),
+    strip.background.x = element_blank(),
+    strip.text.y = element_text(size = 9, face = "bold"),
+    strip.background.y = element_rect(fill = "grey92", colour = "white"),
+    panel.spacing.x = grid::unit(0.9, "lines"),
+    panel.spacing.y = grid::unit(0.65, "lines"),
+    plot.margin = margin(1.5, 5.5, 5.5, 5.5)
+  )
+
+p_gamma <- r2t_strip / gamma_heatmap +
+  plot_layout(heights = c(1.0, 5.4), guides = "collect") +
+  plot_annotation(caption = figure_caption) &
+  theme(
+    legend.position = "right",
+    plot.caption = element_text(size = 8.2, colour = "grey25", hjust = 0),
+    plot.margin = margin(5.5, 5.5, 5.5, 5.5)
+  )
+
+ggsave(output_png, p_gamma, width = 14.6, height = 8.2, units = "in", dpi = 300, bg = "white")
+ggsave(output_pdf, p_gamma, width = 14.6, height = 8.2, units = "in", bg = "white")
+ggsave(output_atlas_r2t_png, p_gamma, width = 14.6, height = 8.2, units = "in", dpi = 300, bg = "white")
+ggsave(output_atlas_r2t_pdf, p_gamma, width = 14.6, height = 8.2, units = "in", bg = "white")
 
 # Compatibility alias for the old draft filename. The publication filename above
 # is the canonical output.
-ggsave(file.path(output_dir, "gamma_circles.png"), p_combined, width = 18, height = 10, dpi = 300)
-ggsave(file.path(output_dir, "gamma_circles.pdf"), p_combined, width = 18, height = 10)
+ggsave(file.path(output_dir, "gamma_circles.png"), p_gamma, width = 14.6, height = 8.2, units = "in", dpi = 300, bg = "white")
+ggsave(file.path(output_dir, "gamma_circles.pdf"), p_gamma, width = 14.6, height = 8.2, units = "in", bg = "white")
 
 message("Wrote: ", output_png)
 message("Wrote: ", output_pdf)
+message("Wrote: ", output_atlas_r2t_png)
+message("Wrote: ", output_atlas_r2t_pdf)

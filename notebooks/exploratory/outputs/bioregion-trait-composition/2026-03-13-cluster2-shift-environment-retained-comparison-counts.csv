@@ -1,0 +1,5 @@
+source_cluster,group_status,group,n_sites
+Cluster 1,Retained source cluster,Cluster 1 to Cluster 1,141
+Cluster 1,Shifted into Cluster 2,Cluster 1 to Cluster 2,245
+Cluster 3,Retained source cluster,Cluster 3 to Cluster 3,100
+Cluster 3,Shifted into Cluster 2,Cluster 3 to Cluster 2,392

@@ -1,0 +1,31 @@
+"comparison_id","comparison_label","migratory_strategy","change_class","n_species","group_species_count","proportion_within_group","percentage_within_group"
+"1990s_minus_1970s","1990s minus 1970s","long-distance","Decrease",5,42,0.119047619047619,11.9047619047619
+"2010s_minus_1990s","2010s minus 1990s","long-distance","Decrease",3,42,0.0714285714285714,7.14285714285714
+"1990s_minus_1970s","1990s minus 1970s","short-and long-distance","Decrease",0,8,0,0
+"2010s_minus_1990s","2010s minus 1990s","short-and long-distance","Decrease",0,8,0,0
+"1990s_minus_1970s","1990s minus 1970s","short-distance","Decrease",2,39,0.0512820512820513,5.12820512820513
+"2010s_minus_1990s","2010s minus 1990s","short-distance","Decrease",6,39,0.153846153846154,15.3846153846154
+"1990s_minus_1970s","1990s minus 1970s","sedentary and short-distance","Decrease",0,31,0,0
+"2010s_minus_1990s","2010s minus 1990s","sedentary and short-distance","Decrease",5,31,0.161290322580645,16.1290322580645
+"1990s_minus_1970s","1990s minus 1970s","sedentary","Decrease",2,34,0.0588235294117647,5.88235294117647
+"2010s_minus_1990s","2010s minus 1990s","sedentary","Decrease",2,34,0.0588235294117647,5.88235294117647
+"1990s_minus_1970s","1990s minus 1970s","long-distance","Stable",32,42,0.761904761904762,76.1904761904762
+"2010s_minus_1990s","2010s minus 1990s","long-distance","Stable",37,42,0.880952380952381,88.0952380952381
+"1990s_minus_1970s","1990s minus 1970s","short-and long-distance","Stable",7,8,0.875,87.5
+"2010s_minus_1990s","2010s minus 1990s","short-and long-distance","Stable",6,8,0.75,75
+"1990s_minus_1970s","1990s minus 1970s","short-distance","Stable",28,39,0.717948717948718,71.7948717948718
+"2010s_minus_1990s","2010s minus 1990s","short-distance","Stable",31,39,0.794871794871795,79.4871794871795
+"1990s_minus_1970s","1990s minus 1970s","sedentary and short-distance","Stable",19,31,0.612903225806452,61.2903225806452
+"2010s_minus_1990s","2010s minus 1990s","sedentary and short-distance","Stable",25,31,0.806451612903226,80.6451612903226
+"1990s_minus_1970s","1990s minus 1970s","sedentary","Stable",18,34,0.529411764705882,52.9411764705882
+"2010s_minus_1990s","2010s minus 1990s","sedentary","Stable",27,34,0.794117647058823,79.4117647058823
+"1990s_minus_1970s","1990s minus 1970s","long-distance","Increase",5,42,0.119047619047619,11.9047619047619
+"2010s_minus_1990s","2010s minus 1990s","long-distance","Increase",2,42,0.0476190476190476,4.76190476190476
+"1990s_minus_1970s","1990s minus 1970s","short-and long-distance","Increase",1,8,0.125,12.5
+"2010s_minus_1990s","2010s minus 1990s","short-and long-distance","Increase",2,8,0.25,25
+"1990s_minus_1970s","1990s minus 1970s","short-distance","Increase",9,39,0.230769230769231,23.0769230769231
+"2010s_minus_1990s","2010s minus 1990s","short-distance","Increase",2,39,0.0512820512820513,5.12820512820513
+"1990s_minus_1970s","1990s minus 1970s","sedentary and short-distance","Increase",12,31,0.387096774193548,38.7096774193548
+"2010s_minus_1990s","2010s minus 1990s","sedentary and short-distance","Increase",1,31,0.032258064516129,3.2258064516129
+"1990s_minus_1970s","1990s minus 1970s","sedentary","Increase",14,34,0.411764705882353,41.1764705882353
+"2010s_minus_1990s","2010s minus 1990s","sedentary","Increase",5,34,0.147058823529412,14.7058823529412

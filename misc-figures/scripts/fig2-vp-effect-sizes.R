@@ -4,15 +4,30 @@ if(!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,Hmsc,RColorBrewer,ggplot2,
                rnaturalearth,rnaturalearthdata,
                gridExtra,patchwork,
-               readxl,cowplot)
+               readxl,cowplot,scales)
 source(file.path("support_scripts", "figure_data_helpers.R"))
 
-devtools::install_github("davidsjoberg/ggbump")
-devtools::install_github("davidsjoberg/ggsankey")
+if (!requireNamespace("ggbump", quietly = TRUE) || !requireNamespace("ggsankey", quietly = TRUE)) {
+  stop(
+    "Install the `ggbump` and `ggsankey` packages before running this script. ",
+    "They are used for the variance-partitioning alluvial panel.",
+    call. = FALSE
+  )
+}
 library(ggbump)
 library(ggsankey)
 
-scaled = F # set to NULL to not scale 
+scaled = T # set to NULL to not scale 
+
+predictor_sds_by_atlas <- function(models, variables) {
+  imap_dfr(models, function(model, atlas) {
+    tibble(
+      atlas = as.numeric(atlas),
+      variable = variables,
+      predictor_sd = map_dbl(variables, ~ sd(model$XData[[.x]], na.rm = TRUE))
+    )
+  })
+}
 
 #### LOAD VP DATA ####
 pattern <- "2026-03-13"
@@ -131,6 +146,13 @@ gamma <- read_parameter_effects(pattern, effect = "Gamma")
 
 n_species_total <- length(unique(beta$species))
 
+# These SDs convert beta coefficients into effects for a one-standard-deviation
+# change in the environmental variable. The SD is calculated separately within
+# each atlas, matching the atlas-specific model used to estimate each beta.
+mods <- load_hmsc_posteriors(matching_folders)
+beta_variables <- intersect(setdiff(unique(beta$variable), "(Intercept)"), colnames(mods[[1]]$XData))
+beta_predictor_sds <- predictor_sds_by_atlas(mods, beta_variables)
+
 # prepare betas
 beta_processed <- beta %>%
   filter(variable != "(Intercept)", !is.na(effect_size)) %>%
@@ -165,6 +187,53 @@ beta_clean <- beta_processed %>%
                           .default = variable
     ),
     plot_val = ifelse(direction == "Negative", -perc, perc),
+    variable = factor(variable, levels = names(base_colors)),
+    atlas = factor(atlas, levels = c('1970s', '1990s', '2010s'))
+  )
+
+# Prepare a second version of the beta bar panel. Instead of counting the
+# percentage of species with supported effects, this sums the magnitude of the
+# atlas-specific SD-scaled beta effects across species. Unsupported beta
+# coefficients have already been removed by `read_parameter_effects()`, which
+# keeps only effects with Pr(x > 0) >= 0.95 or Pr(x > 0) <= 0.05.
+beta_total_effect <- beta %>%
+  filter(variable != "(Intercept)", !is.na(effect_size)) %>%
+  inner_join(beta_predictor_sds, by = c("atlas", "variable")) %>%
+  mutate(
+    sd_scaled_effect_size = effect_size * predictor_sd,
+    direction = factor(
+      ifelse(sd_scaled_effect_size > 0, "Positive", "Negative"),
+      levels = c("Positive", "Negative")
+    ),
+    atlas = case_when(
+      atlas == 1 ~ "1970s",
+      atlas == 2 ~ "1990s",
+      atlas == 3 ~ "2010s"
+    )
+  ) %>%
+  group_by(atlas, variable, direction) %>%
+  summarise(
+    n_species = n_distinct(species),
+    total_abs_sd_scaled_effect = sum(abs(sd_scaled_effect_size), na.rm = TRUE),
+    mean_abs_sd_scaled_effect = mean(abs(sd_scaled_effect_size), na.rm = TRUE),
+    .groups = "drop"
+  )
+
+beta_total_effect_clean <- beta_total_effect %>%
+  mutate(
+    variable = case_match(variable,
+                          "tmean_breeding"     ~ "Temperature",
+                          "prec_breeding"      ~ "Precipitation",
+                          "hh"                 ~ "Land-use heterogeneity",
+                          "perc_urban"         ~ "Urban (% coverage)",
+                          "perc_cropland"      ~ "Cropland (% coverage)",
+                          "perc_pasture"       ~ "Pasture (% coverage)",
+                          "perc_forest"        ~ "Forest (% coverage)",
+                          "perc_grass_shrub"   ~ "Grass/Shrubland (% coverage)",
+                          "Random: site"       ~ "Site-level random effect",
+                          .default = variable
+    ),
+    plot_val = ifelse(direction == "Negative", -total_abs_sd_scaled_effect, total_abs_sd_scaled_effect),
     variable = factor(variable, levels = names(base_colors)),
     atlas = factor(atlas, levels = c('1970s', '1990s', '2010s'))
   )
@@ -236,6 +305,46 @@ plots[[2]] <- ggplot(beta_clean, aes(x = variable, y = plot_val, fill = variable
 
 plots[[2]]
 
+# The total-effect version keeps the same signed layout as the percentage plot,
+# but the bar height is now the summed SD-scaled beta magnitude among species
+# with at least 95% posterior support for the effect direction.
+total_effect_max <- max(abs(beta_total_effect_clean$plot_val), na.rm = TRUE)
+total_effect_limit <- pretty(c(-total_effect_max, total_effect_max), n = 6)
+total_effect_limit <- max(abs(total_effect_limit))
+
+plots[[3]] <- ggplot(beta_total_effect_clean, aes(x = variable, y = plot_val, fill = variable, group = atlas, alpha = atlas)) +
+  geom_col(position = position_dodge(width = 0.9), color = "white", linewidth = 0.1) +
+  geom_hline(yintercept = 0, color = "black") +
+  scale_fill_manual(values = base_colors) +
+  scale_alpha_manual(values=c(0.4,0.7,1))+
+  scale_y_continuous(
+    limits = c(-total_effect_limit, total_effect_limit),
+    labels = label_number(accuracy = 0.1)
+  ) +
+  annotate("text", x = 4.5, y = total_effect_limit * 0.82,
+           label = "Positive effect",
+           hjust = 0.5, vjust = 0.5,
+           fontface = "bold", size = 5, color = "black") +
+  annotate("text", x = 4.5, y = -total_effect_limit * 0.82,
+           label = "Negative effect",
+           hjust = 0.5, vjust = 0.5,
+           fontface = "bold", size = 5, color = "black") +
+  labs(
+    title = 'Total supported variable effects across modelled species',
+    x = NULL,
+    y = "Total SD-scaled effect size",
+    alpha = 'Atlas',
+    fill = 'Variable'
+  ) +
+  theme_minimal() +
+  theme(
+    legend.direction = "vertical",
+    panel.grid.major.x = element_blank(),
+    axis.text.x = element_blank()
+  )
+
+plots[[3]]
+
 # ASSEMBLE ----------------------------------------------------------------
 # get legend
 # Shared Variable Legend (for Maps A & B and the Bar/Sankey plots)
@@ -269,7 +378,39 @@ final_layout <- wrap_plots(
 
 final_layout
 
+total_effect_leg <- get_legend(
+  plots[[3]] +
+    theme(legend.position = "right",
+          legend.direction = "vertical")+
+    labs(fill = 'Variable',alpha = "Atlas")
+)
+
+total_effect_layout <- wrap_plots(
+  A = plots[[1]] + theme(legend.position = "none"),
+  B = plots[[3]] + theme(legend.position = "none"),
+  L = total_effect_leg,
+  design = layout
+) +
+  plot_layout(heights = c(1, 1, 0.1), widths = c(1, 0.4)) +
+  plot_annotation(tag_levels = list(c('A', 'B', '', ''))) &
+  theme(plot.tag = element_text(face = "bold", size = 14))
+
+total_effect_layout
+
 # Save with a slightly wider aspect ratio to accommodate the side legend
 name <- if (scaled==T) sprintf('misc-figures/%s-fig2-scaled-vp-effect-sizes.png',pattern) else sprintf('misc-figures/%s-fig2-unscaled-vp-effect-sizes.png',pattern)
 
 ggsave(name, final_layout, width = 10, height = 6)
+
+total_effect_name <- if (scaled==T) {
+  sprintf('misc-figures/%s-fig2-scaled-vp-total-supported-effect-sizes.png', pattern)
+} else {
+  sprintf('misc-figures/%s-fig2-unscaled-vp-total-supported-effect-sizes.png', pattern)
+}
+
+ggsave(total_effect_name, total_effect_layout, width = 10, height = 6)
+
+write_csv(
+  beta_total_effect_clean,
+  sprintf('misc-figures/%s-fig2-total-supported-sd-scaled-beta-effects.csv', pattern)
+)

@@ -1,0 +1,762 @@
+---
+title: "Grid-level environmental maps"
+author: "WM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  results = "hide",
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  dev = "png"
+)
+knitr::opts_knit$set(root.dir = normalizePath("../.."))
+```
+
+## Aim
+
+These maps and distribution plots show the grid-level environmental variables
+used by the HMSC analysis. The map panels focus on Atlas 1 and Atlas 3,
+labelled here as the 1970s and 2010s. The violin plots include all three atlas
+periods so temporal shifts in the land-use distributions are visible.
+
+The map style follows the avian bioregion cluster notebooks: each grid cell is
+drawn at its model coordinate, with mainland Denmark as the main panel and
+Bornholm shown as an inset.
+
+## Load Data
+
+```{r load-data}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(cowplot)
+  library(scales)
+  library(knitr)
+})
+
+source(file.path("support_scripts", "data_helpers.R"))
+
+input_path <- file.path(
+  "Data",
+  "preprocessed_data_min_occs_is_5_coverage_is_good_and_average.RData"
+)
+if (!file.exists(input_path)) {
+  stop("Missing preprocessed model input file: ", input_path, call. = FALSE)
+}
+
+load(input_path)
+if (!all(c("X", "Design") %in% ls())) {
+  stop("Expected objects `X` and `Design` in: ", input_path, call. = FALSE)
+}
+
+output_prefix <- format(Sys.Date(), "%Y-%m-%d")
+out_dir <- file.path("notebooks", "exploratory", "outputs", "grid-environment-maps")
+plot_dir <- file.path(out_dir, "plots")
+dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
+
+year_lookup <- c("1" = "1970s", "2" = "1990s", "3" = "2010s")
+map_year_lookup <- year_lookup[c("1", "3")]
+focal_atlases <- names(year_lookup)
+
+# These are the land-use predictors retained by the fitted HMSC models. The
+# freshwater/saltwater percentage is deliberately excluded here because it was
+# also excluded from the model formula.
+landuse_vars <- c(
+  "perc_urban",
+  "perc_cropland",
+  "perc_pasture",
+  "perc_forest",
+  "perc_grass_shrub"
+)
+
+landuse_relative_vars <- c("hh", landuse_vars)
+climate_relative_vars <- c("tmean_breeding", "prec_breeding")
+relative_vars <- c(landuse_relative_vars, climate_relative_vars)
+
+var_labels <- c(
+  "tmean_breeding" = "Breeding temperature",
+  "prec_breeding" = "Breeding precipitation",
+  "hh" = "Land-use heterogeneity",
+  "perc_urban" = "Urban",
+  "perc_cropland" = "Cropland",
+  "perc_pasture" = "Pasture",
+  "perc_forest" = "Forest",
+  "perc_grass_shrub" = "Grass/Shrubland"
+)
+
+landuse_labels <- c(
+  "perc_urban" = "Urban",
+  "perc_cropland" = "Cropland",
+  "perc_pasture" = "Pasture",
+  "perc_forest" = "Forest",
+  "perc_grass_shrub" = "Grass/Shrubland"
+)
+
+landuse_palette <- c(
+  "Urban" = "#666666",
+  "Cropland" = "#D6A11F",
+  "Pasture" = "#E68A2E",
+  "Forest" = "#2F7D32",
+  "Grass/Shrubland" = "#79B75B"
+)
+```
+
+```{r prepare-data}
+design_df <- Design |>
+  as.data.frame() |>
+  rownames_to_column("survey") |>
+  transmute(
+    survey,
+    site,
+    atlas = as.character(.data$atlas),
+    X = .data$lon,
+    Y = .data$lat
+  )
+
+env_df <- X |>
+  as.data.frame() |>
+  rownames_to_column("survey") |>
+  mutate(atlas = stringr::str_extract(.data$survey, "[123]$")) |>
+  filter(.data$atlas %in% focal_atlases) |>
+  left_join(design_df, by = c("survey", "atlas")) |>
+  filter(!is.na(.data$X), !is.na(.data$Y)) |>
+  rowwise() |>
+  mutate(
+    dominant_model_land_use = landuse_vars[
+      which.max(c_across(all_of(landuse_vars)))
+    ],
+    dominant_model_land_use = landuse_labels[[dominant_model_land_use]]
+  ) |>
+  ungroup() |>
+  mutate(
+    period = factor(year_lookup[.data$atlas], levels = unname(year_lookup)),
+    dominant_model_land_use = factor(
+      .data$dominant_model_land_use,
+      levels = unname(landuse_labels)
+    )
+  )
+
+scaling_summary <- env_df |>
+  pivot_longer(
+    cols = all_of(relative_vars),
+    names_to = "variable",
+    values_to = "value"
+  ) |>
+  group_by(.data$period, .data$variable) |>
+  summarise(
+    variable_label = var_labels[.data$variable[[1]]],
+    mean_value = mean(.data$value, na.rm = TRUE),
+    sd_value = sd(.data$value, na.rm = TRUE),
+    q10 = quantile(.data$value, 0.10, na.rm = TRUE),
+    q50 = quantile(.data$value, 0.50, na.rm = TRUE),
+    q90 = quantile(.data$value, 0.90, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+relative_long <- env_df |>
+  select(
+    survey,
+    site,
+    atlas,
+    period,
+    X,
+    Y,
+    all_of(relative_vars)
+  ) |>
+  pivot_longer(
+    cols = all_of(relative_vars),
+    names_to = "variable",
+    values_to = "value"
+  ) |>
+  left_join(
+    scaling_summary |> select(period, variable, mean_value, sd_value),
+    by = c("period", "variable")
+  ) |>
+  mutate(
+    variable_label = var_labels[.data$variable],
+    relative_z = (.data$value - .data$mean_value) / .data$sd_value,
+    relative_z = if_else(is.finite(.data$relative_z), .data$relative_z, NA_real_)
+  )
+
+dominant_summary <- env_df |>
+  count(.data$period, .data$dominant_model_land_use, name = "n_cells") |>
+  group_by(.data$period) |>
+  mutate(prop_cells = .data$n_cells / sum(.data$n_cells)) |>
+  ungroup()
+
+landuse_distribution <- env_df |>
+  select(
+    survey,
+    site,
+    atlas,
+    period,
+    all_of(landuse_vars)
+  ) |>
+  pivot_longer(
+    cols = all_of(landuse_vars),
+    names_to = "variable",
+    values_to = "proportion"
+  ) |>
+  mutate(
+    land_use_type = factor(var_labels[.data$variable], levels = var_labels[landuse_vars]),
+    percentage = .data$proportion * 100,
+    has_cover = .data$percentage > 0
+  )
+
+safe_quantile <- function(x, prob) {
+  x <- x[is.finite(x)]
+  if (length(x) == 0) {
+    return(NA_real_)
+  }
+  as.numeric(quantile(x, prob, na.rm = TRUE))
+}
+
+landuse_distribution_summary <- landuse_distribution |>
+  group_by(.data$period, .data$land_use_type) |>
+  summarise(
+    n_cells = n(),
+    mean_percentage = mean(.data$percentage, na.rm = TRUE),
+    median_percentage = median(.data$percentage, na.rm = TRUE),
+    q10_percentage = quantile(.data$percentage, 0.10, na.rm = TRUE),
+    q90_percentage = quantile(.data$percentage, 0.90, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+landuse_zero_inflated_summary <- landuse_distribution |>
+  group_by(.data$period, .data$land_use_type) |>
+  summarise(
+    n_cells = n(),
+    n_present = sum(.data$has_cover, na.rm = TRUE),
+    prop_present = .data$n_present / .data$n_cells,
+    mean_positive_percentage = mean(.data$percentage[.data$has_cover], na.rm = TRUE),
+    median_positive_percentage = median(.data$percentage[.data$has_cover], na.rm = TRUE),
+    q10_positive_percentage = safe_quantile(.data$percentage[.data$has_cover], 0.10),
+    q90_positive_percentage = safe_quantile(.data$percentage[.data$has_cover], 0.90),
+    .groups = "drop"
+  )
+
+write_csv(
+  env_df |>
+    select(
+      survey,
+      site,
+      atlas,
+      period,
+      X,
+      Y,
+      dominant_model_land_use,
+      all_of(relative_vars)
+    ),
+  file.path(out_dir, paste0(output_prefix, "-environment-map-data-all-atlas-periods.csv"))
+)
+write_csv(
+  scaling_summary,
+  file.path(out_dir, paste0(output_prefix, "-environment-map-scaling-summary.csv"))
+)
+write_csv(
+  dominant_summary,
+  file.path(out_dir, paste0(output_prefix, "-dominant-modelled-land-use-summary.csv"))
+)
+write_csv(
+  landuse_distribution_summary,
+  file.path(out_dir, paste0(output_prefix, "-land-use-percentage-distribution-summary.csv"))
+)
+write_csv(
+  landuse_zero_inflated_summary,
+  file.path(out_dir, paste0(output_prefix, "-land-use-zero-inflated-distribution-summary.csv"))
+)
+```
+
+## Map Helpers
+
+```{r map-helpers}
+mainland_bbox <- c(xmin = 400000, xmax = 750000, ymin = 6000000, ymax = 6450000)
+bornholm_bbox <- c(xmin = 855000, xmax = 905000, ymin = 6100000, ymax = 6160000)
+
+mainland_width <- mainland_bbox[["xmax"]] - mainland_bbox[["xmin"]]
+mainland_height <- mainland_bbox[["ymax"]] - mainland_bbox[["ymin"]]
+bornholm_width <- bornholm_bbox[["xmax"]] - bornholm_bbox[["xmin"]]
+bornholm_height <- bornholm_bbox[["ymax"]] - bornholm_bbox[["ymin"]]
+bornholm_inset_width <- bornholm_width / mainland_width
+bornholm_inset_height <- bornholm_height / mainland_height
+
+denmark_map_theme <- function(legend_position = "bottom") {
+  theme_minimal(base_size = 10) +
+    theme(
+      legend.position = legend_position,
+      legend.title = element_text(face = "bold"),
+      axis.text = element_blank(),
+      axis.title = element_blank(),
+      panel.grid = element_blank(),
+      plot.title = element_text(face = "bold", hjust = 0.5),
+      plot.background = element_rect(fill = "white", colour = NA),
+      plot.margin = margin(0, 0, 0, 0)
+    )
+}
+
+dominant_landuse_scale <- function() {
+  scale_colour_manual(
+    values = landuse_palette,
+    drop = FALSE,
+    name = "Dominant modelled\nland-use class"
+  )
+}
+
+relative_value_scale <- function() {
+  scale_colour_gradient2(
+    low = "#2166AC",
+    mid = "grey95",
+    high = "#B2182B",
+    midpoint = 0,
+    limits = c(-2.5, 2.5),
+    oob = squish,
+    name = "Relative value\n(z-score)",
+    breaks = c(-2, 0, 2),
+    labels = c("Lower", "Average", "Higher")
+  )
+}
+
+plot_environment_base <- function(df, colour_col, scale_layer, title = NULL,
+                                  bbox = mainland_bbox, show_legend = FALSE,
+                                  border = FALSE) {
+  ggplot(df) +
+    geom_point(
+      aes(x = .data$X, y = .data$Y, colour = .data[[colour_col]]),
+      size = 1.25,
+      alpha = 0.95
+    ) +
+    scale_layer +
+    coord_fixed(
+      xlim = c(bbox[["xmin"]], bbox[["xmax"]]),
+      ylim = c(bbox[["ymin"]], bbox[["ymax"]]),
+      expand = FALSE
+    ) +
+    denmark_map_theme(if (show_legend) "bottom" else "none") +
+    theme(
+      panel.border = if (border) {
+        element_rect(colour = "grey35", fill = NA, linewidth = 0.45)
+      } else {
+        element_blank()
+      }
+    ) +
+    labs(title = title)
+}
+
+plot_denmark_inset_map <- function(df, colour_col, scale_layer, title = NULL,
+                                   bornholm_label = FALSE) {
+  p_main <- plot_environment_base(
+    df,
+    colour_col = colour_col,
+    scale_layer = scale_layer,
+    title = title,
+    bbox = mainland_bbox
+  )
+
+  p_inset <- plot_environment_base(
+    df,
+    colour_col = colour_col,
+    scale_layer = scale_layer,
+    bbox = bornholm_bbox,
+    border = TRUE
+  ) +
+    theme_void() +
+    theme(
+      legend.position = "none",
+      plot.background = element_rect(fill = "white", colour = NA),
+      panel.border = element_rect(colour = "grey35", fill = NA, linewidth = 0.7)
+    )
+
+  map_plot <- ggdraw(p_main) +
+    draw_plot(
+      p_inset,
+      x = 0.66,
+      y = 0.60,
+      width = 0.24,
+      height = 0.22
+    )
+
+  if (isTRUE(bornholm_label)) {
+    map_plot <- map_plot +
+      draw_label("Bornholm", x = 0.78, y = 0.84, size = 7, colour = "grey30")
+  }
+
+  map_plot
+}
+
+period_maps <- function(df, colour_col, scale_fn, bornholm_label = FALSE) {
+  map(unname(map_year_lookup), function(period_name) {
+    plot_denmark_inset_map(
+      df |> filter(.data$period == period_name),
+      colour_col = colour_col,
+      scale_layer = scale_fn(),
+      title = period_name,
+      bornholm_label = bornholm_label
+    )
+  })
+}
+
+legend_for_map <- function(df, colour_col, scale_fn) {
+  plot_environment_base(
+    df,
+    colour_col = colour_col,
+    scale_layer = scale_fn(),
+    show_legend = TRUE
+  ) |>
+    get_legend()
+}
+
+relative_variable_row <- function(variable_name) {
+  variable_label <- var_labels[[variable_name]]
+  maps <- map(unname(map_year_lookup), function(period_name) {
+    relative_long |>
+      filter(.data$variable == variable_name, .data$period == period_name) |>
+      plot_denmark_inset_map(
+        colour_col = "relative_z",
+        scale_layer = relative_value_scale(),
+        title = period_name
+      )
+  })
+
+  row_label <- ggdraw() +
+    draw_label(
+      variable_label,
+      x = 0.5,
+      y = 0.5,
+      angle = 90,
+      fontface = "bold",
+      size = 9
+    )
+
+  plot_grid(
+    row_label,
+    plot_grid(plotlist = maps, nrow = 1, align = "none"),
+    nrow = 1,
+    rel_widths = c(0.08, 1)
+  )
+}
+
+relative_variable_panel <- function(variable_names) {
+  plot_grid(
+    plotlist = map(variable_names, relative_variable_row),
+    ncol = 1,
+    align = "v"
+  )
+}
+```
+
+## Dominant Land-Use Class
+
+Dominance here is calculated only among the land-use predictors retained by the
+HMSC models: urban, cropland, pasture, forest, and grass/shrubland. The
+freshwater/saltwater percentage is omitted to match the model formula.
+
+```{r dominant-land-use-map, fig.width=9, fig.height=5}
+dominant_panel <- plot_grid(
+  plot_grid(
+    plotlist = period_maps(
+      env_df,
+      colour_col = "dominant_model_land_use",
+      scale_fn = dominant_landuse_scale,
+      bornholm_label = TRUE
+    ),
+    nrow = 1,
+    align = "none"
+  ),
+  legend_for_map(
+    env_df,
+    colour_col = "dominant_model_land_use",
+    scale_fn = dominant_landuse_scale
+  ),
+  ncol = 1,
+  rel_heights = c(1, 0.16)
+)
+
+dominant_panel
+
+ggsave(
+  file.path(plot_dir, paste0(output_prefix, "-dominant-modelled-land-use-maps.png")),
+  dominant_panel,
+  width = 9,
+  height = 5,
+  dpi = 300,
+  bg = "white"
+)
+```
+
+```{r dominant-land-use-summary, results='asis'}
+dominant_summary |>
+  mutate(prop_cells = percent(.data$prop_cells, accuracy = 0.1)) |>
+  arrange(.data$period, .data$dominant_model_land_use) |>
+  kable()
+```
+
+## Land-Use Percentage Distributions Through Time
+
+Each violin shows the distribution of grid-cell percentage cover for one
+land-use type within each atlas period. The y axis is the raw percentage cover
+of that land-use type in the grid cell.
+
+```{r land-use-percentage-violins, fig.width=10, fig.height=6.5}
+landuse_violin_plot <- landuse_distribution |>
+  ggplot(aes(
+    x = .data$period,
+    y = .data$percentage,
+    fill = .data$land_use_type
+  )) +
+  geom_violin(
+    trim = FALSE,
+    scale = "width",
+    colour = "grey35",
+    linewidth = 0.25,
+    alpha = 0.78
+  ) +
+  geom_boxplot(
+    width = 0.13,
+    outlier.shape = NA,
+    fill = "white",
+    colour = "grey25",
+    linewidth = 0.25,
+    alpha = 0.82
+  ) +
+  facet_wrap(~land_use_type, ncol = 3) +
+  scale_fill_manual(values = landuse_palette, guide = "none") +
+  scale_y_continuous(
+    limits = c(0, 100),
+    labels = label_percent(scale = 1),
+    expand = expansion(mult = c(0, 0.04))
+  ) +
+  labs(
+    x = "Atlas period",
+    y = "Land-use cover (%)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold"),
+    axis.title = element_text(face = "bold"),
+    plot.background = element_rect(fill = "white", colour = NA)
+  )
+
+landuse_violin_plot
+
+ggsave(
+  file.path(plot_dir, paste0(output_prefix, "-land-use-percentage-violins.png")),
+  landuse_violin_plot,
+  width = 10,
+  height = 6.5,
+  dpi = 300,
+  bg = "white"
+)
+```
+
+```{r land-use-percentage-summary, results='asis'}
+landuse_distribution_summary |>
+  mutate(across(ends_with("_percentage"), ~ round(.x, 2))) |>
+  arrange(.data$period, .data$land_use_type) |>
+  kable()
+```
+
+## Zero-Inflated Land-Use Distribution View
+
+The plot below separates the two parts of the distribution. The top panels show
+the percentage of grid cells where each land-use type is present at all. The
+bottom panels then show the percentage cover distribution only for cells where
+that land-use type is present. The bottom panels use free y axes because the
+sparse land-use types otherwise disappear against cropland's 0-100% range.
+
+```{r zero-inflated-land-use-view, fig.width=10, fig.height=9.5}
+percentage_axis_breaks <- function(limits) {
+  axis_limits <- c(max(0, limits[[1]]), min(100, limits[[2]]))
+  breaks <- pretty(axis_limits, n = 4)
+  breaks[breaks >= 0 & breaks <= 100]
+}
+
+presence_plot <- landuse_zero_inflated_summary |>
+  ggplot(aes(
+    x = .data$period,
+    y = .data$prop_present,
+    fill = .data$land_use_type
+  )) +
+  geom_col(
+    width = 0.66,
+    colour = "grey35",
+    linewidth = 0.25,
+    alpha = 0.82
+  ) +
+  facet_wrap(~land_use_type, ncol = 3) +
+  scale_fill_manual(values = landuse_palette, guide = "none") +
+  scale_y_continuous(
+    limits = c(0, 1),
+    labels = label_percent(accuracy = 1),
+    expand = expansion(mult = c(0, 0.04))
+  ) +
+  labs(
+    x = NULL,
+    y = "Cells with >0% cover"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold"),
+    axis.title = element_text(face = "bold"),
+    plot.background = element_rect(fill = "white", colour = NA),
+    plot.margin = margin(5.5, 8, 5.5, 12)
+  )
+
+positive_cover_plot <- landuse_distribution |>
+  filter(.data$has_cover) |>
+  ggplot(aes(
+    x = .data$period,
+    y = .data$percentage,
+    fill = .data$land_use_type
+  )) +
+  geom_violin(
+    trim = FALSE,
+    scale = "width",
+    colour = "grey35",
+    linewidth = 0.25,
+    alpha = 0.78
+  ) +
+  geom_boxplot(
+    width = 0.13,
+    outlier.shape = NA,
+    fill = "white",
+    colour = "grey25",
+    linewidth = 0.25,
+    alpha = 0.82
+  ) +
+  facet_wrap(~land_use_type, ncol = 3, scales = "free_y") +
+  scale_fill_manual(values = landuse_palette, guide = "none") +
+  scale_y_continuous(
+    labels = label_percent(scale = 1),
+    breaks = percentage_axis_breaks,
+    expand = expansion(mult = c(0.03, 0.08))
+  ) +
+  labs(
+    x = "Atlas period",
+    y = "Cover where present (%)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold"),
+    axis.title = element_text(face = "bold"),
+    plot.background = element_rect(fill = "white", colour = NA),
+    plot.margin = margin(5.5, 8, 5.5, 12)
+  )
+
+zero_inflated_landuse_plot <- plot_grid(
+  presence_plot,
+  positive_cover_plot,
+  ncol = 1,
+  rel_heights = c(0.9, 1.35),
+  align = "v"
+)
+
+zero_inflated_landuse_plot
+
+ggsave(
+  file.path(plot_dir, paste0(output_prefix, "-land-use-zero-inflated-hurdle-plot.png")),
+  zero_inflated_landuse_plot,
+  width = 10,
+  height = 9.5,
+  dpi = 300,
+  bg = "white"
+)
+```
+
+```{r zero-inflated-land-use-summary, results='asis'}
+landuse_zero_inflated_summary |>
+  mutate(
+    prop_present = percent(.data$prop_present, accuracy = 0.1),
+    across(ends_with("_percentage"), ~ round(.x, 2))
+  ) |>
+  arrange(.data$period, .data$land_use_type) |>
+  kable()
+```
+
+## Land-Use Relative High-Low Maps
+
+The maps below show whether each grid cell is lower or higher than the
+same-period distribution for that variable. Values are standardized within each
+`variable x period` combination before plotting, so the colours emphasize
+spatial high-low regions rather than raw units or period-level shifts.
+
+```{r land-use-relative-maps, fig.width=9, fig.height=13.5}
+landuse_relative_panel <- plot_grid(
+  relative_variable_panel(landuse_relative_vars),
+  legend_for_map(
+    relative_long |> filter(.data$variable == "hh"),
+    colour_col = "relative_z",
+    scale_fn = relative_value_scale
+  ),
+  ncol = 1,
+  rel_heights = c(1, 0.07)
+)
+
+landuse_relative_panel
+
+ggsave(
+  file.path(plot_dir, paste0(output_prefix, "-land-use-relative-high-low-maps.png")),
+  landuse_relative_panel,
+  width = 9,
+  height = 13.5,
+  dpi = 300,
+  bg = "white"
+)
+```
+
+## Climate Relative High-Low Maps
+
+These climate panels use the breeding-season temperature and precipitation
+variables included in the fitted models. As above, colours are relative to each
+period's own spatial distribution.
+
+```{r climate-relative-maps, fig.width=9, fig.height=5.4}
+climate_relative_panel <- plot_grid(
+  relative_variable_panel(climate_relative_vars),
+  legend_for_map(
+    relative_long |> filter(.data$variable == "tmean_breeding"),
+    colour_col = "relative_z",
+    scale_fn = relative_value_scale
+  ),
+  ncol = 1,
+  rel_heights = c(1, 0.14)
+)
+
+climate_relative_panel
+
+ggsave(
+  file.path(plot_dir, paste0(output_prefix, "-climate-relative-high-low-maps.png")),
+  climate_relative_panel,
+  width = 9,
+  height = 5.4,
+  dpi = 300,
+  bg = "white"
+)
+```
+
+## Scaling Summary
+
+```{r scaling-summary, results='asis'}
+scaling_summary |>
+  mutate(variable_label = factor(.data$variable_label, levels = var_labels[relative_vars])) |>
+  arrange(.data$period, .data$variable_label) |>
+  select(
+    period,
+    variable_label,
+    mean_value,
+    sd_value,
+    q10,
+    q50,
+    q90
+  ) |>
+  kable(digits = 3)
+```

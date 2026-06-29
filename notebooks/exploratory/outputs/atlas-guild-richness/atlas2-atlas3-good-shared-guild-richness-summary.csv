@@ -1,0 +1,3 @@
+"atlas","period","n_cells","mean_guild_richness","median_guild_richness","sd_guild_richness","q25_guild_richness","q75_guild_richness","min_guild_richness","max_guild_richness","mean_species_richness"
+"2","1990s",1465,22.8122866894198,23,3.58173291617066,21,25,3,30,64.3556313993174
+"3","2010s",1465,22.421843003413,23,3.87961790974426,20,25,0,31,63.4156996587031

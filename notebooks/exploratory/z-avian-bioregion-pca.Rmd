@@ -1,0 +1,1357 @@
+---
+title: "Modelled avian bioregion and environmental-response PCA"
+author: "WM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  results = "hide",
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
+)
+knitr::opts_knit$set(root.dir = normalizePath("../.."))
+```
+
+## Aim
+
+This notebook focuses on modelled avian community structure through time. It
+contains two linked analyses:
+
+- modelled bioregion shifts: define Atlas 1 reference community types from HMSC
+  predicted species probability vectors, then assign Atlas 2 and Atlas 3 grid
+  cells to those same reference types
+- species environmental-response PCA: ordinate species by their HMSC
+  environmental beta parameters, using Atlas 1 as the reference response space
+
+Both analyses use HMSC modelled outputs only.
+
+## Load Model Outputs
+
+```{r load-models}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+  tidyverse, Hmsc, sf, vegan, patchwork, RColorBrewer, cowplot, cluster
+)
+
+source(file.path("support_scripts", "figure_data_helpers.R"))
+
+base_dir <- "./HmscOutputs"
+pattern <- "2026-03-13"
+
+matching_folders <- figure_model_folders(pattern = pattern, base_dir = base_dir)
+models_nums <- atlas_numbers(matching_folders)
+
+mods <- load_hmsc_posteriors(matching_folders, base_dir = base_dir)
+designs <- load_hmsc_study_designs(mods)
+predsY <- load_or_compute_site_predictions(mods, matching_folders, base_dir = base_dir)
+
+names(mods) <- names(designs) <- names(predsY) <- models_nums
+
+year_lookup <- c("1" = "1970s", "2" = "1990s", "3" = "2010s")
+reference_atlas <- "1"
+```
+
+```{r shared-definitions}
+predictor_names <- function(df) {
+  c(
+    "tmean_breeding",
+    "prec_breeding",
+    "hh",
+    grep("^perc_", colnames(df), value = TRUE)
+  )
+}
+
+var_labels <- c(
+  "tmean_breeding" = "Temperature",
+  "prec_breeding" = "Precipitation",
+  "hh" = "Land-use heterogeneity",
+  "perc_urban" = "Urban (% coverage)",
+  "perc_cropland" = "Cropland (% coverage)",
+  "perc_pasture" = "Pasture (% coverage)",
+  "perc_forest" = "Forest (% coverage)",
+  "perc_grass_shrub" = "Grass/Shrubland (% coverage)"
+)
+
+driver_colours <- c(
+  "Temperature" = "firebrick3",
+  "Precipitation" = "dodgerblue3",
+  "Land-use heterogeneity" = "orchid3",
+  "Urban (% coverage)" = "#4d4d4d",
+  "Cropland (% coverage)" = "goldenrod1",
+  "Pasture (% coverage)" = "darkorange",
+  "Forest (% coverage)" = "springgreen4",
+  "Grass/Shrubland (% coverage)" = "springgreen2",
+  "No significant driver" = "#d9d9d9"
+)
+
+mainland_bbox <- st_bbox(
+  c(xmin = 400000, xmax = 750000, ymin = 6000000, ymax = 6450000),
+  crs = st_crs(25832)
+)
+bornholm_bbox <- st_bbox(
+  c(xmin = 855000, xmax = 905000, ymin = 6100000, ymax = 6160000),
+  crs = st_crs(25832)
+)
+
+mainland_width <- as.numeric(mainland_bbox["xmax"] - mainland_bbox["xmin"])
+mainland_height <- as.numeric(mainland_bbox["ymax"] - mainland_bbox["ymin"])
+bornholm_width <- as.numeric(bornholm_bbox["xmax"] - bornholm_bbox["xmin"])
+bornholm_height <- as.numeric(bornholm_bbox["ymax"] - bornholm_bbox["ymin"])
+
+inset_w <- bornholm_width / mainland_width
+inset_h <- bornholm_height / mainland_height
+```
+
+## Modelled Avian Bioregion Shifts
+
+This analysis treats Atlas 1 as a reference community map. It first defines
+discrete clusters from Atlas 1 modelled species probability vectors, then
+assigns Atlas 2 and Atlas 3 communities to those same reference community
+types. A retained cell is compositionally closest to the same Atlas 1 cluster;
+a shifted cell is closer to another Atlas 1 cluster.
+
+```{r bioregion-functions}
+assert_species_alignment <- function(predictions) {
+  reference_species <- colnames(predictions[[1]])
+  mismatched <- names(predictions)[map_lgl(predictions, ~ !identical(colnames(.x), reference_species))]
+
+  if (length(mismatched) > 0) {
+    stop("Species columns do not align for atlas: ", paste(mismatched, collapse = ", "), call. = FALSE)
+  }
+
+  tibble(
+    atlas = names(predictions),
+    n_sites = map_int(predictions, nrow),
+    n_species = map_int(predictions, ncol)
+  )
+}
+
+hellinger_transform <- function(x) {
+  row_total <- rowSums(x, na.rm = TRUE)
+  rel <- sweep(x, 1, row_total, "/")
+  rel[!is.finite(as.matrix(rel))] <- 0
+  sqrt(rel)
+}
+
+bioregion_input_frame <- function(pred_y, design, atlas) {
+  design_aligned <- design[match(rownames(pred_y), design$survey), ]
+
+  tibble(
+    atlas = atlas,
+    period = year_lookup[[as.character(atlas)]],
+    survey = rownames(pred_y)
+  ) |>
+    bind_cols(design_aligned |> select(site, X, Y))
+}
+
+choose_reference_bioregions <- function(reference_hellinger, k_values = 3:8) {
+  reference_dist <- vegan::vegdist(reference_hellinger, method = "bray")
+
+  k_diagnostics <- map_dfr(k_values, function(k) {
+    fit <- cluster::pam(reference_dist, k = k, diss = TRUE)
+    cluster_sizes <- table(fit$clustering)
+
+    tibble(
+      k = k,
+      mean_silhouette = fit$silinfo$avg.width,
+      min_cluster_n = min(cluster_sizes),
+      min_cluster_prop = min(cluster_sizes) / length(fit$clustering)
+    )
+  })
+
+  chosen_k <- k_diagnostics |>
+    filter(min_cluster_prop >= 0.03) |>
+    slice_max(mean_silhouette, n = 1, with_ties = FALSE) |>
+    pull(k)
+
+  if (length(chosen_k) == 0) {
+    chosen_k <- k_diagnostics |>
+      slice_max(mean_silhouette, n = 1, with_ties = FALSE) |>
+      pull(k)
+  }
+
+  chosen_fit <- cluster::pam(reference_dist, k = chosen_k, diss = TRUE)
+
+  list(
+    reference_dist = reference_dist,
+    k_diagnostics = k_diagnostics,
+    chosen_k = chosen_k,
+    fit = chosen_fit
+  )
+}
+
+bray_to_medoids <- function(query_matrix, medoid_matrix) {
+  map_dfc(seq_len(nrow(medoid_matrix)), function(i) {
+    medoid <- medoid_matrix[i, ]
+    numerator <- rowSums(abs(sweep(query_matrix, 2, medoid, "-")), na.rm = TRUE)
+    denominator <- rowSums(sweep(query_matrix, 2, medoid, "+"), na.rm = TRUE)
+    tibble(!!paste0("Cluster ", i) := ifelse(denominator == 0, 0, numerator / denominator))
+  }) |>
+    as_tibble()
+}
+
+assign_to_reference_bioregions <- function(query_hellinger, site_frame, medoid_matrix) {
+  distance_tbl <- bray_to_medoids(query_hellinger, medoid_matrix)
+  distance_matrix <- as.matrix(distance_tbl)
+  nearest_idx <- max.col(-distance_matrix, ties.method = "first")
+  sorted_distances <- t(apply(distance_matrix, 1, sort))
+
+  site_frame |>
+    mutate(
+      bioregion = factor(paste0("Cluster ", nearest_idx), levels = paste0("Cluster ", seq_len(nrow(medoid_matrix)))),
+      nearest_distance = distance_matrix[cbind(seq_len(nrow(distance_matrix)), nearest_idx)],
+      second_distance = sorted_distances[, 2],
+      assignment_margin = second_distance - nearest_distance,
+      low_confidence = assignment_margin < quantile(assignment_margin, 0.1, na.rm = TRUE)
+    )
+}
+
+summarise_bioregion_transitions <- function(assignments_wide, target_col, target_period) {
+  assignments_wide |>
+    filter(!is.na(reference_bioregion), !is.na(.data[[target_col]])) |>
+    group_by(reference_bioregion) |>
+    summarise(
+      target_period = target_period,
+      n_reference_sites = n(),
+      n_retained = sum(.data[[target_col]] == reference_bioregion),
+      pct_retained = n_retained / n_reference_sites,
+      n_reassigned = n_reference_sites - n_retained,
+      pct_reassigned = n_reassigned / n_reference_sites,
+      dominant_destination = names(sort(table(.data[[target_col]][.data[[target_col]] != reference_bioregion]), decreasing = TRUE))[1],
+      dominant_destination = ifelse(is.na(dominant_destination), "None", dominant_destination),
+      mean_assignment_margin = mean(.data[[paste0("assignment_margin_", target_period)]], na.rm = TRUE),
+      .groups = "drop"
+    )
+}
+
+bioregion_theme <- function(legend_position = "bottom") {
+  theme_minimal(base_size = 10) +
+    theme(
+      legend.position = legend_position,
+      legend.title = element_text(face = "bold"),
+      axis.text = element_blank(),
+      axis.title = element_blank(),
+      panel.grid = element_blank(),
+      plot.title = element_text(face = "bold", hjust = 0.5),
+      plot.background = element_rect(fill = "white", colour = NA),
+      plot.margin = margin(0, 0, 0, 0)
+    )
+}
+
+plot_bioregion_base <- function(df, fill_col, palette, title = NULL,
+                                bbox = mainland_bbox, show_legend = FALSE,
+                                border = FALSE) {
+  ggplot(df) +
+    geom_point(aes(x = X, y = Y, colour = .data[[fill_col]]), size = 1.25, alpha = 0.95) +
+    scale_colour_manual(values = palette, drop = FALSE, name = "Cluster") +
+    coord_fixed(
+      xlim = c(bbox["xmin"], bbox["xmax"]),
+      ylim = c(bbox["ymin"], bbox["ymax"]),
+      expand = FALSE
+    ) +
+    bioregion_theme(if (show_legend) "bottom" else "none") +
+    theme(panel.border = if (border) element_rect(colour = "grey35", fill = NA, linewidth = 0.45) else element_blank()) +
+    labs(title = title)
+}
+
+plot_bioregion_map <- function(df, fill_col, palette, title) {
+  p_main <- plot_bioregion_base(df, fill_col, palette, title = title, bbox = mainland_bbox)
+  p_inset <- plot_bioregion_base(df, fill_col, palette, bbox = bornholm_bbox, border = TRUE) +
+    theme_void() +
+    theme(
+      legend.position = "none",
+      plot.background = element_rect(fill = "white", colour = NA),
+      panel.border = element_rect(colour = "grey35", fill = NA, linewidth = 0.7)
+    )
+
+  ggdraw(p_main) +
+    draw_plot(
+      p_inset,
+      x = 0.66,
+      y = 0.60,
+      width = 0.24,
+      height = 0.22
+    ) +
+    draw_label("Bornholm", x = 0.78, y = 0.84, size = 7, colour = "grey30") |>
+    as_grob()
+}
+
+bioregion_legend <- function(df, fill_col, palette) {
+  plot_bioregion_base(df, fill_col, palette, show_legend = TRUE) |>
+    get_legend()
+}
+
+adjusted_rand_index <- function(x, y) {
+  contingency <- table(x, y)
+  choose2 <- function(n) n * (n - 1) / 2
+  index <- sum(choose2(contingency))
+  expected_index <- sum(choose2(rowSums(contingency))) * sum(choose2(colSums(contingency))) / choose2(sum(contingency))
+  max_index <- (sum(choose2(rowSums(contingency))) + sum(choose2(colSums(contingency)))) / 2
+
+  if (isTRUE(all.equal(max_index, expected_index))) {
+    return(NA_real_)
+  }
+
+  (index - expected_index) / (max_index - expected_index)
+}
+
+cluster_pca_point_cloud <- function(score_df, axes, k_values = 2:8) {
+  score_matrix <- score_df |>
+    select(all_of(axes)) |>
+    as.matrix()
+  score_dist <- dist(score_matrix)
+
+  diagnostics <- map_dfr(k_values, function(k) {
+    fit <- cluster::pam(score_dist, k = k, diss = TRUE)
+    tibble(
+      k = k,
+      mean_silhouette = fit$silinfo$avg.width,
+      min_cluster_n = min(table(fit$clustering)),
+      min_cluster_prop = min(table(fit$clustering)) / length(fit$clustering)
+    )
+  })
+
+  chosen_k <- diagnostics |>
+    filter(min_cluster_prop >= 0.03) |>
+    slice_max(mean_silhouette, n = 1, with_ties = FALSE) |>
+    pull(k)
+
+  if (length(chosen_k) == 0) {
+    chosen_k <- diagnostics |>
+      slice_max(mean_silhouette, n = 1, with_ties = FALSE) |>
+      pull(k)
+  }
+
+  fit <- cluster::pam(score_dist, k = chosen_k, diss = TRUE)
+
+  list(
+    diagnostics = diagnostics,
+    chosen_k = chosen_k,
+    assignments = score_df |>
+      mutate(
+        pca_cluster = factor(paste0("PCA cluster ", fit$clustering)),
+        pca_cluster_silhouette = fit$silinfo$widths[, "sil_width"]
+      )
+  )
+}
+
+plot_cluster_occupancy <- function(df, palette) {
+  df |>
+    arrange(bioregion) |>
+    mutate(
+      ymin = lag(cumsum(pct_sites), default = 0),
+      ymax = cumsum(pct_sites),
+      ymid = (ymin + ymax) / 2,
+      label = scales::percent(pct_sites, accuracy = 1)
+    ) |>
+    ggplot(aes(x = 1, y = pct_sites, fill = bioregion)) +
+    geom_col(width = 0.55, colour = "white", linewidth = 0.35) +
+    geom_text(
+      aes(y = ymid, label = label),
+      size = 2.7,
+      colour = "grey15",
+      fontface = "bold"
+    ) +
+    scale_fill_manual(values = palette, drop = FALSE, name = "Cluster") +
+    scale_y_continuous(
+      breaks = NULL,
+      labels = NULL,
+      limits = c(0, 1),
+      expand = expansion(mult = c(0, 0))
+    ) +
+    labs(x = NULL, y = "% grid cells") +
+    coord_cartesian(clip = "off") +
+    theme_minimal(base_size = 9) +
+    theme(
+      legend.position = "none",
+      panel.grid = element_blank(),
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      axis.title = element_blank(),
+      plot.margin = margin(4, 2, 4, 0)
+    )
+}
+
+plot_bioregion_map_with_bar <- function(map_df, occupancy_df, palette, title) {
+  map_plot <- plot_bioregion_map(map_df, "bioregion", palette, title)
+  bar_plot <- plot_cluster_occupancy(occupancy_df, palette)
+
+  plot_grid(map_plot, bar_plot, nrow = 1, rel_widths = c(1, 0.18), align = "h")
+}
+```
+
+```{r bioregion-analysis, cache=TRUE}
+species_alignment <- assert_species_alignment(predsY)
+
+hellinger_communities <- map(predsY, hellinger_transform)
+community_frames <- imap(predsY, ~ bioregion_input_frame(.x, designs[[.y]], .y))
+
+reference_hellinger <- hellinger_communities[[reference_atlas]]
+reference_pca <- prcomp(reference_hellinger, center = TRUE, scale. = FALSE)
+reference_pca_variance <- tibble(
+  axis = paste0("PC", seq_along(reference_pca$sdev)),
+  variance_explained = reference_pca$sdev^2 / sum(reference_pca$sdev^2),
+  cumulative_variance = cumsum(variance_explained)
+)
+reference_selection <- choose_reference_bioregions(reference_hellinger, k_values = 3:8)
+
+reference_clusters <- reference_selection$fit$clustering
+medoid_indices <- reference_selection$fit$id.med
+medoid_matrix <- reference_hellinger[medoid_indices, , drop = FALSE]
+rownames(medoid_matrix) <- paste0("Cluster ", seq_len(nrow(medoid_matrix)))
+
+bioregion_palette <- setNames(
+  brewer.pal(max(3, reference_selection$chosen_k), "Set2")[seq_len(reference_selection$chosen_k)],
+  paste0("Cluster ", seq_len(reference_selection$chosen_k))
+)
+
+bioregion_assignments <- imap(hellinger_communities, function(hellinger, atlas) {
+  assigned <- assign_to_reference_bioregions(
+    hellinger,
+    community_frames[[atlas]],
+    medoid_matrix
+  )
+
+  if (atlas == reference_atlas) {
+    assigned <- assigned |>
+      mutate(
+        reference_cluster = factor(
+          paste0("Cluster ", reference_clusters),
+          levels = names(bioregion_palette)
+        ),
+        validation_match = reference_cluster == bioregion
+      )
+  }
+
+  assigned
+})
+
+bioregion_assignments_df <- bind_rows(bioregion_assignments)
+
+atlas1_reference <- bioregion_assignments[[reference_atlas]] |>
+  select(site, reference_bioregion = reference_cluster)
+
+assignments_wide <- reduce(
+  imap(bioregion_assignments, function(df, atlas) {
+    period <- year_lookup[[as.character(atlas)]]
+    df |>
+      select(site, bioregion, assignment_margin, low_confidence) |>
+      rename(
+        !!paste0("bioregion_", period) := bioregion,
+        !!paste0("assignment_margin_", period) := assignment_margin,
+        !!paste0("low_confidence_", period) := low_confidence
+      )
+  }),
+  full_join,
+  by = "site"
+) |>
+  left_join(atlas1_reference, by = "site")
+
+site_match_summary <- tibble(
+  comparison = c("Atlas 1 to Atlas 2", "Atlas 1 to Atlas 3", "Atlas 2 to Atlas 3"),
+  n_matched_sites = c(
+    sum(!is.na(assignments_wide$bioregion_1970s) & !is.na(assignments_wide$bioregion_1990s)),
+    sum(!is.na(assignments_wide$bioregion_1970s) & !is.na(assignments_wide$bioregion_2010s)),
+    sum(!is.na(assignments_wide$bioregion_1990s) & !is.na(assignments_wide$bioregion_2010s))
+  ),
+  n_unmatched_sites = c(
+    sum(xor(!is.na(assignments_wide$bioregion_1970s), !is.na(assignments_wide$bioregion_1990s))),
+    sum(xor(!is.na(assignments_wide$bioregion_1970s), !is.na(assignments_wide$bioregion_2010s))),
+    sum(xor(!is.na(assignments_wide$bioregion_1990s), !is.na(assignments_wide$bioregion_2010s)))
+  )
+)
+
+transition_1_to_2 <- assignments_wide |>
+  filter(!is.na(reference_bioregion), !is.na(bioregion_1990s)) |>
+  count(reference_bioregion, assigned_bioregion = bioregion_1990s, name = "n") |>
+  group_by(reference_bioregion) |>
+  mutate(prop = n / sum(n), target_period = "1990s") |>
+  ungroup()
+
+transition_1_to_3 <- assignments_wide |>
+  filter(!is.na(reference_bioregion), !is.na(bioregion_2010s)) |>
+  count(reference_bioregion, assigned_bioregion = bioregion_2010s, name = "n") |>
+  group_by(reference_bioregion) |>
+  mutate(prop = n / sum(n), target_period = "2010s") |>
+  ungroup()
+
+transition_tables <- bind_rows(transition_1_to_2, transition_1_to_3)
+
+bioregion_summary <- bind_rows(
+  summarise_bioregion_transitions(assignments_wide, "bioregion_1990s", "1990s"),
+  summarise_bioregion_transitions(assignments_wide, "bioregion_2010s", "2010s")
+)
+
+bioregion_shift_maps <- bioregion_assignments_df |>
+  left_join(atlas1_reference, by = "site") |>
+  mutate(
+    shift_status = case_when(
+      period == "1970s" ~ "Reference",
+      is.na(reference_bioregion) ~ "No Atlas 1 match",
+      bioregion == reference_bioregion ~ "Retained reference region",
+      low_confidence ~ "Shifted, low confidence",
+      TRUE ~ "Shifted reference region"
+    ),
+    shift_status = factor(
+      shift_status,
+      levels = c("Reference", "Retained reference region", "Shifted reference region", "Shifted, low confidence", "No Atlas 1 match")
+    )
+  )
+
+n_pca_axes_for_clustering <- min(which(reference_pca_variance$cumulative_variance >= 0.8)[1], 10)
+pca_axes_for_clustering <- reference_pca_variance$axis[seq_len(n_pca_axes_for_clustering)]
+
+pca_scores_full <- imap_dfr(hellinger_communities, function(hellinger, atlas) {
+  scores <- predict(reference_pca, newdata = hellinger)[, pca_axes_for_clustering, drop = FALSE]
+  community_frames[[atlas]] |>
+    bind_cols(as_tibble(scores)) |>
+    left_join(bioregion_assignments[[atlas]] |> select(survey, bioregion), by = "survey")
+})
+
+pca_scores <- pca_scores_full |>
+  select(atlas, period, survey, site, X, Y, PC1, PC2, bioregion)
+
+pca_cloud_cluster_results <- cluster_pca_point_cloud(
+  pca_scores_full,
+  axes = pca_axes_for_clustering,
+  k_values = 2:8
+)
+
+pca_cloud_cluster_diagnostics <- pca_cloud_cluster_results$diagnostics |>
+  mutate(scope = "All atlas periods")
+
+pca_cloud_clusters <- pca_cloud_cluster_results$assignments
+
+pca_cluster_period_diagnostics <- pca_scores_full |>
+  group_split(period) |>
+  map_dfr(function(df) {
+    res <- cluster_pca_point_cloud(df, axes = pca_axes_for_clustering, k_values = 2:8)
+    res$diagnostics |>
+      mutate(scope = unique(df$period))
+  })
+
+pca_cluster_agreement <- pca_cloud_clusters |>
+  group_by(period) |>
+  summarise(
+    n_sites = n(),
+    adjusted_rand_index = adjusted_rand_index(bioregion, pca_cluster),
+    mean_silhouette = mean(pca_cluster_silhouette, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  bind_rows(
+    pca_cloud_clusters |>
+      summarise(
+        period = "All atlas periods",
+        n_sites = n(),
+        adjusted_rand_index = adjusted_rand_index(bioregion, pca_cluster),
+        mean_silhouette = mean(pca_cluster_silhouette, na.rm = TRUE)
+      )
+  )
+
+pca_centroids <- pca_scores |>
+  group_by(period, bioregion) |>
+  summarise(
+    PC1 = mean(PC1, na.rm = TRUE),
+    PC2 = mean(PC2, na.rm = TRUE),
+    n_sites = n(),
+    .groups = "drop"
+  )
+
+cluster_occupancy <- bioregion_assignments_df |>
+  count(period, bioregion, name = "n_sites") |>
+  complete(
+    period,
+    bioregion = factor(names(bioregion_palette), levels = names(bioregion_palette)),
+    fill = list(n_sites = 0)
+  ) |>
+  group_by(period) |>
+  mutate(
+    pct_sites = n_sites / sum(n_sites),
+    bioregion = factor(bioregion, levels = names(bioregion_palette))
+  ) |>
+  ungroup()
+
+validation_summary <- bioregion_assignments[[reference_atlas]] |>
+  summarise(
+    n_reference_sites = n(),
+    n_validation_matches = sum(validation_match, na.rm = TRUE),
+    validation_match_rate = mean(validation_match, na.rm = TRUE)
+  )
+```
+
+```{r bioregion-diagnostics, results='asis'}
+knitr::kable(species_alignment, caption = "Species and site dimensions used for modelled bioregion analysis.")
+knitr::kable(reference_selection$k_diagnostics, digits = 3, caption = "Atlas 1 PAM/k-medoids diagnostics across candidate numbers of bioregions.")
+knitr::kable(site_match_summary, caption = "Matched and unmatched grid cells across atlas periods.")
+knitr::kable(validation_summary, digits = 3, caption = "Validation that Atlas 1 nearest-medoid assignment reproduces the Atlas 1 reference clustering.")
+knitr::kable(bioregion_summary, digits = 3, caption = "Reference cluster retention and reassignment summaries.")
+```
+
+## Manuscript Methods
+
+We used HMSC modelled species occurrence probabilities to evaluate whether
+avian community structure shifted among atlas periods. For each atlas period,
+we extracted the predicted species probability vector for every grid cell and
+retained only species shared across all modelled outputs. Predicted community
+vectors were transformed using the Hellinger transformation by first dividing
+each grid cell's predicted probabilities by its total predicted probability
+across species and then taking the square root. This transformation treats the
+data as community composition while reducing the influence of very common
+species.
+
+Atlas 1 was used as the reference period for defining community clusters. We
+calculated Bray-Curtis dissimilarities among Hellinger-transformed Atlas 1 grid
+cells and clustered them using partitioning around medoids. Candidate solutions
+from three to eight clusters were compared using mean silhouette width, while
+excluding solutions with very small clusters (<3% of Atlas 1 grid cells). The
+selected Atlas 1 medoids were then kept fixed as reference community types. For
+Atlas 2 and Atlas 3, each grid cell was assigned to the nearest Atlas 1 medoid
+using Bray-Curtis dissimilarity. Assignment confidence was summarized as the
+difference between the nearest and second-nearest medoid distances, with the
+lowest 10% of margins flagged as low-confidence assignments.
+
+To visualize directional changes in community composition, we fitted a PCA to
+the Hellinger-transformed Atlas 1 community matrix and projected Atlas 2 and
+Atlas 3 communities into the same ordination space. Cluster centroids were
+calculated separately for each atlas period in this reference PCA space. We
+summarized temporal change using maps of projected cluster membership, the
+percentage of grid cells assigned to each cluster, transition tables from the
+Atlas 1 reference clusters to later atlas assignments, and centroid movement in
+ordination space. As a sensitivity check on whether the ordination itself
+contained discrete structure, we also clustered the projected PCA point cloud
+directly using partitioning around medoids. Candidate solutions from two to
+eight PCA-space clusters were compared using mean silhouette width, and
+agreement between these unsupervised PCA clusters and the fixed reference
+clusters was summarized using the adjusted Rand index.
+
+Species-level environmental-response structure was assessed separately from
+the grid-cell community clustering. For each atlas period, we extracted HMSC
+posterior mean beta parameters for the environmental predictors and multiplied
+each coefficient by the within-atlas standard deviation of the corresponding
+predictor. This converted coefficients to standardized effects, representing
+the expected response to a one-standard-deviation change in the environmental
+gradient available during that atlas period. Standardized effects were weighted
+by posterior certainty, defined as `2 * abs(Pr(beta > 0) - 0.5)`, so uncertain
+effects were shrunk towards zero. PCA was fitted to the weighted standardized
+beta matrix from Atlas 1, and Atlas 2 and Atlas 3 species response profiles
+were projected into that fixed reference space.
+
+### Plain-Language Bioregion Workflow
+
+The bioregion analysis asks whether Danish bird communities can be summarized
+as repeatable composition types, and whether grid cells have moved between
+those types through time. The input is the HMSC modelled species probability
+matrix for each atlas period. Rows are grid cells, columns are bird species,
+and each value is the predicted probability of occurrence. Thus, each grid cell
+is represented by a complete modelled community vector rather than by richness
+or by a single dominant species.
+
+Before clustering, each grid cell's predicted community vector was
+Hellinger-transformed. This means the predicted probabilities were converted to
+relative composition within the grid cell and then square-root transformed.
+This transformation keeps the focus on compositional differences among
+communities and reduces the tendency for high-richness cells or very common
+species to dominate the analysis.
+
+Atlas 1 was treated as the baseline community map. Within Atlas 1, we calculated
+Bray-Curtis dissimilarity among all Hellinger-transformed communities and then
+used PAM/k-medoids clustering to identify discrete reference clusters. PAM was
+used because each cluster centre is a real grid-cell community, called a
+medoid, rather than an abstract average. Candidate values of `k` from 3 to 8
+were compared with silhouette width, and the selected solution contained three
+clusters. These are labelled `Cluster 1`, `Cluster 2`, and `Cluster 3`.
+
+Atlas 2 and Atlas 3 were not clustered independently. Instead, the Atlas 1
+cluster medoids were kept fixed as reference community types. Each later grid
+cell was assigned to the nearest Atlas 1 medoid using Bray-Curtis dissimilarity.
+This means a later grid cell assigned to `Cluster 2` is interpreted as being
+more similar to the Atlas 1 `Cluster 2` community type than to the other Atlas 1
+reference types. A change in cluster identity therefore means a movement
+towards another baseline community type, not the discovery of a new later-period
+cluster.
+
+Assignment confidence was summarized using the distance margin between the
+nearest and second-nearest Atlas 1 medoids. If those two distances were similar,
+the grid cell was flagged as low confidence. These cells sit close to the
+boundary between community types, so apparent shifts in those places should be
+interpreted cautiously.
+
+The ordination plots provide a visual summary of the same modelled community
+composition data. PCA was fitted to the Hellinger-transformed Atlas 1
+communities, and Atlas 2 and Atlas 3 were projected into that fixed reference
+PCA space. The PCA does not define the clusters; it helps show whether the
+clusters occupy distinct regions of composition space and whether their
+centroids drift directionally over time.
+
+The linked trait-composition analysis then asks what kinds of species make up
+each cluster. For each cluster and atlas period, predicted probabilities were
+summed for species in each trait group and divided by total expected richness
+among species with known trait data. Those percentages are therefore
+model-weighted expected community composition, not raw species counts.
+
+## Cluster Maps And Ordination
+
+```{r bioregion-map-panel, fig.width=13.5, fig.height=7.5}
+bioregion_period_maps <- imap(bioregion_assignments, function(df, atlas) {
+  period <- year_lookup[[as.character(atlas)]]
+  plot_bioregion_map_with_bar(
+    df,
+    cluster_occupancy |> filter(.data$period == .env$period),
+    bioregion_palette,
+    period
+  )
+})
+
+bioregion_map_panel <- plot_grid(
+  plotlist = bioregion_period_maps,
+  nrow = 1,
+  align = "h",
+  rel_widths = c(1, 1, 1)
+)
+
+bioregion_map_panel
+```
+
+```{r bioregion-shift-map, fig.width=12, fig.height=4.8}
+shift_palette <- c(
+  "Reference" = "grey75",
+  "Retained reference region" = "#1a9850",
+  "Shifted reference region" = "#d73027",
+  "Shifted, low confidence" = "#fdae61",
+  "No Atlas 1 match" = "grey30"
+)
+
+shift_period_maps <- bioregion_shift_maps |>
+  filter(period != "1970s") |>
+  (\(df) split(df, df$period))() |>
+  imap(function(df, period) {
+    plot_bioregion_map(df, "shift_status", shift_palette, period)
+  })
+
+shift_map_panel <- plot_grid(
+  plot_grid(plotlist = shift_period_maps, nrow = 1, align = "none"),
+  bioregion_legend(bioregion_shift_maps |> filter(period != "1970s"), "shift_status", shift_palette),
+  ncol = 1,
+  rel_heights = c(1, 0.18)
+)
+
+shift_map_panel
+```
+
+```{r bioregion-ordination, fig.width=8.5, fig.height=6.4}
+bioregion_ordination_plot <- ggplot(pca_scores, aes(x = PC1, y = PC2, colour = bioregion)) +
+  geom_point(alpha = 0.07, size = 0.75) +
+  geom_path(
+    data = pca_centroids,
+    aes(group = bioregion),
+    linewidth = 0.8,
+    arrow = arrow(length = unit(0.15, "cm")),
+    alpha = 0.8
+  ) +
+  geom_point(data = pca_centroids, aes(size = n_sites), alpha = 0.95) +
+  geom_text(data = pca_centroids, aes(label = period), size = 3, nudge_y = 0.015, show.legend = FALSE) +
+  scale_colour_manual(values = bioregion_palette, drop = FALSE, name = "Cluster") +
+  scale_size_continuous(name = "Sites", range = c(2, 5)) +
+  labs(
+    title = "Projected movement of modelled avian clusters",
+    subtitle = "Atlas 2 and 3 communities projected into the reference Hellinger-PCA space",
+    x = "PCA axis 1",
+    y = "PCA axis 2"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "bottom")
+
+bioregion_ordination_plot
+```
+
+```{r bioregion-publication-figure, fig.width=13.5, fig.height=11}
+cluster_legend <- bioregion_legend(
+  bioregion_assignments[[reference_atlas]],
+  "bioregion",
+  bioregion_palette
+)
+
+bioregion_publication_figure <- plot_grid(
+  bioregion_map_panel,
+  bioregion_ordination_plot +
+    labs(title = NULL, subtitle = NULL) +
+    theme(legend.position = "none"),
+  cluster_legend,
+  ncol = 1,
+  rel_heights = c(1, 1.02, 0.1)
+)
+
+bioregion_publication_figure
+```
+
+Low-confidence shifts are cells where the nearest and second-nearest reference
+bioregions are very similar, so those changes should be treated cautiously.
+
+## PCA Point-Cloud Separation Diagnostics
+
+The fixed clusters above are useful because they keep Atlas 1 as the baseline.
+This diagnostic asks a slightly different question: if the projected community
+points are clustered directly in PCA space, do they form clearly separated
+groups?
+
+```{r pca-cloud-cluster-diagnostics, results='asis'}
+knitr::kable(
+  bind_rows(pca_cloud_cluster_diagnostics, pca_cluster_period_diagnostics) |>
+    arrange(scope, k),
+  digits = 3,
+  caption = paste(
+    "PAM/k-medoids diagnostics for projected community points using",
+    length(pca_axes_for_clustering),
+    "PCA axes."
+  )
+)
+
+knitr::kable(
+  pca_cluster_agreement,
+  digits = 3,
+  caption = "Agreement between unsupervised PCA-space clusters and fixed reference clusters."
+)
+```
+
+```{r pca-cloud-cluster-plot, fig.width=11, fig.height=5.8}
+pca_cluster_palette <- setNames(
+  brewer.pal(max(3, nlevels(pca_cloud_clusters$pca_cluster)), "Dark2")[seq_len(nlevels(pca_cloud_clusters$pca_cluster))],
+  levels(pca_cloud_clusters$pca_cluster)
+)
+
+pca_cloud_cluster_plot <- ggplot(pca_cloud_clusters, aes(x = PC1, y = PC2, colour = pca_cluster)) +
+  geom_point(alpha = 0.18, size = 0.8) +
+  stat_ellipse(linewidth = 0.55, alpha = 0.8, show.legend = FALSE) +
+  facet_wrap(~ period, nrow = 1) +
+  scale_colour_manual(values = pca_cluster_palette, name = "PCA cluster") +
+  labs(
+    title = "Unsupervised clustering of projected community points",
+    subtitle = "PAM/k-medoids clustering in the reference PCA space",
+    x = "PCA axis 1",
+    y = "PCA axis 2"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+pca_silhouette_plot <- bind_rows(pca_cloud_cluster_diagnostics, pca_cluster_period_diagnostics) |>
+  mutate(scope = factor(scope, levels = c("All atlas periods", unname(year_lookup)))) |>
+  ggplot(aes(x = k, y = mean_silhouette, colour = scope)) +
+  geom_line(linewidth = 0.7) +
+  geom_point(size = 1.8) +
+  scale_x_continuous(breaks = 2:8) +
+  labs(
+    title = "Separation strength",
+    x = "Number of PCA clusters",
+    y = "Mean silhouette width",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "bottom")
+
+pca_cloud_separation_panel <- plot_grid(
+  pca_cloud_cluster_plot,
+  pca_silhouette_plot,
+  nrow = 1,
+  rel_widths = c(1.35, 1)
+)
+
+pca_cloud_separation_panel
+```
+
+Interpretation: high silhouette values would indicate discrete, well-separated
+groups in the ordination. Low or moderate values indicate that the modelled
+communities are better understood as a gradient, even if it is still useful to
+summarize that gradient with fixed reference clusters.
+
+## Species Environmental Response PCA
+
+This section asks whether the way species respond to the environmental
+gradients shifted through time. Each species is represented by its HMSC
+environmental beta coefficients. The coefficients are converted to standardized
+effects before PCA:
+
+`standardized beta = posterior mean beta * within-atlas predictor SD`
+
+The PCA therefore ordains species by their response to a one-standard-deviation
+change in each predictor within that atlas period. Coefficients are also
+weighted by posterior certainty, so uncertain effects are shrunk towards zero
+rather than removed with a hard threshold.
+
+```{r beta-pca-functions}
+read_beta_parameter_workbook <- function(model_folder, base_dir = "HmscOutputs") {
+  path <- file.path(
+    base_dir,
+    model_folder,
+    "Results",
+    paste0(model_folder, "parameter_estimates_Beta_.xlsx")
+  )
+
+  posterior_mean <- readxl::read_excel(path, sheet = "Posterior mean") |>
+    pivot_longer(
+      cols = -Species,
+      names_to = "variable",
+      values_to = "beta_mean"
+    )
+
+  posterior_positive <- readxl::read_excel(path, sheet = "Pr(x>0)") |>
+    pivot_longer(
+      cols = -Species,
+      names_to = "variable",
+      values_to = "prob_positive"
+    )
+
+  posterior_mean |>
+    left_join(posterior_positive, by = c("Species", "variable")) |>
+    mutate(
+      atlas = as.character(sub(".*Atlas([0-9]+).*", "\\1", model_folder)),
+      period = year_lookup[atlas],
+      certainty_weight = 2 * abs(prob_positive - 0.5)
+    )
+}
+
+predictor_sds_by_atlas <- function(models, variables) {
+  imap_dfr(models, function(model, atlas) {
+    tibble(
+      atlas = as.character(atlas),
+      variable = variables,
+      predictor_sd = map_dbl(variables, ~ sd(model$XData[[.x]], na.rm = TRUE))
+    )
+  }) |>
+    mutate(period = year_lookup[atlas])
+}
+
+beta_parameter_alignment <- function(beta_long, variables) {
+  atlas_species <- beta_long |>
+    distinct(atlas, Species) |>
+    count(atlas, name = "n_species")
+
+  common_species <- beta_long |>
+    distinct(atlas, Species) |>
+    count(Species, name = "n_atlases") |>
+    filter(n_atlases == length(unique(beta_long$atlas))) |>
+    pull(Species) |>
+    sort()
+
+  tibble(
+    atlas = names(year_lookup),
+    period = unname(year_lookup),
+    n_species_in_workbook = atlas_species$n_species[match(names(year_lookup), atlas_species$atlas)],
+    n_common_species_used = length(common_species),
+    n_predictors_used = length(variables)
+  )
+}
+
+weighted_beta_matrix <- function(beta_df, atlas_id, species, variables) {
+  beta_df |>
+    filter(atlas == atlas_id, Species %in% species, variable %in% variables) |>
+    mutate(variable = factor(variable, levels = variables)) |>
+    arrange(Species, variable) |>
+    select(Species, variable, weighted_standardized_beta) |>
+    pivot_wider(names_from = variable, values_from = weighted_standardized_beta) |>
+    arrange(Species) |>
+    column_to_rownames(var = "Species") |>
+    as.matrix()
+}
+
+largest_beta_pca_movements <- function(scores, target_period, n = 15) {
+  scores |>
+    filter(period %in% c("1970s", target_period)) |>
+    select(Species, period, PC1, PC2) |>
+    pivot_wider(
+      names_from = period,
+      values_from = c(PC1, PC2),
+      names_sep = "_"
+    ) |>
+    mutate(
+      target_period = target_period,
+      delta_PC1 = .data[[paste0("PC1_", target_period)]] - PC1_1970s,
+      delta_PC2 = .data[[paste0("PC2_", target_period)]] - PC2_1970s,
+      pca_distance = sqrt(delta_PC1^2 + delta_PC2^2)
+    ) |>
+    arrange(desc(pca_distance)) |>
+    slice_head(n = n)
+}
+```
+
+```{r beta-pca-analysis}
+beta_predictors <- intersect(
+  predictor_names(mods[[reference_atlas]]$XData),
+  names(var_labels)
+)
+
+beta_parameter_long_raw <- map_dfr(
+  matching_folders,
+  read_beta_parameter_workbook,
+  base_dir = base_dir
+) |>
+  filter(variable != "(Intercept)", variable %in% beta_predictors)
+
+beta_predictor_sds <- predictor_sds_by_atlas(mods, beta_predictors)
+
+stopifnot(all(is.finite(beta_predictor_sds$predictor_sd)))
+stopifnot(all(beta_predictor_sds$predictor_sd > 0))
+
+beta_parameter_long <- beta_parameter_long_raw |>
+  left_join(beta_predictor_sds, by = c("atlas", "period", "variable")) |>
+  mutate(
+    standardized_beta = beta_mean * predictor_sd,
+    weighted_standardized_beta = standardized_beta * certainty_weight,
+    variable_label = recode(variable, !!!var_labels)
+  )
+
+common_beta_species <- beta_parameter_long |>
+  distinct(atlas, Species) |>
+  count(Species, name = "n_atlases") |>
+  filter(n_atlases == length(unique(beta_parameter_long$atlas))) |>
+  pull(Species) |>
+  sort()
+
+beta_alignment_summary <- beta_parameter_alignment(beta_parameter_long, beta_predictors)
+
+beta_matrices <- setNames(
+  map(names(year_lookup), ~ weighted_beta_matrix(
+    beta_parameter_long,
+    .x,
+    common_beta_species,
+    beta_predictors
+  )),
+  names(year_lookup)
+)
+
+stopifnot(all(map_lgl(beta_matrices, ~ identical(rownames(.x), common_beta_species))))
+stopifnot(all(map_lgl(beta_matrices, ~ identical(colnames(.x), beta_predictors))))
+
+beta_reference_pca <- prcomp(beta_matrices[[reference_atlas]], center = TRUE, scale. = FALSE)
+beta_pca_variance <- tibble(
+  axis = paste0("PC", seq_along(beta_reference_pca$sdev)),
+  variance_explained = beta_reference_pca$sdev^2 / sum(beta_reference_pca$sdev^2),
+  cumulative_variance = cumsum(beta_reference_pca$sdev^2 / sum(beta_reference_pca$sdev^2))
+)
+
+beta_pca_scores <- imap_dfr(beta_matrices, function(mat, atlas) {
+  predict(beta_reference_pca, newdata = mat)[, 1:2, drop = FALSE] |>
+    as_tibble(rownames = "Species") |>
+    mutate(
+      atlas = atlas,
+      period = year_lookup[atlas],
+      .before = 2
+    )
+})
+
+atlas1_projection_check <- max(abs(
+  beta_pca_scores |>
+    filter(atlas == reference_atlas) |>
+    arrange(Species) |>
+    select(PC1, PC2) |>
+    as.matrix() -
+    beta_reference_pca$x[common_beta_species, 1:2, drop = FALSE]
+))
+
+stopifnot(atlas1_projection_check < 1e-10)
+
+beta_pca_loadings <- beta_reference_pca$rotation[, 1:2, drop = FALSE] |>
+  as_tibble(rownames = "variable") |>
+  mutate(
+    variable_label = recode(variable, !!!var_labels),
+    loading_strength = sqrt(PC1^2 + PC2^2)
+  ) |>
+  arrange(desc(loading_strength))
+
+beta_pca_centroids <- beta_pca_scores |>
+  group_by(atlas, period) |>
+  summarise(
+    PC1 = mean(PC1, na.rm = TRUE),
+    PC2 = mean(PC2, na.rm = TRUE),
+    n_species = n(),
+    .groups = "drop"
+  ) |>
+  arrange(as.numeric(atlas)) |>
+  mutate(
+    delta_PC1_from_1970s = PC1 - first(PC1),
+    delta_PC2_from_1970s = PC2 - first(PC2),
+    distance_from_1970s = sqrt(delta_PC1_from_1970s^2 + delta_PC2_from_1970s^2)
+  )
+
+beta_pca_centroid_labels <- beta_pca_centroids |>
+  mutate(
+    label_dx = c(-0.055, 0.045, 0.055),
+    label_dy = c(0.045, -0.055, 0.045)
+  )
+
+beta_pca_movements <- bind_rows(
+  largest_beta_pca_movements(beta_pca_scores, "1990s", n = 10),
+  largest_beta_pca_movements(beta_pca_scores, "2010s", n = 10)
+)
+
+beta_pca_interpretation <- tibble(
+  axis = c("PC1", "PC2"),
+  strongest_positive_loading = map_chr(c("PC1", "PC2"), ~ beta_pca_loadings$variable_label[which.max(beta_pca_loadings[[.x]])]),
+  strongest_negative_loading = map_chr(c("PC1", "PC2"), ~ beta_pca_loadings$variable_label[which.min(beta_pca_loadings[[.x]])]),
+  variance_explained = beta_pca_variance$variance_explained[1:2]
+)
+```
+
+```{r beta-pca-diagnostics, results='asis'}
+knitr::kable(beta_alignment_summary, caption = "Species and predictor alignment for the HMSC beta-parameter PCA.")
+knitr::kable(beta_pca_interpretation, digits = 3, caption = "Main environmental-response gradients in the Atlas 1 beta PCA.")
+knitr::kable(beta_pca_centroids, digits = 3, caption = "Centroid movement of species environmental-response profiles in the Atlas 1 beta PCA space.")
+```
+
+```{r beta-pca-plot, fig.width=10, fig.height=7}
+period_palette <- c(
+  "1970s" = "#4575b4",
+  "1990s" = "#fdae61",
+  "2010s" = "#d73027"
+)
+
+loading_multiplier <- 0.7 * min(
+  diff(range(beta_pca_scores$PC1, na.rm = TRUE)) / diff(range(beta_pca_loadings$PC1, na.rm = TRUE)),
+  diff(range(beta_pca_scores$PC2, na.rm = TRUE)) / diff(range(beta_pca_loadings$PC2, na.rm = TRUE))
+)
+
+beta_loading_arrows <- beta_pca_loadings |>
+  mutate(
+    PC1_end = PC1 * loading_multiplier,
+    PC2_end = PC2 * loading_multiplier,
+    loading_label = case_when(
+      variable == "hh" ~ "Heterogeneity",
+      variable == "perc_grass_shrub" ~ "Grass/Shrub",
+      TRUE ~ stringr::str_remove(variable_label, " \\(% coverage\\)")
+    )
+  )
+
+beta_pca_main_plot <- ggplot(beta_pca_scores, aes(x = PC1, y = PC2, colour = period)) +
+  geom_point(alpha = 0.32, size = 1.5) +
+  geom_path(
+    data = beta_pca_centroids,
+    aes(group = 1),
+    colour = "grey20",
+    linewidth = 0.8,
+    arrow = arrow(length = unit(0.16, "cm"))
+  ) +
+  geom_point(
+    data = beta_pca_centroids,
+    aes(size = n_species),
+    colour = "grey10",
+    fill = "white",
+    shape = 21,
+    stroke = 0.8,
+    show.legend = FALSE
+  ) +
+  geom_label(
+    data = beta_pca_centroid_labels,
+    aes(x = PC1 + label_dx, y = PC2 + label_dy, label = period),
+    colour = "grey10",
+    fill = "white",
+    label.size = 0.2,
+    size = 3,
+    show.legend = FALSE
+  ) +
+  scale_colour_manual(values = period_palette, drop = FALSE, name = "Atlas period") +
+  labs(
+    title = "Species environmental-response structure",
+    subtitle = "Atlas 2 and 3 beta profiles projected into the Atlas 1 weighted standardized-beta PCA",
+    x = paste0("PC1 (", scales::percent(beta_pca_variance$variance_explained[1], accuracy = 0.1), ")"),
+    y = paste0("PC2 (", scales::percent(beta_pca_variance$variance_explained[2], accuracy = 0.1), ")")
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "bottom")
+
+beta_loading_plot <- ggplot(beta_loading_arrows, aes(x = 0, y = 0, xend = PC1_end, yend = PC2_end)) +
+  geom_segment(
+    aes(colour = variable),
+    arrow = arrow(length = unit(0.16, "cm")),
+    linewidth = 0.8,
+    show.legend = FALSE
+  ) +
+  geom_text(
+    aes(
+      x = PC1_end,
+      y = PC2_end,
+      label = loading_label,
+      colour = variable,
+      hjust = ifelse(PC1_end >= 0, -0.05, 1.05),
+      vjust = ifelse(PC2_end >= 0, -0.25, 1.15)
+    ),
+    size = 2.7,
+    show.legend = FALSE
+  ) +
+  scale_colour_manual(values = driver_colours[names(driver_colours) %in% beta_predictors]) +
+  coord_cartesian(clip = "off") +
+  labs(
+    title = "Predictor loadings",
+    x = "PC1 loading",
+    y = "PC2 loading"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(plot.margin = margin(8, 28, 8, 28))
+
+beta_movement_plot <- beta_pca_movements |>
+  mutate(
+    species_label = stringr::str_replace_all(Species, "_", " "),
+    species_period = paste(species_label, target_period, sep = "___"),
+    species_period = forcats::fct_reorder(species_period, pca_distance)
+  ) |>
+  ggplot(aes(x = pca_distance, y = species_period, fill = target_period)) +
+  geom_col(width = 0.7) +
+  facet_wrap(~ target_period, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = period_palette[c("1990s", "2010s")], name = "Target period") +
+  scale_y_discrete(labels = ~ stringr::str_remove(.x, "___.*$")) +
+  labs(
+    title = "Largest species movements",
+    x = "Distance from Atlas 1 position",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold"),
+    panel.spacing.y = unit(0.5, "lines")
+  )
+
+beta_pca_panel <- beta_pca_main_plot / (beta_loading_plot | beta_movement_plot) +
+  plot_layout(heights = c(1.18, 1), widths = c(1, 1.15))
+
+beta_pca_panel
+```
+
+Interpretation: this ordination summarizes how species' environmental responses
+are structured, not where species occur. Species close together have similar
+weighted standardized responses to the modelled environmental predictors. The
+centroid arrow shows whether the average species response profile moves away
+from the Atlas 1 baseline. The loading panel gives the ecological meaning of
+the axes: movement towards a predictor arrow means stronger positive association
+with that predictor, while movement in the opposite direction means stronger
+negative association. Because the coefficients were standardized with
+atlas-specific predictor standard deviations, these shifts describe response
+strength within the environmental variation available in each atlas period.
+
+## Export Results
+
+```{r export-results}
+out_dir <- file.path("notebooks", "exploratory", "outputs", "bioregion-pca")
+model_dir <- file.path(out_dir, "models")
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(model_dir, recursive = TRUE, showWarnings = FALSE)
+
+write_csv(species_alignment, file.path(out_dir, paste0(pattern, "-bioregion-species-alignment.csv")))
+write_csv(reference_selection$k_diagnostics, file.path(out_dir, paste0(pattern, "-bioregion-k-diagnostics.csv")))
+write_csv(site_match_summary, file.path(out_dir, paste0(pattern, "-bioregion-site-match-summary.csv")))
+write_csv(transition_tables, file.path(out_dir, paste0(pattern, "-bioregion-transition-tables.csv")))
+write_csv(bioregion_summary, file.path(out_dir, paste0(pattern, "-bioregion-retention-summary.csv")))
+write_csv(bioregion_assignments_df, file.path(out_dir, paste0(pattern, "-bioregion-assignments.csv")))
+write_csv(bioregion_shift_maps, file.path(out_dir, paste0(pattern, "-bioregion-shift-status.csv")))
+write_csv(pca_centroids, file.path(out_dir, paste0(pattern, "-bioregion-pca-centroids.csv")))
+write_csv(cluster_occupancy, file.path(out_dir, paste0(pattern, "-cluster-occupancy.csv")))
+write_csv(
+  bind_rows(pca_cloud_cluster_diagnostics, pca_cluster_period_diagnostics),
+  file.path(out_dir, paste0(pattern, "-pca-cloud-cluster-diagnostics.csv"))
+)
+write_csv(pca_cloud_clusters, file.path(out_dir, paste0(pattern, "-pca-cloud-cluster-assignments.csv")))
+write_csv(pca_cluster_agreement, file.path(out_dir, paste0(pattern, "-pca-cloud-cluster-agreement.csv")))
+
+write_csv(beta_parameter_long, file.path(out_dir, paste0(pattern, "-species-beta-weighted-standardized-effects.csv")))
+write_csv(beta_pca_scores, file.path(out_dir, paste0(pattern, "-species-beta-pca-scores.csv")))
+write_csv(beta_pca_loadings, file.path(out_dir, paste0(pattern, "-species-beta-pca-loadings.csv")))
+write_csv(beta_pca_centroids, file.path(out_dir, paste0(pattern, "-species-beta-pca-centroids.csv")))
+write_csv(beta_pca_movements, file.path(out_dir, paste0(pattern, "-species-beta-pca-largest-movements.csv")))
+
+ggsave(
+  filename = file.path(out_dir, paste0(pattern, "-bioregion-reference-assignment-maps.png")),
+  plot = bioregion_map_panel,
+  width = 12,
+  height = 4.8,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  filename = file.path(out_dir, paste0(pattern, "-bioregion-shift-maps.png")),
+  plot = shift_map_panel,
+  width = 12,
+  height = 4.8,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  filename = file.path(out_dir, paste0(pattern, "-bioregion-ordination-drift.png")),
+  plot = bioregion_ordination_plot,
+  width = 8.5,
+  height = 6.4,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  filename = file.path(out_dir, paste0(pattern, "-avian-cluster-map-pca-publication-figure.png")),
+  plot = bioregion_publication_figure,
+  width = 13.5,
+  height = 11,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  filename = file.path(out_dir, paste0(pattern, "-pca-cloud-cluster-separation.png")),
+  plot = pca_cloud_separation_panel,
+  width = 11,
+  height = 5.8,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+ggsave(
+  filename = file.path(out_dir, paste0(pattern, "-species-beta-pca-drift.png")),
+  plot = beta_pca_panel,
+  width = 10,
+  height = 7,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+
+saveRDS(
+  list(
+    species_alignment = species_alignment,
+    hellinger_communities = hellinger_communities,
+    reference_pca = reference_pca,
+    reference_selection = reference_selection,
+    medoid_matrix = medoid_matrix,
+    bioregion_palette = bioregion_palette,
+    bioregion_assignments = bioregion_assignments,
+    assignments_wide = assignments_wide,
+    transition_tables = transition_tables,
+    bioregion_summary = bioregion_summary,
+    cluster_occupancy = cluster_occupancy,
+    pca_scores = pca_scores,
+    pca_centroids = pca_centroids,
+    pca_axes_for_clustering = pca_axes_for_clustering,
+    pca_cloud_clusters = pca_cloud_clusters,
+    pca_cloud_cluster_diagnostics = pca_cloud_cluster_diagnostics,
+    pca_cluster_period_diagnostics = pca_cluster_period_diagnostics,
+    pca_cluster_agreement = pca_cluster_agreement,
+    beta_parameter_long = beta_parameter_long,
+    beta_predictor_sds = beta_predictor_sds,
+    beta_matrices = beta_matrices,
+    beta_reference_pca = beta_reference_pca,
+    beta_pca_variance = beta_pca_variance,
+    beta_pca_scores = beta_pca_scores,
+    beta_pca_loadings = beta_pca_loadings,
+    beta_pca_centroids = beta_pca_centroids,
+    beta_pca_movements = beta_pca_movements
+  ),
+  file.path(model_dir, paste0(pattern, "-avian-bioregion-pca-analysis.rds"))
+)
+```

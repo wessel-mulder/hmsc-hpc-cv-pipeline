@@ -1,0 +1,103 @@
+"foraging_guild_consensus","change_class","n_species","guild_species_count","proportion_within_guild","percentage_within_guild"
+"Aerial insectivores","Decrease",1,4,0.25,25
+"Aquatic pursuers","Decrease",0,6,0,0
+"Buntings","Decrease",1,3,0.333333333333333,33.3333333333333
+"Columbids","Decrease",0,4,0,0
+"Cuckoos","Decrease",0,1,0,0
+"Dabbling ducks","Decrease",0,7,0,0
+"Dippers","Decrease",0,1,0,0
+"Diurnal raptors","Decrease",0,7,0,0
+"Diving ducks","Decrease",0,3,0,0
+"Flycatchers","Decrease",0,3,0,0
+"Foliage gleaners","Decrease",0,9,0,0
+"Gallinaceous birds","Decrease",0,2,0,0
+"Grazing waterfowl","Decrease",0,2,0,0
+"Gulls","Decrease",1,5,0.2,20
+"Kingfishers","Decrease",0,1,0,0
+"Low flycatching feeders","Decrease",1,9,0.111111111111111,11.1111111111111
+"Marsh warblers","Decrease",1,6,0.166666666666667,16.6666666666667
+"Nigthjars","Decrease",0,1,0,0
+"Omnivorous corvids","Decrease",0,7,0,0
+"Open-land insectivores","Decrease",1,6,0.166666666666667,16.6666666666667
+"Orioles","Decrease",1,1,1,100
+"Owls","Decrease",1,5,0.2,20
+"Passerine seedeaters","Decrease",0,11,0,0
+"Plovers","Decrease",0,6,0,0
+"Rails","Decrease",0,5,0,0
+"Reedlings","Decrease",0,1,0,0
+"Scolopacids","Decrease",1,9,0.111111111111111,11.1111111111111
+"Shrikes","Decrease",0,1,0,0
+"Starlings","Decrease",0,1,0,0
+"Terns","Decrease",0,4,0,0
+"Thrushes","Decrease",0,4,0,0
+"Tit-like birds","Decrease",0,12,0,0
+"Wading birds","Decrease",0,2,0,0
+"Woodpeckers","Decrease",0,5,0,0
+"Aerial insectivores","Stable",3,4,0.75,75
+"Aquatic pursuers","Stable",4,6,0.666666666666667,66.6666666666667
+"Buntings","Stable",2,3,0.666666666666667,66.6666666666667
+"Columbids","Stable",2,4,0.5,50
+"Cuckoos","Stable",1,1,1,100
+"Dabbling ducks","Stable",6,7,0.857142857142857,85.7142857142857
+"Dippers","Stable",1,1,1,100
+"Diurnal raptors","Stable",2,7,0.285714285714286,28.5714285714286
+"Diving ducks","Stable",2,3,0.666666666666667,66.6666666666667
+"Flycatchers","Stable",2,3,0.666666666666667,66.6666666666667
+"Foliage gleaners","Stable",8,9,0.888888888888889,88.8888888888889
+"Gallinaceous birds","Stable",2,2,1,100
+"Grazing waterfowl","Stable",1,2,0.5,50
+"Gulls","Stable",4,5,0.8,80
+"Kingfishers","Stable",1,1,1,100
+"Low flycatching feeders","Stable",6,9,0.666666666666667,66.6666666666667
+"Marsh warblers","Stable",2,6,0.333333333333333,33.3333333333333
+"Nigthjars","Stable",1,1,1,100
+"Omnivorous corvids","Stable",3,7,0.428571428571429,42.8571428571429
+"Open-land insectivores","Stable",5,6,0.833333333333333,83.3333333333333
+"Orioles","Stable",0,1,0,0
+"Owls","Stable",3,5,0.6,60
+"Passerine seedeaters","Stable",5,11,0.454545454545455,45.4545454545455
+"Plovers","Stable",5,6,0.833333333333333,83.3333333333333
+"Rails","Stable",3,5,0.6,60
+"Reedlings","Stable",1,1,1,100
+"Scolopacids","Stable",8,9,0.888888888888889,88.8888888888889
+"Shrikes","Stable",1,1,1,100
+"Starlings","Stable",1,1,1,100
+"Terns","Stable",4,4,1,100
+"Thrushes","Stable",2,4,0.5,50
+"Tit-like birds","Stable",7,12,0.583333333333333,58.3333333333333
+"Wading birds","Stable",2,2,1,100
+"Woodpeckers","Stable",4,5,0.8,80
+"Aerial insectivores","Increase",0,4,0,0
+"Aquatic pursuers","Increase",2,6,0.333333333333333,33.3333333333333
+"Buntings","Increase",0,3,0,0
+"Columbids","Increase",2,4,0.5,50
+"Cuckoos","Increase",0,1,0,0
+"Dabbling ducks","Increase",1,7,0.142857142857143,14.2857142857143
+"Dippers","Increase",0,1,0,0
+"Diurnal raptors","Increase",5,7,0.714285714285714,71.4285714285714
+"Diving ducks","Increase",1,3,0.333333333333333,33.3333333333333
+"Flycatchers","Increase",1,3,0.333333333333333,33.3333333333333
+"Foliage gleaners","Increase",1,9,0.111111111111111,11.1111111111111
+"Gallinaceous birds","Increase",0,2,0,0
+"Grazing waterfowl","Increase",1,2,0.5,50
+"Gulls","Increase",0,5,0,0
+"Kingfishers","Increase",0,1,0,0
+"Low flycatching feeders","Increase",2,9,0.222222222222222,22.2222222222222
+"Marsh warblers","Increase",3,6,0.5,50
+"Nigthjars","Increase",0,1,0,0
+"Omnivorous corvids","Increase",4,7,0.571428571428571,57.1428571428571
+"Open-land insectivores","Increase",0,6,0,0
+"Orioles","Increase",0,1,0,0
+"Owls","Increase",1,5,0.2,20
+"Passerine seedeaters","Increase",6,11,0.545454545454545,54.5454545454545
+"Plovers","Increase",1,6,0.166666666666667,16.6666666666667
+"Rails","Increase",2,5,0.4,40
+"Reedlings","Increase",0,1,0,0
+"Scolopacids","Increase",0,9,0,0
+"Shrikes","Increase",0,1,0,0
+"Starlings","Increase",0,1,0,0
+"Terns","Increase",0,4,0,0
+"Thrushes","Increase",2,4,0.5,50
+"Tit-like birds","Increase",5,12,0.416666666666667,41.6666666666667
+"Wading birds","Increase",0,2,0,0
+"Woodpeckers","Increase",1,5,0.2,20

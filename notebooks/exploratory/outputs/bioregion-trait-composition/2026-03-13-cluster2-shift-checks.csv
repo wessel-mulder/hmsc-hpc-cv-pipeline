@@ -1,0 +1,10 @@
+check_type,comparison,transition,n_sites,expected_n_sites,passed,n_low_confidence,pct_low_confidence,median_assignment_margin,target_atlas,n_missing_from,n_missing_to,n_model_species,n_species_missing_metadata
+Focal transition counts,1990s minus 1970s,Cluster 1 to Cluster 2,142,142,TRUE,23,0.1619718309859155,0.027629806988163825,NA,NA,NA,NA,NA
+Focal transition counts,1990s minus 1970s,Cluster 3 to Cluster 2,219,219,TRUE,35,0.1598173515981735,0.03131298219910627,NA,NA,NA,NA,NA
+Focal transition counts,2010s minus 1970s,Cluster 1 to Cluster 2,245,245,TRUE,43,0.17551020408163265,0.03490553810645655,NA,NA,NA,NA,NA
+Focal transition counts,2010s minus 1970s,Cluster 3 to Cluster 2,392,392,TRUE,41,0.10459183673469388,0.03767730908204374,NA,NA,NA,NA,NA
+Prediction row matches,1990s minus 1970s,Cluster 1 to Cluster 2,142,NA,TRUE,NA,NA,NA,2,0,0,NA,NA
+Prediction row matches,1990s minus 1970s,Cluster 3 to Cluster 2,219,NA,TRUE,NA,NA,NA,2,0,0,NA,NA
+Prediction row matches,2010s minus 1970s,Cluster 1 to Cluster 2,245,NA,TRUE,NA,NA,NA,3,0,0,NA,NA
+Prediction row matches,2010s minus 1970s,Cluster 3 to Cluster 2,392,NA,TRUE,NA,NA,NA,3,0,0,NA,NA
+Species metadata coverage,NA,NA,NA,NA,TRUE,NA,NA,NA,NA,NA,NA,157,0

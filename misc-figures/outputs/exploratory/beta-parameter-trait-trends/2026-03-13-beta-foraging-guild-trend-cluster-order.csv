@@ -1,0 +1,69 @@
+effect_scale,trait_value,n_species,cluster_order
+Unscaled beta,Nigthjars,1,1
+Unscaled beta,Starlings,1,2
+Unscaled beta,Owls,5,3
+Unscaled beta,Aerial insectivores,4,4
+Unscaled beta,Kingfishers,1,5
+Unscaled beta,Reedlings,1,6
+Unscaled beta,Diurnal raptors,7,7
+Unscaled beta,Omnivorous corvids,7,8
+Unscaled beta,Terns,5,9
+Unscaled beta,Wading birds,2,10
+Unscaled beta,Scolopacids,9,11
+Unscaled beta,Shrikes,2,12
+Unscaled beta,Diving ducks,3,13
+Unscaled beta,Dabbling ducks,7,14
+Unscaled beta,Gulls,5,15
+Unscaled beta,Orioles,1,16
+Unscaled beta,Buntings,3,17
+Unscaled beta,Aquatic pursuers,6,18
+Unscaled beta,Passerine seedeaters,12,19
+Unscaled beta,Flycatchers,3,20
+Unscaled beta,Marsh warblers,6,21
+Unscaled beta,Gallinaceous birds,2,22
+Unscaled beta,Woodpeckers,5,23
+Unscaled beta,Foliage gleaners,9,24
+Unscaled beta,Rails,5,25
+Unscaled beta,Dippers,1,26
+Unscaled beta,Cuckoos,1,27
+Unscaled beta,Plovers,6,28
+Unscaled beta,Grazing waterfowl,2,29
+Unscaled beta,Open-land insectivores,6,30
+Unscaled beta,Thrushes,4,31
+Unscaled beta,Columbids,4,32
+Unscaled beta,Tit-like birds,12,33
+Unscaled beta,Low flycatching feeders,9,34
+SD-scaled effect size,Orioles,1,1
+SD-scaled effect size,Reedlings,1,2
+SD-scaled effect size,Diving ducks,3,3
+SD-scaled effect size,Owls,5,4
+SD-scaled effect size,Aerial insectivores,4,5
+SD-scaled effect size,Starlings,1,6
+SD-scaled effect size,Nigthjars,1,7
+SD-scaled effect size,Scolopacids,9,8
+SD-scaled effect size,Shrikes,2,9
+SD-scaled effect size,Gulls,5,10
+SD-scaled effect size,Marsh warblers,6,11
+SD-scaled effect size,Rails,5,12
+SD-scaled effect size,Woodpeckers,5,13
+SD-scaled effect size,Columbids,4,14
+SD-scaled effect size,Gallinaceous birds,2,15
+SD-scaled effect size,Aquatic pursuers,6,16
+SD-scaled effect size,Buntings,3,17
+SD-scaled effect size,Passerine seedeaters,12,18
+SD-scaled effect size,Flycatchers,3,19
+SD-scaled effect size,Diurnal raptors,7,20
+SD-scaled effect size,Omnivorous corvids,7,21
+SD-scaled effect size,Terns,5,22
+SD-scaled effect size,Wading birds,2,23
+SD-scaled effect size,Plovers,6,24
+SD-scaled effect size,Grazing waterfowl,2,25
+SD-scaled effect size,Foliage gleaners,9,26
+SD-scaled effect size,Open-land insectivores,6,27
+SD-scaled effect size,Thrushes,4,28
+SD-scaled effect size,Tit-like birds,12,29
+SD-scaled effect size,Low flycatching feeders,9,30
+SD-scaled effect size,Dippers,1,31
+SD-scaled effect size,Cuckoos,1,32
+SD-scaled effect size,Dabbling ducks,7,33
+SD-scaled effect size,Kingfishers,1,34

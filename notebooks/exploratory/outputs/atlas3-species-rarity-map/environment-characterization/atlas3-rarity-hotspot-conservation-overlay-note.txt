@@ -1,0 +1,7 @@
+Conservation overlay status
+
+No local protected-area/conservation-area layer was found in this repo during inspection.
+That means this analysis cannot determine whether the Atlas 3 rarity hotspots are already covered by protected areas.
+
+To add that check, provide a polygon layer such as WDPA, Natura 2000, Danish protected areas, or IBA coverage.
+The next step would be to intersect that layer with the 5 km atlas grid and summarize protected-area overlap for top-decile rarity hotspots versus other Atlas 3 cells.

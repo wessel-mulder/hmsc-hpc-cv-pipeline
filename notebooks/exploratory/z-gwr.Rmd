@@ -1,734 +1,603 @@
 ---
-title: "z-gwr"
-output: html_document
+title: "Ecologically informed GWR on modelled avian richness"
+author: "WM"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    df_print: paged
 ---
 
-```{r}
-#### GETTING STARTED ####
-if(!require("pacman")) install.packages("pacman")
-pacman::p_load(GWmodel,sf,sp,tidyverse,Hmsc)
-```
-
-### MODELS APPLIED TO RICHNESS
-```{r}
-#### LOAD MODELS #### 
-dir <- './HmscOutputs'
-pattern <- '2026-03-13'
-
-matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern,
-                                           basename(matching_folders))]
-model <- matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-
-# load models
-mods <- lapply(matching_folders,function(model){
-  # read objects
-  load(file.path(dir,model,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
-  m <- fitted_model$posteriors
-})
-names(mods) <- models_nums
-#mod <- mods[[1]]
-# load designs
-designs <- lapply(mods,function(mod){
-  mod$studyDesign %>% 
-    rownames_to_column(.,var='survey') %>% 
-    left_join(.,
-              mod$ranLevels$site$s %>% rownames_to_column(.,var='site'),
-              by = 'site')
-})
-# load MFs
-MFs <- lapply(matching_folders,function(model){
-  # read objects
-  load(file.path(dir,
-                    model,
-                 'Models',
-                    'Fitted',
-                    'MF_samples_0250_thin_100_chains_4_nfolds_10.rdata'))
-  list <- list(MF,MFCV)
-  names(list) <- c('MF','MFCV')
-  list
-})
-names(MFs) <- models_nums
-str(MFs)
-
-#### GET PREDS #### 
-predsY <- map2(mods, matching_folders, function(mod, folder) {
-  
-  # Define the target file path
-  target_path <- file.path(dir, 
-                           folder, 
-                           'Results', 
-                           'Preds', 
-                           'predicted-values.rdata')
-  
-  if (!file.exists(target_path)) {
-    # If file doesn't exist, compute predictions
-    message(paste("Computing predictions for:", folder))
-    
-    # Compute full predictions
-    pred_temp <- pcomputePredictedValues(mod)
-    
-    # Calculate row means (predsY logic)
-    pred_y <- rowMeans(pred_temp, dims = 2)
-    
-    # Ensure directory exists before saving
-    if (!dir.exists(dirname(target_path))) {
-      dir.create(dirname(target_path), recursive = TRUE)
-    }
-    
-    # Save the object
-    saveRDS(pred_y, target_path)
-    
-    return(pred_y)
-    
-  } else {
-    # If file exists, simply load it
-    message(paste("Loading existing predictions for:", folder))
-    return(readRDS(target_path))
-  }
-})
-
-# Name the list for clarity
-names(predsY) <- models_nums
-
-p <- predsY[[1]]
-d <- designs[[1]]
-# prepare for plotting 
-dfs <- pmap(list(p=predsY,d=designs,m=mods), function(p,d,m) {
-  # Calculate row sums and keep it as a data frame
-    p %>% 
-    as.data.frame() %>% 
-    mutate(richness = rowSums(.)) %>% 
-    rownames_to_column(var = 'survey') %>% 
-    select(survey, richness) %>% 
-    # Join with the second object (design)
-    left_join(d, by = 'survey') %>% 
-    # Join with the third object (metadata)
-    left_join(m$XData %>% rownames_to_column(var = 'survey'), by = 'survey')
-}) 
-```
-
-# TRY WITH PCA 
-
-```{r}
-# --- 1. Global PCA across all dfs ---
-prec_cols <- grep("^perc_", colnames(dfs[[1]]), value = TRUE)
-
-# Stack all land-use data from all dfs for global PCA
-all_landuse <- do.call(rbind, lapply(dfs, function(df) df[, prec_cols]))
-
-# Fit global PCA
-global_pca <- prcomp(all_landuse, scale. = TRUE, center = TRUE)
-
-# Inspect variance explained
-var_exp <- summary(global_pca)$importance[2, ]
-print(round(var_exp, 3))
-
-# Retain PCs explaining > 5% variance
-n_pcs <- sum(var_exp > 0.05)
-print(paste("Retaining", n_pcs, "PCs"))
-
-# Global loadings — single source of truth for all models
-global_loadings <- global_pca$rotation[, 1:n_pcs]
-global_var_exp  <- var_exp[1:n_pcs]
-print(round(global_loadings, 3))
-
-# --- 2. Apply global PCA to each df (predict scores using global rotation) ---
-add_landuse_pca_global <- function(df, pca, n_pcs) {
-  prec_cols <- grep("^perc_", colnames(df), value = TRUE)
-  
-  # Project this df's data onto the GLOBAL PCA axes
-  pc_scores <- predict(pca, newdata = df[, prec_cols])[, 1:n_pcs]
-  pc_scores <- as.data.frame(pc_scores)
-  colnames(pc_scores) <- paste0("lu_PC", 1:n_pcs)
-  
-  df <- df[, !colnames(df) %in% prec_cols]
-  df <- cbind(df, pc_scores)
-  return(df)
-}
-
-dfs_prep <- lapply(dfs, add_landuse_pca_global, pca = global_pca, n_pcs = n_pcs)
-
-# --- 3. Main GWR pipeline ---
-gwr_mods <- pmap(list(df = dfs_prep, mod = mods), function(df, mod) {
-  
-  vars   <- colnames(mod$XData)
-  lu_pcs <- grep("^lu_PC", colnames(df), value = TRUE)
-  vars   <- c(vars[!grepl("^perc_", vars)], lu_pcs)
-  
-  # Scale all vars including PCs
-  df[vars] <- scale(df[vars])
-  
-  coordinates(df) <- c('X', 'Y')
-  
-  formula <- reformulate(termlabels = vars, response = 'richness')
-  
-  bw_adaptive <- bw.gwr(formula,
-                        data = df,
-                        approach = "CV",
-                        kernel = "bisquare",
-                        adaptive = TRUE)
-  
-  print('run the model')
-  gwr_model <- gwr.basic(formula,
-                         data = df,
-                         bw = bw_adaptive,
-                         kernel = "bisquare",
-                         adaptive = TRUE)
-  
-  print('run collin diag')
-  collin_diag <- gwr.collin.diagno(formula,
-                                   data = df,
-                                   bw = bw_adaptive,
-                                   kernel = "bisquare",
-                                   adaptive = TRUE)
-  
-  return(list(mod     = gwr_model,
-              collin  = collin_diag))
-  # Note: loadings live in global_loadings, not per-model
-})
-
-# --- 4. Build PC labels from global loadings (once, used in all plots) ---
-pc_labels <- apply(global_loadings, 2, function(col) {
-  dominant  <- names(which.max(abs(col)))
-  direction <- ifelse(col[dominant] > 0, "+", "-")
-  paste0(gsub("perc_", "", dominant), direction)
-})
-
-lu_pcs <- paste0("lu_PC", 1:n_pcs)
-
-var_labels <- c(
-  "tmean_breeding" = "Breeding Temp.",
-  "prec_breeding"  = "Breeding Precip.",
-  "hh"             = "Heterogeneity",
-  setNames(pc_labels, lu_pcs)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
 )
 
-driver_colours <- c(
-  "Breeding Temp."        = "#e41a1c",
-  "Breeding Precip."      = "#377eb8",
-  "Heterogeneity"         = "#ff7f00",
-  'cropland-' = 'goldenrod1',
-  'urban+' = 'tomato4',
-  'forest+' = 'forestgreen',
-  'grass_shrub-' = 'springgreen2',
-  'cropland-' = 'goldenrod4',
-  "No Significant Driver" = "grey85"
-)
+input_path <- knitr::current_input(dir = TRUE)
+candidate_roots <- unique(c(
+  normalizePath(".", mustWork = TRUE),
+  if (!is.null(input_path) && nzchar(input_path)) {
+    normalizePath(file.path(dirname(input_path), "..", ".."), mustWork = FALSE)
+  },
+  normalizePath("../..", mustWork = FALSE)
+))
+project_root <- candidate_roots[
+  file.exists(file.path(candidate_roots, "hmsc-hpc-cv-pipeline.Rproj"))
+][[1]]
+knitr::opts_knit$set(root.dir = project_root)
 
-gwr_theme <- function() {
-  theme_minimal(base_size = 11) +
-    theme(
-      legend.position = "bottom",
-      legend.title    = element_text(face = "bold"),
-      plot.title      = element_text(face = "bold"),
-      plot.subtitle   = element_text(colour = "grey40"),
-      panel.grid      = element_line(colour = "grey95")
-    )
-}
-names(gwr_mods) <- c('1','2','3')
-nm <- names(gwr_mods)[1]
-# --- 5. Plotting pipeline ---
-plots <- lapply(names(gwr_mods), function(nm) {
-  
-  gwr_mod <- gwr_mods[[nm]]
-  
-  gwr_model <- gwr_mod$mod
-  
-  gwr_sf    <- st_as_sf(gwr_model$SDF)
-  
-  tv_cols <- paste0(names(var_labels), "_TV")
-  tv_cols <- tv_cols[tv_cols %in% names(gwr_sf)]
-  
-  dominant_drivers <- gwr_sf %>%
-
-    st_drop_geometry() %>%
-
-    select(all_of(tv_cols[tv_cols != "Intercept_TV"])) %>%
-
-    rowwise() %>%
-
-    mutate(
-
-      max_tv       = max(abs(c_across(everything())), na.rm = TRUE),
-
-      dominant_col = names(.)[which.max(abs(c_across(everything())))],
-      
-      raw_tv_value = cur_data()[[dominant_col]],
-    
-    # 3. Assign the direction based on the raw value
-    direction = ifelse(raw_tv_value >= 0, "Positive (+)", "Negative (-)")
-
-    ) %>%
-
-    ungroup() %>%
-
-    mutate(
-
-      dominant_var = var_labels[gsub("_TV$", "", dominant_col)],
-
-      dominant_var = ifelse(max_tv < 1.96, "No Significant Driver", dominant_var)
-
-    ) %>%
-
-    st_sf(geometry = st_geometry(gwr_sf))
-  
-  p_dominant <- ggplot(dominant_drivers) +
-    geom_sf(aes(colour = dominant_var,shape = direction), size = 1.8) +
-    scale_colour_manual(values = driver_colours, name = "Primary Driver",
-                        drop = TRUE) +
-        scale_shape_manual(values = list('Negative (-)' = 4,
-                                         'Positive (+)' = 19), name = "Primary Driver",
-                        drop = TRUE) +
-    gwr_theme() +
-    labs(
-      title    = paste0("Dominant driver of richness - Atlas ",nm),
-      subtitle = "Variable with highest significant |t-value| at each site",
-      caption  = paste0("Global PCA loadings: ",
-                        paste(paste0(lu_pcs, " = ", pc_labels), collapse = "; "))
-    )
-  
-  p_r2 <- ggplot(gwr_sf) +
-    geom_sf(aes(colour = Local_R2), size = 1.5) +
-    scale_colour_viridis_c(option = "magma", name = "Local R²", limits = c(0, 1)) +
-    gwr_theme() +
-    labs(title = "Model Fit", subtitle = "Local R² from GWR")
-  
-  list(dominant = p_dominant, r2 = p_r2)
-})
-
-# --- 5. Plotting pipeline individual variables  ---
-# --- Individual Variable Significance Pipeline ---
-individual_plots <- lapply(gwr_mods, function(gwr_mod) {
-  
-  gwr_sf <- st_as_sf(gwr_mod$mod$SDF)
-  
-  # Identify variables based on your var_labels (excluding Intercept)
-  vars_to_plot <- names(var_labels)
-  vars_to_plot <- vars_to_plot[vars_to_plot != "Intercept"]
-  
-  # Internal loop to create a plot for each variable
-  var_maps <- lapply(vars_to_plot, function(v) {
-    
-    tv_col <- paste0(v, "_TV") # The t-value column
-    
-    # Check if column exists in results
-    if(!tv_col %in% names(gwr_sf)) return(NULL)
-    
-    # Categorize the relationship
-    plot_df <- gwr_sf %>%
-      mutate(
-        sig_status = case_when(
-          .data[[tv_col]] > 1.96  ~ "Significant Positive",
-          .data[[tv_col]] < -1.96 ~ "Significant Negative",
-          TRUE                    ~ "Non-Significant"
-        ),
-        # Factorize for consistent legend colors
-        sig_status = factor(sig_status, 
-                            levels = c("Significant Positive", "Significant Negative", "Non-Significant"))
-      )
-    
-    # Generate the plot
-    ggplot(plot_df) +
-      geom_sf(aes(colour = sig_status), size = 1.2) +
-      scale_colour_manual(
-        values = c(
-          "Significant Positive" = "#d73027", # Red
-          "Significant Negative" = "#4575b4", # Blue
-          "Non-Significant"      = "grey90"   # Light Grey
-        ),
-        name = "Relationship",
-        drop = FALSE
-      ) +
-      gwr_theme() +
-      labs(
-        title = paste("Spatial Significance:", var_labels[v]),
-        subtitle = paste("Based on local t-values (|t| > 1.96)"),
-        caption = "Red = High positive influence | Blue = High negative influence"
-      )
-  })
-  
-  # Name the list elements for easy access
-  names(var_maps) <- vars_to_plot
-  return(var_maps)
-})
-
-individual_plots[[1]]
-
-# --- View ---
-plots[[1]]$dominant
-#plots[[1]]$r2
-plots[[2]]$dominant
-plots[[3]]$dominant
-
-print(gwr_mods[[1]]$mod)
-```
-
-### MODELS APPLIED TO STI 
-```{r}
-#### LOAD MODELS #### 
-dir <- './HmscOutputs'
-pattern <- '2026-03-13'
-
-matching_folders <- list.dirs(dir, recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern,
-                                           basename(matching_folders))]
-model <- matching_folders[1]
-models_nums <- as.numeric(str_extract(matching_folders, "(?<=Atlas)\\d+"))
-
-# load models
-mods <- lapply(matching_folders,function(model){
-  # read objects
-  load(file.path(dir,model,'Models','Fitted','HPC_samples_0250_thin_100_chains_4.Rdata'))
-  m <- fitted_model$posteriors
-})
-names(mods) <- models_nums
-#mod <- mods[[1]]
-# load designs
-designs <- lapply(mods,function(mod){
-  mod$studyDesign %>% 
-    rownames_to_column(.,var='survey') %>% 
-    left_join(.,
-              mod$ranLevels$site$s %>% rownames_to_column(.,var='site'),
-              by = 'site')
-})
-# load MFs
-MFs <- lapply(matching_folders,function(model){
-  # read objects
-  load(file.path(dir,
-                    model,
-                 'Models',
-                    'Fitted',
-                    'MF_samples_0250_thin_100_chains_4_nfolds_10.rdata'))
-  list <- list(MF,MFCV)
-  names(list) <- c('MF','MFCV')
-  list
-})
-names(MFs) <- models_nums
-str(MFs)
-
-#### GET PREDS #### 
-predsY <- map2(mods, matching_folders, function(mod, folder) {
-  
-  # Define the target file path
-  target_path <- file.path(dir, 
-                           folder, 
-                           'Results', 
-                           'Preds', 
-                           'predicted-values.rdata')
-  
-  if (!file.exists(target_path)) {
-    # If file doesn't exist, compute predictions
-    message(paste("Computing predictions for:", folder))
-    
-    # Compute full predictions
-    pred_temp <- pcomputePredictedValues(mod)
-    
-    # Calculate row means (predsY logic)
-    pred_y <- rowMeans(pred_temp, dims = 2)
-    
-    # Ensure directory exists before saving
-    if (!dir.exists(dirname(target_path))) {
-      dir.create(dirname(target_path), recursive = TRUE)
-    }
-    
-    # Save the object
-    saveRDS(pred_y, target_path)
-    
-    return(pred_y)
-    
-  } else {
-    # If file exists, simply load it
-    message(paste("Loading existing predictions for:", folder))
-    return(readRDS(target_path))
-  }
-})
-
-# Name the list for clarity
-names(predsY) <- models_nums
-
-CWMs <- map2(predsY, mods, ~ {
-  S <- rowSums(.x)
-  (.x %*% .y$Tr) / matrix(rep(S, .y$nt), ncol = .y$nt)
-}) 
-
-
-p <- predsY[[1]]
-d <- designs[[1]]
-# prepare for plotting 
-dfs <- pmap(list(p=CWMs,d=designs,m=mods), function(p,d,m) {
-  p %>% 
-    as.data.frame() %>% 
-    rownames_to_column(var = 'survey') %>% 
-    # Now join with .y (the design list element)
-    left_join(d, by = 'survey') %>% 
-
-    # Join with the third object (metadata)
-    left_join(m$XData %>% rownames_to_column(var = 'survey'), by = 'survey')
-}) 
-```
-
-```{r}
-
-df <- dfs[[1]]
-
-# TRY WITH PCA 
-# --- 1. Global PCA across all dfs ---
-prec_cols <- grep("^perc_", colnames(dfs[[1]]), value = TRUE)
-
-# Stack all land-use data from all dfs for global PCA
-all_landuse <- do.call(rbind, lapply(dfs, function(df) df[, prec_cols]))
-
-# Fit global PCA
-global_pca <- prcomp(all_landuse, scale. = TRUE, center = TRUE)
-
-# Inspect variance explained
-var_exp <- summary(global_pca)$importance[2, ]
-print(round(var_exp, 3))
-
-# Retain PCs explaining > 5% variance
-n_pcs <- sum(var_exp > 0.05)
-print(paste("Retaining", n_pcs, "PCs"))
-
-# Global loadings — single source of truth for all models
-global_loadings <- global_pca$rotation[, 1:n_pcs]
-global_var_exp  <- var_exp[1:n_pcs]
-print(round(global_loadings, 3))
-
-# --- 2. Apply global PCA to each df (predict scores using global rotation) ---
-add_landuse_pca_global <- function(df, pca, n_pcs) {
-  prec_cols <- grep("^perc_", colnames(df), value = TRUE)
-  
-  # Project this df's data onto the GLOBAL PCA axes
-  pc_scores <- predict(pca, newdata = df[, prec_cols])[, 1:n_pcs]
-  pc_scores <- as.data.frame(pc_scores)
-  colnames(pc_scores) <- paste0("lu_PC", 1:n_pcs)
-  
-  df <- df[, !colnames(df) %in% prec_cols]
-  df <- cbind(df, pc_scores)
-  return(df)
+required_packages <- c("dplyr", "readr", "tidyr", "knitr")
+missing_packages <- required_packages[
+  !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
+]
+if (length(missing_packages) > 0) {
+  stop(
+    "Install these R packages before rendering this notebook: ",
+    paste(missing_packages, collapse = ", "),
+    call. = FALSE
+  )
 }
 
-dfs_prep <- lapply(dfs, add_landuse_pca_global, pca = global_pca, n_pcs = n_pcs)
-dfs_prep[[1]]
-# --- 3. Main GWR pipeline ---
-gwr_mods <- pmap(list(df = dfs_prep, mod = mods), function(df, mod) {
-  
-  vars   <- colnames(mod$XData)
-  lu_pcs <- grep("^lu_PC", colnames(df), value = TRUE)
-  vars   <- c(vars[!grepl("^perc_", vars)], lu_pcs)
-  
-  # Scale all vars including PCs
-  df[vars] <- scale(df[vars])
-  
-  coordinates(df) <- c('X', 'Y')
-  
-  formula <- reformulate(termlabels = vars, response = 'species_thermal_index')
-  
-  bw_adaptive <- bw.gwr(formula,
-                        data = df,
-                        approach = "CV",
-                        kernel = "bisquare",
-                        adaptive = TRUE)
-  
-  print('run the model')
-  gwr_model <- gwr.basic(formula,
-                         data = df,
-                         bw = bw_adaptive,
-                         kernel = "bisquare",
-                         adaptive = TRUE)
-  
-  print('run collin diag')
-  collin_diag <- gwr.collin.diagno(formula,
-                                   data = df,
-                                   bw = bw_adaptive,
-                                   kernel = "bisquare",
-                                   adaptive = TRUE)
-  
-  return(list(mod     = gwr_model,
-              collin  = collin_diag))
-  # Note: loadings live in global_loadings, not per-model
-})
-
-# --- 4. Build PC labels from global loadings (once, used in all plots) ---
-pc_labels <- apply(global_loadings, 2, function(col) {
-  dominant  <- names(which.max(abs(col)))
-  direction <- ifelse(col[dominant] > 0, "+", "-")
-  paste0(gsub("perc_", "", dominant), direction)
-})
-
-lu_pcs <- paste0("lu_PC", 1:n_pcs)
-
-var_labels <- c(
-  "tmean_breeding" = "Breeding Temp.",
-  "prec_breeding"  = "Breeding Precip.",
-  "hh"             = "Heterogeneity",
-  setNames(pc_labels, lu_pcs)
-)
-
-driver_colours <- c(
-  "Breeding Temp."        = "#e41a1c",
-  "Breeding Precip."      = "#377eb8",
-  "Heterogeneity"         = "#ff7f00",
-  'cropland-' = 'goldenrod1',
-  'urban+' = 'tomato4',
-  'forest+' = 'forestgreen',
-  'grass_shrub-' = 'springgreen2',
-  'cropland-' = 'goldenrod4',
-  "No Significant Driver" = "grey85"
-)
-
-gwr_theme <- function() {
-  theme_minimal(base_size = 11) +
-    theme(
-      legend.position = "bottom",
-      legend.title    = element_text(face = "bold"),
-      plot.title      = element_text(face = "bold"),
-      plot.subtitle   = element_text(colour = "grey40"),
-      panel.grid      = element_line(colour = "grey95")
-    )
-}
-names(gwr_mods) <- c('1','2','3')
-nm <- names(gwr_mods)[1]
-# --- 5. Plotting pipeline ---
-plots <- lapply(names(gwr_mods), function(nm) {
-  
-  gwr_mod <- gwr_mods[[nm]]
-  
-  gwr_model <- gwr_mod$mod
-  
-  gwr_sf    <- st_as_sf(gwr_model$SDF)
-  
-  tv_cols <- paste0(names(var_labels), "_TV")
-  tv_cols <- tv_cols[tv_cols %in% names(gwr_sf)]
-  
-  dominant_drivers <- gwr_sf %>%
-
-    st_drop_geometry() %>%
-
-    select(all_of(tv_cols[tv_cols != "Intercept_TV"])) %>%
-
-    rowwise() %>%
-
-    mutate(
-
-      max_tv       = max(abs(c_across(everything())), na.rm = TRUE),
-
-      dominant_col = names(.)[which.max(abs(c_across(everything())))],
-      
-      raw_tv_value = cur_data()[[dominant_col]],
-    
-    # 3. Assign the direction based on the raw value
-    direction = ifelse(raw_tv_value >= 0, "Positive (+)", "Negative (-)")
-
-    ) %>%
-
-    ungroup() %>%
-
-    mutate(
-
-      dominant_var = var_labels[gsub("_TV$", "", dominant_col)],
-
-      dominant_var = ifelse(max_tv < 1.96, "No Significant Driver", dominant_var)
-
-    ) %>%
-
-    st_sf(geometry = st_geometry(gwr_sf))
-  
-  p_dominant <- ggplot(dominant_drivers) +
-    geom_sf(aes(colour = dominant_var,shape = direction), size = 1.8) +
-    scale_colour_manual(values = driver_colours, name = "Primary Driver",
-                        drop = TRUE) +
-        scale_shape_manual(values = list('Negative (-)' = 4,
-                                         'Positive (+)' = 19), name = "Primary Driver",
-                        drop = TRUE) +
-    gwr_theme() +
-    labs(
-      title    = paste0("Dominant driver of richness - Atlas ",nm),
-      subtitle = "Variable with highest significant |t-value| at each site",
-      caption  = paste0("Global PCA loadings: ",
-                        paste(paste0(lu_pcs, " = ", pc_labels), collapse = "; "))
-    )
-  
-  p_r2 <- ggplot(gwr_sf) +
-    geom_sf(aes(colour = Local_R2), size = 1.5) +
-    scale_colour_viridis_c(option = "magma", name = "Local R²", limits = c(0, 1)) +
-    gwr_theme() +
-    labs(title = "Model Fit", subtitle = "Local R² from GWR")
-  
-  list(dominant = p_dominant, r2 = p_r2)
-})
-
-# --- 5. Plotting pipeline individual variables  ---
-# --- Individual Variable Significance Pipeline ---
-individual_plots <- lapply(gwr_mods, function(gwr_mod) {
-  
-  gwr_sf <- st_as_sf(gwr_mod$mod$SDF)
-  
-  # Identify variables based on your var_labels (excluding Intercept)
-  vars_to_plot <- names(var_labels)
-  vars_to_plot <- vars_to_plot[vars_to_plot != "Intercept"]
-  
-  # Internal loop to create a plot for each variable
-  var_maps <- lapply(vars_to_plot, function(v) {
-    
-    tv_col <- paste0(v, "_TV") # The t-value column
-    
-    # Check if column exists in results
-    if(!tv_col %in% names(gwr_sf)) return(NULL)
-    
-    # Categorize the relationship
-    plot_df <- gwr_sf %>%
-      mutate(
-        sig_status = case_when(
-          .data[[tv_col]] > 1.96  ~ "Significant Positive",
-          .data[[tv_col]] < -1.96 ~ "Significant Negative",
-          TRUE                    ~ "Non-Significant"
-        ),
-        # Factorize for consistent legend colors
-        sig_status = factor(sig_status, 
-                            levels = c("Significant Positive", "Significant Negative", "Non-Significant"))
-      )
-    
-    # Generate the plot
-    ggplot(plot_df) +
-      geom_sf(aes(colour = sig_status), size = 1.2) +
-      scale_colour_manual(
-        values = c(
-          "Significant Positive" = "#d73027", # Red
-          "Significant Negative" = "#4575b4", # Blue
-          "Non-Significant"      = "grey90"   # Light Grey
-        ),
-        name = "Relationship",
-        drop = FALSE
-      ) +
-      gwr_theme() +
-      labs(
-        title = paste("Spatial Significance:", var_labels[v]),
-        subtitle = paste("Based on local t-values (|t| > 1.96)"),
-        caption = "Red = High positive influence | Blue = High negative influence"
-      )
-  })
-  
-  # Name the list elements for easy access
-  names(var_maps) <- vars_to_plot
-  return(var_maps)
-})
-
-individual_plots[[1]]$tmean_breeding
-individual_plots[[2]]$tmean_breeding
-individual_plots[[3]]$tmean_breeding
-
-
-
-# --- View ---
-plots[[1]]$dominant
-#plots[[1]]$r2
-plots[[2]]$dominant
-plots[[3]]$dominant
-
-print(gwr_mods[[1]]$mod)
+library(dplyr)
+library(readr)
+library(tidyr)
 ```
 
+## Aim
 
+This notebook reads the cached geographically weighted regression outputs created
+by `misc-figures/scripts/fig10-gwr-richness-turnover.R` and
+`misc-figures/scripts/fig11-gwr-richness-univariate.R`. The expensive GWR fitting
+now lives in those plotting scripts so this report can be re-rendered quickly
+without re-running the regressions.
+
+All response variables are derived from HMSC modelled outputs rather than raw
+observations:
+
+- predicted richness: summed species occurrence probabilities per grid cell
+- all-site beta turnover: mean Bray-Curtis dissimilarity from each grid cell to
+  all other atlas grid cells in the same period
+
+The focal GWR uses a fixed 100 km bisquare bandwidth. The mapped driver at each
+grid cell is the environmental predictor with the largest absolute local
+t-value; cells with `|t| < 1.96` are labelled as having no significant driver.
+The richness-only univariate workflow fits the same richness response one
+predictor at a time, plus an intercept-only baseline model, to compare how
+single-predictor support changes through time. That workflow is restricted to
+grid cells present in all three atlas periods, so every mapped period is based on
+the same spatial footprint.
+
+## Cached Outputs
+
+```{r load-cached-gwr}
+pattern <- "2026-03-13"
+gwr_out_dir <- file.path("notebooks", "exploratory", "outputs", "gwr")
+gwr_model_dir <- file.path(gwr_out_dir, "models")
+figure_out_dir <- file.path("misc-figures", "outputs", "main")
+
+gwr_fit_path <- file.path(gwr_model_dir, paste0(pattern, "-gwr-fits-richness-beta-100km.rds"))
+gwr_inputs_path <- file.path(gwr_model_dir, paste0(pattern, "-gwr-analysis-inputs-100km.rds"))
+gwr_summary_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-100km-summary.csv"))
+gwr_local_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-local-coefficients-100km.csv"))
+gwr_dominant_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-dominant-drivers-100km.csv"))
+figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig10-gwr-richness-turnover.png"))
+gwr_effect_ridge_summary_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-multivariate-effect-ridge-summary-100km.csv"))
+gwr_effect_ridge_density_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-multivariate-effect-ridge-density-100km.csv"))
+gwr_effect_ridge_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig10b-gwr-multivariate-effect-ridges.png"))
+gwr_effect_forest_summary_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-multivariate-effect-forest-interval-summary-100km.csv"))
+gwr_effect_forest_richness_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig10e1-gwr-richness-effect-forest-intervals.png"))
+gwr_effect_forest_turnover_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig10e2-gwr-turnover-effect-forest-intervals.png"))
+gwr_effect_forest_combined_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig10e-gwr-richness-turnover-effect-forest-intervals.png"))
+gwr_richness_line_ridge_summary_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-richness-multivariate-effect-ridge-line-summary-100km.csv"))
+gwr_richness_line_ridge_density_path <- file.path(gwr_out_dir, paste0(pattern, "-gwr-richness-multivariate-effect-ridge-line-density-100km.csv"))
+gwr_richness_line_ridge_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig10c-gwr-richness-multivariate-effect-ridge-lines.png"))
+
+richness_site_filter <- "common-sites"
+richness_univariate_fit_path <- file.path(gwr_model_dir, paste0(pattern, "-richness-univariate-gwr-", richness_site_filter, "-fits-100km.rds"))
+richness_univariate_inputs_path <- file.path(gwr_model_dir, paste0(pattern, "-richness-univariate-gwr-", richness_site_filter, "-analysis-inputs-100km.rds"))
+richness_univariate_summary_path <- file.path(gwr_out_dir, paste0(pattern, "-richness-univariate-gwr-", richness_site_filter, "-summary-100km.csv"))
+richness_univariate_local_path <- file.path(gwr_out_dir, paste0(pattern, "-richness-univariate-gwr-", richness_site_filter, "-local-results-100km.csv"))
+richness_univariate_comparison_path <- file.path(gwr_out_dir, paste0(pattern, "-richness-univariate-gwr-", richness_site_filter, "-model-comparison-100km.csv"))
+richness_univariate_strongest_path <- file.path(gwr_out_dir, paste0(pattern, "-richness-univariate-gwr-", richness_site_filter, "-strongest-associations-100km.csv"))
+richness_univariate_comparison_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig11-gwr-richness-univariate-", richness_site_filter, "-model-comparison.png"))
+richness_univariate_strongest_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig11-gwr-richness-univariate-", richness_site_filter, "-strongest-associations.png"))
+richness_univariate_map_paths <- sort(Sys.glob(file.path(figure_out_dir, paste0(pattern, "-fig11-gwr-richness-univariate-", richness_site_filter, "-map-*.png"))))
+
+cwm_sti_site_filter <- "common-sites"
+cwm_sti_univariate_fit_path <- file.path(gwr_model_dir, paste0(pattern, "-cwm-sti-univariate-gwr-", cwm_sti_site_filter, "-fits-100km.rds"))
+cwm_sti_univariate_inputs_path <- file.path(gwr_model_dir, paste0(pattern, "-cwm-sti-univariate-gwr-", cwm_sti_site_filter, "-analysis-inputs-100km.rds"))
+cwm_sti_univariate_summary_path <- file.path(gwr_out_dir, paste0(pattern, "-cwm-sti-univariate-gwr-", cwm_sti_site_filter, "-summary-100km.csv"))
+cwm_sti_univariate_local_path <- file.path(gwr_out_dir, paste0(pattern, "-cwm-sti-univariate-gwr-", cwm_sti_site_filter, "-local-results-100km.csv"))
+cwm_sti_univariate_comparison_path <- file.path(gwr_out_dir, paste0(pattern, "-cwm-sti-univariate-gwr-", cwm_sti_site_filter, "-model-comparison-100km.csv"))
+cwm_sti_univariate_strongest_path <- file.path(gwr_out_dir, paste0(pattern, "-cwm-sti-univariate-gwr-", cwm_sti_site_filter, "-strongest-associations-100km.csv"))
+cwm_sti_univariate_comparison_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig12-gwr-cwm-sti-univariate-", cwm_sti_site_filter, "-model-comparison.png"))
+cwm_sti_univariate_strongest_figure_path <- file.path(figure_out_dir, paste0(pattern, "-fig12-gwr-cwm-sti-univariate-", cwm_sti_site_filter, "-strongest-associations.png"))
+cwm_sti_univariate_map_paths <- sort(Sys.glob(file.path(figure_out_dir, paste0(pattern, "-fig12-gwr-cwm-sti-univariate-", cwm_sti_site_filter, "-map-*.png"))))
+cwm_sti_univariate_effect_map_paths <- sort(Sys.glob(file.path(figure_out_dir, paste0(pattern, "-fig12-gwr-cwm-sti-univariate-", cwm_sti_site_filter, "-effect-map-*.png"))))
+
+required_outputs <- c(
+  gwr_fit_path,
+  gwr_inputs_path,
+  gwr_summary_path,
+  gwr_local_path,
+  gwr_dominant_path,
+  figure_path,
+  gwr_effect_ridge_summary_path,
+  gwr_effect_ridge_density_path,
+  gwr_effect_ridge_figure_path,
+  gwr_effect_forest_summary_path,
+  gwr_effect_forest_richness_figure_path,
+  gwr_effect_forest_turnover_figure_path,
+  gwr_effect_forest_combined_figure_path,
+  gwr_richness_line_ridge_summary_path,
+  gwr_richness_line_ridge_density_path,
+  gwr_richness_line_ridge_figure_path,
+  richness_univariate_fit_path,
+  richness_univariate_inputs_path,
+  richness_univariate_summary_path,
+  richness_univariate_local_path,
+  richness_univariate_comparison_path,
+  richness_univariate_strongest_path,
+  richness_univariate_comparison_figure_path,
+  richness_univariate_strongest_figure_path,
+  cwm_sti_univariate_fit_path,
+  cwm_sti_univariate_inputs_path,
+  cwm_sti_univariate_summary_path,
+  cwm_sti_univariate_local_path,
+  cwm_sti_univariate_comparison_path,
+  cwm_sti_univariate_strongest_path,
+  cwm_sti_univariate_comparison_figure_path,
+  cwm_sti_univariate_strongest_figure_path
+)
+missing_outputs <- required_outputs[!file.exists(required_outputs)]
+
+if (length(missing_outputs) > 0 || length(richness_univariate_map_paths) == 0 || length(cwm_sti_univariate_map_paths) == 0 || length(cwm_sti_univariate_effect_map_paths) == 0) {
+  stop(
+    "Cached GWR outputs are missing. Run `Rscript misc-figures/scripts/fig10-gwr-richness-turnover.R`, `Rscript misc-figures/scripts/fig11-gwr-richness-univariate.R`, and `Rscript misc-figures/scripts/fig12-gwr-cwm-sti-univariate.R` first.\nMissing: ",
+    paste(missing_outputs, collapse = ", "),
+    if (length(richness_univariate_map_paths) == 0) "\nNo richness-univariate predictor map PNGs were found." else "",
+    if (length(cwm_sti_univariate_map_paths) == 0) "\nNo CWM-STI univariate predictor map PNGs were found." else "",
+    if (length(cwm_sti_univariate_effect_map_paths) == 0) "\nNo CWM-STI univariate local-effect map PNGs were found." else "",
+    call. = FALSE
+  )
+}
+
+period_col_types <- cols(period = col_character(), .default = col_guess())
+
+gwr_summary <- read_csv(gwr_summary_path, col_types = period_col_types, show_col_types = FALSE)
+gwr_local <- read_csv(gwr_local_path, col_types = period_col_types, show_col_types = FALSE)
+gwr_dominant <- read_csv(gwr_dominant_path, col_types = period_col_types, show_col_types = FALSE)
+gwr_effect_ridge_summary <- read_csv(gwr_effect_ridge_summary_path, col_types = period_col_types, show_col_types = FALSE)
+gwr_effect_forest_summary <- read_csv(gwr_effect_forest_summary_path, col_types = period_col_types, show_col_types = FALSE)
+gwr_richness_line_ridge_summary <- read_csv(gwr_richness_line_ridge_summary_path, col_types = period_col_types, show_col_types = FALSE)
+richness_univariate_summary <- read_csv(richness_univariate_summary_path, col_types = period_col_types, show_col_types = FALSE)
+richness_univariate_comparison <- read_csv(richness_univariate_comparison_path, col_types = period_col_types, show_col_types = FALSE)
+richness_univariate_strongest <- read_csv(richness_univariate_strongest_path, col_types = period_col_types, show_col_types = FALSE)
+richness_univariate_inputs <- readRDS(richness_univariate_inputs_path)
+cwm_sti_univariate_summary <- read_csv(cwm_sti_univariate_summary_path, col_types = period_col_types, show_col_types = FALSE)
+cwm_sti_univariate_comparison <- read_csv(cwm_sti_univariate_comparison_path, col_types = period_col_types, show_col_types = FALSE)
+cwm_sti_univariate_strongest <- read_csv(cwm_sti_univariate_strongest_path, col_types = period_col_types, show_col_types = FALSE)
+cwm_sti_univariate_inputs <- readRDS(cwm_sti_univariate_inputs_path)
+figure_path_absolute <- normalizePath(figure_path, mustWork = TRUE)
+gwr_effect_ridge_figure_path_absolute <- normalizePath(gwr_effect_ridge_figure_path, mustWork = TRUE)
+gwr_effect_forest_combined_figure_path_absolute <- normalizePath(gwr_effect_forest_combined_figure_path, mustWork = TRUE)
+gwr_effect_forest_turnover_figure_path_absolute <- normalizePath(gwr_effect_forest_turnover_figure_path, mustWork = TRUE)
+gwr_richness_line_ridge_figure_path_absolute <- normalizePath(gwr_richness_line_ridge_figure_path, mustWork = TRUE)
+richness_univariate_comparison_figure_path_absolute <- normalizePath(richness_univariate_comparison_figure_path, mustWork = TRUE)
+richness_univariate_strongest_figure_path_absolute <- normalizePath(richness_univariate_strongest_figure_path, mustWork = TRUE)
+richness_univariate_map_paths_absolute <- normalizePath(richness_univariate_map_paths, mustWork = TRUE)
+cwm_sti_univariate_comparison_figure_path_absolute <- normalizePath(cwm_sti_univariate_comparison_figure_path, mustWork = TRUE)
+cwm_sti_univariate_strongest_figure_path_absolute <- normalizePath(cwm_sti_univariate_strongest_figure_path, mustWork = TRUE)
+cwm_sti_univariate_map_paths_absolute <- normalizePath(cwm_sti_univariate_map_paths, mustWork = TRUE)
+cwm_sti_univariate_effect_map_paths_absolute <- normalizePath(cwm_sti_univariate_effect_map_paths, mustWork = TRUE)
+```
+
+The cached model object and analysis inputs are stored at:
+
+```{r cached-paths, results='asis'}
+knitr::kable(
+  tibble::tibble(
+    output = c(
+      "Fitted multivariable GWR models",
+      "Multivariable analysis inputs",
+      "Multivariable local coefficients",
+      "Multivariable dominant drivers",
+      "Multivariable figure",
+      "Multivariable effect-ridge summary",
+      "Multivariable effect-ridge densities",
+      "Multivariable effect-ridge figure",
+      "Multivariable forest-interval summary",
+      "Richness forest-interval figure",
+      "Turnover forest-interval figure",
+      "Combined richness-turnover forest-interval figure",
+      "Richness multivariable ridge-line summary",
+      "Richness multivariable ridge-line densities",
+      "Richness multivariable ridge-line figure",
+      "Fitted richness-univariate GWR models",
+      "Richness-univariate analysis inputs",
+      "Richness-univariate local results",
+      "Richness-univariate model comparison",
+      "Richness-univariate strongest associations",
+      "Richness-univariate comparison figure",
+      "Richness-univariate strongest-association map",
+      "Fitted CWM-STI univariate GWR models",
+      "CWM-STI univariate analysis inputs",
+      "CWM-STI univariate local results",
+      "CWM-STI univariate model comparison",
+      "CWM-STI univariate strongest associations",
+      "CWM-STI univariate comparison figure",
+      "CWM-STI univariate strongest-association map"
+    ),
+    path = c(
+      gwr_fit_path,
+      gwr_inputs_path,
+      gwr_local_path,
+      gwr_dominant_path,
+      figure_path,
+      gwr_effect_ridge_summary_path,
+      gwr_effect_ridge_density_path,
+      gwr_effect_ridge_figure_path,
+      gwr_effect_forest_summary_path,
+      gwr_effect_forest_richness_figure_path,
+      gwr_effect_forest_turnover_figure_path,
+      gwr_effect_forest_combined_figure_path,
+      gwr_richness_line_ridge_summary_path,
+      gwr_richness_line_ridge_density_path,
+      gwr_richness_line_ridge_figure_path,
+      richness_univariate_fit_path,
+      richness_univariate_inputs_path,
+      richness_univariate_local_path,
+      richness_univariate_comparison_path,
+      richness_univariate_strongest_path,
+      richness_univariate_comparison_figure_path,
+      richness_univariate_strongest_figure_path,
+      cwm_sti_univariate_fit_path,
+      cwm_sti_univariate_inputs_path,
+      cwm_sti_univariate_local_path,
+      cwm_sti_univariate_comparison_path,
+      cwm_sti_univariate_strongest_path,
+      cwm_sti_univariate_comparison_figure_path,
+      cwm_sti_univariate_strongest_figure_path
+    )
+  ),
+  caption = "Local cached outputs used by this notebook."
+)
+```
+
+## Figure
+
+```{r fig10-gwr, out.width='100%'}
+knitr::include_graphics(figure_path_absolute, rel_path = FALSE)
+```
+
+## Multivariate Effect Forest Intervals
+
+This forest-style panel summarises the local t-value distributions from the
+multivariate GWRs for both predicted richness and all-site beta turnover. Thin
+intervals are the 5-95% spread across grid cells, thick intervals are the
+25-75% spread, and points are medians.
+
+```{r fig10e-gwr-effect-forest-intervals, out.width='100%'}
+knitr::include_graphics(gwr_effect_forest_combined_figure_path_absolute, rel_path = FALSE)
+```
+
+```{r gwr-effect-forest-counts, results='asis'}
+gwr_effect_forest_summary |>
+  transmute(
+    response_label,
+    period,
+    driver_label,
+    n_cells,
+    n_supported_negative,
+    n_supported_positive,
+    percent_supported_negative,
+    percent_supported_positive,
+    local_t_median
+  ) |>
+  arrange(.data$response_label, .data$period, .data$driver_label) |>
+  knitr::kable(
+    digits = 1,
+    caption = "Supported positive and negative local effects for the multivariate GWR forest-interval panel."
+  )
+```
+
+## Richness Effect Ridges
+
+This ridge-line plot uses the local t-values from the multivariate richness GWR.
+Each environmental layer keeps the Figure 2 variable-importance colour, while
+the three atlas periods are overlaid with increasing opacity from oldest to
+newest.
+
+```{r fig10c-richness-gwr-effect-ridge-lines, out.width='100%'}
+knitr::include_graphics(gwr_richness_line_ridge_figure_path_absolute, rel_path = FALSE)
+```
+
+```{r richness-gwr-effect-ridge-counts, results='asis'}
+gwr_richness_line_ridge_summary |>
+  transmute(
+    period,
+    driver_label,
+    n_cells,
+    n_supported_negative,
+    n_supported_positive,
+    percent_supported_negative,
+    percent_supported_positive,
+    local_t_median
+  ) |>
+  arrange(.data$period, .data$driver_label) |>
+  knitr::kable(
+    digits = 1,
+    caption = "Supported positive and negative local effects for the multivariate richness GWR."
+  )
+```
+
+## Multivariate Effect Ridges
+
+This ridge plot uses the local t-values from the multivariate GWRs, not the
+single-predictor models. Blue density sits on the negative side of the local
+effect, red density sits on the positive side, and the side labels count grid
+cells with supported effects at `|t| >= 1.96`.
+
+```{r fig10b-gwr-effect-ridges, out.width='100%'}
+knitr::include_graphics(gwr_effect_ridge_figure_path_absolute, rel_path = FALSE)
+```
+
+```{r gwr-effect-ridge-counts, results='asis'}
+gwr_effect_ridge_summary |>
+  mutate(
+    max_supported_direction = if_else(
+      .data$n_supported_positive >= .data$n_supported_negative,
+      "Positive",
+      "Negative"
+    ),
+    max_supported_cells = pmax(.data$n_supported_positive, .data$n_supported_negative),
+    max_supported_percent = pmax(.data$percent_supported_positive, .data$percent_supported_negative)
+  ) |>
+  group_by(.data$response_label, .data$period) |>
+  slice_max(.data$max_supported_cells, n = 3, with_ties = FALSE) |>
+  ungroup() |>
+  select(
+    response_label,
+    period,
+    driver_label,
+    max_supported_direction,
+    max_supported_cells,
+    max_supported_percent,
+    n_supported_negative,
+    n_supported_positive
+  ) |>
+  arrange(.data$response_label, .data$period, desc(.data$max_supported_cells)) |>
+  knitr::kable(
+    digits = 1,
+    caption = "Environmental layers with the largest number of supported local effects in the multivariate GWRs."
+  )
+```
+
+## Model Summary
+
+```{r model-summary, results='asis'}
+gwr_summary |>
+  mutate(
+    response = recode(
+      .data$response,
+      predicted_richness = "Predicted richness",
+      beta_turnover = "All-site beta turnover"
+    ),
+    bandwidth_km = .data$bandwidth_value / 1000
+  ) |>
+  select(
+    response,
+    period,
+    bandwidth_km,
+    aicc,
+    rss,
+    local_r2_mean,
+    local_r2_median,
+    local_r2_min,
+    local_r2_max,
+    local_cn_max,
+    local_cn_over_30
+  ) |>
+  arrange(response, period) |>
+  knitr::kable(
+    digits = 4,
+    caption = "Summary of fixed 100 km GWR fits for predicted richness and all-site beta turnover."
+  )
+```
+
+## Dominant Drivers
+
+```{r dominant-driver-counts, results='asis'}
+gwr_dominant |>
+  mutate(
+    response = recode(
+      .data$response,
+      predicted_richness = "Predicted richness",
+      beta_turnover = "All-site beta turnover"
+    )
+  ) |>
+  count(.data$response, .data$period, .data$dominant_driver, name = "n_cells") |>
+  group_by(.data$response, .data$period) |>
+  mutate(percent_cells = 100 * .data$n_cells / sum(.data$n_cells)) |>
+  ungroup() |>
+  arrange(.data$response, .data$period, desc(.data$n_cells)) |>
+  knitr::kable(
+    digits = 1,
+    caption = "Cell counts and percentages for dominant local GWR drivers."
+  )
+```
+
+## Richness-only univariate models
+
+This cache fits predicted richness against one local predictor at a time, plus an
+intercept-only baseline, after keeping only grid cells found in all three atlas
+periods. These models are not conditional on the other environmental predictors,
+so the maps should be read as local univariate associations rather than
+multivariable dominant drivers.
+
+```{r richness-univariate-common-site-summary, results='asis'}
+richness_univariate_inputs$common_site_summary |>
+  knitr::kable(
+    caption = "Grid-cell filtering for the common-site richness-only GWR run."
+  )
+```
+
+```{r fig11-richness-univariate-comparison, out.width='100%'}
+knitr::include_graphics(richness_univariate_comparison_figure_path_absolute, rel_path = FALSE)
+```
+
+```{r richness-univariate-model-comparison-table, results='asis'}
+richness_univariate_comparison |>
+  mutate(
+    bandwidth_km = .data$bandwidth_value / 1000
+  ) |>
+  filter(.data$period_rank <= 3 | .data$model_id == "intercept_only") |>
+  select(
+    period,
+    model_label,
+    bandwidth_km,
+    period_rank,
+    delta_aicc,
+    aicc_weight,
+    local_r2_mean,
+    gw_r2,
+    beats_intercept
+  ) |>
+  arrange(.data$period, .data$period_rank, .data$model_label) |>
+  knitr::kable(
+    digits = 4,
+    caption = "Top richness-only univariate GWR models by period, with the intercept-only baseline retained for comparison."
+  )
+```
+
+```{r fig11-richness-univariate-strongest, out.width='100%'}
+knitr::include_graphics(richness_univariate_strongest_figure_path_absolute, rel_path = FALSE)
+```
+
+```{r richness-univariate-strongest-counts, results='asis'}
+richness_univariate_strongest |>
+  count(.data$period, .data$dominant_driver, name = "n_cells") |>
+  group_by(.data$period) |>
+  mutate(percent_cells = 100 * .data$n_cells / sum(.data$n_cells)) |>
+  ungroup() |>
+  arrange(.data$period, desc(.data$n_cells)) |>
+  knitr::kable(
+    digits = 1,
+    caption = "Cell counts and percentages for the strongest supported univariate richness association."
+  )
+```
+
+### Predictor-specific richness maps
+
+Each map shows the local t-value for a single-predictor richness GWR. Grey cells
+have `|t| < 1.96`.
+
+```{r fig11-richness-univariate-predictor-maps, out.width='100%'}
+knitr::include_graphics(richness_univariate_map_paths_absolute, rel_path = FALSE)
+```
+
+## CWM-STI univariate models
+
+This cache rebuilds the response as the community weighted mean of species
+thermal index from HMSC posterior site predictions. Like the richness-only
+workflow, it keeps only grid cells found in all three atlas periods and fits one
+predictor at a time plus an intercept-only baseline.
+
+```{r cwm-sti-univariate-common-site-summary, results='asis'}
+cwm_sti_univariate_inputs$common_site_summary |>
+  knitr::kable(
+    caption = "Grid-cell filtering for the common-site CWM-STI GWR run."
+  )
+```
+
+```{r cwm-sti-univariate-sti-summary, results='asis'}
+cwm_sti_univariate_inputs$sti_summary |>
+  knitr::kable(
+    digits = 3,
+    caption = "Species thermal index summary for species used in CWM-STI."
+  )
+```
+
+```{r fig12-cwm-sti-univariate-comparison, out.width='100%'}
+knitr::include_graphics(cwm_sti_univariate_comparison_figure_path_absolute, rel_path = FALSE)
+```
+
+```{r cwm-sti-univariate-model-comparison-table, results='asis'}
+cwm_sti_univariate_comparison |>
+  mutate(
+    bandwidth_km = .data$bandwidth_value / 1000
+  ) |>
+  filter(.data$period_rank <= 3 | .data$model_id == "intercept_only") |>
+  select(
+    period,
+    model_label,
+    bandwidth_km,
+    period_rank,
+    delta_aicc,
+    aicc_weight,
+    local_r2_mean,
+    gw_r2,
+    beats_intercept
+  ) |>
+  arrange(.data$period, .data$period_rank, .data$model_label) |>
+  knitr::kable(
+    digits = 4,
+    caption = "Top CWM-STI univariate GWR models by period, with the intercept-only baseline retained for comparison."
+  )
+```
+
+```{r fig12-cwm-sti-univariate-strongest, out.width='100%'}
+knitr::include_graphics(cwm_sti_univariate_strongest_figure_path_absolute, rel_path = FALSE)
+```
+
+```{r cwm-sti-univariate-strongest-counts, results='asis'}
+cwm_sti_univariate_strongest |>
+  count(.data$period, .data$dominant_driver, name = "n_cells") |>
+  group_by(.data$period) |>
+  mutate(percent_cells = 100 * .data$n_cells / sum(.data$n_cells)) |>
+  ungroup() |>
+  arrange(.data$period, desc(.data$n_cells)) |>
+  knitr::kable(
+    digits = 1,
+    caption = "Cell counts and percentages for the strongest supported univariate CWM-STI association."
+  )
+```
+
+### Predictor-specific CWM-STI maps
+
+Each map shows the local t-value for a single-predictor CWM-STI GWR. Grey cells
+have `|t| < 1.96`.
+
+```{r fig12-cwm-sti-univariate-predictor-maps, out.width='100%'}
+knitr::include_graphics(cwm_sti_univariate_map_paths_absolute, rel_path = FALSE)
+```
+
+### Individual local-effect CWM-STI maps
+
+Each map shows the local coefficient from the single-predictor CWM-STI GWR.
+Predictors were scaled within atlas period, so the mapped value is the expected
+change in CWM-STI per one standard deviation increase in that predictor. Grey
+cells have `|t| < 1.96`.
+
+```{r fig12-cwm-sti-univariate-effect-maps, out.width='100%'}
+knitr::include_graphics(cwm_sti_univariate_effect_map_paths_absolute, rel_path = FALSE)
+```
+
+## Interpretation Notes
+
+The richness GWR asks which environmental variables explain spatial variation in
+the number of modelled species. The beta-turnover GWR asks which environmental
+variables explain where modelled community composition is most distinct from
+the full set of atlas grid cells in the same period. These are related but not
+equivalent: richness can be spatially smooth while composition turns over.
+
+To refresh the cached results and figure, run:
+
+```{r refresh-command, eval=FALSE, echo=TRUE}
+Rscript misc-figures/scripts/fig10-gwr-richness-turnover.R --force-refit
+Rscript misc-figures/scripts/fig11-gwr-richness-univariate.R --force-refit
+Rscript misc-figures/scripts/fig12-gwr-cwm-sti-univariate.R --force-refit
+```

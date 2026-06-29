@@ -1,0 +1,4 @@
+"comparison","test","n_species","statistic","df","p_value","p_value_formatted","effect_size_type","effect_size_primary","effect_size_secondary","adjusted_r2_lm"
+"Species thermal index ~ migration","Kruskal-Wallis plus one-way linear model effect size",157,15.8841065616446,4,0.00317868387216689,"0.003","eta_squared_lm / epsilon_squared_kw",0.104262647571155,0.0781849115897669,0.0806906119809226
+"Species thermal index ~ foraging guild","Kruskal-Wallis plus one-way linear model effect size",157,55.3102111885991,33,0.00881258158275828,"0.009","eta_squared_lm / epsilon_squared_kw",0.352994351239055,0.181383830801618,0.179407469864167
+"Migration x foraging guild","Chi-square test with simulated p-value",157,255.626206776668,NA,1e-04,"<0.001","cramers_v",0.638003213128936,NA,NA

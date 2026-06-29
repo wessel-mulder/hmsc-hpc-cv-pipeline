@@ -1,0 +1,12 @@
+effect_subset,atlas,period,dominant_variable,dominant_variable_label,n_sites,prop_sites
+positive,1,1970s,perc_forest,Forest (% coverage),1578,0.8885135135135135
+positive,1,1970s,tmean_breeding,Temperature,180,0.10135135135135136
+positive,1,1970s,perc_cropland,Cropland (% coverage),16,0.009009009009009009
+positive,1,1970s,perc_urban,Urban (% coverage),2,0.0011261261261261261
+positive,2,1990s,perc_forest,Forest (% coverage),1803,0.9745945945945946
+positive,2,1990s,tmean_breeding,Temperature,45,0.024324324324324326
+positive,2,1990s,perc_cropland,Cropland (% coverage),1,5.405405405405405e-4
+positive,2,1990s,perc_urban,Urban (% coverage),1,5.405405405405405e-4
+positive,3,2010s,perc_forest,Forest (% coverage),1831,0.9616596638655462
+positive,3,2010s,perc_urban,Urban (% coverage),64,0.03361344537815126
+positive,3,2010s,tmean_breeding,Temperature,9,0.004726890756302521

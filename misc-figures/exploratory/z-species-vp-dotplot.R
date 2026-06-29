@@ -6,6 +6,9 @@ require(corrplot)
 require(writexl)
 require(cli)
 require(tidyverse)
+require(readxl)
+
+source(file.path("support_scripts", "figure_data_helpers.R"))
 
 
 ### Set up directories #### 
@@ -575,6 +578,136 @@ var_colors <- c(
   "Grass/Shrubland" = "springgreen2"
 )
 
+col_order <- names(var_colors)[names(var_colors) %in% unique(fg_summary$variable_clean)]
+
+clean_variable_names <- function(x) {
+  case_match(x,
+             "tmean_breeding"       ~ "Temperature",
+             "prec_breeding"        ~ "Precipitation",
+             "hh"                   ~ "Land-use heterogeneity",
+             "perc_urban"           ~ "Urban",
+             "perc_cropland"        ~ "Cropland",
+             "perc_pasture"         ~ "Pasture",
+             "perc_forest"          ~ "Forest",
+             "perc_grass_shrub"     ~ "Grass/Shrubland",
+             "Random: site"         ~ "Site-level random effects",
+             .default = x)
+}
+
+summarise_trait_direction <- function(df,
+                                      trait = "foraging_guild_consensus",
+                                      stat = c("median", "mean"),
+                                      min_species = 5,
+                                      pattern = pattern2match,
+                                      dominance_threshold = 0.1) {
+  stat <- match.arg(stat)
+  sum_fn <- if (stat == "median") median else mean
+  
+  beta <- read_parameter_effects(pattern, effect = "Beta") %>%
+    filter(variable != "(Intercept)", !is.na(effect_size)) %>%
+    mutate(
+      atlas = as.character(atlas),
+      variable_clean = clean_variable_names(variable),
+      effect_sign = sign(effect_size)
+    ) %>%
+    select(species, atlas, variable_clean, effect_sign)
+  
+  direction_df <- df %>%
+    mutate(
+      atlas = as.character(atlas),
+      trait_group = .data[[trait]],
+      variable_clean = as.character(variable_clean)
+    ) %>%
+    filter(!is.na(trait_group), !variable_clean %in% c("Site-level random effects", "Site-level random effect")) %>%
+    mutate(variable_clean = gsub(" (% coverage)", "", variable_clean, fixed = TRUE)) %>%
+    left_join(beta, by = c("species", "atlas", "variable_clean")) %>%
+    group_by(trait_group, variable_clean, atlas) %>%
+    summarise(
+      n_species = n_distinct(species),
+      vp_per_atlas = sum_fn(VP, na.rm = TRUE),
+      signed_vp = sum(VP * effect_sign, na.rm = TRUE),
+      supported_vp = sum(ifelse(is.na(effect_sign), 0, VP), na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    filter(n_species >= min_species)
+  
+  direction_df %>%
+    group_by(trait_group, variable_clean) %>%
+    summarise(
+      direction_score = ifelse(
+        sum(supported_vp, na.rm = TRUE) > 0,
+        sum(signed_vp, na.rm = TRUE) / sum(supported_vp, na.rm = TRUE),
+        NA_real_
+      ),
+      supported_vp_share = ifelse(
+        sum(vp_per_atlas, na.rm = TRUE) > 0,
+        sum(supported_vp, na.rm = TRUE) / sum(vp_per_atlas, na.rm = TRUE),
+        NA_real_
+      ),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      effect_direction = case_when(
+        is.na(direction_score) ~ "Not supported",
+        direction_score >= dominance_threshold ~ "Higher at max",
+        direction_score <= -dominance_threshold ~ "Lower at max",
+        TRUE ~ "Mixed"
+      ),
+      effect_direction = factor(
+        effect_direction,
+        levels = c("Higher at max", "Lower at max", "Mixed", "Not supported")
+      )
+    )
+}
+
+fg_direction <- summarise_trait_direction(subset_ordered,
+                                          trait = "foraging_guild_consensus",
+                                          stat = "median",
+                                          min_species = 5,
+                                          pattern = pattern2match)
+
+fg_summary_directed <- fg_summary %>%
+  left_join(fg_direction, by = c("trait_group", "variable_clean")) %>%
+  mutate(
+    direction_score = replace_na(direction_score, 0),
+    signed_vp_central = vp_central * direction_score
+  )
+
+pca_order_trait_groups <- function(summary_df, value_col = "signed_vp_central",
+                                   var_order = NULL, fallback_order = NULL) {
+  input <- summary_df %>%
+    select(trait_group, variable_clean, value = all_of(value_col)) %>%
+    mutate(value = replace_na(value, 0)) %>%
+    pivot_wider(names_from = variable_clean, values_from = value, values_fill = 0) %>%
+    column_to_rownames("trait_group")
+  
+  if (!is.null(var_order)) {
+    input <- input[, var_order[var_order %in% colnames(input)], drop = FALSE]
+  }
+  
+  nonzero_cols <- vapply(input, sd, numeric(1), na.rm = TRUE) > 0
+  input <- input[, nonzero_cols, drop = FALSE]
+  
+  if (nrow(input) < 2 || ncol(input) < 2) {
+    return(fallback_order[fallback_order %in% rownames(input)])
+  }
+  
+  pca <- prcomp(input, center = TRUE, scale. = TRUE)
+  n_pc <- min(3, ncol(pca$x))
+  pc_scores <- pca$x[, seq_len(n_pc), drop = FALSE]
+  clustering <- hclust(dist(pc_scores), method = "ward.D2")
+  
+  clustering$labels[clustering$order]
+}
+
+row_order <- pca_order_trait_groups(
+  fg_summary_directed,
+  value_col = "signed_vp_central",
+  var_order = col_order,
+  fallback_order = sorted_guilds
+)
+target_guilds <- row_order
+
 # Let clustering decide row order
 plot_trait_tile(fg_summary,
                 trait_label = "Foraging guild",
@@ -590,7 +723,8 @@ plot_trait_bubble <- function(summary_df,
                               guild_order  = NULL,
                               var_order    = NULL,
                               var_colors   = NULL,
-                              sd_type      = c("species", "temporal")) {
+                              sd_type      = c("species", "temporal"),
+                              show_direction = FALSE) {
   library(scales)
   library(purrr)
   
@@ -617,14 +751,36 @@ plot_trait_bubble <- function(summary_df,
       alpha_val      = 1 - rescale(sd, to = c(0.15, 0.9)),
       trait_group    = factor(trait_group,    levels = rev(row_order)),
       variable_clean = factor(variable_clean, levels = col_order),
-      fill_color     = var_colors[as.character(variable_clean)]
+      fill_color     = var_colors[as.character(variable_clean)],
+      effect_direction = if ("effect_direction" %in% names(.)) {
+        fct_na_value_to_level(effect_direction, level = "Not supported")
+      } else {
+        factor("Not supported", levels = c("Higher at max", "Lower at max", "Mixed", "Not supported"))
+      }
     )
   
-  ggplot(plot_df, aes(x = variable_clean, y = trait_group)) +
-    geom_point(aes(size = vp_central, color = variable_clean, alpha = alpha_val),
-               shape = 16) +
-    geom_point(aes(size = vp_central, color = variable_clean),
-               shape = 21, fill = NA, stroke = 0.4, alpha = 0.6) +  # subtle outline ring
+  p <- ggplot(plot_df, aes(x = variable_clean, y = trait_group))
+  
+  if (show_direction) {
+    p <- p +
+      geom_point(
+        aes(
+          size = vp_central,
+          color = variable_clean,
+          alpha = alpha_val,
+          shape = effect_direction
+        ),
+        stroke = 1.1
+      )
+  } else {
+    p <- p +
+      geom_point(aes(size = vp_central, color = variable_clean, alpha = alpha_val),
+                 shape = 16) +
+      geom_point(aes(size = vp_central, color = variable_clean),
+                 shape = 21, fill = NA, stroke = 0.4, alpha = 0.6)
+  }
+  
+  p <- p +
     scale_color_manual(values = var_colors, guide = "none") +
     scale_size_continuous(
       range  = c(1, 12),
@@ -634,11 +790,26 @@ plot_trait_bubble <- function(summary_df,
     scale_alpha_identity(
       name  = paste0("certainty\n(1 – scaled\n", sd_label, ")"),
       guide = guide_legend()
-    ) +
+    )
+
+  if (show_direction) {
+    p <- p +
+    scale_shape_manual(
+      values = c("Higher at max" = 16, "Lower at max" = 4, "Mixed" = 1, "Not supported" = 3),
+      name = "Direction at\nhigh predictor value",
+      drop = FALSE
+    )
+  }
+
+  p <- p +
     scale_x_discrete(position = "top") +
     labs(
       title    = paste("Variance partitioning —", trait_label),
-      subtitle = paste("Size: median VP  ·  Transparency:", sd_label),
+      subtitle = if (show_direction) {
+        paste("Size: median VP  ·  Transparency:", sd_label, " ·  Symbol: supported Beta direction")
+      } else {
+        paste("Size: median VP  ·  Transparency:", sd_label)
+      },
       x = NULL, y = NULL
     ) +
     theme_minimal(base_size = 11) +
@@ -651,6 +822,8 @@ plot_trait_bubble <- function(summary_df,
       plot.title       = element_text(size = 13, face = "bold"),
       plot.subtitle    = element_text(size = 10, color = "grey50")
     )
+  
+  p
 }
 
 plot_trait_bubble(fg_summary,
@@ -660,6 +833,16 @@ plot_trait_bubble(fg_summary,
                   var_colors  = var_colors,
                   sd_type     = "temporal")
 ggsave(sprintf("misc-figures/%s-env-vp-guild-bubble-temporalvariabaility.png",pattern2match))
+
+plot_trait_bubble(fg_summary_directed,
+                  trait_label = "Foraging guild",
+                  guild_order = row_order,
+                  var_order   = col_order,
+                  var_colors  = var_colors,
+                  sd_type     = "temporal",
+                  show_direction = TRUE)
+ggsave(sprintf("misc-figures/%s-env-vp-guild-bubble-temporalvariabaility-direction.png", pattern2match),
+       width = 9, height = 7.5, dpi = 300)
 
 # GUILD - ENVIRONMENT - DOTPLOT - ATLAS SEPEARTE --------------------------
 
@@ -704,4 +887,3 @@ ggplot(VP_mean,
   facet_grid(~variable_clean) +
   theme_minimal()
 ggsave(sprintf("misc-figures/%s-env-vp-guild-bubble-temporalvariabaility-atlas-seperated.png",pattern2match))
-

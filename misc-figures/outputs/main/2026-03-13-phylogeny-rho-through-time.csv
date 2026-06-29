@@ -1,0 +1,4 @@
+atlas,atlas_num,mean_rho,median_rho,lower_95,upper_95,prob_rho_positive,n_draws
+1970s,1,0.88099,0.88,0.77,0.98,1,1000
+1990s,2,0.80803,0.81,0.67,0.92,1,1000
+2010s,3,0.71733,0.72,0.56,0.85,1,1000

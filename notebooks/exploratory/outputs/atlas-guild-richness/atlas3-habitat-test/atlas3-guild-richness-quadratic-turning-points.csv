@@ -1,0 +1,7 @@
+"model","term","variable","quadratic_coefficient","curvature","turning_point","observed_min","observed_max","turning_point_within_observed_range"
+"Quadratic linear model","hh","Habitat heterogeneity",-7.23163915568987,"concave: local maximum",1.27471587399556,0,0.809734454503031,FALSE
+"Quadratic linear model","forest_percent","Forest cover (%)",0.000956458060994237,"convex: local minimum",12.7387165235576,0,100,TRUE
+"Quadratic linear model","agriculture_percent","Agricultural cover (%)",0.00116072189911565,"convex: local minimum",36.0839143760547,0,100,TRUE
+"Quadratic spatial-error model","hh","Habitat heterogeneity",-7.15294568370515,"concave: local maximum",1.25231159979712,0,0.809734454503031,FALSE
+"Quadratic spatial-error model","forest_percent","Forest cover (%)",0.000954470826900105,"convex: local minimum",10.267316337271,0,100,TRUE
+"Quadratic spatial-error model","agriculture_percent","Agricultural cover (%)",0.00100816394813433,"convex: local minimum",32.9806280239913,0,100,TRUE

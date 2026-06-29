@@ -1,0 +1,61 @@
+bioregion,species,expected_occurrence_sum,expected_occurrence_share,n_sites,mean_predicted_probability,rank_in_cluster,thermal_group,migratory_strategy,foraging_guild,species_thermal_index,species_label
+Cluster 1,Alauda_arvensis,399.821774352843,0.01864338622033882,401,0.9970617814285362,1,medium,sedentary and short-distance,Open-land insectivores,12.1983199326,Alauda arvensis
+Cluster 1,Vanellus_vanellus,391.1842494181401,0.01824062498101882,401,0.9755218189978556,2,cold,short-distance,Plovers,11.532605723,Vanellus vanellus
+Cluster 1,Turdus_merula,389.78905217017314,0.018175567991089984,401,0.972042524115145,3,warm,sedentary,Thrushes,12.5843398181,Turdus merula
+Cluster 1,Emberiza_citrinella,384.96131180522235,0.017950454117937425,401,0.9600032713347191,4,cold,sedentary,Buntings,11.5528442066,Emberiza citrinella
+Cluster 1,Sturnus_vulgaris,379.4507530721656,0.01769350094194663,401,0.9462612296063979,5,cold,short-distance,Starlings,11.8027600322,Sturnus vulgaris
+Cluster 1,Hirundo_rustica,373.62881353556116,0.0174220283151542,401,0.9317426771460379,6,warm,long-distance,Aerial insectivores,12.4305273248,Hirundo rustica
+Cluster 1,Passer_domesticus,373.2828179702534,0.017405894804254255,401,0.9308798453123527,7,medium,sedentary,Passerine seedeaters,12.2628071769,Passer domesticus
+Cluster 1,Emberiza_schoeniclus,371.7249754081975,0.017333253786636093,401,0.9269949511426372,8,cold,sedentary and short-distance,Buntings,11.2704483494,Emberiza schoeniclus
+Cluster 1,Fringilla_coelebs,367.22135640478683,0.01712325344684533,401,0.9157639810593188,9,medium,sedentary and short-distance,Foliage gleaners,12.2951633877,Fringilla coelebs
+Cluster 1,Curruca_communis,363.5637553866534,0.016952702284314624,401,0.9066427815128514,10,warm,long-distance,Foliage gleaners,12.6535890847,Curruca communis
+Cluster 1,Parus_major,362.80909695580533,0.016917513133814985,401,0.9047608402887913,11,medium,sedentary and short-distance,Tit-like birds,12.343727765,Parus major
+Cluster 1,Linaria_cannabina,362.20980210168466,0.016889568469112024,401,0.9032663394056974,12,very warm,short-distance,Passerine seedeaters,13.1603552715,Linaria cannabina
+Cluster 1,Cuculus_canorus,349.0237238633285,0.016274711637647085,401,0.8703833512801209,13,medium,long-distance,Cuckoos,12.1394391784,Cuculus canorus
+Cluster 1,Columba_palumbus,348.65840550084147,0.016257677119363902,401,0.8694723329198042,14,medium,sedentary and short-distance,Columbids,12.2214205187,Columba palumbus
+Cluster 1,Phylloscopus_trochilus,348.1472728659086,0.016233843392103056,401,0.8681976879449091,15,very cold,long-distance,Foliage gleaners,10.4596695622,Phylloscopus trochilus
+Cluster 1,Emberiza_calandra,333.16588212895397,0.015535272499912564,401,0.8308376112941496,16,very warm,sedentary,Buntings,14.2313581317,Emberiza calandra
+Cluster 1,Motacilla_alba,332.27337252223214,0.015493655453591337,401,0.8286119015517011,17,medium,short-distance,Open-land insectivores,11.9859302219,Motacilla alba
+Cluster 1,Anas_platyrhynchos,331.82896757885726,0.015472933187999433,401,0.8275036597976491,18,cold,sedentary and short-distance,Dabbling ducks,11.8110548425,Anas platyrhynchos
+Cluster 1,Turdus_philomelos,325.3866752775119,0.015172533982096498,401,0.8114380929613764,19,cold,short-distance,Thrushes,11.3956704897,Turdus philomelos
+Cluster 1,Anthus_pratensis,325.28183384867776,0.015167645305753617,401,0.811176643014159,20,very cold,short-distance,Open-land insectivores,9.9487726902,Anthus pratensis
+Cluster 2,Turdus_merula,494.1580063350114,0.022467783474453384,496,0.9962863030947811,1,warm,sedentary,Thrushes,12.5843398181,Turdus merula
+Cluster 2,Alauda_arvensis,492.8923725732104,0.022410239156738083,496,0.9937346221234081,2,medium,sedentary and short-distance,Open-land insectivores,12.1983199326,Alauda arvensis
+Cluster 2,Emberiza_citrinella,487.886457076356,0.022182636195675287,496,0.9836420505571694,3,cold,sedentary,Buntings,11.5528442066,Emberiza citrinella
+Cluster 2,Fringilla_coelebs,487.16789379391327,0.022149965422287733,496,0.9821933342619219,4,medium,sedentary and short-distance,Foliage gleaners,12.2951633877,Fringilla coelebs
+Cluster 2,Parus_major,479.8474636393451,0.021817128885098874,496,0.9674344024986796,5,medium,sedentary and short-distance,Tit-like birds,12.343727765,Parus major
+Cluster 2,Hirundo_rustica,478.20144909212615,0.02174228987011053,496,0.9641158247825125,6,warm,long-distance,Aerial insectivores,12.4305273248,Hirundo rustica
+Cluster 2,Sturnus_vulgaris,473.89243406246334,0.021546372743536657,496,0.9554282944807728,7,cold,short-distance,Starlings,11.8027600322,Sturnus vulgaris
+Cluster 2,Passer_domesticus,473.7831822405928,0.021541405412750736,496,0.9552080287108725,8,medium,sedentary,Passerine seedeaters,12.2628071769,Passer domesticus
+Cluster 2,Columba_palumbus,463.48340738032385,0.021073107604297835,496,0.9344423535893626,9,medium,sedentary and short-distance,Columbids,12.2214205187,Columba palumbus
+Cluster 2,Phylloscopus_trochilus,462.03509438566726,0.02100725744635236,496,0.9315223677130389,10,very cold,long-distance,Foliage gleaners,10.4596695622,Phylloscopus trochilus
+Cluster 2,Emberiza_calandra,458.87955509069667,0.020863785170854177,496,0.9251603933280175,11,very warm,sedentary,Buntings,14.2313581317,Emberiza calandra
+Cluster 2,Turdus_philomelos,441.9072612010931,0.020092109271065396,496,0.8909420588731716,12,cold,short-distance,Thrushes,11.3956704897,Turdus philomelos
+Cluster 2,Curruca_communis,440.13228892568975,0.020011406960780687,496,0.8873634857372777,13,warm,long-distance,Foliage gleaners,12.6535890847,Curruca communis
+Cluster 2,Pica_pica,437.1540930802434,0.019875997924516605,496,0.881359058629523,14,medium,sedentary,Omnivorous corvids,12.155826028,Pica pica
+Cluster 2,Vanellus_vanellus,432.85629195508665,0.01968059065830139,496,0.8726941370062231,15,cold,short-distance,Plovers,11.532605723,Vanellus vanellus
+Cluster 2,Troglodytes_troglodytes,432.5589141799739,0.01966706984233627,496,0.8720945850402699,16,medium,sedentary,Low flycatching feeders,12.2368253494,Troglodytes troglodytes
+Cluster 2,Linaria_cannabina,422.9204584016192,0.019228840096627453,496,0.8526622145193936,17,very warm,short-distance,Passerine seedeaters,13.1603552715,Linaria cannabina
+Cluster 2,Curruca_curruca,409.54664244914613,0.018620775475200177,496,0.8256988759055366,18,cold,long-distance,Foliage gleaners,11.6399285102,Curruca curruca
+Cluster 2,Erithacus_rubecula,397.6470269516211,0.01807973803171011,496,0.8017077156282684,19,medium,sedentary,Low flycatching feeders,11.998445823500001,Erithacus rubecula
+Cluster 2,Sylvia_borin,397.50308157508596,0.018073193295996676,496,0.8014175031755765,20,cold,long-distance,Foliage gleaners,11.3163422901,Sylvia borin
+Cluster 3,Turdus_merula,877.831301047141,0.016891679171170113,879,0.9986704221241649,1,warm,sedentary,Thrushes,12.5843398181,Turdus merula
+Cluster 3,Alauda_arvensis,873.5832375824851,0.016809935759812898,879,0.9938375854180719,2,medium,sedentary and short-distance,Open-land insectivores,12.1983199326,Alauda arvensis
+Cluster 3,Parus_major,871.1574472899922,0.01676325746147875,879,0.9910778694994223,3,medium,sedentary and short-distance,Tit-like birds,12.343727765,Parus major
+Cluster 3,Fringilla_coelebs,870.7032407882247,0.01675451738750763,879,0.9905611385531566,4,medium,sedentary and short-distance,Foliage gleaners,12.2951633877,Fringilla coelebs
+Cluster 3,Sturnus_vulgaris,869.5773360933794,0.016732852153128367,879,0.989280245840022,5,cold,short-distance,Starlings,11.8027600322,Sturnus vulgaris
+Cluster 3,Emberiza_citrinella,869.5024123458969,0.016731410432033134,879,0.9891950083571068,6,cold,sedentary,Buntings,11.5528442066,Emberiza citrinella
+Cluster 3,Turdus_philomelos,866.1301209780847,0.0166665190755859,879,0.9853584994062398,7,cold,short-distance,Thrushes,11.3956704897,Turdus philomelos
+Cluster 3,Phylloscopus_trochilus,861.5805040194195,0.016578973017561068,879,0.9801825984293738,8,very cold,long-distance,Foliage gleaners,10.4596695622,Phylloscopus trochilus
+Cluster 3,Passer_domesticus,859.9174497562599,0.016546971676273704,879,0.9782906140571784,9,medium,sedentary,Passerine seedeaters,12.2628071769,Passer domesticus
+Cluster 3,Columba_palumbus,857.0371521241265,0.016491547515092117,879,0.9750138249421234,10,medium,sedentary and short-distance,Columbids,12.2214205187,Columba palumbus
+Cluster 3,Troglodytes_troglodytes,853.2902306765347,0.016419447334913084,879,0.9707511156729633,11,medium,sedentary,Low flycatching feeders,12.2368253494,Troglodytes troglodytes
+Cluster 3,Hirundo_rustica,851.8507189412056,0.0163917475133559,879,0.9691134458944319,12,warm,long-distance,Aerial insectivores,12.4305273248,Hirundo rustica
+Cluster 3,Curruca_communis,841.6479306112254,0.016195420238495913,879,0.9575061781697672,13,warm,long-distance,Foliage gleaners,12.6535890847,Curruca communis
+Cluster 3,Cyanistes_caeruleus,836.4445286058469,0.016095293713993278,879,0.9515864944321353,14,warm,sedentary,Tit-like birds,12.7367473555,Cyanistes caeruleus
+Cluster 3,Erithacus_rubecula,836.2302072468513,0.016091169632713235,879,0.9513426703604678,15,medium,sedentary,Low flycatching feeders,11.998445823500001,Erithacus rubecula
+Cluster 3,Sylvia_atricapilla,833.8083815429296,0.016044567623021463,879,0.9485874647814899,16,warm,short-distance,Foliage gleaners,12.6192368528,Sylvia atricapilla
+Cluster 3,Linaria_cannabina,820.0313702105675,0.015779463319852697,879,0.9329139592839221,17,very warm,short-distance,Passerine seedeaters,13.1603552715,Linaria cannabina
+Cluster 3,Sylvia_borin,818.4509632053365,0.015749052319401484,879,0.931115999095946,18,cold,long-distance,Foliage gleaners,11.3163422901,Sylvia borin
+Cluster 3,Prunella_modularis,812.9225206205764,0.015642671197713745,879,0.9248265308538981,19,very cold,sedentary and short-distance,Low flycatching feeders,10.9083374064,Prunella modularis
+Cluster 3,Chloris_chloris,812.6055341919069,0.01563657158261878,879,0.92446590920581,20,warm,sedentary and short-distance,Passerine seedeaters,12.6006224966,Chloris chloris

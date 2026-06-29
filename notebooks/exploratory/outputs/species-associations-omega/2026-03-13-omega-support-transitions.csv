@@ -1,0 +1,10 @@
+support_transition_1970s_to_2010s,n_pairs,prop_pairs
+Supported positive -> Supported positive,5394,0.4404703576678099
+Unsupported -> Unsupported,2869,0.23428058141433938
+Unsupported -> Supported positive,1704,0.13914747672709457
+Supported positive -> Unsupported,1488,0.12150906418422341
+Unsupported -> Supported negative,434,0.0354401437203985
+Supported negative -> Unsupported,161,0.01314715008982525
+Supported negative -> Supported negative,136,0.01110566715662257
+Supported positive -> Supported negative,52,0.004246284501061571
+Supported negative -> Supported positive,8,6.532745386248571e-4

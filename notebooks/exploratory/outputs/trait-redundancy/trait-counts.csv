@@ -1,0 +1,40 @@
+"trait","level","n_species"
+"migration","long-distance",44
+"migration","short-distance",39
+"migration","sedentary",35
+"migration","sedentary and short-distance",31
+"migration","short-and long-distance",8
+"foraging_guild","Passerine seedeaters",12
+"foraging_guild","Tit-like birds",12
+"foraging_guild","Foliage gleaners",9
+"foraging_guild","Low flycatching feeders",9
+"foraging_guild","Scolopacids",9
+"foraging_guild","Dabbling ducks",7
+"foraging_guild","Diurnal raptors",7
+"foraging_guild","Omnivorous corvids",7
+"foraging_guild","Aquatic pursuers",6
+"foraging_guild","Marsh warblers",6
+"foraging_guild","Open-land insectivores",6
+"foraging_guild","Plovers",6
+"foraging_guild","Gulls",5
+"foraging_guild","Owls",5
+"foraging_guild","Rails",5
+"foraging_guild","Terns",5
+"foraging_guild","Woodpeckers",5
+"foraging_guild","Aerial insectivores",4
+"foraging_guild","Columbids",4
+"foraging_guild","Thrushes",4
+"foraging_guild","Buntings",3
+"foraging_guild","Diving ducks",3
+"foraging_guild","Flycatchers",3
+"foraging_guild","Gallinaceous birds",2
+"foraging_guild","Grazing waterfowl",2
+"foraging_guild","Shrikes",2
+"foraging_guild","Wading birds",2
+"foraging_guild","Cuckoos",1
+"foraging_guild","Dippers",1
+"foraging_guild","Kingfishers",1
+"foraging_guild","Nigthjars",1
+"foraging_guild","Orioles",1
+"foraging_guild","Reedlings",1
+"foraging_guild","Starlings",1

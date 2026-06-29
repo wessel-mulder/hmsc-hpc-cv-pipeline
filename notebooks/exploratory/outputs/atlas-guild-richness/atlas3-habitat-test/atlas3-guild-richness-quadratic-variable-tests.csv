@@ -1,0 +1,4 @@
+"term","variable","degrees_of_freedom","F_statistic","p_value","unique_r_squared","partial_r_squared"
+"hh","Habitat heterogeneity",2,112.23250651969,4.68763235673725e-46,0.114627576662157,0.133652687788451
+"forest_percent","Forest cover (%)",2,36.5306851892405,3.31434677649977e-16,0.0373102592724872,0.0478131126110365
+"agriculture_percent","Agricultural cover (%)",2,35.9197649371889,5.93106326090402e-16,0.0366863018273753,0.0470511330554092

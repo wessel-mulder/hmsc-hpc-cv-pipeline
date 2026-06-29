@@ -1,0 +1,315 @@
+model_set,trait_family,trait_value,n_species,dominant_driver,dominant_direction,n_cells,prop_cells,signed_prop
+Multivariate reduced,Foraging guild,Aquatic pursuers,6,Cropland,Negative,445,0.2976588628762542,-0.2976588628762542
+Multivariate reduced,Foraging guild,Aquatic pursuers,6,Forest,Negative,2,0.0013377926421404682,-0.0013377926421404682
+Multivariate reduced,Foraging guild,Aquatic pursuers,6,Forest,Positive,19,0.012709030100334449,0.012709030100334449
+Multivariate reduced,Foraging guild,Aquatic pursuers,6,Precipitation,Negative,225,0.1505016722408027,-0.1505016722408027
+Multivariate reduced,Foraging guild,Aquatic pursuers,6,Precipitation,Positive,12,0.008026755852842809,0.008026755852842809
+Multivariate reduced,Foraging guild,Aquatic pursuers,6,Temperature,Negative,208,0.1391304347826087,-0.1391304347826087
+Multivariate reduced,Foraging guild,Aquatic pursuers,6,Temperature,Positive,584,0.3906354515050167,0.3906354515050167
+Multivariate reduced,Foraging guild,Dabbling ducks,7,Cropland,Negative,98,0.0650298606502986,-0.0650298606502986
+Multivariate reduced,Foraging guild,Dabbling ducks,7,Forest,Positive,41,0.027206370272063702,0.027206370272063702
+Multivariate reduced,Foraging guild,Dabbling ducks,7,Precipitation,Negative,10,0.006635700066357001,-0.006635700066357001
+Multivariate reduced,Foraging guild,Dabbling ducks,7,Precipitation,Positive,752,0.49900464499004643,0.49900464499004643
+Multivariate reduced,Foraging guild,Dabbling ducks,7,Temperature,Negative,147,0.09754479097544791,-0.09754479097544791
+Multivariate reduced,Foraging guild,Dabbling ducks,7,Temperature,Positive,293,0.19442601194426012,0.19442601194426012
+Multivariate reduced,Foraging guild,Dabbling ducks,7,Urban,Negative,166,0.11015262110152621,-0.11015262110152621
+Multivariate reduced,Foraging guild,Diurnal raptors,7,Cropland,Negative,720,0.4316546762589928,-0.4316546762589928
+Multivariate reduced,Foraging guild,Diurnal raptors,7,Forest,Negative,262,0.15707434052757793,-0.15707434052757793
+Multivariate reduced,Foraging guild,Diurnal raptors,7,Precipitation,Negative,352,0.21103117505995203,-0.21103117505995203
+Multivariate reduced,Foraging guild,Diurnal raptors,7,Precipitation,Positive,4,0.002398081534772182,0.002398081534772182
+Multivariate reduced,Foraging guild,Diurnal raptors,7,Temperature,Negative,22,0.013189448441247002,-0.013189448441247002
+Multivariate reduced,Foraging guild,Diurnal raptors,7,Temperature,Positive,37,0.022182254196642687,0.022182254196642687
+Multivariate reduced,Foraging guild,Diurnal raptors,7,Urban,Negative,271,0.16247002398081534,-0.16247002398081534
+Multivariate reduced,Foraging guild,Foliage gleaners,9,Cropland,Positive,296,0.1807081807081807,0.1807081807081807
+Multivariate reduced,Foraging guild,Foliage gleaners,9,Forest,Negative,183,0.11172161172161173,-0.11172161172161173
+Multivariate reduced,Foraging guild,Foliage gleaners,9,Precipitation,Negative,652,0.398046398046398,-0.398046398046398
+Multivariate reduced,Foraging guild,Foliage gleaners,9,Temperature,Negative,312,0.19047619047619047,-0.19047619047619047
+Multivariate reduced,Foraging guild,Foliage gleaners,9,Temperature,Positive,195,0.11904761904761904,0.11904761904761904
+Multivariate reduced,Foraging guild,Gulls,5,Cropland,Negative,241,0.1582403151674327,-0.1582403151674327
+Multivariate reduced,Foraging guild,Gulls,5,Forest,Negative,4,0.0026263952724885093,-0.0026263952724885093
+Multivariate reduced,Foraging guild,Gulls,5,Precipitation,Negative,35,0.02298095863427446,-0.02298095863427446
+Multivariate reduced,Foraging guild,Gulls,5,Precipitation,Positive,75,0.04924491135915955,0.04924491135915955
+Multivariate reduced,Foraging guild,Gulls,5,Temperature,Negative,396,0.26001313197636244,-0.26001313197636244
+Multivariate reduced,Foraging guild,Gulls,5,Temperature,Positive,212,0.139198949441891,0.139198949441891
+Multivariate reduced,Foraging guild,Gulls,5,Urban,Negative,3,0.001969796454366382,-0.001969796454366382
+Multivariate reduced,Foraging guild,Gulls,5,Urban,Positive,557,0.36572554169402494,0.36572554169402494
+Multivariate reduced,Foraging guild,Low flycatching feeders,9,Cropland,Negative,57,0.034358047016274866,-0.034358047016274866
+Multivariate reduced,Foraging guild,Low flycatching feeders,9,Forest,Negative,17,0.010247136829415311,-0.010247136829415311
+Multivariate reduced,Foraging guild,Low flycatching feeders,9,Precipitation,Negative,219,0.13200723327305605,-0.13200723327305605
+Multivariate reduced,Foraging guild,Low flycatching feeders,9,Precipitation,Positive,385,0.2320675105485232,0.2320675105485232
+Multivariate reduced,Foraging guild,Low flycatching feeders,9,Temperature,Negative,811,0.48884870403857744,-0.48884870403857744
+Multivariate reduced,Foraging guild,Low flycatching feeders,9,Temperature,Positive,170,0.1024713682941531,0.1024713682941531
+Multivariate reduced,Foraging guild,Marsh warblers,6,Cropland,Positive,300,0.19218449711723254,0.19218449711723254
+Multivariate reduced,Foraging guild,Marsh warblers,6,Forest,Negative,9,0.005765534913516977,-0.005765534913516977
+Multivariate reduced,Foraging guild,Marsh warblers,6,Forest,Positive,8,0.005124919923126201,0.005124919923126201
+Multivariate reduced,Foraging guild,Marsh warblers,6,Precipitation,Negative,594,0.38052530429212045,-0.38052530429212045
+Multivariate reduced,Foraging guild,Marsh warblers,6,Precipitation,Positive,13,0.008327994875080076,0.008327994875080076
+Multivariate reduced,Foraging guild,Marsh warblers,6,Temperature,Negative,634,0.40614990390775146,-0.40614990390775146
+Multivariate reduced,Foraging guild,Marsh warblers,6,Temperature,Positive,3,0.0019218449711723255,0.0019218449711723255
+Multivariate reduced,Foraging guild,Omnivorous corvids,7,Cropland,Positive,28,0.018704074816299265,0.018704074816299265
+Multivariate reduced,Foraging guild,Omnivorous corvids,7,Forest,Negative,417,0.2785571142284569,-0.2785571142284569
+Multivariate reduced,Foraging guild,Omnivorous corvids,7,Precipitation,Negative,128,0.08550434201736808,-0.08550434201736808
+Multivariate reduced,Foraging guild,Omnivorous corvids,7,Precipitation,Positive,27,0.018036072144288578,0.018036072144288578
+Multivariate reduced,Foraging guild,Omnivorous corvids,7,Temperature,Positive,891,0.5951903807615231,0.5951903807615231
+Multivariate reduced,Foraging guild,Omnivorous corvids,7,Urban,Positive,6,0.004008016032064128,0.004008016032064128
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Cropland,Negative,214,0.13905133203378817,-0.13905133203378817
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Cropland,Positive,33,0.021442495126705652,0.021442495126705652
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Forest,Positive,97,0.06302794022092267,0.06302794022092267
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Precipitation,Negative,123,0.07992202729044834,-0.07992202729044834
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Precipitation,Positive,246,0.15984405458089668,0.15984405458089668
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Temperature,Negative,219,0.14230019493177387,-0.14230019493177387
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Temperature,Positive,456,0.2962962962962963,0.2962962962962963
+Multivariate reduced,Foraging guild,Open-land insectivores,6,Urban,Negative,151,0.09811565951916829,-0.09811565951916829
+Multivariate reduced,Foraging guild,Owls,5,Cropland,Positive,732,0.41756988020536223,0.41756988020536223
+Multivariate reduced,Foraging guild,Owls,5,Precipitation,Negative,35,0.019965772960638905,-0.019965772960638905
+Multivariate reduced,Foraging guild,Owls,5,Precipitation,Positive,74,0.042213348545350825,0.042213348545350825
+Multivariate reduced,Foraging guild,Owls,5,Temperature,Positive,912,0.5202509982886481,0.5202509982886481
+Multivariate reduced,Foraging guild,Passerine seedeaters,12,Cropland,Positive,927,0.5367689635205559,0.5367689635205559
+Multivariate reduced,Foraging guild,Passerine seedeaters,12,Forest,Positive,35,0.02026635784597568,0.02026635784597568
+Multivariate reduced,Foraging guild,Passerine seedeaters,12,Precipitation,Positive,45,0.02605674580196873,0.02605674580196873
+Multivariate reduced,Foraging guild,Passerine seedeaters,12,Temperature,Negative,500,0.2895193977996526,-0.2895193977996526
+Multivariate reduced,Foraging guild,Passerine seedeaters,12,Temperature,Positive,77,0.044585987261146494,0.044585987261146494
+Multivariate reduced,Foraging guild,Passerine seedeaters,12,Urban,Positive,143,0.08280254777070063,0.08280254777070063
+Multivariate reduced,Foraging guild,Plovers,6,Cropland,Negative,335,0.1949941792782305,-0.1949941792782305
+Multivariate reduced,Foraging guild,Plovers,6,Forest,Positive,19,0.011059371362048894,0.011059371362048894
+Multivariate reduced,Foraging guild,Plovers,6,Precipitation,Positive,870,0.5064027939464494,0.5064027939464494
+Multivariate reduced,Foraging guild,Plovers,6,Temperature,Negative,187,0.10884749708963912,-0.10884749708963912
+Multivariate reduced,Foraging guild,Plovers,6,Temperature,Positive,305,0.17753201396973226,0.17753201396973226
+Multivariate reduced,Foraging guild,Plovers,6,Urban,Positive,2,0.0011641443538998836,0.0011641443538998836
+Multivariate reduced,Foraging guild,Rails,5,Cropland,Positive,5,0.0035511363636363635,0.0035511363636363635
+Multivariate reduced,Foraging guild,Rails,5,Forest,Negative,164,0.11647727272727272,-0.11647727272727272
+Multivariate reduced,Foraging guild,Rails,5,Precipitation,Negative,329,0.23366477272727273,-0.23366477272727273
+Multivariate reduced,Foraging guild,Rails,5,Precipitation,Positive,92,0.06534090909090909,0.06534090909090909
+Multivariate reduced,Foraging guild,Rails,5,Temperature,Negative,74,0.052556818181818184,-0.052556818181818184
+Multivariate reduced,Foraging guild,Rails,5,Temperature,Positive,733,0.5205965909090909,0.5205965909090909
+Multivariate reduced,Foraging guild,Rails,5,Urban,Positive,11,0.0078125,0.0078125
+Multivariate reduced,Foraging guild,Scolopacids,9,Cropland,Negative,353,0.20974450386215093,-0.20974450386215093
+Multivariate reduced,Foraging guild,Scolopacids,9,Forest,Positive,176,0.10457516339869281,0.10457516339869281
+Multivariate reduced,Foraging guild,Scolopacids,9,Precipitation,Negative,90,0.053475935828877004,-0.053475935828877004
+Multivariate reduced,Foraging guild,Scolopacids,9,Precipitation,Positive,217,0.1289364230540701,0.1289364230540701
+Multivariate reduced,Foraging guild,Scolopacids,9,Temperature,Negative,435,0.25846702317290554,-0.25846702317290554
+Multivariate reduced,Foraging guild,Scolopacids,9,Temperature,Positive,412,0.24480095068330363,0.24480095068330363
+Multivariate reduced,Foraging guild,Terns,5,Cropland,Negative,503,0.29501466275659827,-0.29501466275659827
+Multivariate reduced,Foraging guild,Terns,5,Forest,Positive,3,0.0017595307917888563,0.0017595307917888563
+Multivariate reduced,Foraging guild,Terns,5,Precipitation,Negative,13,0.007624633431085044,-0.007624633431085044
+Multivariate reduced,Foraging guild,Terns,5,Precipitation,Positive,436,0.2557184750733138,0.2557184750733138
+Multivariate reduced,Foraging guild,Terns,5,Temperature,Negative,502,0.2944281524926686,-0.2944281524926686
+Multivariate reduced,Foraging guild,Terns,5,Temperature,Positive,235,0.1378299120234604,0.1378299120234604
+Multivariate reduced,Foraging guild,Terns,5,Urban,Negative,13,0.007624633431085044,-0.007624633431085044
+Multivariate reduced,Foraging guild,Tit-like birds,12,Cropland,Positive,376,0.2251497005988024,0.2251497005988024
+Multivariate reduced,Foraging guild,Tit-like birds,12,Forest,Positive,513,0.307185628742515,0.307185628742515
+Multivariate reduced,Foraging guild,Tit-like birds,12,Precipitation,Negative,227,0.13592814371257486,-0.13592814371257486
+Multivariate reduced,Foraging guild,Tit-like birds,12,Precipitation,Positive,192,0.11497005988023952,0.11497005988023952
+Multivariate reduced,Foraging guild,Tit-like birds,12,Temperature,Negative,86,0.05149700598802395,-0.05149700598802395
+Multivariate reduced,Foraging guild,Tit-like birds,12,Temperature,Positive,269,0.16107784431137726,0.16107784431137726
+Multivariate reduced,Foraging guild,Tit-like birds,12,Urban,Positive,7,0.004191616766467066,0.004191616766467066
+Multivariate reduced,Foraging guild,Woodpeckers,5,Cropland,Negative,526,0.34067357512953367,-0.34067357512953367
+Multivariate reduced,Foraging guild,Woodpeckers,5,Forest,Positive,185,0.11981865284974093,0.11981865284974093
+Multivariate reduced,Foraging guild,Woodpeckers,5,Precipitation,Positive,231,0.14961139896373057,0.14961139896373057
+Multivariate reduced,Foraging guild,Woodpeckers,5,Temperature,Negative,157,0.1016839378238342,-0.1016839378238342
+Multivariate reduced,Foraging guild,Woodpeckers,5,Temperature,Positive,216,0.13989637305699482,0.13989637305699482
+Multivariate reduced,Foraging guild,Woodpeckers,5,Urban,Negative,116,0.07512953367875648,-0.07512953367875648
+Multivariate reduced,Foraging guild,Woodpeckers,5,Urban,Positive,113,0.07318652849740932,0.07318652849740932
+Multivariate reduced,Migratory strategy,long-distance,44,Forest,Positive,162,0.11035422343324251,0.11035422343324251
+Multivariate reduced,Migratory strategy,long-distance,44,Precipitation,Negative,312,0.2125340599455041,-0.2125340599455041
+Multivariate reduced,Migratory strategy,long-distance,44,Precipitation,Positive,117,0.07970027247956403,0.07970027247956403
+Multivariate reduced,Migratory strategy,long-distance,44,Temperature,Negative,834,0.5681198910081744,-0.5681198910081744
+Multivariate reduced,Migratory strategy,long-distance,44,Temperature,Positive,19,0.012942779291553134,0.012942779291553134
+Multivariate reduced,Migratory strategy,long-distance,44,Urban,Negative,24,0.01634877384196185,-0.01634877384196185
+Multivariate reduced,Migratory strategy,sedentary,35,Cropland,Negative,4,0.0027874564459930314,-0.0027874564459930314
+Multivariate reduced,Migratory strategy,sedentary,35,Cropland,Positive,300,0.20905923344947736,0.20905923344947736
+Multivariate reduced,Migratory strategy,sedentary,35,Precipitation,Negative,159,0.110801393728223,-0.110801393728223
+Multivariate reduced,Migratory strategy,sedentary,35,Precipitation,Positive,210,0.14634146341463414,0.14634146341463414
+Multivariate reduced,Migratory strategy,sedentary,35,Temperature,Negative,17,0.011846689895470384,-0.011846689895470384
+Multivariate reduced,Migratory strategy,sedentary,35,Temperature,Positive,633,0.4411149825783972,0.4411149825783972
+Multivariate reduced,Migratory strategy,sedentary,35,Urban,Positive,112,0.07804878048780488,0.07804878048780488
+Multivariate reduced,Migratory strategy,sedentary and short-distance,31,Cropland,Positive,52,0.03282828282828283,0.03282828282828283
+Multivariate reduced,Migratory strategy,sedentary and short-distance,31,Forest,Negative,43,0.027146464646464648,-0.027146464646464648
+Multivariate reduced,Migratory strategy,sedentary and short-distance,31,Precipitation,Negative,457,0.288510101010101,-0.288510101010101
+Multivariate reduced,Migratory strategy,sedentary and short-distance,31,Precipitation,Positive,51,0.032196969696969696,0.032196969696969696
+Multivariate reduced,Migratory strategy,sedentary and short-distance,31,Temperature,Negative,276,0.17424242424242425,-0.17424242424242425
+Multivariate reduced,Migratory strategy,sedentary and short-distance,31,Temperature,Positive,522,0.32954545454545453,0.32954545454545453
+Multivariate reduced,Migratory strategy,sedentary and short-distance,31,Urban,Positive,183,0.11553030303030302,0.11553030303030302
+Multivariate reduced,Migratory strategy,short-and long-distance,8,Cropland,Negative,925,0.5306942053930006,-0.5306942053930006
+Multivariate reduced,Migratory strategy,short-and long-distance,8,Forest,Negative,126,0.07228915662650602,-0.07228915662650602
+Multivariate reduced,Migratory strategy,short-and long-distance,8,Precipitation,Positive,423,0.24268502581755594,0.24268502581755594
+Multivariate reduced,Migratory strategy,short-and long-distance,8,Temperature,Negative,144,0.08261617900172118,-0.08261617900172118
+Multivariate reduced,Migratory strategy,short-and long-distance,8,Urban,Negative,125,0.0717154331612163,-0.0717154331612163
+Multivariate reduced,Migratory strategy,short-distance,39,Cropland,Negative,1002,0.5901060070671378,-0.5901060070671378
+Multivariate reduced,Migratory strategy,short-distance,39,Forest,Positive,120,0.0706713780918728,0.0706713780918728
+Multivariate reduced,Migratory strategy,short-distance,39,Precipitation,Positive,325,0.19140164899882214,0.19140164899882214
+Multivariate reduced,Migratory strategy,short-distance,39,Temperature,Negative,222,0.13074204946996468,-0.13074204946996468
+Multivariate reduced,Migratory strategy,short-distance,39,Urban,Negative,29,0.01707891637220259,-0.01707891637220259
+Single predictor,Foraging guild,Aquatic pursuers,6,Cropland,Negative,361,0.22478206724782068,-0.22478206724782068
+Single predictor,Foraging guild,Aquatic pursuers,6,Grass/Shrubland,Negative,75,0.046699875466998754,-0.046699875466998754
+Single predictor,Foraging guild,Aquatic pursuers,6,Grass/Shrubland,Positive,28,0.017434620174346202,0.017434620174346202
+Single predictor,Foraging guild,Aquatic pursuers,6,Pasture,Negative,52,0.0323785803237858,-0.0323785803237858
+Single predictor,Foraging guild,Aquatic pursuers,6,Pasture,Positive,176,0.1095890410958904,0.1095890410958904
+Single predictor,Foraging guild,Aquatic pursuers,6,Precipitation,Negative,177,0.11021170610211706,-0.11021170610211706
+Single predictor,Foraging guild,Aquatic pursuers,6,Precipitation,Positive,4,0.0024906600249066002,0.0024906600249066002
+Single predictor,Foraging guild,Aquatic pursuers,6,Temperature,Negative,204,0.12702366127023662,-0.12702366127023662
+Single predictor,Foraging guild,Aquatic pursuers,6,Temperature,Positive,529,0.32938978829389787,0.32938978829389787
+Single predictor,Foraging guild,Dabbling ducks,7,Cropland,Negative,15,0.00967741935483871,-0.00967741935483871
+Single predictor,Foraging guild,Dabbling ducks,7,Forest,Positive,30,0.01935483870967742,0.01935483870967742
+Single predictor,Foraging guild,Dabbling ducks,7,Pasture,Negative,21,0.013548387096774193,-0.013548387096774193
+Single predictor,Foraging guild,Dabbling ducks,7,Pasture,Positive,279,0.18,0.18
+Single predictor,Foraging guild,Dabbling ducks,7,Precipitation,Positive,670,0.432258064516129,0.432258064516129
+Single predictor,Foraging guild,Dabbling ducks,7,Temperature,Negative,139,0.08967741935483871,-0.08967741935483871
+Single predictor,Foraging guild,Dabbling ducks,7,Temperature,Positive,370,0.23870967741935484,0.23870967741935484
+Single predictor,Foraging guild,Dabbling ducks,7,Urban,Negative,26,0.016774193548387096,-0.016774193548387096
+Single predictor,Foraging guild,Diurnal raptors,7,Cropland,Negative,238,0.14476885644768855,-0.14476885644768855
+Single predictor,Foraging guild,Diurnal raptors,7,Forest,Negative,48,0.029197080291970802,-0.029197080291970802
+Single predictor,Foraging guild,Diurnal raptors,7,Grass/Shrubland,Positive,1,6.082725060827251e-4,6.082725060827251e-4
+Single predictor,Foraging guild,Diurnal raptors,7,Land-use heterogeneity,Positive,578,0.3515815085158151,0.3515815085158151
+Single predictor,Foraging guild,Diurnal raptors,7,Pasture,Positive,101,0.06143552311435523,0.06143552311435523
+Single predictor,Foraging guild,Diurnal raptors,7,Precipitation,Negative,356,0.21654501216545013,-0.21654501216545013
+Single predictor,Foraging guild,Diurnal raptors,7,Temperature,Negative,14,0.00851581508515815,-0.00851581508515815
+Single predictor,Foraging guild,Diurnal raptors,7,Temperature,Positive,62,0.037712895377128956,0.037712895377128956
+Single predictor,Foraging guild,Diurnal raptors,7,Urban,Negative,246,0.14963503649635038,-0.14963503649635038
+Single predictor,Foraging guild,Foliage gleaners,9,Cropland,Positive,368,0.21957040572792363,0.21957040572792363
+Single predictor,Foraging guild,Foliage gleaners,9,Forest,Negative,153,0.09128878281622911,-0.09128878281622911
+Single predictor,Foraging guild,Foliage gleaners,9,Grass/Shrubland,Positive,32,0.01909307875894988,0.01909307875894988
+Single predictor,Foraging guild,Foliage gleaners,9,Land-use heterogeneity,Negative,45,0.02684964200477327,-0.02684964200477327
+Single predictor,Foraging guild,Foliage gleaners,9,Precipitation,Negative,537,0.3204057279236277,-0.3204057279236277
+Single predictor,Foraging guild,Foliage gleaners,9,Temperature,Negative,375,0.22374701670644392,-0.22374701670644392
+Single predictor,Foraging guild,Foliage gleaners,9,Temperature,Positive,166,0.09904534606205251,0.09904534606205251
+Single predictor,Foraging guild,Gulls,5,Cropland,Negative,217,0.13503422526446796,-0.13503422526446796
+Single predictor,Foraging guild,Gulls,5,Forest,Positive,3,0.001866832607342875,0.001866832607342875
+Single predictor,Foraging guild,Gulls,5,Grass/Shrubland,Positive,28,0.017423771001866834,0.017423771001866834
+Single predictor,Foraging guild,Gulls,5,Land-use heterogeneity,Negative,59,0.03671437461107654,-0.03671437461107654
+Single predictor,Foraging guild,Gulls,5,Pasture,Positive,60,0.037336652146857496,0.037336652146857496
+Single predictor,Foraging guild,Gulls,5,Precipitation,Negative,13,0.008089607965152458,-0.008089607965152458
+Single predictor,Foraging guild,Gulls,5,Precipitation,Positive,139,0.0864965774735532,0.0864965774735532
+Single predictor,Foraging guild,Gulls,5,Temperature,Negative,344,0.21406347230864967,-0.21406347230864967
+Single predictor,Foraging guild,Gulls,5,Temperature,Positive,263,0.16365899191039204,0.16365899191039204
+Single predictor,Foraging guild,Gulls,5,Urban,Positive,481,0.29931549471064095,0.29931549471064095
+Single predictor,Foraging guild,Low flycatching feeders,9,Forest,Negative,3,0.0017814726840855108,-0.0017814726840855108
+Single predictor,Foraging guild,Low flycatching feeders,9,Land-use heterogeneity,Positive,1,5.938242280285036e-4,5.938242280285036e-4
+Single predictor,Foraging guild,Low flycatching feeders,9,Pasture,Positive,22,0.013064133016627079,0.013064133016627079
+Single predictor,Foraging guild,Low flycatching feeders,9,Precipitation,Negative,171,0.10154394299287411,-0.10154394299287411
+Single predictor,Foraging guild,Low flycatching feeders,9,Precipitation,Positive,433,0.25712589073634207,0.25712589073634207
+Single predictor,Foraging guild,Low flycatching feeders,9,Temperature,Negative,830,0.49287410926365793,-0.49287410926365793
+Single predictor,Foraging guild,Low flycatching feeders,9,Temperature,Positive,224,0.1330166270783848,0.1330166270783848
+Single predictor,Foraging guild,Marsh warblers,6,Cropland,Positive,379,0.2253269916765755,0.2253269916765755
+Single predictor,Foraging guild,Marsh warblers,6,Grass/Shrubland,Negative,68,0.04042806183115339,-0.04042806183115339
+Single predictor,Foraging guild,Marsh warblers,6,Land-use heterogeneity,Negative,58,0.034482758620689655,-0.034482758620689655
+Single predictor,Foraging guild,Marsh warblers,6,Precipitation,Negative,614,0.36504161712247324,-0.36504161712247324
+Single predictor,Foraging guild,Marsh warblers,6,Temperature,Negative,559,0.3323424494649227,-0.3323424494649227
+Single predictor,Foraging guild,Marsh warblers,6,Temperature,Positive,4,0.0023781212841854932,0.0023781212841854932
+Single predictor,Foraging guild,Omnivorous corvids,7,Cropland,Positive,67,0.04339378238341969,0.04339378238341969
+Single predictor,Foraging guild,Omnivorous corvids,7,Forest,Negative,322,0.20854922279792745,-0.20854922279792745
+Single predictor,Foraging guild,Omnivorous corvids,7,Precipitation,Negative,137,0.08873056994818652,-0.08873056994818652
+Single predictor,Foraging guild,Omnivorous corvids,7,Precipitation,Positive,118,0.07642487046632124,0.07642487046632124
+Single predictor,Foraging guild,Omnivorous corvids,7,Temperature,Positive,894,0.5790155440414507,0.5790155440414507
+Single predictor,Foraging guild,Omnivorous corvids,7,Urban,Positive,6,0.0038860103626943004,0.0038860103626943004
+Single predictor,Foraging guild,Open-land insectivores,6,Cropland,Negative,6,0.003656307129798903,-0.003656307129798903
+Single predictor,Foraging guild,Open-land insectivores,6,Forest,Positive,88,0.05362583790371724,0.05362583790371724
+Single predictor,Foraging guild,Open-land insectivores,6,Grass/Shrubland,Positive,336,0.20475319926873858,0.20475319926873858
+Single predictor,Foraging guild,Open-land insectivores,6,Land-use heterogeneity,Positive,105,0.06398537477148081,0.06398537477148081
+Single predictor,Foraging guild,Open-land insectivores,6,Pasture,Negative,189,0.11517367458866545,-0.11517367458866545
+Single predictor,Foraging guild,Open-land insectivores,6,Precipitation,Negative,63,0.038391224862888484,-0.038391224862888484
+Single predictor,Foraging guild,Open-land insectivores,6,Precipitation,Positive,221,0.13467397928092625,0.13467397928092625
+Single predictor,Foraging guild,Open-land insectivores,6,Temperature,Negative,168,0.10237659963436929,-0.10237659963436929
+Single predictor,Foraging guild,Open-land insectivores,6,Temperature,Positive,417,0.25411334552102377,0.25411334552102377
+Single predictor,Foraging guild,Open-land insectivores,6,Urban,Negative,48,0.029250457038391225,-0.029250457038391225
+Single predictor,Foraging guild,Owls,5,Cropland,Positive,405,0.22933182332955832,0.22933182332955832
+Single predictor,Foraging guild,Owls,5,Forest,Negative,29,0.01642129105322763,-0.01642129105322763
+Single predictor,Foraging guild,Owls,5,Grass/Shrubland,Negative,56,0.031710079275198186,-0.031710079275198186
+Single predictor,Foraging guild,Owls,5,Land-use heterogeneity,Negative,185,0.10475651189127973,-0.10475651189127973
+Single predictor,Foraging guild,Owls,5,Pasture,Negative,8,0.004530011325028313,-0.004530011325028313
+Single predictor,Foraging guild,Owls,5,Precipitation,Negative,41,0.0232163080407701,-0.0232163080407701
+Single predictor,Foraging guild,Owls,5,Precipitation,Positive,45,0.02548131370328426,0.02548131370328426
+Single predictor,Foraging guild,Owls,5,Temperature,Positive,997,0.5645526613816535,0.5645526613816535
+Single predictor,Foraging guild,Passerine seedeaters,12,Cropland,Positive,460,0.2688486265341905,0.2688486265341905
+Single predictor,Foraging guild,Passerine seedeaters,12,Forest,Negative,34,0.019871420222092345,-0.019871420222092345
+Single predictor,Foraging guild,Passerine seedeaters,12,Forest,Positive,6,0.0035067212156633548,0.0035067212156633548
+Single predictor,Foraging guild,Passerine seedeaters,12,Grass/Shrubland,Negative,264,0.1542957334891876,-0.1542957334891876
+Single predictor,Foraging guild,Passerine seedeaters,12,Land-use heterogeneity,Negative,27,0.015780245470485097,-0.015780245470485097
+Single predictor,Foraging guild,Passerine seedeaters,12,Pasture,Negative,384,0.2244301578024547,-0.2244301578024547
+Single predictor,Foraging guild,Passerine seedeaters,12,Precipitation,Positive,1,5.844535359438924e-4,5.844535359438924e-4
+Single predictor,Foraging guild,Passerine seedeaters,12,Temperature,Negative,473,0.2764465225014611,-0.2764465225014611
+Single predictor,Foraging guild,Passerine seedeaters,12,Temperature,Positive,50,0.029222676797194622,0.029222676797194622
+Single predictor,Foraging guild,Passerine seedeaters,12,Urban,Positive,12,0.0070134424313267095,0.0070134424313267095
+Single predictor,Foraging guild,Plovers,6,Cropland,Negative,561,0.3220436280137773,-0.3220436280137773
+Single predictor,Foraging guild,Plovers,6,Land-use heterogeneity,Positive,81,0.04649827784156142,0.04649827784156142
+Single predictor,Foraging guild,Plovers,6,Precipitation,Positive,755,0.4334098737083812,0.4334098737083812
+Single predictor,Foraging guild,Plovers,6,Temperature,Negative,81,0.04649827784156142,-0.04649827784156142
+Single predictor,Foraging guild,Plovers,6,Temperature,Positive,264,0.1515499425947187,0.1515499425947187
+Single predictor,Foraging guild,Rails,5,Cropland,Positive,91,0.056592039800995024,0.056592039800995024
+Single predictor,Foraging guild,Rails,5,Forest,Negative,231,0.14365671641791045,-0.14365671641791045
+Single predictor,Foraging guild,Rails,5,Pasture,Negative,32,0.01990049751243781,-0.01990049751243781
+Single predictor,Foraging guild,Rails,5,Precipitation,Negative,392,0.24378109452736318,-0.24378109452736318
+Single predictor,Foraging guild,Rails,5,Precipitation,Positive,6,0.0037313432835820895,0.0037313432835820895
+Single predictor,Foraging guild,Rails,5,Temperature,Negative,124,0.07711442786069651,-0.07711442786069651
+Single predictor,Foraging guild,Rails,5,Temperature,Positive,715,0.44465174129353235,0.44465174129353235
+Single predictor,Foraging guild,Rails,5,Urban,Positive,17,0.010572139303482588,0.010572139303482588
+Single predictor,Foraging guild,Scolopacids,9,Cropland,Negative,548,0.3147616312464101,-0.3147616312464101
+Single predictor,Foraging guild,Scolopacids,9,Forest,Positive,199,0.11430212521539346,0.11430212521539346
+Single predictor,Foraging guild,Scolopacids,9,Grass/Shrubland,Positive,7,0.00402067777139575,0.00402067777139575
+Single predictor,Foraging guild,Scolopacids,9,Pasture,Negative,6,0.0034462952326249283,-0.0034462952326249283
+Single predictor,Foraging guild,Scolopacids,9,Precipitation,Negative,43,0.02469844916714532,-0.02469844916714532
+Single predictor,Foraging guild,Scolopacids,9,Precipitation,Positive,190,0.10913268236645605,0.10913268236645605
+Single predictor,Foraging guild,Scolopacids,9,Temperature,Negative,341,0.1958644457208501,-0.1958644457208501
+Single predictor,Foraging guild,Scolopacids,9,Temperature,Positive,407,0.2337736932797243,0.2337736932797243
+Single predictor,Foraging guild,Terns,5,Cropland,Negative,699,0.4102112676056338,-0.4102112676056338
+Single predictor,Foraging guild,Terns,5,Land-use heterogeneity,Positive,31,0.018192488262910797,0.018192488262910797
+Single predictor,Foraging guild,Terns,5,Precipitation,Negative,7,0.004107981220657277,-0.004107981220657277
+Single predictor,Foraging guild,Terns,5,Precipitation,Positive,440,0.25821596244131456,0.25821596244131456
+Single predictor,Foraging guild,Terns,5,Temperature,Negative,280,0.1643192488262911,-0.1643192488262911
+Single predictor,Foraging guild,Terns,5,Temperature,Positive,247,0.1449530516431925,0.1449530516431925
+Single predictor,Foraging guild,Tit-like birds,12,Cropland,Positive,41,0.024683925346177003,0.024683925346177003
+Single predictor,Foraging guild,Tit-like birds,12,Forest,Positive,388,0.23359422034918723,0.23359422034918723
+Single predictor,Foraging guild,Tit-like birds,12,Grass/Shrubland,Negative,287,0.17278747742323902,-0.17278747742323902
+Single predictor,Foraging guild,Tit-like birds,12,Pasture,Negative,6,0.003612281757977122,-0.003612281757977122
+Single predictor,Foraging guild,Tit-like birds,12,Precipitation,Negative,215,0.12944009632751355,-0.12944009632751355
+Single predictor,Foraging guild,Tit-like birds,12,Precipitation,Positive,186,0.11198073449729079,0.11198073449729079
+Single predictor,Foraging guild,Tit-like birds,12,Temperature,Negative,119,0.0716435881998796,-0.0716435881998796
+Single predictor,Foraging guild,Tit-like birds,12,Temperature,Positive,419,0.25225767609873573,0.25225767609873573
+Single predictor,Foraging guild,Woodpeckers,5,Cropland,Negative,529,0.34195216548157725,-0.34195216548157725
+Single predictor,Foraging guild,Woodpeckers,5,Forest,Positive,458,0.2960568842921784,0.2960568842921784
+Single predictor,Foraging guild,Woodpeckers,5,Grass/Shrubland,Negative,5,0.003232062055591467,-0.003232062055591467
+Single predictor,Foraging guild,Woodpeckers,5,Land-use heterogeneity,Positive,42,0.027149321266968326,0.027149321266968326
+Single predictor,Foraging guild,Woodpeckers,5,Pasture,Negative,1,6.464124111182935e-4,-6.464124111182935e-4
+Single predictor,Foraging guild,Woodpeckers,5,Precipitation,Positive,191,0.12346477052359406,0.12346477052359406
+Single predictor,Foraging guild,Woodpeckers,5,Temperature,Positive,93,0.060116354234001294,0.060116354234001294
+Single predictor,Foraging guild,Woodpeckers,5,Urban,Negative,126,0.08144796380090498,-0.08144796380090498
+Single predictor,Foraging guild,Woodpeckers,5,Urban,Positive,102,0.06593406593406594,0.06593406593406594
+Single predictor,Migratory strategy,long-distance,44,Forest,Positive,125,0.08229098090849243,0.08229098090849243
+Single predictor,Migratory strategy,long-distance,44,Precipitation,Negative,305,0.20078999341672152,-0.20078999341672152
+Single predictor,Migratory strategy,long-distance,44,Precipitation,Positive,120,0.07899934167215274,0.07899934167215274
+Single predictor,Migratory strategy,long-distance,44,Temperature,Negative,872,0.5740618828176431,-0.5740618828176431
+Single predictor,Migratory strategy,long-distance,44,Temperature,Positive,31,0.02040816326530612,0.02040816326530612
+Single predictor,Migratory strategy,long-distance,44,Urban,Negative,66,0.043449637919684,-0.043449637919684
+Single predictor,Migratory strategy,sedentary,35,Cropland,Positive,128,0.08737201365187713,0.08737201365187713
+Single predictor,Migratory strategy,sedentary,35,Forest,Negative,13,0.008873720136518772,-0.008873720136518772
+Single predictor,Migratory strategy,sedentary,35,Grass/Shrubland,Negative,10,0.006825938566552901,-0.006825938566552901
+Single predictor,Migratory strategy,sedentary,35,Grass/Shrubland,Positive,28,0.01911262798634812,0.01911262798634812
+Single predictor,Migratory strategy,sedentary,35,Pasture,Negative,164,0.11194539249146758,-0.11194539249146758
+Single predictor,Migratory strategy,sedentary,35,Precipitation,Negative,160,0.10921501706484642,-0.10921501706484642
+Single predictor,Migratory strategy,sedentary,35,Precipitation,Positive,184,0.12559726962457338,0.12559726962457338
+Single predictor,Migratory strategy,sedentary,35,Temperature,Negative,30,0.020477815699658702,-0.020477815699658702
+Single predictor,Migratory strategy,sedentary,35,Temperature,Positive,703,0.47986348122866895,0.47986348122866895
+Single predictor,Migratory strategy,sedentary,35,Urban,Positive,45,0.030716723549488054,0.030716723549488054
+Single predictor,Migratory strategy,sedentary and short-distance,31,Cropland,Positive,3,0.0018148820326678765,0.0018148820326678765
+Single predictor,Migratory strategy,sedentary and short-distance,31,Forest,Negative,114,0.06896551724137931,-0.06896551724137931
+Single predictor,Migratory strategy,sedentary and short-distance,31,Land-use heterogeneity,Negative,105,0.06352087114337568,-0.06352087114337568
+Single predictor,Migratory strategy,sedentary and short-distance,31,Pasture,Negative,1,6.049606775559589e-4,-6.049606775559589e-4
+Single predictor,Migratory strategy,sedentary and short-distance,31,Precipitation,Negative,542,0.3278886872353297,-0.3278886872353297
+Single predictor,Migratory strategy,sedentary and short-distance,31,Precipitation,Positive,50,0.030248033877797943,0.030248033877797943
+Single predictor,Migratory strategy,sedentary and short-distance,31,Temperature,Negative,324,0.19600725952813067,-0.19600725952813067
+Single predictor,Migratory strategy,sedentary and short-distance,31,Temperature,Positive,487,0.294615849969752,0.294615849969752
+Single predictor,Migratory strategy,sedentary and short-distance,31,Urban,Positive,27,0.016333938294010888,0.016333938294010888
+Single predictor,Migratory strategy,short-and long-distance,8,Cropland,Negative,232,0.13264722698684964,-0.13264722698684964
+Single predictor,Migratory strategy,short-and long-distance,8,Land-use heterogeneity,Positive,334,0.19096626643796455,0.19096626643796455
+Single predictor,Migratory strategy,short-and long-distance,8,Pasture,Positive,780,0.44596912521440824,0.44596912521440824
+Single predictor,Migratory strategy,short-and long-distance,8,Precipitation,Positive,330,0.18867924528301888,0.18867924528301888
+Single predictor,Migratory strategy,short-and long-distance,8,Temperature,Negative,64,0.03659233847913093,-0.03659233847913093
+Single predictor,Migratory strategy,short-and long-distance,8,Temperature,Positive,5,0.002858776443682104,0.002858776443682104
+Single predictor,Migratory strategy,short-and long-distance,8,Urban,Negative,4,0.002287021154945683,-0.002287021154945683
+Single predictor,Migratory strategy,short-distance,39,Cropland,Negative,872,0.49377123442808607,-0.49377123442808607
+Single predictor,Migratory strategy,short-distance,39,Forest,Positive,146,0.08267270668176671,0.08267270668176671
+Single predictor,Migratory strategy,short-distance,39,Land-use heterogeneity,Positive,17,0.009626274065685165,0.009626274065685165
+Single predictor,Migratory strategy,short-distance,39,Pasture,Positive,116,0.06568516421291053,0.06568516421291053
+Single predictor,Migratory strategy,short-distance,39,Precipitation,Positive,384,0.217440543601359,0.217440543601359
+Single predictor,Migratory strategy,short-distance,39,Temperature,Negative,213,0.12061155152887883,-0.12061155152887883
+Single predictor,Migratory strategy,short-distance,39,Urban,Positive,18,0.010192525481313703,0.010192525481313703

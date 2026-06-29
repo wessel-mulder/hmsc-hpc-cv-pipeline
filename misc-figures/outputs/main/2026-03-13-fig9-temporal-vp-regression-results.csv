@@ -1,0 +1,281 @@
+variable,trait_family,trait_value,n,n_species,r_squared,slope,direction,p_value,significance,variable_clean,sig_label
+tmean_breeding,All species,All species,471,157,4.861530785893592e-4,-6.397057147471414e-4,decreasing,0.6331463117488828,ns,Temperature,
+prec_breeding,All species,All species,471,157,0.00396743013563609,0.0011216802102617003,increasing,0.17234348412871334,ns,Precipitation,
+hh,All species,All species,471,157,0.002458572496828289,5.524729446596686e-4,increasing,0.28286767413054714,ns,"Habitat
+heterogeneity",
+perc_urban,All species,All species,471,157,0.022827934924345292,0.002865472387009647,increasing,0.0010047040361236543,**,Urban,**
+perc_cropland,All species,All species,471,157,0.008744892863304729,0.002295330826587386,increasing,0.04250435364888991,*,Cropland,*
+perc_pasture,All species,All species,471,157,0.060505360858576725,0.0020893052070837773,increasing,6.392073309762998e-8,***,Pasture,***
+perc_forest,All species,All species,471,157,0.02340450697479435,0.0057971619050764065,increasing,8.654237341124588e-4,***,Forest,***
+perc_grass_shrub,All species,All species,471,157,0.0211055353308712,8.39985204660281e-4,increasing,0.0015706772723044274,**,"Grass/
+shrubland",**
+tmean_breeding,Thermal affinity,very cold,96,32,0.027867453126974088,-0.003533059631707829,decreasing,0.10402840455270707,ns,Temperature,
+tmean_breeding,Thermal affinity,cold,93,31,0.0015512885738561335,-8.118906014549971e-4,decreasing,0.7077816051659479,ns,Temperature,
+tmean_breeding,Thermal affinity,medium,93,31,8.344495326237345e-5,-3.716497862366448e-4,decreasing,0.9307483061891892,ns,Temperature,
+tmean_breeding,Thermal affinity,warm,93,31,0.001815031476574922,7.481846741444245e-4,increasing,0.6851263349914238,ns,Temperature,
+tmean_breeding,Thermal affinity,very warm,96,32,5.560941696942316e-4,8.162543162285309e-4,increasing,0.819601879727556,ns,Temperature,
+prec_breeding,Thermal affinity,very cold,96,32,0.0012015794306234275,-6.509598327972561e-4,decreasing,0.7374091354443055,ns,Precipitation,
+prec_breeding,Thermal affinity,cold,93,31,3.6190797853495896e-6,-3.822752522089581e-5,decreasing,0.985560790091085,ns,Precipitation,
+prec_breeding,Thermal affinity,medium,93,31,0.03750638867581325,0.003322483036501049,increasing,0.06288042428507944,.,Precipitation,.
+prec_breeding,Thermal affinity,warm,93,31,0.0012688724650038955,-3.088891067949365e-4,decreasing,0.7346245142372902,ns,Precipitation,
+prec_breeding,Thermal affinity,very warm,96,32,0.02635732704991398,0.0032718171600486737,increasing,0.11402461873879427,ns,Precipitation,
+hh,Thermal affinity,very cold,96,32,0.001412502098533074,-6.626244479485336e-4,decreasing,0.7161985087060099,ns,"Habitat
+heterogeneity",
+hh,Thermal affinity,cold,93,31,0.015346783780937161,8.831009677359589e-4,increasing,0.23677665102242537,ns,"Habitat
+heterogeneity",
+hh,Thermal affinity,medium,93,31,0.0012562689434196198,2.729625242789248e-4,increasing,0.7358971003926339,ns,"Habitat
+heterogeneity",
+hh,Thermal affinity,warm,93,31,0.031180648372985613,0.0010703648175335982,increasing,0.09042089060020515,.,"Habitat
+heterogeneity",.
+hh,Thermal affinity,very warm,96,32,0.012976977917608271,0.0012163424078099436,increasing,0.2691030160998997,ns,"Habitat
+heterogeneity",
+perc_urban,Thermal affinity,very cold,96,32,0.01277814027453596,0.0019008542359627947,increasing,0.27282672143397735,ns,Urban,
+perc_urban,Thermal affinity,cold,93,31,0.0014343559946703864,2.806283991508886e-4,increasing,0.7185311069561244,ns,Urban,
+perc_urban,Thermal affinity,medium,93,31,0.0329946101439995,0.003378560503263601,increasing,0.08141238991724435,.,Urban,.
+perc_urban,Thermal affinity,warm,93,31,0.06190985900855661,0.00709370229511032,increasing,0.016172288804077534,*,Urban,*
+perc_urban,Thermal affinity,very warm,96,32,0.013734958273717766,0.001741006315201138,increasing,0.25546899192478956,ns,Urban,
+perc_cropland,Thermal affinity,very cold,96,32,0.010456140277610104,0.004036979043668078,increasing,0.32150483948297537,ns,Cropland,
+perc_cropland,Thermal affinity,cold,93,31,0.006590437240385689,0.0012750091963695319,increasing,0.43918166226663435,ns,Cropland,
+perc_cropland,Thermal affinity,medium,93,31,0.04566958238829342,0.0022690078956411393,increasing,0.0397012430337689,*,Cropland,*
+perc_cropland,Thermal affinity,warm,93,31,0.019704962272755245,0.0017195424647215504,increasing,0.1795738573309873,ns,Cropland,
+perc_cropland,Thermal affinity,very warm,96,32,0.009411651252614383,0.0021254145036919574,increasing,0.34706126915523317,ns,Cropland,
+perc_pasture,Thermal affinity,very cold,96,32,0.05335057155443156,0.0031137164231429737,increasing,0.023563587064880664,*,Pasture,*
+perc_pasture,Thermal affinity,cold,93,31,0.1480218154299379,0.002472048191569869,increasing,1.402429392354153e-4,***,Pasture,***
+perc_pasture,Thermal affinity,medium,93,31,0.08091539184957143,0.0014282172922216703,increasing,0.005719752113152923,**,Pasture,**
+perc_pasture,Thermal affinity,warm,93,31,0.046038816481049065,0.001536097104733083,increasing,0.03889081470617779,*,Pasture,*
+perc_pasture,Thermal affinity,very warm,96,32,0.08230004726703548,0.0018704609914785893,increasing,0.004599233076542955,**,Pasture,**
+perc_forest,Thermal affinity,very cold,96,32,0.057187272258290255,0.009442120301815302,increasing,0.01894901598996464,*,Forest,*
+perc_forest,Thermal affinity,cold,93,31,0.036249927853628856,0.008138781341204373,increasing,0.06754624440071999,.,Forest,.
+perc_forest,Thermal affinity,medium,93,31,0.01675452164972992,0.004801664953122591,increasing,0.2162377411140721,ns,Forest,
+perc_forest,Thermal affinity,warm,93,31,0.004085812572658736,0.00186925961490168,increasing,0.5427155949524433,ns,Forest,
+perc_forest,Thermal affinity,very warm,96,32,0.01618626439250115,0.00465330269540058,increasing,0.21673926256523895,ns,Forest,
+perc_grass_shrub,Thermal affinity,very cold,96,32,0.016619740479720337,0.0011020841689257316,increasing,0.21063771732384506,ns,"Grass/
+shrubland",
+perc_grass_shrub,Thermal affinity,cold,93,31,0.038131264885626036,0.0013276121535765186,increasing,0.06068693863659597,.,"Grass/
+shrubland",.
+perc_grass_shrub,Thermal affinity,medium,93,31,0.14695299891245603,0.0011661544972562784,increasing,1.4895281917994398e-4,***,"Grass/
+shrubland",***
+perc_grass_shrub,Thermal affinity,warm,93,31,0.008433445385429776,1.9261997029698682e-4,increasing,0.38130881565132513,ns,"Grass/
+shrubland",
+perc_grass_shrub,Thermal affinity,very warm,96,32,0.011609154957772334,4.1665620221929654e-4,increasing,0.29606674025699875,ns,"Grass/
+shrubland",
+tmean_breeding,Migratory strategy,long-distance,132,44,2.425586791397695e-4,-4.948433436784532e-4,decreasing,0.8593168239823463,ns,Temperature,
+tmean_breeding,Migratory strategy,short-and long-distance,24,8,0.0015315395457937578,-0.0010874143870206136,decreasing,0.8559317040999805,ns,Temperature,
+tmean_breeding,Migratory strategy,short-distance,117,39,8.187596508495857e-4,-7.144584629676695e-4,decreasing,0.7594164942636404,ns,Temperature,
+tmean_breeding,Migratory strategy,sedentary and short-distance,93,31,1.7912464380184463e-5,-5.588990187807577e-5,decreasing,0.9678833710859014,ns,Temperature,
+tmean_breeding,Migratory strategy,sedentary,105,35,9.543418944026166e-4,-0.001153283085237849,decreasing,0.7544033320705322,ns,Temperature,
+prec_breeding,Migratory strategy,long-distance,132,44,0.007247846207422517,0.0016342449151245102,increasing,0.33175806002577213,ns,Precipitation,
+prec_breeding,Migratory strategy,short-and long-distance,24,8,0.023008049511605493,0.003723750641719635,increasing,0.47923206765391313,ns,Precipitation,
+prec_breeding,Migratory strategy,short-distance,117,39,0.002776677071374582,0.0010150768264568849,increasing,0.5725857936307921,ns,Precipitation,
+prec_breeding,Migratory strategy,sedentary and short-distance,93,31,0.011910018500427152,9.960685997788606e-4,increasing,0.29772662728688376,ns,Precipitation,
+prec_breeding,Migratory strategy,sedentary,105,35,4.066615673523295e-5,1.1259682248253037e-4,increasing,0.9485217321262496,ns,Precipitation,
+hh,Migratory strategy,long-distance,132,44,0.00925390740523161,7.393622078865744e-4,increasing,0.27252907021710276,ns,"Habitat
+heterogeneity",
+hh,Migratory strategy,short-and long-distance,24,8,0.03784134217639904,-0.002836086640965482,decreasing,0.36236850160175005,ns,"Habitat
+heterogeneity",
+hh,Migratory strategy,short-distance,117,39,1.682805865751875e-4,2.1252005708976218e-4,increasing,0.8895954033162026,ns,"Habitat
+heterogeneity",
+hh,Migratory strategy,sedentary and short-distance,93,31,0.01601708648965902,0.0010758694844432268,increasing,0.22672121103295925,ns,"Habitat
+heterogeneity",
+hh,Migratory strategy,sedentary,105,35,0.02295543155185147,0.0010072792013726267,increasing,0.12286534809645912,ns,"Habitat
+heterogeneity",
+perc_urban,Migratory strategy,long-distance,132,44,0.012724768492970006,0.0018822260935541168,increasing,0.19781262161884094,ns,Urban,
+perc_urban,Migratory strategy,short-and long-distance,24,8,0.048824017230908096,-0.0019681903358228768,decreasing,0.29945875541293043,ns,Urban,
+perc_urban,Migratory strategy,short-distance,117,39,0.020924344091760645,0.0022596756372455042,increasing,0.1196955606503415,ns,Urban,
+perc_urban,Migratory strategy,sedentary and short-distance,93,31,0.023500063415130338,0.0027894621055043877,increasing,0.14236575242008473,ns,Urban,
+perc_urban,Migratory strategy,sedentary,105,35,0.052497871277853825,0.005948744691643035,increasing,0.01871863942639923,*,Urban,*
+perc_cropland,Migratory strategy,long-distance,132,44,0.00688224011149001,0.001948203263978006,increasing,0.34430396916324835,ns,Cropland,
+perc_cropland,Migratory strategy,short-and long-distance,24,8,0.0867903963891568,0.006826932864418078,increasing,0.16227985627157368,ns,Cropland,
+perc_cropland,Migratory strategy,short-distance,117,39,0.002763533100326761,0.0014950581163072026,increasing,0.5734972325619352,ns,Cropland,
+perc_cropland,Migratory strategy,sedentary and short-distance,93,31,0.0019745515487900075,0.001129106470734321,increasing,0.6723405732426893,ns,Cropland,
+perc_cropland,Migratory strategy,sedentary,105,35,0.037032871890249064,0.0036205990318599513,increasing,0.04921379727818638,*,Cropland,*
+perc_pasture,Migratory strategy,long-distance,132,44,0.081668736540269,0.002171502876698416,increasing,8.948443673406352e-4,***,Pasture,***
+perc_pasture,Migratory strategy,short-and long-distance,24,8,0.1955973715012716,0.001981751896358116,increasing,0.030465623985806427,*,Pasture,*
+perc_pasture,Migratory strategy,short-distance,117,39,0.08546700749070628,0.003721677716962413,increasing,0.0013817026712085855,**,Pasture,**
+perc_pasture,Migratory strategy,sedentary and short-distance,93,31,0.09675596087343025,0.0021425586995214253,increasing,0.002406863137376593,**,Pasture,**
+perc_pasture,Migratory strategy,sedentary,105,35,0.003758672694082734,1.4445786056742598e-4,increasing,0.5344121515556198,ns,Pasture,
+perc_forest,Migratory strategy,long-distance,132,44,0.015697509887426374,0.004431532287802402,increasing,0.1523084648118146,ns,Forest,
+perc_forest,Migratory strategy,short-and long-distance,24,8,0.025622494606450993,0.0036929658033323736,increasing,0.45496910050030015,ns,Forest,
+perc_forest,Migratory strategy,short-distance,117,39,0.04754761981446288,0.008132986435125706,increasing,0.018187078634062777,*,Forest,*
+perc_forest,Migratory strategy,sedentary and short-distance,93,31,0.010355079977339308,0.004035177936593233,increasing,0.33175390150475204,ns,Forest,
+perc_forest,Migratory strategy,sedentary,105,35,0.02883589222170756,0.006952751000078268,increasing,0.08330551466885375,.,Forest,.
+perc_grass_shrub,Migratory strategy,long-distance,132,44,0.030715269577895055,8.307050321073695e-4,increasing,0.0444320989885274,*,"Grass/
+shrubland",*
+perc_grass_shrub,Migratory strategy,short-and long-distance,24,8,0.06602222450566615,0.0012799494671131546,increasing,0.2254881480767523,ns,"Grass/
+shrubland",
+perc_grass_shrub,Migratory strategy,short-distance,117,39,0.0075910121886990515,6.872819335323604e-4,increasing,0.35026485844882094,ns,"Grass/
+shrubland",
+perc_grass_shrub,Migratory strategy,sedentary and short-distance,93,31,0.07002764606225094,0.0011279875567840594,increasing,0.010367362086347068,*,"Grass/
+shrubland",*
+perc_grass_shrub,Migratory strategy,sedentary,105,35,0.018225020222698455,6.661557232561962e-4,increasing,0.16972919111310966,ns,"Grass/
+shrubland",
+tmean_breeding,Foraging guild,Passerine seedeaters,36,12,0.005686345456180143,4.7473097080644655e-4,increasing,0.6620367948553989,ns,Temperature,
+tmean_breeding,Foraging guild,Tit-like birds,36,12,2.3840194813178512e-4,-4.105190868544071e-4,decreasing,0.9287820310435648,ns,Temperature,
+tmean_breeding,Foraging guild,Foliage gleaners,27,9,0.03743894305966653,7.465532213809963e-4,increasing,0.33353583871781467,ns,Temperature,
+tmean_breeding,Foraging guild,Low flycatching feeders,27,9,0.0011106687894094026,-4.379632276800111e-4,decreasing,0.8689267531807101,ns,Temperature,
+tmean_breeding,Foraging guild,Scolopacids,27,9,0.0791583786296213,-0.011895081716824688,decreasing,0.15512158462296102,ns,Temperature,
+tmean_breeding,Foraging guild,Dabbling ducks,21,7,0.0010295642472397323,0.0010175025237434924,increasing,0.890183897968911,ns,Temperature,
+tmean_breeding,Foraging guild,Diurnal raptors,21,7,0.033200642652564914,-0.007523712776652739,decreasing,0.4292268109196574,ns,Temperature,
+tmean_breeding,Foraging guild,Omnivorous corvids,21,7,4.0092402858896675e-5,-4.1069718924093555e-4,decreasing,0.9782686452652074,ns,Temperature,
+tmean_breeding,Foraging guild,Aquatic pursuers,18,6,0.27880458800533187,0.0013105292801870003,increasing,0.024299001652227734,*,Temperature,*
+tmean_breeding,Foraging guild,Marsh warblers,18,6,0.18838983301554696,0.007993280088165624,increasing,0.0719095932997255,.,Temperature,.
+tmean_breeding,Foraging guild,Open-land insectivores,18,6,0.0014491684066632613,0.0011216165336953479,increasing,0.8807905028867489,ns,Temperature,
+tmean_breeding,Foraging guild,Plovers,18,6,0.022489721723793845,-0.004645410566152106,decreasing,0.5525465410994805,ns,Temperature,
+tmean_breeding,Foraging guild,Gulls,15,5,0.05550858484889021,0.0013772129088465855,increasing,0.3979331380712434,ns,Temperature,
+tmean_breeding,Foraging guild,Owls,15,5,0.2181172681765784,-0.004063313967651124,decreasing,0.07923155470936101,.,Temperature,.
+tmean_breeding,Foraging guild,Rails,15,5,0.13814574782517297,0.0021256229712896947,increasing,0.17253678705616649,ns,Temperature,
+tmean_breeding,Foraging guild,Terns,15,5,0.06631504568643501,-0.0030396449506858063,decreasing,0.35413585262062774,ns,Temperature,
+tmean_breeding,Foraging guild,Woodpeckers,15,5,0.06769825088802216,-0.0062468242029795435,decreasing,0.3489870338718911,ns,Temperature,
+prec_breeding,Foraging guild,Passerine seedeaters,36,12,7.239397824235109e-8,-1.6079153489895647e-6,decreasing,0.9987573818523101,ns,Precipitation,
+prec_breeding,Foraging guild,Tit-like birds,36,12,0.0023555679555910354,-5.26758274622055e-4,decreasing,0.7786385708783083,ns,Precipitation,
+prec_breeding,Foraging guild,Foliage gleaners,27,9,0.13426208843889498,0.003311054562603985,increasing,0.060128385680397606,.,Precipitation,.
+prec_breeding,Foraging guild,Low flycatching feeders,27,9,0.008774351328543104,-0.0015637557054592802,decreasing,0.6421290886974171,ns,Precipitation,
+prec_breeding,Foraging guild,Scolopacids,27,9,0.006851272586089672,-0.0020557723943230416,decreasing,0.6814744084646938,ns,Precipitation,
+prec_breeding,Foraging guild,Dabbling ducks,21,7,0.009049570794108541,0.001011126053447048,increasing,0.6816772034905059,ns,Precipitation,
+prec_breeding,Foraging guild,Diurnal raptors,21,7,1.6272274222495625e-5,9.737944922766481e-5,increasing,0.9861544824374456,ns,Precipitation,
+prec_breeding,Foraging guild,Omnivorous corvids,21,7,6.68722981558356e-5,-2.4418170225506996e-4,decreasing,0.9719362351396075,ns,Precipitation,
+prec_breeding,Foraging guild,Aquatic pursuers,18,6,0.0037480363553472683,4.93501211786945e-4,increasing,0.8093084547333573,ns,Precipitation,
+prec_breeding,Foraging guild,Marsh warblers,18,6,0.04338023013437643,0.005036564206937752,increasing,0.40689579615713234,ns,Precipitation,
+prec_breeding,Foraging guild,Open-land insectivores,18,6,0.02191198505351022,0.003495715332187245,increasing,0.5577524034983845,ns,Precipitation,
+prec_breeding,Foraging guild,Plovers,18,6,2.62864784313027e-5,-9.729353109446916e-5,decreasing,0.98389138633423745,ns,Precipitation,
+prec_breeding,Foraging guild,Gulls,15,5,0.036356931392880376,0.0016975111187443861,increasing,0.49606020271498785,ns,Precipitation,
+prec_breeding,Foraging guild,Owls,15,5,7.955928439295579e-4,3.3644185597224674e-4,increasing,0.9205158936007013,ns,Precipitation,
+prec_breeding,Foraging guild,Rails,15,5,0.01968093122858609,0.0017269379343850977,increasing,0.6180066110403304,ns,Precipitation,
+prec_breeding,Foraging guild,Terns,15,5,0.28079368535184357,0.006905514598950006,increasing,0.04218227773470071,*,Precipitation,*
+prec_breeding,Foraging guild,Woodpeckers,15,5,0.08561311675716747,0.0024758292678534336,increasing,0.28991987104426276,ns,Precipitation,
+hh,Foraging guild,Passerine seedeaters,36,12,0.1461785820008643,0.0020000819242906153,increasing,0.02137762238375886,*,"Habitat
+heterogeneity",*
+hh,Foraging guild,Tit-like birds,36,12,0.005012663881711676,4.3996421871446385e-4,increasing,0.6815678114126076,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Foliage gleaners,27,9,0.017648677721923477,5.146767291247608e-4,increasing,0.5088857252494636,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Low flycatching feeders,27,9,0.05988783061588392,4.0038420669608955e-4,increasing,0.21860616527614504,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Scolopacids,27,9,0.0966347470723002,-0.002710500075358637,decreasing,0.11451046659853568,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Dabbling ducks,21,7,0.07070732843099575,0.002669467741384556,increasing,0.24399691787034755,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Diurnal raptors,21,7,0.031706486018461384,0.001044344277427714,increasing,0.43998137794354153,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Omnivorous corvids,21,7,0.00597903198677107,-3.2799371454248595e-4,decreasing,0.7390243206099838,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Aquatic pursuers,18,6,4.15171412214173e-4,-5.478429834881214e-4,decreasing,0.9360395199408449,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Marsh warblers,18,6,0.20278549379646787,0.00416952959334224,increasing,0.060751646176829065,.,"Habitat
+heterogeneity",.
+hh,Foraging guild,Open-land insectivores,18,6,0.012544039711885818,-7.606244017820844e-4,decreasing,0.6581565846596853,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Plovers,18,6,0.1779651580740495,-0.009431877801758711,decreasing,0.08119858730848842,.,"Habitat
+heterogeneity",.
+hh,Foraging guild,Gulls,15,5,0.09061961900525986,0.00341159350916308,increasing,0.27558811474083145,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Owls,15,5,0.31183941498445733,0.0017703955010704249,increasing,0.030494892177785414,*,"Habitat
+heterogeneity",*
+hh,Foraging guild,Rails,15,5,0.011675585835544832,6.103350636316137e-4,increasing,0.7014902066963324,ns,"Habitat
+heterogeneity",
+hh,Foraging guild,Terns,15,5,0.2816736013237509,-0.005188993849468684,decreasing,0.04180149308868924,*,"Habitat
+heterogeneity",*
+hh,Foraging guild,Woodpeckers,15,5,0.005293447948777338,5.103031462116667e-4,increasing,0.7966554954229582,ns,"Habitat
+heterogeneity",
+perc_urban,Foraging guild,Passerine seedeaters,36,12,0.033330585921623454,0.0019396971034255303,increasing,0.2865455808181032,ns,Urban,
+perc_urban,Foraging guild,Tit-like birds,36,12,0.14823279870510178,0.0028220812301041477,increasing,0.02041004240150601,*,Urban,*
+perc_urban,Foraging guild,Foliage gleaners,27,9,0.028613213539158217,-0.0010272020377892874,decreasing,0.39896897076894366,ns,Urban,
+perc_urban,Foraging guild,Low flycatching feeders,27,9,0.023799970195537572,0.0032495082412628104,increasing,0.44230422357902266,ns,Urban,
+perc_urban,Foraging guild,Scolopacids,27,9,0.10417987697096877,0.007084990782523305,increasing,0.10057209855201776,ns,Urban,
+perc_urban,Foraging guild,Dabbling ducks,21,7,0.006428937952646199,-0.0010236427742429585,decreasing,0.7297247090666334,ns,Urban,
+perc_urban,Foraging guild,Diurnal raptors,21,7,0.005196011769361566,5.705681023552824e-4,increasing,0.7561772770753014,ns,Urban,
+perc_urban,Foraging guild,Omnivorous corvids,21,7,0.19092739042924142,0.022357366386818168,increasing,0.04763469858223164,*,Urban,*
+perc_urban,Foraging guild,Aquatic pursuers,18,6,0.06978118749335335,0.0037760743315837595,increasing,0.289488457641995,ns,Urban,
+perc_urban,Foraging guild,Marsh warblers,18,6,0.014556620818667869,7.717613457128814e-4,increasing,0.6334488350615479,ns,Urban,
+perc_urban,Foraging guild,Open-land insectivores,18,6,0.11169803060888096,0.002182656494634788,increasing,0.17525470055803813,ns,Urban,
+perc_urban,Foraging guild,Plovers,18,6,0.03173474671895506,-0.0022220446112318306,decreasing,0.4794274412828201,ns,Urban,
+perc_urban,Foraging guild,Gulls,15,5,0.004550451767822257,-7.289598871438079e-4,decreasing,0.8112098118201838,ns,Urban,
+perc_urban,Foraging guild,Owls,15,5,3.5327575458645285e-4,8.371582739122527e-5,increasing,0.946991711932397,ns,Urban,
+perc_urban,Foraging guild,Rails,15,5,0.2038442764133521,0.004132634789659777,increasing,0.09115066637499439,.,Urban,.
+perc_urban,Foraging guild,Terns,15,5,0.06602536442453712,-0.002599524079920215,decreasing,0.355226288672271,ns,Urban,
+perc_urban,Foraging guild,Woodpeckers,15,5,0.1605193088520788,0.0033836258185329167,increasing,0.1388947233861086,ns,Urban,
+perc_cropland,Foraging guild,Passerine seedeaters,36,12,0.002794545604780594,-6.963349706084286e-4,decreasing,0.7594515595822413,ns,Cropland,
+perc_cropland,Foraging guild,Tit-like birds,36,12,0.02051373082224221,0.0011996426593133894,increasing,0.4046543073506035,ns,Cropland,
+perc_cropland,Foraging guild,Foliage gleaners,27,9,0.0024708243734025376,4.209740468282266e-4,increasing,0.805514004533284,ns,Cropland,
+perc_cropland,Foraging guild,Low flycatching feeders,27,9,0.04417886050275906,0.0023930293622369285,increasing,0.2926620001336435,ns,Cropland,
+perc_cropland,Foraging guild,Scolopacids,27,9,0.32448532998439183,0.0155163968204735,increasing,0.0019254703582893236,**,Cropland,**
+perc_cropland,Foraging guild,Dabbling ducks,21,7,1.610965102935786e-4,-1.8469671331190464e-4,decreasing,0.956453830973305,ns,Cropland,
+perc_cropland,Foraging guild,Diurnal raptors,21,7,0.08832616982175494,0.0037418877209363737,increasing,0.19076107464021824,ns,Cropland,
+perc_cropland,Foraging guild,Omnivorous corvids,21,7,0.030177215423670672,0.0019811968895269982,increasing,0.4514051083199986,ns,Cropland,
+perc_cropland,Foraging guild,Aquatic pursuers,18,6,0.0023936535104097656,-9.0994713127707e-4,decreasing,0.8471282264428514,ns,Cropland,
+perc_cropland,Foraging guild,Marsh warblers,18,6,0.1765863266771027,0.003207411423029665,increasing,0.08251127023022203,.,Cropland,.
+perc_cropland,Foraging guild,Open-land insectivores,18,6,0.15456333841395897,0.004107258155049281,increasing,0.1065269014421823,ns,Cropland,
+perc_cropland,Foraging guild,Plovers,18,6,0.002233939396427198,-0.00212444629047554,decreasing,0.8522614857648435,ns,Cropland,
+perc_cropland,Foraging guild,Gulls,15,5,0.06694736162409828,0.007917040140290774,increasing,0.3517703224110158,ns,Cropland,
+perc_cropland,Foraging guild,Owls,15,5,0.0032587264465926617,4.143016343117346e-4,increasing,0.8398595283812709,ns,Cropland,
+perc_cropland,Foraging guild,Rails,15,5,0.03493475087018578,0.0010648283437368529,increasing,0.5047661874649625,ns,Cropland,
+perc_cropland,Foraging guild,Terns,15,5,0.10469963342546701,-0.013807397236912308,decreasing,0.2394107717777894,ns,Cropland,
+perc_cropland,Foraging guild,Woodpeckers,15,5,0.06181967638735466,-0.002305118425418951,decreasing,0.37155155738772916,ns,Cropland,
+perc_pasture,Foraging guild,Passerine seedeaters,36,12,0.03682518823851559,4.549049115176027e-4,increasing,0.2621949540018029,ns,Pasture,
+perc_pasture,Foraging guild,Tit-like birds,36,12,4.6037840039356797e-4,3.149230599013426e-5,increasing,0.9011495473662061,ns,Pasture,
+perc_pasture,Foraging guild,Foliage gleaners,27,9,0.14315179610434337,0.001114501654527689,increasing,0.051655356366749734,.,Pasture,.
+perc_pasture,Foraging guild,Low flycatching feeders,27,9,0.13330309882927352,0.001601421985729058,increasing,0.06112119724874562,.,Pasture,.
+perc_pasture,Foraging guild,Scolopacids,27,9,0.08767246511039017,0.005962545256927101,increasing,0.13371413807796279,ns,Pasture,
+perc_pasture,Foraging guild,Dabbling ducks,21,7,0.45044393813201344,0.009267168566987392,increasing,8.661667974560735e-4,***,Pasture,***
+perc_pasture,Foraging guild,Diurnal raptors,21,7,0.02416412601185478,6.765356329480191e-4,increasing,0.5010479963732433,ns,Pasture,
+perc_pasture,Foraging guild,Omnivorous corvids,21,7,0.00721429960463533,-1.3961779048564087e-4,decreasing,0.7143209187096315,ns,Pasture,
+perc_pasture,Foraging guild,Aquatic pursuers,18,6,0.1934152300665718,0.0026045499096253085,increasing,0.06780737779251501,.,Pasture,.
+perc_pasture,Foraging guild,Marsh warblers,18,6,0.23553826679184614,0.0028555225548899475,increasing,0.04118959130248329,*,Pasture,*
+perc_pasture,Foraging guild,Open-land insectivores,18,6,0.18784958757721448,0.002441416974697884,increasing,0.0723645889426136,.,Pasture,.
+perc_pasture,Foraging guild,Plovers,18,6,0.14540743614765833,0.0012532543693627009,increasing,0.1184412990023586,ns,Pasture,
+perc_pasture,Foraging guild,Gulls,15,5,0.12152889856704568,0.0015579091254305458,increasing,0.2028630473279645,ns,Pasture,
+perc_pasture,Foraging guild,Owls,15,5,0.04020087889325286,2.3905508870821775e-4,increasing,0.47368380390256537,ns,Pasture,
+perc_pasture,Foraging guild,Rails,15,5,0.2248006846789567,0.002483977457777872,increasing,0.0741731986427555,.,Pasture,.
+perc_pasture,Foraging guild,Terns,15,5,0.2184056674936019,0.0019654615042111606,increasing,0.07900671020161261,.,Pasture,.
+perc_pasture,Foraging guild,Woodpeckers,15,5,0.08731606806423393,0.001122960736051163,increasing,0.28495027284719754,ns,Pasture,
+perc_forest,Foraging guild,Passerine seedeaters,36,12,0.04344802061364719,0.009703438095848957,increasing,0.22247686848266182,ns,Forest,
+perc_forest,Foraging guild,Tit-like birds,36,12,0.12107073862076077,0.015070109621088746,increasing,0.037570131213340345,*,Forest,*
+perc_forest,Foraging guild,Foliage gleaners,27,9,0.026600155915443232,0.0036926183277992274,increasing,0.4163143157506394,ns,Forest,
+perc_forest,Foraging guild,Low flycatching feeders,27,9,0.04951428399593841,0.010208308875680812,increasing,0.26460003269555543,ns,Forest,
+perc_forest,Foraging guild,Scolopacids,27,9,0.017386498946088454,0.005668651664176475,increasing,0.5120782752079164,ns,Forest,
+perc_forest,Foraging guild,Dabbling ducks,21,7,0.0321890855870618,0.0013110718546200772,increasing,0.43646507862429995,ns,Forest,
+perc_forest,Foraging guild,Diurnal raptors,21,7,0.011309531982194455,-0.0051365732491537,decreasing,0.6463753424327705,ns,Forest,
+perc_forest,Foraging guild,Omnivorous corvids,21,7,0.01961431868086686,0.003084334358283235,increasing,0.5448520329020548,ns,Forest,
+perc_forest,Foraging guild,Aquatic pursuers,18,6,0.027013603950253928,0.003309846526122058,increasing,0.5145903177639743,ns,Forest,
+perc_forest,Foraging guild,Marsh warblers,18,6,0.23303042584799463,0.0010764157782104336,increasing,0.04244592145396001,*,Forest,*
+perc_forest,Foraging guild,Open-land insectivores,18,6,0.07451307281712909,0.015428764986335218,increasing,0.27309812981223736,ns,Forest,
+perc_forest,Foraging guild,Plovers,18,6,0.010054784779156471,0.0029471324682356775,increasing,0.6921911779452963,ns,Forest,
+perc_forest,Foraging guild,Gulls,15,5,0.12998220019313775,0.006018465511694643,increasing,0.18679549664924522,ns,Forest,
+perc_forest,Foraging guild,Owls,15,5,0.005779325585573858,0.0010636422055892284,increasing,0.787716273504625,ns,Forest,
+perc_forest,Foraging guild,Rails,15,5,0.012308113634629466,-2.757746987979773e-4,decreasing,0.6938624146302783,ns,Forest,
+perc_forest,Foraging guild,Terns,15,5,0.0024353997534927964,0.0012046887006219164,increasing,0.8613511740608975,ns,Forest,
+perc_forest,Foraging guild,Woodpeckers,15,5,0.08308989018780337,0.009928634056043488,increasing,0.2974704458772533,ns,Forest,
+perc_grass_shrub,Foraging guild,Passerine seedeaters,36,12,0.06734274966541012,8.003598249399173e-4,increasing,0.1264138718352909,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Tit-like birds,36,12,0.10594563425674841,9.477633244432812e-4,increasing,0.05272666373290968,.,"Grass/
+shrubland",.
+perc_grass_shrub,Foraging guild,Foliage gleaners,27,9,0.14301170343598604,0.0011181593598575607,increasing,0.051779225952098384,.,"Grass/
+shrubland",.
+perc_grass_shrub,Foraging guild,Low flycatching feeders,27,9,0.26129174962756757,0.004122966666974241,increasing,0.006431537222606834,**,"Grass/
+shrubland",**
+perc_grass_shrub,Foraging guild,Scolopacids,27,9,5.455259662331246e-6,-2.26886456160664e-5,decreasing,0.9907749886604463,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Dabbling ducks,21,7,0.12179658151964966,0.002005224732318444,increasing,0.12100203098360776,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Diurnal raptors,21,7,0.0258760872674638,6.243594373085135e-4,increasing,0.4860693294640285,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Omnivorous corvids,21,7,0.029431116288251704,1.279089700720877e-4,increasing,0.4571403304271273,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Aquatic pursuers,18,6,0.02063284183124039,-7.371683323416921e-4,decreasing,0.5696071574950452,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Marsh warblers,18,6,0.030255365628556068,7.731566015179051e-4,increasing,0.4900186695857076,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Open-land insectivores,18,6,0.11517896615965886,0.0012730276382891853,increasing,0.16826423357516618,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Plovers,18,6,0.016122600740246396,0.0013649654343749853,increasing,0.6156153190128737,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Gulls,15,5,0.21634822667558418,0.0022844175670562465,increasing,0.0806240638791962,.,"Grass/
+shrubland",.
+perc_grass_shrub,Foraging guild,Owls,15,5,0.0025802214830613498,-1.844652669670251e-4,decreasing,0.8573261094697504,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Rails,15,5,0.10554911060505251,-7.023982521242718e-4,decreasing,0.2374038293809743,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Terns,15,5,1.6660378109931917e-5,8.51136217771534e-6,increasing,0.9884814645966462,ns,"Grass/
+shrubland",
+perc_grass_shrub,Foraging guild,Woodpeckers,15,5,0.06907740901471048,0.0010218395884503797,increasing,0.34394662727791836,ns,"Grass/
+shrubland",

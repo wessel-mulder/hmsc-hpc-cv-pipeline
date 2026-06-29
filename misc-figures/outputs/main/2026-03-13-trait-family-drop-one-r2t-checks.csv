@@ -1,0 +1,25 @@
+atlas,variable_raw,variable,n_trait_families,max_abs_full_export_difference
+1970s,hh,Land-use heterogeneity,3,2.7755575615628914e-16
+1970s,perc_cropland,Cropland,3,3.885780586188048e-16
+1970s,perc_forest,Forest,3,3.3306690738754696e-16
+1970s,perc_grass_shrub,Grass/shrubland,3,3.885780586188048e-16
+1970s,perc_pasture,Pasture,3,1.3877787807814457e-16
+1970s,perc_urban,Urban,3,5.551115123125783e-17
+1970s,prec_breeding,Precipitation,3,1.1102230246251565e-16
+1970s,tmean_breeding,Temperature,3,4.163336342344337e-16
+1990s,hh,Land-use heterogeneity,3,3.0531133177191805e-16
+1990s,perc_cropland,Cropland,3,9.43689570931383e-16
+1990s,perc_forest,Forest,3,2.220446049250313e-16
+1990s,perc_grass_shrub,Grass/shrubland,3,1.3877787807814457e-16
+1990s,perc_pasture,Pasture,3,5.551115123125783e-17
+1990s,perc_urban,Urban,3,1.1102230246251565e-16
+1990s,prec_breeding,Precipitation,3,2.914335439641036e-16
+1990s,tmean_breeding,Temperature,3,3.885780586188048e-16
+2010s,hh,Land-use heterogeneity,3,5.828670879282072e-16
+2010s,perc_cropland,Cropland,3,1.1102230246251565e-16
+2010s,perc_forest,Forest,3,3.885780586188048e-16
+2010s,perc_grass_shrub,Grass/shrubland,3,1.3877787807814457e-16
+2010s,perc_pasture,Pasture,3,1.1102230246251565e-16
+2010s,perc_urban,Urban,3,1.6653345369377348e-16
+2010s,prec_breeding,Precipitation,3,5.551115123125783e-16
+2010s,tmean_breeding,Temperature,3,3.0531133177191805e-16

@@ -1,0 +1,472 @@
+bioregion,species,expected_occurrence_sum,expected_occurrence_share,n_sites,mean_predicted_probability,rank_in_cluster,thermal_group,migratory_strategy,foraging_guild,species_thermal_index,species_label
+Cluster 1,Alauda_arvensis,399.821774352843,0.01864338622033882,401,0.9970617814285362,1,medium,sedentary and short-distance,Open-land insectivores,12.1983199326,Alauda arvensis
+Cluster 1,Vanellus_vanellus,391.1842494181401,0.01824062498101882,401,0.9755218189978556,2,cold,short-distance,Plovers,11.532605723,Vanellus vanellus
+Cluster 1,Turdus_merula,389.78905217017314,0.018175567991089984,401,0.972042524115145,3,warm,sedentary,Thrushes,12.5843398181,Turdus merula
+Cluster 1,Emberiza_citrinella,384.96131180522235,0.017950454117937425,401,0.9600032713347191,4,cold,sedentary,Buntings,11.5528442066,Emberiza citrinella
+Cluster 1,Sturnus_vulgaris,379.4507530721656,0.01769350094194663,401,0.9462612296063979,5,cold,short-distance,Starlings,11.8027600322,Sturnus vulgaris
+Cluster 1,Hirundo_rustica,373.62881353556116,0.0174220283151542,401,0.9317426771460379,6,warm,long-distance,Aerial insectivores,12.4305273248,Hirundo rustica
+Cluster 1,Passer_domesticus,373.2828179702534,0.017405894804254255,401,0.9308798453123527,7,medium,sedentary,Passerine seedeaters,12.2628071769,Passer domesticus
+Cluster 1,Emberiza_schoeniclus,371.7249754081975,0.017333253786636093,401,0.9269949511426372,8,cold,sedentary and short-distance,Buntings,11.2704483494,Emberiza schoeniclus
+Cluster 1,Fringilla_coelebs,367.22135640478683,0.01712325344684533,401,0.9157639810593188,9,medium,sedentary and short-distance,Foliage gleaners,12.2951633877,Fringilla coelebs
+Cluster 1,Curruca_communis,363.5637553866534,0.016952702284314624,401,0.9066427815128514,10,warm,long-distance,Foliage gleaners,12.6535890847,Curruca communis
+Cluster 1,Parus_major,362.80909695580533,0.016917513133814985,401,0.9047608402887913,11,medium,sedentary and short-distance,Tit-like birds,12.343727765,Parus major
+Cluster 1,Linaria_cannabina,362.20980210168466,0.016889568469112024,401,0.9032663394056974,12,very warm,short-distance,Passerine seedeaters,13.1603552715,Linaria cannabina
+Cluster 1,Cuculus_canorus,349.0237238633285,0.016274711637647085,401,0.8703833512801209,13,medium,long-distance,Cuckoos,12.1394391784,Cuculus canorus
+Cluster 1,Columba_palumbus,348.65840550084147,0.016257677119363902,401,0.8694723329198042,14,medium,sedentary and short-distance,Columbids,12.2214205187,Columba palumbus
+Cluster 1,Phylloscopus_trochilus,348.1472728659086,0.016233843392103056,401,0.8681976879449091,15,very cold,long-distance,Foliage gleaners,10.4596695622,Phylloscopus trochilus
+Cluster 1,Emberiza_calandra,333.16588212895397,0.015535272499912564,401,0.8308376112941496,16,very warm,sedentary,Buntings,14.2313581317,Emberiza calandra
+Cluster 1,Motacilla_alba,332.27337252223214,0.015493655453591337,401,0.8286119015517011,17,medium,short-distance,Open-land insectivores,11.9859302219,Motacilla alba
+Cluster 1,Anas_platyrhynchos,331.82896757885726,0.015472933187999433,401,0.8275036597976491,18,cold,sedentary and short-distance,Dabbling ducks,11.8110548425,Anas platyrhynchos
+Cluster 1,Turdus_philomelos,325.3866752775119,0.015172533982096498,401,0.8114380929613764,19,cold,short-distance,Thrushes,11.3956704897,Turdus philomelos
+Cluster 1,Anthus_pratensis,325.28183384867776,0.015167645305753617,401,0.811176643014159,20,very cold,short-distance,Open-land insectivores,9.9487726902,Anthus pratensis
+Cluster 1,Acrocephalus_schoenobaenus,320.5187243905258,0.01494554512278632,401,0.7992985645649022,21,cold,long-distance,Marsh warblers,11.3913898283,Acrocephalus schoenobaenus
+Cluster 1,Fulica_atra,318.77893860845785,0.014864420230755996,401,0.7949599466545083,22,warm,sedentary and short-distance,Rails,12.9624637063,Fulica atra
+Cluster 1,Hippolais_icterina,317.26250852079136,0.014793710245422483,401,0.7911783254882577,23,cold,long-distance,Foliage gleaners,11.3916568563,Hippolais icterina
+Cluster 1,Curruca_curruca,314.4468109935691,0.014662416404398878,401,0.7841566358941873,24,cold,long-distance,Foliage gleaners,11.6399285102,Curruca curruca
+Cluster 1,Pica_pica,310.4353395396419,0.01447536453172766,401,0.7741529664330222,25,medium,sedentary,Omnivorous corvids,12.155826028,Pica pica
+Cluster 1,Passer_montanus,309.72036538286585,0.014442025828842074,401,0.7723699884859497,26,very warm,sedentary,Passerine seedeaters,13.070887931,Passer montanus
+Cluster 1,Sylvia_borin,306.9525980621771,0.014312966937011699,401,0.7654678255914641,27,cold,long-distance,Foliage gleaners,11.3163422901,Sylvia borin
+Cluster 1,Tringa_totanus,305.8269896665096,0.014260480670881613,401,0.7626608221109964,28,cold,short-distance,Scolopacids,11.0359375128,Tringa totanus
+Cluster 1,Troglodytes_troglodytes,301.1823741348254,0.014043905769871457,401,0.7510782397377193,29,medium,sedentary,Low flycatching feeders,12.2368253494,Troglodytes troglodytes
+Cluster 1,Acrocephalus_scirpaceus,299.87790918237295,0.013983079558095394,401,0.7478252099311046,30,very warm,long-distance,Marsh warblers,13.1524057431,Acrocephalus scirpaceus
+Cluster 1,Gallinula_chloropus,298.6393502954104,0.01392532649618762,401,0.7447365344025196,31,very warm,sedentary and short-distance,Rails,13.3437206998,Gallinula chloropus
+Cluster 1,Cyanistes_caeruleus,293.73001329701844,0.013696407833878729,401,0.7324937987456819,32,warm,sedentary,Tit-like birds,12.7367473555,Cyanistes caeruleus
+Cluster 1,Prunella_modularis,293.0271777680611,0.013663635146005647,401,0.7307410916909255,33,very cold,sedentary and short-distance,Low flycatching feeders,10.9083374064,Prunella modularis
+Cluster 1,Chloris_chloris,289.7959950677256,0.013512967546352431,401,0.7226832794706374,34,warm,sedentary and short-distance,Passerine seedeaters,12.6006224966,Chloris chloris
+Cluster 1,Tadorna_tadorna,287.4776440180888,0.013404864594524293,401,0.7169018554067053,35,medium,short-distance,Dabbling ducks,12.0434493446,Tadorna tadorna
+Cluster 1,Perdix_perdix,283.7891971983613,0.013232875115650451,401,0.7077037336617489,36,warm,sedentary,Gallinaceous birds,12.8463889005,Perdix perdix
+Cluster 1,Erithacus_rubecula,278.55949550014105,0.012989018090267338,401,0.6946620835414989,37,medium,sedentary,Low flycatching feeders,11.998445823500001,Erithacus rubecula
+Cluster 1,Gallinago_gallinago,274.48665515059065,0.012799104632518942,401,0.6845053744403757,38,very cold,short-distance,Scolopacids,10.2670472691,Gallinago gallinago
+Cluster 1,Haematopus_ostralegus,274.2926795239243,0.012790059696106644,401,0.6840216446980655,39,very cold,short-distance,Plovers,10.4739718085,Haematopus ostralegus
+Cluster 1,Corvus_cornix,274.24644536595423,0.012787903832372102,401,0.6839063475460205,40,medium,sedentary,Omnivorous corvids,12.1293990446,Corvus cornix
+Cluster 1,Cygnus_olor,260.48496480686646,0.012146216426922436,401,0.649588440914879,41,medium,sedentary and short-distance,Grazing waterfowl,12.1899516659,Cygnus olor
+Cluster 1,Delichon_urbicum,253.1496704313102,0.011804177211312612,401,0.6312959362376813,42,warm,long-distance,Aerial insectivores,12.3470551373,Delichon urbicum
+Cluster 1,Saxicola_rubetra,243.38677102315006,0.011348940613477848,401,0.606949553673691,43,cold,long-distance,Low flycatching feeders,11.2990488425,Saxicola rubetra
+Cluster 1,Sylvia_atricapilla,239.28983327209815,0.01115790351216645,401,0.5967327513019904,44,warm,short-distance,Foliage gleaners,12.6192368528,Sylvia atricapilla
+Cluster 1,Streptopelia_decaocto,236.12919792301497,0.011010525482017917,401,0.5888508676384413,45,warm,sedentary,Columbids,12.9162282666,Streptopelia decaocto
+Cluster 1,Charadrius_hiaticula,230.0226994407297,0.01072578408732167,401,0.5736226918721439,46,very cold,short-distance,Plovers,8.2214626932,Charadrius hiaticula
+Cluster 1,Coloeus_monedula,224.08731767197978,0.010449021735248495,401,0.5588212410772563,47,warm,sedentary and short-distance,Omnivorous corvids,12.9581704982,Coloeus monedula
+Cluster 1,Motacilla_flava,219.97582004751197,0.010257305718078022,401,0.5485681297942941,48,medium,long-distance,Open-land insectivores,12.136968586,Motacilla flava
+Cluster 1,Chroicocephalus_ridibundus,212.67378623111298,0.009916817417125802,401,0.5303585691548952,49,cold,short-distance,Gulls,11.0679667544,Chroicocephalus ridibundus
+Cluster 1,Riparia_riparia,210.3018891238197,0.009806217653224128,401,0.5244436137751115,50,medium,long-distance,Aerial insectivores,11.9550761988,Riparia riparia
+Cluster 1,Regulus_regulus,192.05145769113534,0.00895521387175655,401,0.4789313159379934,51,very cold,short-distance,Tit-like birds,10.8075146552,Regulus regulus
+Cluster 1,Periparus_ater,176.70137905124162,0.008239451342166153,401,0.4406518180828968,52,medium,sedentary,Tit-like birds,11.9045668053,Periparus ater
+Cluster 1,Anthus_trivialis,167.0494835184754,0.007789390770885403,401,0.4165822531632803,53,cold,long-distance,Low flycatching feeders,11.2439352645,Anthus trivialis
+Cluster 1,Falco_tinnunculus,162.75757560482242,0.007589262358705062,401,0.4058792409097816,54,warm,sedentary and short-distance,Diurnal raptors,12.4263636442,Falco tinnunculus
+Cluster 1,Carduelis_carduelis,161.59713534917663,0.007535151909351344,401,0.40298537493560255,55,very warm,sedentary and short-distance,Passerine seedeaters,13.4542440183,Carduelis carduelis
+Cluster 1,Acrocephalus_palustris,160.35292042372893,0.0074771351106570315,401,0.3998825945728901,56,medium,long-distance,Marsh warblers,12.248077272,Acrocephalus palustris
+Cluster 1,Phoenicurus_phoenicurus,149.14103031764003,0.0069543331751042575,401,0.3719227688719203,57,cold,long-distance,Low flycatching feeders,11.3098485667,Phoenicurus phoenicurus
+Cluster 1,Oenanthe_oenanthe,146.60574607430422,0.006836114792917958,401,0.36560036427507286,58,cold,long-distance,Low flycatching feeders,11.6202368597,Oenanthe oenanthe
+Cluster 1,Recurvirostra_avosetta,146.10332262442512,0.006812687168353456,401,0.36434743796614744,59,very warm,short-and long-distance,Plovers,14.5831200661,Recurvirostra avosetta
+Cluster 1,Luscinia_luscinia,144.12112757871245,0.006720258916137631,401,0.3594043081763403,60,cold,long-distance,Low flycatching feeders,11.8425102806,Luscinia luscinia
+Cluster 1,Phylloscopus_collybita,135.7424725132765,0.006329568582563981,401,0.33850990651689905,61,medium,short-distance,Foliage gleaners,11.9465889491,Phylloscopus collybita
+Cluster 1,Dendrocopos_major,135.4471872404309,0.006315799654156445,401,0.33777353426541373,62,medium,sedentary,Woodpeckers,12.1154284266,Dendrocopos major
+Cluster 1,Garrulus_glandarius,127.36767492072082,0.005939058120026265,401,0.3176251244905756,63,warm,sedentary,Omnivorous corvids,12.466780849,Garrulus glandarius
+Cluster 1,Podiceps_cristatus,127.1332450994023,0.005928126835186962,401,0.3170405114698312,64,warm,short-distance,Aquatic pursuers,12.6860788894,Podiceps cristatus
+Cluster 1,Mergus_serrator,125.49000600354894,0.0058515038419396795,401,0.3129426583629649,65,very cold,short-distance,Aquatic pursuers,7.3724850113,Mergus serrator
+Cluster 1,Larus_canus,122.4146462650691,0.0057081021488633995,401,0.30527343208246654,66,very cold,sedentary and short-distance,Gulls,8.5740563147,Larus canus
+Cluster 1,Lophophanes_cristatus,119.546974581063,0.0055743847923122435,401,0.29812213112484537,67,cold,sedentary,Tit-like birds,11.7118025203,Lophophanes cristatus
+Cluster 1,Sterna_paradisaea,111.29821444347353,0.005189751360746556,401,0.27755165696626816,68,very cold,long-distance,Terns,6.7214988279,Sterna paradisaea
+Cluster 1,Strix_aluco,107.03834271667671,0.004991116771671656,401,0.2669285354530591,69,warm,sedentary,Owls,12.8738657057,Strix aluco
+Cluster 1,Spatula_clypeata,104.33182602672348,0.004864913950316405,401,0.26017911727362464,70,cold,short-distance,Dabbling ducks,11.7556216717,Spatula clypeata
+Cluster 1,Calidris_alpina,100.03280096757558,0.004664453671037372,401,0.2494583565276199,71,very cold,long-distance,Scolopacids,7.0663752664,Calidris alpina
+Cluster 1,Poecile_palustris,97.92214022525805,0.0045660351607828345,401,0.24419486340463353,72,medium,sedentary,Tit-like birds,12.3251392514,Poecile palustris
+Cluster 1,Calidris_pugnax,93.88063281461825,0.004377582734221331,401,0.23411629130827494,73,very cold,long-distance,Scolopacids,7.9732949741,Calidris pugnax
+Cluster 1,Muscicapa_striata,93.14252724693701,0.004343165431181902,401,0.2322756290447307,74,medium,long-distance,Flycatchers,12.1492223917,Muscicapa striata
+Cluster 1,Anas_crecca,91.14984703337704,0.0042502482635385,401,0.22730635170418215,75,very cold,short-distance,Dabbling ducks,10.071290709,Anas crecca
+Cluster 1,Asio_otus,87.96824643818152,0.004101892639858175,401,0.21937218563137537,76,medium,sedentary,Owls,12.2940439872,Asio otus
+Cluster 1,Buteo_buteo,86.00985753307943,0.004010574449930821,401,0.21448842277575916,77,warm,sedentary and short-distance,Diurnal raptors,12.6973693303,Buteo buteo
+Cluster 1,Rallus_aquaticus,83.65356269161373,0.0039007022078561076,401,0.20861237578956043,78,very warm,sedentary and short-distance,Rails,13.3215188918,Rallus aquaticus
+Cluster 1,Sternula_albifrons,81.8950025729454,0.0038187018827435357,401,0.20422693908465187,79,very warm,long-distance,Terns,13.6554594356,Sternula albifrons
+Cluster 1,Larus_argentatus,79.63373486721765,0.003713260683965158,401,0.19858786749929588,80,very cold,sedentary and short-distance,Gulls,9.0583381929,Larus argentatus
+Cluster 1,Sterna_hirundo,78.75734321567589,0.0036723952056744364,401,0.19640235215879273,81,cold,long-distance,Terns,11.4396148713,Sterna hirundo
+Cluster 1,Phylloscopus_sibilatrix,77.05727190197089,0.0035931221691950623,401,0.19216277282287006,82,cold,long-distance,Foliage gleaners,11.3755910555,Phylloscopus sibilatrix
+Cluster 1,Tachybaptus_ruficollis,76.71944143222106,0.003577369390510762,401,0.1913203028234939,83,very warm,sedentary and short-distance,Aquatic pursuers,13.4633891991,Tachybaptus ruficollis
+Cluster 1,Ficedula_hypoleuca,76.10254851748857,0.0035486041415831266,401,0.18978191650246526,84,very cold,long-distance,Flycatchers,10.4275102213,Ficedula hypoleuca
+Cluster 1,Spatula_querquedula,69.70173686488154,0.003250139146883046,401,0.1738197926805026,85,warm,long-distance,Dabbling ducks,12.389627827,Spatula querquedula
+Cluster 1,Athene_noctua,67.33482913787543,0.0031397720340015528,401,0.16791727964557465,86,very warm,sedentary,Owls,14.2083192272,Athene noctua
+Cluster 1,Podiceps_grisegena,67.17075936198601,0.0031321215847383986,401,0.16750812808475316,87,medium,short-distance,Aquatic pursuers,11.9386619385,Podiceps grisegena
+Cluster 1,Limosa_limosa,66.71903007019225,0.0031110577903325463,401,0.16638162112267393,88,medium,long-distance,Scolopacids,12.0468335512,Limosa limosa
+Cluster 1,Turdus_viscivorus,66.09681216708475,0.003082044241234029,401,0.16482995552888965,89,medium,short-distance,Thrushes,11.9147042629,Turdus viscivorus
+Cluster 1,Accipiter_nisus,64.63453193904495,0.00301385922280216,401,0.16118337141906472,90,medium,sedentary and short-distance,Diurnal raptors,11.9162821341,Accipiter nisus
+Cluster 1,Aythya_ferina,64.36184768057532,0.00300114416256042,401,0.16050336079943972,91,warm,short-distance,Diving ducks,12.445391892,Aythya ferina
+Cluster 1,Lanius_collurio,64.15412435022539,0.0029914581811479337,401,0.15998534750679647,92,warm,long-distance,Shrikes,12.6238867722,Lanius collurio
+Cluster 1,Apus_apus,62.88366437660056,0.0029322175957543365,401,0.15681711814613605,93,warm,long-distance,Aerial insectivores,12.4470483242,Apus apus
+Cluster 1,Locustella_naevia,60.06926119783109,0.0028009841092177987,401,0.1497986563536935,94,cold,long-distance,Marsh warblers,11.7684221003,Locustella naevia
+Cluster 1,Anser_anser,57.30300367862961,0.0026719956182861444,401,0.14290025855019853,95,cold,sedentary and short-distance,Grazing waterfowl,11.1956416463,Anser anser
+Cluster 1,Numenius_arquata,55.557674697126586,0.0025906122510686407,401,0.13854781719981693,96,very cold,short-distance,Scolopacids,10.0493203009,Numenius arquata
+Cluster 1,Corvus_frugilegus,54.11276143446934,0.0025232370410661056,401,0.13494454223059685,97,warm,sedentary,Omnivorous corvids,12.7340640684,Corvus frugilegus
+Cluster 1,Aythya_fuligula,53.916570815364196,0.002514088821235645,401,0.13445528881636956,98,very cold,short-distance,Diving ducks,10.1385920012,Aythya fuligula
+Cluster 1,Sitta_europaea,53.01251818068373,0.0024719335322718463,401,0.13220079346803923,99,warm,sedentary,Tit-like birds,12.7946675987,Sitta europaea
+Cluster 1,Pyrrhula_pyrrhula,50.15909408756091,0.0023388805300820206,401,0.12508502266224666,100,very cold,short-distance,Passerine seedeaters,10.756294956,Pyrrhula pyrrhula
+Cluster 1,Acanthis_flammea,50.08450248677254,0.0023354023802875487,401,0.12489900869519337,101,very cold,short-distance,Passerine seedeaters,8.1923087262,Acanthis flammea
+Cluster 1,Circus_aeruginosus,47.50994365042591,0.002215352653604485,401,0.11847866246989006,102,very warm,short-and long-distance,Diurnal raptors,13.2259231132,Circus aeruginosus
+Cluster 1,Anas_acuta,45.698268215639594,0.002130875601569759,401,0.1139607686175551,103,very cold,short-distance,Dabbling ducks,8.5273453088,Anas acuta
+Cluster 1,Certhia_familiaris,34.456723897107054,0.0016066909125725488,401,0.08592699226211235,104,cold,sedentary,Tit-like birds,11.119463211,Certhia familiaris
+Cluster 1,Porzana_porzana,34.18507713580751,0.0015940242300372894,401,0.08524956891722571,105,warm,long-distance,Rails,12.4064941754,Porzana porzana
+Cluster 1,Picus_viridis,33.93597670087556,0.0015824088656074564,401,0.08462837082512607,106,warm,sedentary,Woodpeckers,12.9413688865,Picus viridis
+Cluster 1,Corvus_corone,33.0670451694546,0.0015418912470622117,401,0.08246145927544789,107,medium,sedentary,Omnivorous corvids,12.1293990446,Corvus corone
+Cluster 1,Somateria_mollissima,32.634662267156,0.0015217295601313997,401,0.08138319767370575,108,very cold,short-distance,Diving ducks,8.1688294838,Somateria mollissima
+Cluster 1,Aegithalos_caudatus,31.978460280633353,0.0014911313589876596,401,0.07974678374222781,109,warm,sedentary,Tit-like birds,12.6607518772,Aegithalos caudatus
+Cluster 1,Lullula_arborea,28.660841090517668,0.0013364332913462754,401,0.0714734191783483,110,very warm,short-distance,Open-land insectivores,13.4719748078,Lullula arborea
+Cluster 1,Ardea_cinerea,26.34011042221482,0.0012282193797038031,401,0.06568606090327886,111,warm,sedentary and short-distance,Wading birds,12.6943991523,Ardea cinerea
+Cluster 1,Crex_crex,25.95606513656324,0.0012103116391909412,401,0.06472834198644199,112,medium,long-distance,Rails,11.9688491073,Crex crex
+Cluster 1,Tringa_glareola,25.668187764174473,0.001196888135565539,401,0.06401044330218073,113,very cold,long-distance,Scolopacids,7.6706167812,Tringa glareola
+Cluster 1,Oriolus_oriolus,24.891050855623064,0.0011606508306922483,401,0.06207244602399767,114,very warm,long-distance,Orioles,13.4707159049,Oriolus oriolus
+Cluster 1,Thalasseus_sandvicensis,23.674845164057682,0.0011039400813391686,401,0.059039514124832125,115,medium,short-and long-distance,Terns,12.309341223,Thalasseus sandvicensis
+Cluster 1,Loxia_curvirostra,23.324288640333545,0.0010875938964060767,401,0.05816530833000884,116,very cold,sedentary and short-distance,Passerine seedeaters,10.4943181045,Loxia curvirostra
+Cluster 1,Anarhynchus_alexandrinus,23.298064065941237,0.001086371064383856,401,0.05809991038888089,117,very warm,short-and long-distance,Plovers,16.3071703744,Anarhynchus alexandrinus
+Cluster 1,Coccothraustes_coccothraustes,21.623744019301846,0.001008298789964888,401,0.053924548676563204,118,warm,sedentary,Passerine seedeaters,12.9763477132,Coccothraustes coccothraustes
+Cluster 1,Caprimulgus_europaeus,21.51062781383308,0.0010030242670609093,401,0.05364246337614234,119,very warm,long-distance,Nigthjars,13.110333547,Caprimulgus europaeus
+Cluster 1,Asio_flammeus,21.205143666657055,9.887797728754392e-4,401,0.05288065752283555,120,very cold,sedentary and short-distance,Owls,9.6200242401,Asio flammeus
+Cluster 1,Spinus_spinus,20.763897924528585,9.682048184425638e-4,401,0.051780294076131134,121,very cold,sedentary and short-distance,Passerine seedeaters,10.2425165856,Spinus spinus
+Cluster 1,Panurus_biarmicus,20.588506182607528,9.600264344869002e-4,401,0.051342908186053686,122,very warm,sedentary,Reedlings,13.8780278318,Panurus biarmicus
+Cluster 1,Botaurus_stellaris,20.088017117757833,9.366890088298007e-4,401,0.05009480577994472,123,very warm,sedentary and short-distance,Wading birds,13.1076210929,Botaurus stellaris
+Cluster 1,Acrocephalus_arundinaceus,20.018131360025432,9.334302889293773e-4,401,0.04992052708235768,124,very warm,long-distance,Marsh warblers,13.8793523116,Acrocephalus arundinaceus
+Cluster 1,Charadrius_dubius,19.29089265766953,8.995196995815497e-4,401,0.04810696423358985,125,warm,short-and long-distance,Plovers,12.7729324864,Charadrius dubius
+Cluster 1,Phoenicurus_ochruros,18.523821231059575,8.637517405002236e-4,401,0.04619406790787924,126,very warm,sedentary and short-distance,Low flycatching feeders,13.2394438706,Phoenicurus ochruros
+Cluster 1,Chlidonias_niger,17.764271503003474,8.283345125200223e-4,401,0.044299928935170756,127,very warm,long-distance,Terns,13.0082465521,Chlidonias niger
+Cluster 1,Circus_pygargus,17.567821381402982,8.19174192284941e-4,401,0.043810028382551075,128,very warm,long-distance,Diurnal raptors,13.6904029809,Circus pygargus
+Cluster 1,Jynx_torquilla,17.0748651032583,7.961880147610486e-4,401,0.04258071098069401,129,medium,short-distance,Woodpeckers,11.8812540667,Jynx torquilla
+Cluster 1,Turdus_pilaris,16.926004868391992,7.892467748649599e-4,401,0.042209488449855344,130,very cold,short-distance,Thrushes,10.0287125382,Turdus pilaris
+Cluster 1,Scolopax_rusticola,15.314314610322759,7.140948800053631e-4,401,0.03819031074893456,131,very cold,sedentary and short-distance,Scolopacids,10.6010955955,Scolopax rusticola
+Cluster 1,Locustella_luscinioides,13.830736906775835,6.449167764368976e-4,401,0.034490615727620536,132,very warm,long-distance,Marsh warblers,13.5908101527,Locustella luscinioides
+Cluster 1,Tyto_alba,11.93797142534538,5.566585570041255e-4,401,0.02977050230759446,133,very warm,sedentary,Owls,13.9906366009,Tyto alba
+Cluster 1,Podiceps_nigricollis,11.72808716027881,5.468718128440767e-4,401,0.02924710015032122,134,very warm,short-distance,Aquatic pursuers,13.3391366196,Podiceps nigricollis
+Cluster 1,Coturnix_coturnix,10.615557064138136,4.949953779058508e-4,401,0.026472710883137494,135,very warm,short-and long-distance,Gallinaceous birds,13.6002736383,Coturnix coturnix
+Cluster 1,Astur_gentilis,9.186097313899507,4.2834075347159185e-4,401,0.022907973351370344,136,cold,sedentary,Diurnal raptors,11.8007973825,Astur gentilis
+Cluster 1,Mareca_strepera,8.502729417630938,3.964758265517487e-4,401,0.02120381400905471,137,warm,short-distance,Dabbling ducks,12.5158986156,Mareca strepera
+Cluster 1,Corvus_corax,6.819249986970377,3.179764569998968e-4,401,0.01700561094007575,138,cold,sedentary,Omnivorous corvids,11.7378412998,Corvus corax
+Cluster 1,Larus_marinus,6.666988846749573,3.1087663546546353e-4,401,0.016625907348502673,139,very cold,sedentary and short-distance,Gulls,8.3694639418,Larus marinus
+Cluster 1,Alcedo_atthis,5.536313841426285,2.5815411716829115e-4,401,0.013806268931237618,140,very warm,sedentary,Kingfishers,13.5319163712,Alcedo atthis
+Cluster 1,Streptopelia_turtur,5.473948284538329,0.00025524605853193834,401,0.01365074385171653,141,very warm,long-distance,Columbids,13.7662137901,Streptopelia turtur
+Cluster 1,Remiz_pendulinus,5.2736482724319735,2.4590622082129425e-4,401,0.013151242574643325,142,very warm,short-distance,Tit-like birds,13.7399153521,Remiz pendulinus
+Cluster 1,Larus_fuscus,4.4905152531676515,2.0938932185130452e-4,401,0.011198292401914342,143,very cold,short-and long-distance,Gulls,8.9178677716,Larus fuscus
+Cluster 1,Mergus_merganser,4.405420965389132,2.0542143972490594e-4,401,0.010986087195484119,144,very cold,short-distance,Aquatic pursuers,7.9118621485,Mergus merganser
+Cluster 1,Pernis_apivorus,4.185451944917427,1.9516445106589284e-4,401,0.010437536022237971,145,medium,long-distance,Diurnal raptors,11.9608484505,Pernis apivorus
+Cluster 1,Lanius_excubitor,4.0820375190783444,1.9034231479081557e-4,401,0.010179644685980909,146,cold,sedentary,Shrikes,11.2044136127,Lanius excubitor
+Cluster 1,Motacilla_cinerea,3.026192839879095,1.4110907786953238e-4,401,0.007546615560795749,147,warm,sedentary and short-distance,Open-land insectivores,12.9122079488,Motacilla cinerea
+Cluster 1,Certhia_brachydactyla,2.4668782736052584,1.1502866367852801e-4,401,0.006151816143654011,148,very warm,sedentary,Tit-like birds,13.8972978687,Certhia brachydactyla
+Cluster 1,Serinus_serinus,2.462178314907625,1.1480950816764709e-4,401,0.006140095548398067,149,very warm,short-distance,Passerine seedeaters,13.8814196118,Serinus serinus
+Cluster 1,Regulus_ignicapilla,2.340645607535954,1.0914253016075661e-4,401,0.0058370214651769425,150,very warm,short-distance,Tit-like birds,13.1999439071,Regulus ignicapilla
+Cluster 1,Ficedula_parva,2.2792567665848766,1.0628001504806076e-4,401,0.005683932086246575,151,cold,long-distance,Flycatchers,11.5985667049,Ficedula parva
+Cluster 1,Dryocopus_martius,2.029149325190815,9.461769467034346e-5,401,0.00506022275608682,152,cold,sedentary,Woodpeckers,11.1193962821,Dryocopus martius
+Cluster 1,Columba_oenas,1.8548381036731043,8.648969456191062e-5,401,0.0046255314306062455,153,warm,short-distance,Columbids,12.4358174295,Columba oenas
+Cluster 1,Carpodacus_erythrinus,1.3490799515958163,6.290657536205284e-5,401,0.0033642891560992927,154,very cold,long-distance,Passerine seedeaters,10.348256227,Carpodacus erythrinus
+Cluster 1,Tringa_ochropus,1.1726386114121312,5.467924943513703e-5,401,0.00292428581399534,155,very cold,short-and long-distance,Scolopacids,9.8785200822,Tringa ochropus
+Cluster 1,Cinclus_cinclus,0.8587627034058749,4.004345380421665e-5,401,0.0021415528763238777,156,cold,short-distance,Dippers,11.0150016531,Cinclus cinclus
+Cluster 1,Dryobates_minor,0.20353135859004134,9.490512947390793e-6,401,5.075594977307764e-4,157,cold,sedentary and short-distance,Woodpeckers,11.5509643269,Dryobates minor
+Cluster 2,Turdus_merula,494.1580063350114,0.022467783474453384,496,0.9962863030947811,1,warm,sedentary,Thrushes,12.5843398181,Turdus merula
+Cluster 2,Alauda_arvensis,492.8923725732104,0.022410239156738083,496,0.9937346221234081,2,medium,sedentary and short-distance,Open-land insectivores,12.1983199326,Alauda arvensis
+Cluster 2,Emberiza_citrinella,487.886457076356,0.022182636195675287,496,0.9836420505571694,3,cold,sedentary,Buntings,11.5528442066,Emberiza citrinella
+Cluster 2,Fringilla_coelebs,487.16789379391327,0.022149965422287733,496,0.9821933342619219,4,medium,sedentary and short-distance,Foliage gleaners,12.2951633877,Fringilla coelebs
+Cluster 2,Parus_major,479.8474636393451,0.021817128885098874,496,0.9674344024986796,5,medium,sedentary and short-distance,Tit-like birds,12.343727765,Parus major
+Cluster 2,Hirundo_rustica,478.20144909212615,0.02174228987011053,496,0.9641158247825125,6,warm,long-distance,Aerial insectivores,12.4305273248,Hirundo rustica
+Cluster 2,Sturnus_vulgaris,473.89243406246334,0.021546372743536657,496,0.9554282944807728,7,cold,short-distance,Starlings,11.8027600322,Sturnus vulgaris
+Cluster 2,Passer_domesticus,473.7831822405928,0.021541405412750736,496,0.9552080287108725,8,medium,sedentary,Passerine seedeaters,12.2628071769,Passer domesticus
+Cluster 2,Columba_palumbus,463.48340738032385,0.021073107604297835,496,0.9344423535893626,9,medium,sedentary and short-distance,Columbids,12.2214205187,Columba palumbus
+Cluster 2,Phylloscopus_trochilus,462.03509438566726,0.02100725744635236,496,0.9315223677130389,10,very cold,long-distance,Foliage gleaners,10.4596695622,Phylloscopus trochilus
+Cluster 2,Emberiza_calandra,458.87955509069667,0.020863785170854177,496,0.9251603933280175,11,very warm,sedentary,Buntings,14.2313581317,Emberiza calandra
+Cluster 2,Turdus_philomelos,441.9072612010931,0.020092109271065396,496,0.8909420588731716,12,cold,short-distance,Thrushes,11.3956704897,Turdus philomelos
+Cluster 2,Curruca_communis,440.13228892568975,0.020011406960780687,496,0.8873634857372777,13,warm,long-distance,Foliage gleaners,12.6535890847,Curruca communis
+Cluster 2,Pica_pica,437.1540930802434,0.019875997924516605,496,0.881359058629523,14,medium,sedentary,Omnivorous corvids,12.155826028,Pica pica
+Cluster 2,Vanellus_vanellus,432.85629195508665,0.01968059065830139,496,0.8726941370062231,15,cold,short-distance,Plovers,11.532605723,Vanellus vanellus
+Cluster 2,Troglodytes_troglodytes,432.5589141799739,0.01966706984233627,496,0.8720945850402699,16,medium,sedentary,Low flycatching feeders,12.2368253494,Troglodytes troglodytes
+Cluster 2,Linaria_cannabina,422.9204584016192,0.019228840096627453,496,0.8526622145193936,17,very warm,short-distance,Passerine seedeaters,13.1603552715,Linaria cannabina
+Cluster 2,Curruca_curruca,409.54664244914613,0.018620775475200177,496,0.8256988759055366,18,cold,long-distance,Foliage gleaners,11.6399285102,Curruca curruca
+Cluster 2,Erithacus_rubecula,397.6470269516211,0.01807973803171011,496,0.8017077156282684,19,medium,sedentary,Low flycatching feeders,11.998445823500001,Erithacus rubecula
+Cluster 2,Sylvia_borin,397.50308157508596,0.018073193295996676,496,0.8014175031755765,20,cold,long-distance,Foliage gleaners,11.3163422901,Sylvia borin
+Cluster 2,Hippolais_icterina,393.92083226587795,0.017910319881422814,496,0.7941952263424958,21,cold,long-distance,Foliage gleaners,11.3916568563,Hippolais icterina
+Cluster 2,Cyanistes_caeruleus,392.6763034160674,0.017853735136529908,496,0.79168609559691006,22,warm,sedentary,Tit-like birds,12.7367473555,Cyanistes caeruleus
+Cluster 2,Passer_montanus,391.5367618400186,0.017801923827064966,496,0.7893886327419729,23,very warm,sedentary,Passerine seedeaters,13.070887931,Passer montanus
+Cluster 2,Regulus_regulus,391.19879968671347,0.017786557769274392,496,0.78870725743289,24,very cold,short-distance,Tit-like birds,10.8075146552,Regulus regulus
+Cluster 2,Periparus_ater,388.19500120960663,0.017649984663265103,496,0.7826512121161424,25,medium,sedentary,Tit-like birds,11.9045668053,Periparus ater
+Cluster 2,Prunella_modularis,382.7626941206232,0.017402995040761097,496,0.7716989800819016,26,very cold,sedentary and short-distance,Low flycatching feeders,10.9083374064,Prunella modularis
+Cluster 2,Cuculus_canorus,378.90255763091557,0.017227486985198416,496,0.7639164468365233,27,medium,long-distance,Cuckoos,12.1394391784,Cuculus canorus
+Cluster 2,Corvus_cornix,378.3820378203915,0.01720382061483288,496,0.7628670117346602,28,medium,sedentary,Omnivorous corvids,12.1293990446,Corvus cornix
+Cluster 2,Motacilla_alba,374.42469538607884,0.017023892915982396,496,0.7548884987622557,29,medium,short-distance,Open-land insectivores,11.9859302219,Motacilla alba
+Cluster 2,Chloris_chloris,356.0486867220473,0.016188394596628568,496,0.717840094197676,30,warm,sedentary and short-distance,Passerine seedeaters,12.6006224966,Chloris chloris
+Cluster 2,Anthus_trivialis,350.677032839704,0.015944162681368702,496,0.7070101468542419,31,cold,long-distance,Low flycatching feeders,11.2439352645,Anthus trivialis
+Cluster 2,Sylvia_atricapilla,345.166071113635,0.01569359688417432,496,0.6958993369226512,32,warm,short-distance,Foliage gleaners,12.6192368528,Sylvia atricapilla
+Cluster 2,Emberiza_schoeniclus,330.66721391243505,0.015034380236771195,496,0.6666677699847481,33,cold,sedentary and short-distance,Buntings,11.2704483494,Emberiza schoeniclus
+Cluster 2,Perdix_perdix,319.6925273269271,0.014535396351572308,496,0.6445413857397724,34,warm,sedentary,Gallinaceous birds,12.8463889005,Perdix perdix
+Cluster 2,Saxicola_rubetra,315.1778951185059,0.014330130469758718,496,0.635439304674407,35,cold,long-distance,Low flycatching feeders,11.2990488425,Saxicola rubetra
+Cluster 2,Delichon_urbicum,312.05414119749014,0.014188103373515991,496,0.6291414137046172,36,warm,long-distance,Aerial insectivores,12.3470551373,Delichon urbicum
+Cluster 2,Streptopelia_decaocto,307.71753245379034,0.013990931649051784,496,0.6203982509148999,37,warm,sedentary,Columbids,12.9162282666,Streptopelia decaocto
+Cluster 2,Lophophanes_cristatus,297.51230440827754,0.01352693258176043,496,0.5998231943715273,38,cold,sedentary,Tit-like birds,11.7118025203,Lophophanes cristatus
+Cluster 2,Coloeus_monedula,291.5280625671093,0.013254848252006637,496,0.5877581906594946,39,warm,sedentary and short-distance,Omnivorous corvids,12.9581704982,Coloeus monedula
+Cluster 2,Gallinula_chloropus,263.61079283649104,0.011985539319510642,496,0.5314733726542158,40,very warm,sedentary and short-distance,Rails,13.3437206998,Gallinula chloropus
+Cluster 2,Anthus_pratensis,241.73306593630988,0.010990829075813294,496,0.48736505229094734,41,very cold,short-distance,Open-land insectivores,9.9487726902,Anthus pratensis
+Cluster 2,Anas_platyrhynchos,241.53840783631716,0.010981978594821149,496,0.48697259644418783,42,cold,sedentary and short-distance,Dabbling ducks,11.8110548425,Anas platyrhynchos
+Cluster 2,Dendrocopos_major,238.16800144641365,0.010828736999990185,496,0.48017742227099525,43,medium,sedentary,Woodpeckers,12.1154284266,Dendrocopos major
+Cluster 2,Garrulus_glandarius,235.48365922025292,0.010706688547601408,496,0.47476544197631637,44,warm,sedentary,Omnivorous corvids,12.466780849,Garrulus glandarius
+Cluster 2,Phylloscopus_collybita,225.79900495052414,0.010266358304303294,496,0.45523992933573415,45,medium,short-distance,Foliage gleaners,11.9465889491,Phylloscopus collybita
+Cluster 2,Riparia_riparia,196.41234438577692,0.008930240871940205,496,0.39599262981003414,46,medium,long-distance,Aerial insectivores,11.9550761988,Riparia riparia
+Cluster 2,Fulica_atra,193.09662296391647,0.008779485627639938,496,0.3893077075885413,47,warm,sedentary and short-distance,Rails,12.9624637063,Fulica atra
+Cluster 2,Gallinago_gallinago,190.31713465542268,0.008653111187310268,496,0.38370390051496506,48,very cold,short-distance,Scolopacids,10.2670472691,Gallinago gallinago
+Cluster 2,Buteo_buteo,184.02421988511384,0.008366992487076895,496,0.37101657234901986,49,warm,sedentary and short-distance,Diurnal raptors,12.6973693303,Buteo buteo
+Cluster 2,Acrocephalus_schoenobaenus,178.40738082191186,0.008111612786120843,496,0.3596923000441771,50,cold,long-distance,Marsh warblers,11.3913898283,Acrocephalus schoenobaenus
+Cluster 2,Carduelis_carduelis,174.84067518886488,0.007949446092769557,496,0.35250136126787274,51,very warm,sedentary and short-distance,Passerine seedeaters,13.4542440183,Carduelis carduelis
+Cluster 2,Falco_tinnunculus,174.09190572824505,0.00791540194110588,496,0.3509917454198489,52,warm,sedentary and short-distance,Diurnal raptors,12.4263636442,Falco tinnunculus
+Cluster 2,Accipiter_nisus,154.65339207864892,0.007031594919575508,496,0.31180119370695347,53,medium,sedentary and short-distance,Diurnal raptors,11.9162821341,Accipiter nisus
+Cluster 2,Poecile_palustris,153.25183603560566,0.006967870650619601,496,0.3089754758782372,54,medium,sedentary,Tit-like birds,12.3251392514,Poecile palustris
+Cluster 2,Muscicapa_striata,142.56878186622933,0.0064821463582954144,496,0.28743706021417204,55,medium,long-distance,Flycatchers,12.1492223917,Muscicapa striata
+Cluster 2,Turdus_viscivorus,141.12506335036323,0.006416505096600369,496,0.2845263373999259,56,medium,short-distance,Thrushes,11.9147042629,Turdus viscivorus
+Cluster 2,Picus_viridis,133.28051298682968,0.006059838490448431,496,0.26871071166699534,57,warm,sedentary,Woodpeckers,12.9413688865,Picus viridis
+Cluster 2,Asio_otus,132.0025522485978,0.006001733704555352,496,0.26613417792056004,58,medium,sedentary,Owls,12.2940439872,Asio otus
+Cluster 2,Phoenicurus_phoenicurus,126.88068178927172,0.005768858642350406,496,0.2558078261880478,59,cold,long-distance,Low flycatching feeders,11.3098485667,Phoenicurus phoenicurus
+Cluster 2,Acrocephalus_scirpaceus,125.61982963677258,0.005711531729111154,496,0.2532657855580092,60,very warm,long-distance,Marsh warblers,13.1524057431,Acrocephalus scirpaceus
+Cluster 2,Tadorna_tadorna,123.9624129548694,0.005636174295540196,496,0.2499242196670754,61,medium,short-distance,Dabbling ducks,12.0434493446,Tadorna tadorna
+Cluster 2,Athene_noctua,115.5557483290158,0.005253950152382277,496,0.23297529905043507,62,very warm,sedentary,Owls,14.2083192272,Athene noctua
+Cluster 2,Chroicocephalus_ridibundus,96.77574871451073,0.004400083657091775,496,0.19511239660183613,63,cold,short-distance,Gulls,11.0679667544,Chroicocephalus ridibundus
+Cluster 2,Acrocephalus_palustris,93.979948194992,0.004272967552718217,496,0.18947570200603228,64,medium,long-distance,Marsh warblers,12.248077272,Acrocephalus palustris
+Cluster 2,Phylloscopus_sibilatrix,90.38013332378061,0.004109295488241611,496,0.18221801073342866,65,cold,long-distance,Foliage gleaners,11.3755910555,Phylloscopus sibilatrix
+Cluster 2,Pyrrhula_pyrrhula,82.07369840836363,0.0037316284693292316,496,0.1654711661458944,66,very cold,short-distance,Passerine seedeaters,10.756294956,Pyrrhula pyrrhula
+Cluster 2,Strix_aluco,76.86549303732586,0.003494828034919937,496,0.15497075209138278,67,warm,sedentary,Owls,12.8738657057,Strix aluco
+Cluster 2,Oenanthe_oenanthe,70.45812147241918,0.0032035053504442016,496,0.14205266425890964,68,cold,long-distance,Low flycatching feeders,11.6202368597,Oenanthe oenanthe
+Cluster 2,Tringa_totanus,67.83244241013288,0.0030841241244222153,496,0.13675895647204211,69,cold,short-distance,Scolopacids,11.0359375128,Tringa totanus
+Cluster 2,Cygnus_olor,67.40075590231109,0.0030644967201056946,496,0.13588862077078848,70,medium,sedentary and short-distance,Grazing waterfowl,12.1899516659,Cygnus olor
+Cluster 2,Acanthis_flammea,65.68869555913422,0.002986654814090681,496,0.1324368862079319,71,very cold,short-distance,Passerine seedeaters,8.1923087262,Acanthis flammea
+Cluster 2,Lanius_collurio,65.15768965061591,0.0029625116743999392,496,0.13136630977946756,72,warm,long-distance,Shrikes,12.6238867722,Lanius collurio
+Cluster 2,Haematopus_ostralegus,63.22444222724703,0.0028746130995433985,496,0.12746863352267546,73,very cold,short-distance,Plovers,10.4739718085,Haematopus ostralegus
+Cluster 2,Caprimulgus_europaeus,57.39787506283994,0.002609697732857002,496,0.11572152230411277,74,very warm,long-distance,Nigthjars,13.110333547,Caprimulgus europaeus
+Cluster 2,Motacilla_flava,57.14121166521198,0.0025980280693692205,496,0.11520405577663706,75,medium,long-distance,Open-land insectivores,12.136968586,Motacilla flava
+Cluster 2,Apus_apus,57.05007625577877,0.002593884433892812,496,0.11502031503181204,76,warm,long-distance,Aerial insectivores,12.4470483242,Apus apus
+Cluster 2,Numenius_arquata,55.920215390258676,0.0025425132753618823,496,0.11274236973842475,77,very cold,short-distance,Scolopacids,10.0493203009,Numenius arquata
+Cluster 2,Sitta_europaea,55.23694606232072,0.002511447205161579,496,0.11136481060951758,78,warm,sedentary,Tit-like birds,12.7946675987,Sitta europaea
+Cluster 2,Luscinia_luscinia,54.781943170068665,0.0024907596794464973,496,0.11044746606868683,79,cold,long-distance,Low flycatching feeders,11.8425102806,Luscinia luscinia
+Cluster 2,Lullula_arborea,53.4269663504951,0.002429153218750111,496,0.10771565796470786,80,very warm,short-distance,Open-land insectivores,13.4719748078,Lullula arborea
+Cluster 2,Tachybaptus_ruficollis,52.99707062827298,0.002409607235725135,496,0.1068489327182923,81,very warm,sedentary and short-distance,Aquatic pursuers,13.4633891991,Tachybaptus ruficollis
+Cluster 2,Loxia_curvirostra,51.96261787700728,0.002362573978888184,496,0.1047633424939663,82,very cold,sedentary and short-distance,Passerine seedeaters,10.4943181045,Loxia curvirostra
+Cluster 2,Charadrius_hiaticula,47.186694688147966,0.0021454280322025284,496,0.09513446509707252,83,very cold,short-distance,Plovers,8.2214626932,Charadrius hiaticula
+Cluster 2,Ficedula_hypoleuca,44.613692442732024,0.002028441852502556,496,0.08994696057002424,84,very cold,long-distance,Flycatchers,10.4275102213,Ficedula hypoleuca
+Cluster 2,Astur_gentilis,44.36784438470973,0.0020172639279026354,496,0.08945129916272122,85,cold,sedentary,Diurnal raptors,11.8007973825,Astur gentilis
+Cluster 2,Locustella_naevia,41.43481347379704,0.0018839083967052126,496,0.08353793039071984,86,cold,long-distance,Marsh warblers,11.7684221003,Locustella naevia
+Cluster 2,Corvus_frugilegus,41.253825258628076,0.0018756794416387892,496,0.08317303479562112,87,warm,sedentary,Omnivorous corvids,12.7340640684,Corvus frugilegus
+Cluster 2,Coccothraustes_coccothraustes,40.858551159615864,0.001857707593048229,496,0.08237611120890295,88,warm,sedentary,Passerine seedeaters,12.9763477132,Coccothraustes coccothraustes
+Cluster 2,Jynx_torquilla,37.48710263776288,0.0017044186158118564,496,0.07557883596323162,89,medium,short-distance,Woodpeckers,11.8812540667,Jynx torquilla
+Cluster 2,Podiceps_cristatus,32.298869320507364,0.0014685262467868461,496,0.0651186881461842,90,warm,short-distance,Aquatic pursuers,12.6860788894,Podiceps cristatus
+Cluster 2,Certhia_familiaris,29.446657004240425,0.0013388452785064087,496,0.05936826008919441,91,cold,sedentary,Tit-like birds,11.119463211,Certhia familiaris
+Cluster 2,Anas_crecca,27.247188887999965,0.0012388425005262166,496,0.05493384856451606,92,very cold,short-distance,Dabbling ducks,10.071290709,Anas crecca
+Cluster 2,Corvus_corone,26.76384943298701,0.0012168666019660925,496,0.05395937385682865,93,medium,sedentary,Omnivorous corvids,12.1293990446,Corvus corone
+Cluster 2,Aegithalos_caudatus,26.543414785855028,0.001206844143848372,496,0.053514949165030294,94,warm,sedentary,Tit-like birds,12.6607518772,Aegithalos caudatus
+Cluster 2,Spinus_spinus,25.55259629322028,0.0011617947971422301,496,0.05151733123633121,95,very cold,sedentary and short-distance,Passerine seedeaters,10.2425165856,Spinus spinus
+Cluster 2,Tringa_glareola,24.399621771720746,0.001109372734626762,496,0.04919278583008215,96,very cold,long-distance,Scolopacids,7.6706167812,Tringa glareola
+Cluster 2,Alcedo_atthis,21.751466815118707,9.889696016025474e-4,496,0.04385376374015868,97,very warm,sedentary,Kingfishers,13.5319163712,Alcedo atthis
+Cluster 2,Turdus_pilaris,21.73935474125336,9.884189043568394e-4,496,0.04382934423639791,98,very cold,short-distance,Thrushes,10.0287125382,Turdus pilaris
+Cluster 2,Corvus_corax,18.844128605132624,8.567822353116773e-4,496,0.03799219476841255,99,cold,sedentary,Omnivorous corvids,11.7378412998,Corvus corax
+Cluster 2,Scolopax_rusticola,18.035230095754866,8.200042081857007e-4,496,0.03636135099950578,100,very cold,sedentary and short-distance,Scolopacids,10.6010955955,Scolopax rusticola
+Cluster 2,Tyto_alba,14.462647492589028,6.575703078066551e-4,496,0.02915856349312304,101,very warm,sedentary,Owls,13.9906366009,Tyto alba
+Cluster 2,Motacilla_cinerea,14.124626356120945,6.422015682403778e-4,496,0.028477069266372872,102,warm,sedentary and short-distance,Open-land insectivores,12.9122079488,Motacilla cinerea
+Cluster 2,Crex_crex,12.466928661671759,5.668313579280612e-4,496,0.02513493681788661,103,medium,long-distance,Rails,11.9688491073,Crex crex
+Cluster 2,Podiceps_grisegena,11.478794953870816,5.219040797982615e-4,496,0.023142731761836323,104,medium,short-distance,Aquatic pursuers,11.9386619385,Podiceps grisegena
+Cluster 2,Rallus_aquaticus,11.143080578541532,5.06640221280413e-4,496,0.022465888263188575,105,very warm,sedentary and short-distance,Rails,13.3215188918,Rallus aquaticus
+Cluster 2,Larus_canus,10.088636914057046,4.5869804158093965e-4,496,0.02033999377834082,106,very cold,sedentary and short-distance,Gulls,8.5740563147,Larus canus
+Cluster 2,Coturnix_coturnix,9.766869538550862,4.440683085211965e-4,496,0.01969126923094932,107,very warm,short-and long-distance,Gallinaceous birds,13.6002736383,Coturnix coturnix
+Cluster 2,Lanius_excubitor,9.722318408320728,4.4204271117233106e-4,496,0.019601448403872436,108,cold,sedentary,Shrikes,11.2044136127,Lanius excubitor
+Cluster 2,Pernis_apivorus,9.30556522370946,4.2309427728257044e-4,496,0.018761220209091652,109,medium,long-distance,Diurnal raptors,11.9608484505,Pernis apivorus
+Cluster 2,Asio_flammeus,8.918817068704223,4.055100760869895e-4,496,0.017981486025613353,110,very cold,sedentary and short-distance,Owls,9.6200242401,Asio flammeus
+Cluster 2,Ardea_cinerea,8.145520264878122,3.7035074460370495e-4,496,0.016422419888867182,111,warm,sedentary and short-distance,Wading birds,12.6943991523,Ardea cinerea
+Cluster 2,Regulus_ignicapilla,7.523896659032134,3.4208750814955735e-4,496,0.015169146489984141,112,very warm,short-distance,Tit-like birds,13.1999439071,Regulus ignicapilla
+Cluster 2,Mergus_serrator,7.199510945701195,3.273387276463742e-4,496,0.014515143035687893,113,very cold,short-distance,Aquatic pursuers,7.3724850113,Mergus serrator
+Cluster 2,Oriolus_oriolus,7.107592978124749,3.2315951175501147e-4,496,0.014329824552670864,114,very warm,long-distance,Orioles,13.4707159049,Oriolus oriolus
+Cluster 2,Charadrius_dubius,6.396162604311431,2.908130489008801e-4,496,0.012895489121595625,115,warm,short-and long-distance,Plovers,12.7729324864,Charadrius dubius
+Cluster 2,Circus_pygargus,6.0843544514255035,2.766361298288438e-4,496,0.012266843652067547,116,very warm,long-distance,Diurnal raptors,13.6904029809,Circus pygargus
+Cluster 2,Recurvirostra_avosetta,5.49070141246148,2.49644625558138e-4,496,0.01106996252512395,117,very warm,short-and long-distance,Plovers,14.5831200661,Recurvirostra avosetta
+Cluster 2,Phoenicurus_ochruros,4.901070038197352,2.2283597351389767e-4,496,0.009881189593139822,118,very warm,sedentary and short-distance,Low flycatching feeders,13.2394438706,Phoenicurus ochruros
+Cluster 2,Larus_argentatus,4.800042147458785,2.1824255856383004e-4,496,0.009677504329554002,119,very cold,sedentary and short-distance,Gulls,9.0583381929,Larus argentatus
+Cluster 2,Calidris_alpina,4.432435077876151,2.0152864127992876e-4,496,0.008936361044105143,120,very cold,long-distance,Scolopacids,7.0663752664,Calidris alpina
+Cluster 2,Sterna_paradisaea,4.059464977048819,1.8457088412451297e-4,496,0.008184405195662941,121,very cold,long-distance,Terns,6.7214988279,Sterna paradisaea
+Cluster 2,Somateria_mollissima,4.0065530083261915,1.821651462001514e-4,496,0.008077727839367322,122,very cold,short-distance,Diving ducks,8.1688294838,Somateria mollissima
+Cluster 2,Columba_oenas,3.9407530570486125,1.791734329445091e-4,496,0.007945066647275428,123,warm,short-distance,Columbids,12.4358174295,Columba oenas
+Cluster 2,Aythya_fuligula,3.8063001789997197,1.730602907657064e-4,496,0.007673992296370402,124,very cold,short-distance,Diving ducks,10.1385920012,Aythya fuligula
+Cluster 2,Sternula_albifrons,3.409751193326358,1.5503047715770222e-4,496,0.006874498373641851,125,very warm,long-distance,Terns,13.6554594356,Sternula albifrons
+Cluster 2,Chlidonias_niger,3.2262375447009863,1.466866987122175e-4,496,0.006504511178832634,126,very warm,long-distance,Terns,13.0082465521,Chlidonias niger
+Cluster 2,Sterna_hirundo,3.0149950617920127,1.3708217889110764e-4,496,0.006078619076193574,127,cold,long-distance,Terns,11.4396148713,Sterna hirundo
+Cluster 2,Porzana_porzana,2.8312480217632077,1.2872778888525172e-4,496,0.0057081613342000155,128,warm,long-distance,Rails,12.4064941754,Porzana porzana
+Cluster 2,Spatula_querquedula,2.7913896783811754,1.2691555753965495e-4,496,0.005627801770929789,129,warm,long-distance,Dabbling ducks,12.389627827,Spatula querquedula
+Cluster 2,Spatula_clypeata,2.716735295939953,1.235212616290241e-4,496,0.005477288903104744,130,cold,short-distance,Dabbling ducks,11.7556216717,Spatula clypeata
+Cluster 2,Limosa_limosa,2.543621995077652,1.1565035372009664e-4,496,0.0051282701513662345,131,medium,long-distance,Scolopacids,12.0468335512,Limosa limosa
+Cluster 2,Calidris_pugnax,2.5260125399162523,1.1484970813589618e-4,496,0.0050927672175730895,132,very cold,long-distance,Scolopacids,7.9732949741,Calidris pugnax
+Cluster 2,Aythya_ferina,2.4615587000044017,1.119191982571292e-4,496,0.004962819959686293,133,warm,short-distance,Diving ducks,12.445391892,Aythya ferina
+Cluster 2,Dryocopus_martius,2.439031312243451,1.1089495001270239e-4,496,0.004917401839200506,134,cold,sedentary,Woodpeckers,11.1193962821,Dryocopus martius
+Cluster 2,Podiceps_nigricollis,2.4162350899444824,1.098584787219762e-4,496,0.004871441713597747,135,very warm,short-distance,Aquatic pursuers,13.3391366196,Podiceps nigricollis
+Cluster 2,Streptopelia_turtur,2.2833994628679237,1.0381886777044175e-4,496,0.004603627949330492,136,very warm,long-distance,Columbids,13.7662137901,Streptopelia turtur
+Cluster 2,Cinclus_cinclus,1.9637722021282495,8.928643888176941e-5,496,0.003959218149452116,137,cold,short-distance,Dippers,11.0150016531,Cinclus cinclus
+Cluster 2,Anarhynchus_alexandrinus,1.8289331036075318,8.3155736493837e-5,496,0.0036873651282409914,138,very warm,short-and long-distance,Plovers,16.3071703744,Anarhynchus alexandrinus
+Cluster 2,Circus_aeruginosus,1.732604383193945,7.877597778330757e-5,496,0.0034931539983748894,139,very warm,short-and long-distance,Diurnal raptors,13.2259231132,Circus aeruginosus
+Cluster 2,Locustella_luscinioides,1.3702160543777584,6.229933994453654e-5,496,0.0027625323676970935,140,very warm,long-distance,Marsh warblers,13.5908101527,Locustella luscinioides
+Cluster 2,Thalasseus_sandvicensis,1.2501266700336877,5.683925986805631e-5,496,0.0025204166734550154,141,medium,short-and long-distance,Terns,12.309341223,Thalasseus sandvicensis
+Cluster 2,Serinus_serinus,1.2019665396707309,5.464957283025732e-5,496,0.002423319636432925,142,very warm,short-distance,Passerine seedeaters,13.8814196118,Serinus serinus
+Cluster 2,Tringa_ochropus,1.1839776653690537,5.383167627171156e-5,496,0.0023870517446956726,143,very cold,short-and long-distance,Scolopacids,9.8785200822,Tringa ochropus
+Cluster 2,Botaurus_stellaris,1.0096306816022844,4.590467674832394e-5,496,0.0020355457290368636,144,very warm,sedentary and short-distance,Wading birds,13.1076210929,Botaurus stellaris
+Cluster 2,Panurus_biarmicus,0.9508025753671119,4.3229950980129194e-5,496,0.0019169406761433707,145,very warm,sedentary,Reedlings,13.8780278318,Panurus biarmicus
+Cluster 2,Certhia_brachydactyla,0.9232561551866457,4.197750339013418e-5,496,0.0018614035386827535,146,very warm,sedentary,Tit-like birds,13.8972978687,Certhia brachydactyla
+Cluster 2,Acrocephalus_arundinaceus,0.8112787134173755,3.6886247388122654e-5,496,0.0016356425673737407,147,very warm,long-distance,Marsh warblers,13.8793523116,Acrocephalus arundinaceus
+Cluster 2,Anas_acuta,0.6746205740055482,3.0672839030948255e-5,496,0.001360122125011186,148,very cold,short-distance,Dabbling ducks,8.5273453088,Anas acuta
+Cluster 2,Carpodacus_erythrinus,0.5486154879678735,2.4943790925927676e-5,496,0.0011060796128384547,149,very cold,long-distance,Passerine seedeaters,10.348256227,Carpodacus erythrinus
+Cluster 2,Larus_marinus,0.3020649825549931,1.3733928290659124e-5,496,6.090019809576473e-4,150,very cold,sedentary and short-distance,Gulls,8.3694639418,Larus marinus
+Cluster 2,Larus_fuscus,0.2978472013090648,1.3542159272326387e-5,496,6.004983897360177e-4,151,very cold,short-and long-distance,Gulls,8.9178677716,Larus fuscus
+Cluster 2,Remiz_pendulinus,0.29775556363440464,1.3537992800457122e-5,496,6.003136363596867e-4,152,very warm,short-distance,Tit-like birds,13.7399153521,Remiz pendulinus
+Cluster 2,Anser_anser,0.2770390335983772,1.2596078462888094e-5,496,5.585464387064057e-4,153,cold,sedentary and short-distance,Grazing waterfowl,11.1956416463,Anser anser
+Cluster 2,Dryobates_minor,0.23766051540292152,1.0805663233309658e-5,496,4.79154264925245e-4,154,cold,sedentary and short-distance,Woodpeckers,11.5509643269,Dryobates minor
+Cluster 2,Mareca_strepera,0.20704438470260428,9.413645727609364e-6,496,4.17428194964928e-4,155,warm,short-distance,Dabbling ducks,12.5158986156,Mareca strepera
+Cluster 2,Ficedula_parva,0.19103462375449415,8.685733121016811e-6,496,3.8515045111793176e-4,156,cold,long-distance,Flycatchers,11.5985667049,Ficedula parva
+Cluster 2,Mergus_merganser,0.08151976841328856,3.7064430447690674e-6,496,1.64354371800985e-4,157,very cold,short-distance,Aquatic pursuers,7.9118621485,Mergus merganser
+Cluster 3,Turdus_merula,877.831301047141,0.016891679171170113,879,0.9986704221241649,1,warm,sedentary,Thrushes,12.5843398181,Turdus merula
+Cluster 3,Alauda_arvensis,873.5832375824851,0.016809935759812898,879,0.9938375854180719,2,medium,sedentary and short-distance,Open-land insectivores,12.1983199326,Alauda arvensis
+Cluster 3,Parus_major,871.1574472899922,0.01676325746147875,879,0.9910778694994223,3,medium,sedentary and short-distance,Tit-like birds,12.343727765,Parus major
+Cluster 3,Fringilla_coelebs,870.7032407882247,0.01675451738750763,879,0.9905611385531566,4,medium,sedentary and short-distance,Foliage gleaners,12.2951633877,Fringilla coelebs
+Cluster 3,Sturnus_vulgaris,869.5773360933794,0.016732852153128367,879,0.989280245840022,5,cold,short-distance,Starlings,11.8027600322,Sturnus vulgaris
+Cluster 3,Emberiza_citrinella,869.5024123458969,0.016731410432033134,879,0.9891950083571068,6,cold,sedentary,Buntings,11.5528442066,Emberiza citrinella
+Cluster 3,Turdus_philomelos,866.1301209780847,0.0166665190755859,879,0.9853584994062398,7,cold,short-distance,Thrushes,11.3956704897,Turdus philomelos
+Cluster 3,Phylloscopus_trochilus,861.5805040194195,0.016578973017561068,879,0.9801825984293738,8,very cold,long-distance,Foliage gleaners,10.4596695622,Phylloscopus trochilus
+Cluster 3,Passer_domesticus,859.9174497562599,0.016546971676273704,879,0.9782906140571784,9,medium,sedentary,Passerine seedeaters,12.2628071769,Passer domesticus
+Cluster 3,Columba_palumbus,857.0371521241265,0.016491547515092117,879,0.9750138249421234,10,medium,sedentary and short-distance,Columbids,12.2214205187,Columba palumbus
+Cluster 3,Troglodytes_troglodytes,853.2902306765347,0.016419447334913084,879,0.9707511156729633,11,medium,sedentary,Low flycatching feeders,12.2368253494,Troglodytes troglodytes
+Cluster 3,Hirundo_rustica,851.8507189412056,0.0163917475133559,879,0.9691134458944319,12,warm,long-distance,Aerial insectivores,12.4305273248,Hirundo rustica
+Cluster 3,Curruca_communis,841.6479306112254,0.016195420238495913,879,0.9575061781697672,13,warm,long-distance,Foliage gleaners,12.6535890847,Curruca communis
+Cluster 3,Cyanistes_caeruleus,836.4445286058469,0.016095293713993278,879,0.9515864944321353,14,warm,sedentary,Tit-like birds,12.7367473555,Cyanistes caeruleus
+Cluster 3,Erithacus_rubecula,836.2302072468513,0.016091169632713235,879,0.9513426703604678,15,medium,sedentary,Low flycatching feeders,11.998445823500001,Erithacus rubecula
+Cluster 3,Sylvia_atricapilla,833.8083815429296,0.016044567623021463,879,0.9485874647814899,16,warm,short-distance,Foliage gleaners,12.6192368528,Sylvia atricapilla
+Cluster 3,Linaria_cannabina,820.0313702105675,0.015779463319852697,879,0.9329139592839221,17,very warm,short-distance,Passerine seedeaters,13.1603552715,Linaria cannabina
+Cluster 3,Sylvia_borin,818.4509632053365,0.015749052319401484,879,0.931115999095946,18,cold,long-distance,Foliage gleaners,11.3163422901,Sylvia borin
+Cluster 3,Prunella_modularis,812.9225206205764,0.015642671197713745,879,0.9248265308538981,19,very cold,sedentary and short-distance,Low flycatching feeders,10.9083374064,Prunella modularis
+Cluster 3,Chloris_chloris,812.6055341919069,0.01563657158261878,879,0.92446590920581,20,warm,sedentary and short-distance,Passerine seedeaters,12.6006224966,Chloris chloris
+Cluster 3,Vanellus_vanellus,811.3153043892224,0.015611744320412443,879,0.9229980709775,21,cold,short-distance,Plovers,11.532605723,Vanellus vanellus
+Cluster 3,Passer_montanus,788.3134376726144,0.015169130628634217,879,0.8968298494568993,22,very warm,sedentary,Passerine seedeaters,13.070887931,Passer montanus
+Cluster 3,Curruca_curruca,780.8815524870688,0.01502612249023512,879,0.8883749175051977,23,cold,long-distance,Foliage gleaners,11.6399285102,Curruca curruca
+Cluster 3,Cuculus_canorus,774.7887103776094,0.014908880904031922,879,0.8814433565160517,24,medium,long-distance,Cuckoos,12.1394391784,Cuculus canorus
+Cluster 3,Motacilla_alba,756.8601937756096,0.01456389121171322,879,0.8610468643636059,25,medium,short-distance,Open-land insectivores,11.9859302219,Motacilla alba
+Cluster 3,Hippolais_icterina,748.6805733145677,0.014406494768450101,879,0.851741266569474,26,cold,long-distance,Foliage gleaners,11.3916568563,Hippolais icterina
+Cluster 3,Pica_pica,746.308806653172,0.014360856020474969,879,0.8490430109819932,27,medium,sedentary,Omnivorous corvids,12.155826028,Pica pica
+Cluster 3,Emberiza_calandra,736.5154480550186,0.014172407202062028,879,0.8379015336234569,28,very warm,sedentary,Buntings,14.2313581317,Emberiza calandra
+Cluster 3,Dendrocopos_major,731.3532756141984,0.014073074037942026,879,0.8320287549649584,29,medium,sedentary,Woodpeckers,12.1154284266,Dendrocopos major
+Cluster 3,Corvus_cornix,722.4201176833636,0.013901177641022645,879,0.8218658904247595,30,medium,sedentary,Omnivorous corvids,12.1293990446,Corvus cornix
+Cluster 3,Delichon_urbicum,720.3562852480179,0.013861464321026732,879,0.8195179581888713,31,warm,long-distance,Aerial insectivores,12.3470551373,Delichon urbicum
+Cluster 3,Emberiza_schoeniclus,712.8137130376765,0.013716326286246597,879,0.8109371024319414,32,cold,sedentary and short-distance,Buntings,11.2704483494,Emberiza schoeniclus
+Cluster 3,Anas_platyrhynchos,704.5894452643549,0.013558070716549976,879,0.8015807113360124,33,cold,sedentary and short-distance,Dabbling ducks,11.8110548425,Anas platyrhynchos
+Cluster 3,Regulus_regulus,701.0067742055618,0.013489131126415994,879,0.7975048625774309,34,very cold,short-distance,Tit-like birds,10.8075146552,Regulus regulus
+Cluster 3,Phylloscopus_collybita,694.6245324783772,0.013366320764653026,879,0.7902440642529889,35,medium,short-distance,Foliage gleaners,11.9465889491,Phylloscopus collybita
+Cluster 3,Fulica_atra,688.8180149610475,0.013254588782793284,879,0.7836382422765046,36,warm,sedentary and short-distance,Rails,12.9624637063,Fulica atra
+Cluster 3,Gallinula_chloropus,668.8765844398359,0.012870865570626352,879,0.7609517456653424,37,very warm,sedentary and short-distance,Rails,13.3437206998,Gallinula chloropus
+Cluster 3,Poecile_palustris,640.484673156697,0.012324533882659632,879,0.7286515052977213,38,medium,sedentary,Tit-like birds,12.3251392514,Poecile palustris
+Cluster 3,Anthus_trivialis,639.8647064335905,0.01231260416567298,879,0.7279461961701826,39,cold,long-distance,Low flycatching feeders,11.2439352645,Anthus trivialis
+Cluster 3,Perdix_perdix,623.2197860931662,0.011992314089567534,879,0.7090099955553655,40,warm,sedentary,Gallinaceous birds,12.8463889005,Perdix perdix
+Cluster 3,Luscinia_luscinia,618.8809131585317,0.011908823275912458,879,0.7040738488720497,41,cold,long-distance,Low flycatching feeders,11.8425102806,Luscinia luscinia
+Cluster 3,Periparus_ater,610.4236561094095,0.011746084407326345,879,0.6944523960289073,42,medium,sedentary,Tit-like birds,11.9045668053,Periparus ater
+Cluster 3,Strix_aluco,586.7495746441178,0.01129053561531263,879,0.6675194250786324,43,warm,sedentary,Owls,12.8738657057,Strix aluco
+Cluster 3,Acrocephalus_scirpaceus,585.963897683917,0.011275417217132865,879,0.6666255946347179,44,very warm,long-distance,Marsh warblers,13.1524057431,Acrocephalus scirpaceus
+Cluster 3,Phoenicurus_phoenicurus,584.7727046150462,0.011252495670445836,879,0.6652704261832153,45,cold,long-distance,Low flycatching feeders,11.3098485667,Phoenicurus phoenicurus
+Cluster 3,Coloeus_monedula,580.2013085440636,0.011164530527595183,879,0.6600697480592306,46,warm,sedentary and short-distance,Omnivorous corvids,12.9581704982,Coloeus monedula
+Cluster 3,Buteo_buteo,578.8361176532242,0.011138260825765281,879,0.6585166298671492,47,warm,sedentary and short-distance,Diurnal raptors,12.6973693303,Buteo buteo
+Cluster 3,Sitta_europaea,577.4589310138562,0.011111760295602735,879,0.6569498646346487,48,warm,sedentary,Tit-like birds,12.7946675987,Sitta europaea
+Cluster 3,Phylloscopus_sibilatrix,558.643109556844,0.010749696629138876,879,0.6355439244105165,49,cold,long-distance,Foliage gleaners,11.3755910555,Phylloscopus sibilatrix
+Cluster 3,Garrulus_glandarius,552.3280572254126,0.010628179160116704,879,0.6283595645340303,50,warm,sedentary,Omnivorous corvids,12.466780849,Garrulus glandarius
+Cluster 3,Carduelis_carduelis,539.6320488476753,0.010383876069061045,879,0.6139158689962176,51,very warm,sedentary and short-distance,Passerine seedeaters,13.4542440183,Carduelis carduelis
+Cluster 3,Acrocephalus_schoenobaenus,529.3608628948838,0.010186232652136834,879,0.6022307882763183,52,cold,long-distance,Marsh warblers,11.3913898283,Acrocephalus schoenobaenus
+Cluster 3,Acrocephalus_palustris,515.3499910423079,0.00991662828514767,879,0.5862912298547303,53,medium,long-distance,Marsh warblers,12.248077272,Acrocephalus palustris
+Cluster 3,Pyrrhula_pyrrhula,514.8942873727422,0.009907859401907521,879,0.5857727956458955,54,very cold,short-distance,Passerine seedeaters,10.756294956,Pyrrhula pyrrhula
+Cluster 3,Streptopelia_decaocto,490.43016445656417,0.009437108227950512,879,0.5579410289608239,55,warm,sedentary,Columbids,12.9162282666,Streptopelia decaocto
+Cluster 3,Anthus_pratensis,485.76423136670843,0.009347323955398404,879,0.5526328001896569,56,very cold,short-distance,Open-land insectivores,9.9487726902,Anthus pratensis
+Cluster 3,Riparia_riparia,482.438091018627,0.009283320660493043,879,0.5488487952430341,57,medium,long-distance,Aerial insectivores,11.9550761988,Riparia riparia
+Cluster 3,Cygnus_olor,474.11907544585637,0.009123241905147244,879,0.5393846137040459,58,medium,sedentary and short-distance,Grazing waterfowl,12.1899516659,Cygnus olor
+Cluster 3,Certhia_familiaris,449.6728594216798,0.008652835304770923,879,0.5115732189097608,59,cold,sedentary,Tit-like birds,11.119463211,Certhia familiaris
+Cluster 3,Muscicapa_striata,419.67236219925155,0.008075550382881788,879,0.4774429604087048,60,medium,long-distance,Flycatchers,12.1492223917,Muscicapa striata
+Cluster 3,Saxicola_rubetra,407.6575081486605,0.007844354412005695,879,0.4637741844694659,61,cold,long-distance,Low flycatching feeders,11.2990488425,Saxicola rubetra
+Cluster 3,Gallinago_gallinago,399.74254883175234,0.007692050713932279,879,0.45476968012713576,62,very cold,short-distance,Scolopacids,10.2670472691,Gallinago gallinago
+Cluster 3,Tadorna_tadorna,388.51582598029944,0.007476020366957671,879,0.4419975267125136,63,medium,short-distance,Dabbling ducks,12.0434493446,Tadorna tadorna
+Cluster 3,Accipiter_nisus,375.0703423792511,0.007217295490071626,879,0.42670118586945516,64,medium,sedentary and short-distance,Diurnal raptors,11.9162821341,Accipiter nisus
+Cluster 3,Aegithalos_caudatus,374.9018749409668,0.007214053753402072,879,0.426509527805423,65,warm,sedentary,Tit-like birds,12.6607518772,Aegithalos caudatus
+Cluster 3,Falco_tinnunculus,371.28748460340205,0.007144503804671954,879,0.42239759340546307,66,warm,sedentary and short-distance,Diurnal raptors,12.4263636442,Falco tinnunculus
+Cluster 3,Ficedula_hypoleuca,365.82111783558344,0.007039317177624373,879,0.41617874611556704,67,very cold,long-distance,Flycatchers,10.4275102213,Ficedula hypoleuca
+Cluster 3,Lanius_collurio,330.11924333647266,0.006352323436197086,879,0.3755622791086151,68,warm,long-distance,Shrikes,12.6238867722,Lanius collurio
+Cluster 3,Apus_apus,321.4562601543986,0.006185625880069523,879,0.36570678060796197,69,warm,long-distance,Aerial insectivores,12.4470483242,Apus apus
+Cluster 3,Lophophanes_cristatus,283.8807442379223,0.00546257857155457,879,0.32295875339922897,70,cold,sedentary,Tit-like birds,11.7118025203,Lophophanes cristatus
+Cluster 3,Coccothraustes_coccothraustes,263.4990603808135,0.005070383779375464,879,0.29977139975064104,71,warm,sedentary,Passerine seedeaters,12.9763477132,Coccothraustes coccothraustes
+Cluster 3,Podiceps_cristatus,254.9282512543359,0.004905459883600617,879,0.2900207636568099,72,warm,short-distance,Aquatic pursuers,12.6860788894,Podiceps cristatus
+Cluster 3,Turdus_viscivorus,231.12417904101815,0.004447409743083772,879,0.2629399078964939,73,medium,short-distance,Thrushes,11.9147042629,Turdus viscivorus
+Cluster 3,Tringa_totanus,225.9858384608321,0.004348535163823302,879,0.2570942417074313,74,cold,short-distance,Scolopacids,11.0359375128,Tringa totanus
+Cluster 3,Chroicocephalus_ridibundus,224.81317049414628,0.004325970086633713,879,0.2557601484575043,75,cold,short-distance,Gulls,11.0679667544,Chroicocephalus ridibundus
+Cluster 3,Oenanthe_oenanthe,219.2728205657049,0.0042193598377446495,879,0.24945713374937986,76,cold,long-distance,Low flycatching feeders,11.6202368597,Oenanthe oenanthe
+Cluster 3,Corvus_frugilegus,217.74600245407822,0.0041899800222111126,879,0.2477201393106692,77,warm,sedentary,Omnivorous corvids,12.7340640684,Corvus frugilegus
+Cluster 3,Motacilla_flava,201.67309150471306,0.003880696843564372,879,0.22943468885632884,78,medium,long-distance,Open-land insectivores,12.136968586,Motacilla flava
+Cluster 3,Tachybaptus_ruficollis,188.21395612633836,0.0036217092721919975,879,0.21412281698104477,79,very warm,sedentary and short-distance,Aquatic pursuers,13.4633891991,Tachybaptus ruficollis
+Cluster 3,Asio_otus,187.76280990129646,0.00361302808563189,879,0.21360956757826674,80,medium,sedentary,Owls,12.2940439872,Asio otus
+Cluster 3,Podiceps_grisegena,182.33962253133,0.0035086723386571123,879,0.20743984360788398,81,medium,short-distance,Aquatic pursuers,11.9386619385,Podiceps grisegena
+Cluster 3,Scolopax_rusticola,182.0222705830602,0.0035025656900469237,879,0.20707880612407303,82,very cold,sedentary and short-distance,Scolopacids,10.6010955955,Scolopax rusticola
+Cluster 3,Picus_viridis,175.9805662944325,0.003386308123964644,879,0.2002054224054977,83,warm,sedentary,Woodpeckers,12.9413688865,Picus viridis
+Cluster 3,Haematopus_ostralegus,172.77361878764157,0.003324598398714613,879,0.1965570179609119,84,very cold,short-distance,Plovers,10.4739718085,Haematopus ostralegus
+Cluster 3,Pernis_apivorus,153.62713799335677,0.0029561720160506152,879,0.17477490101633306,85,medium,long-distance,Diurnal raptors,11.9608484505,Pernis apivorus
+Cluster 3,Oriolus_oriolus,147.47176221772716,0.002837727125038072,879,0.16777219819991712,86,very warm,long-distance,Orioles,13.4707159049,Oriolus oriolus
+Cluster 3,Astur_gentilis,145.2006967447412,0.0027940261208694583,879,0.16518850596671356,87,cold,sedentary,Diurnal raptors,11.8007973825,Astur gentilis
+Cluster 3,Anser_anser,137.60088010193826,0.0026477865594220448,879,0.15654252571324034,88,cold,sedentary and short-distance,Grazing waterfowl,11.1956416463,Anser anser
+Cluster 3,Rallus_aquaticus,136.46425443143312,0.002625915026542109,879,0.1552494362132345,89,very warm,sedentary and short-distance,Rails,13.3215188918,Rallus aquaticus
+Cluster 3,Athene_noctua,131.3448160271746,0.0025274041726250215,879,0.14942527420611446,90,very warm,sedentary,Owls,14.2083192272,Athene noctua
+Cluster 3,Charadrius_hiaticula,130.46688143423174,0.002510510505858329,879,0.14842648627330118,91,very cold,short-distance,Plovers,8.2214626932,Charadrius hiaticula
+Cluster 3,Locustella_naevia,123.34817346630112,0.0023735286837655222,879,0.14032784239624702,92,cold,long-distance,Marsh warblers,11.7684221003,Locustella naevia
+Cluster 3,Corvus_corax,103.59808636799588,0.001993487399672233,879,0.11785902886006357,93,cold,sedentary,Omnivorous corvids,11.7378412998,Corvus corax
+Cluster 3,Mergus_serrator,100.70211671522176,0.0019377616694484959,879,0.11456441036999063,94,very cold,short-distance,Aquatic pursuers,7.3724850113,Mergus serrator
+Cluster 3,Phoenicurus_ochruros,86.5690577114237,0.001665806114759801,879,0.09848584495042514,95,very warm,sedentary and short-distance,Low flycatching feeders,13.2394438706,Phoenicurus ochruros
+Cluster 3,Corvus_corone,83.75698430514824,0.0016116947590495154,879,0.09528667156444623,96,medium,sedentary,Omnivorous corvids,12.1293990446,Corvus corone
+Cluster 3,Motacilla_cinerea,82.28381044739798,0.0015833471937043422,879,0.0936107058559704,97,warm,sedentary and short-distance,Open-land insectivores,12.9122079488,Motacilla cinerea
+Cluster 3,Alcedo_atthis,81.97021211322526,0.0015773127740577196,879,0.09325393869536434,98,very warm,sedentary,Kingfishers,13.5319163712,Alcedo atthis
+Cluster 3,Jynx_torquilla,78.35704879942591,0.0015077864363468902,879,0.08914340022687817,99,medium,short-distance,Woodpeckers,11.8812540667,Jynx torquilla
+Cluster 3,Spinus_spinus,75.89096288035341,0.0014603327489426906,879,0.08633784172963983,100,very cold,sedentary and short-distance,Passerine seedeaters,10.2425165856,Spinus spinus
+Cluster 3,Larus_canus,74.78267223384617,0.0014390064530964643,879,0.0850769877518159,101,very cold,sedentary and short-distance,Gulls,8.5740563147,Larus canus
+Cluster 3,Charadrius_dubius,73.12713370380442,0.001407149733392328,879,0.08319355370171151,102,warm,short-and long-distance,Plovers,12.7729324864,Charadrius dubius
+Cluster 3,Anas_crecca,72.58271810064133,0.001396673809722894,879,0.08257419579140084,103,very cold,short-distance,Dabbling ducks,10.071290709,Anas crecca
+Cluster 3,Loxia_curvirostra,69.88149833509533,0.0013446955565027162,879,0.07950113576233826,104,very cold,sedentary and short-distance,Passerine seedeaters,10.4943181045,Loxia curvirostra
+Cluster 3,Ardea_cinerea,66.26814511309576,0.0012751655644811025,879,0.07539038124356741,105,warm,sedentary and short-distance,Wading birds,12.6943991523,Ardea cinerea
+Cluster 3,Caprimulgus_europaeus,65.23313983081268,0.001255249463120924,879,0.07421290083141374,106,very warm,long-distance,Nigthjars,13.110333547,Caprimulgus europaeus
+Cluster 3,Aythya_fuligula,64.07602831803966,0.001232983731179361,879,0.07289650548127379,107,very cold,short-distance,Diving ducks,10.1385920012,Aythya fuligula
+Cluster 3,Aythya_ferina,63.48749361647672,0.0012216588452382436,879,0.07222695519508159,108,warm,short-distance,Diving ducks,12.445391892,Aythya ferina
+Cluster 3,Dryocopus_martius,55.415678850245335,0.0010663368543299108,879,0.06304400324259993,109,cold,sedentary,Woodpeckers,11.1193962821,Dryocopus martius
+Cluster 3,Spatula_clypeata,47.781047030826294,9.194273614355491e-4,879,0.05435841527966586,110,cold,short-distance,Dabbling ducks,11.7556216717,Spatula clypeata
+Cluster 3,Larus_argentatus,43.99048881623939,8.464875002525781e-4,879,0.05004606236204709,111,very cold,sedentary and short-distance,Gulls,9.0583381929,Larus argentatus
+Cluster 3,Circus_aeruginosus,43.417213306631126,8.35456239492748e-4,879,0.049393871793664536,112,very warm,short-and long-distance,Diurnal raptors,13.2259231132,Circus aeruginosus
+Cluster 3,Crex_crex,43.171572426869204,8.307294919647062e-4,879,0.04911441686788305,113,medium,long-distance,Rails,11.9688491073,Crex crex
+Cluster 3,Tyto_alba,40.864295188831015,7.863316824796789e-4,879,0.0464895280874073,114,very warm,sedentary,Owls,13.9906366009,Tyto alba
+Cluster 3,Lullula_arborea,39.87526658776266,7.673002879504233e-4,879,0.04536435334216457,115,very warm,short-distance,Open-land insectivores,13.4719748078,Lullula arborea
+Cluster 3,Columba_oenas,38.7648922250032,7.459338961696203e-4,879,0.044101128811152676,116,warm,short-distance,Columbids,12.4358174295,Columba oenas
+Cluster 3,Recurvirostra_avosetta,35.77528323119921,6.884063098209196e-4,879,0.040699980922865996,117,very warm,short-and long-distance,Plovers,14.5831200661,Recurvirostra avosetta
+Cluster 3,Regulus_ignicapilla,33.593848743199494,6.464300309387906e-4,879,0.038218257955858356,118,very warm,short-distance,Tit-like birds,13.1999439071,Regulus ignicapilla
+Cluster 3,Sterna_hirundo,32.85855422693771,6.322811175311703e-4,879,0.03738174542313733,119,cold,long-distance,Terns,11.4396148713,Sterna hirundo
+Cluster 3,Acrocephalus_arundinaceus,31.967804192629824,6.151408494827543e-4,879,0.03636837792108057,120,very warm,long-distance,Marsh warblers,13.8793523116,Acrocephalus arundinaceus
+Cluster 3,Spatula_querquedula,31.95106793900227,6.148188019247934e-4,879,0.036349337814564585,121,warm,long-distance,Dabbling ducks,12.389627827,Spatula querquedula
+Cluster 3,Sterna_paradisaea,31.47380752837597,6.056351128403603e-4,879,0.03580637944070077,122,very cold,long-distance,Terns,6.7214988279,Sterna paradisaea
+Cluster 3,Certhia_brachydactyla,26.807441999504313,5.158425190753828e-4,879,0.03049765870250775,123,very warm,sedentary,Tit-like birds,13.8972978687,Certhia brachydactyla
+Cluster 3,Numenius_arquata,26.44135641607656,5.087981129154797e-4,879,0.03008117908541133,124,very cold,short-distance,Scolopacids,10.0493203009,Numenius arquata
+Cluster 3,Turdus_pilaris,24.465010371036268,4.707682508175926e-4,879,0.027832776303795527,125,very cold,short-distance,Thrushes,10.0287125382,Turdus pilaris
+Cluster 3,Tringa_ochropus,23.543118800728138,4.530287413951382e-4,879,0.026783980433137813,126,very cold,short-and long-distance,Scolopacids,9.8785200822,Tringa ochropus
+Cluster 3,Sternula_albifrons,23.05018923532903,4.4354353841505117e-4,879,0.026223195944629157,127,very warm,long-distance,Terns,13.6554594356,Sternula albifrons
+Cluster 3,Porzana_porzana,18.78687113097535,3.6150658947340454e-4,879,0.02137300469963066,128,warm,long-distance,Rails,12.4064941754,Porzana porzana
+Cluster 3,Somateria_mollissima,17.48112077584304,3.363806728534047e-4,879,0.019887509415066028,129,very cold,short-distance,Diving ducks,8.1688294838,Somateria mollissima
+Cluster 3,Chlidonias_niger,16.950768003845575,3.261753533786543e-4,879,0.019284150175023405,130,very warm,long-distance,Terns,13.0082465521,Chlidonias niger
+Cluster 3,Podiceps_nigricollis,16.756920868998826,3.224452475984481e-4,879,0.01906361873606237,131,very warm,short-distance,Aquatic pursuers,13.3391366196,Podiceps nigricollis
+Cluster 3,Locustella_luscinioides,14.296064101188463,2.750921821991283e-4,879,0.016264009216369127,132,very warm,long-distance,Marsh warblers,13.5908101527,Locustella luscinioides
+Cluster 3,Tringa_glareola,13.638980635786895,2.6244824586078635e-4,879,0.015516473988380996,133,very cold,long-distance,Scolopacids,7.6706167812,Tringa glareola
+Cluster 3,Calidris_alpina,13.53172154860371,2.603843116097181e-4,879,0.0153944499984115,134,very cold,long-distance,Scolopacids,7.0663752664,Calidris alpina
+Cluster 3,Acanthis_flammea,13.27983851423821,2.555374493480427e-4,879,0.015107893645322194,135,very cold,short-distance,Passerine seedeaters,8.1923087262,Acanthis flammea
+Cluster 3,Coturnix_coturnix,12.924316833343743,2.4869631920731885e-4,879,0.014703432119844987,136,very warm,short-and long-distance,Gallinaceous birds,13.6002736383,Coturnix coturnix
+Cluster 3,Asio_flammeus,11.52553015432437,2.2178015002684336e-4,879,0.013112093463395189,137,very cold,sedentary and short-distance,Owls,9.6200242401,Asio flammeus
+Cluster 3,Botaurus_stellaris,11.109631965014248,2.1377722421032604e-4,879,0.012638944215033275,138,very warm,sedentary and short-distance,Wading birds,13.1076210929,Botaurus stellaris
+Cluster 3,Cinclus_cinclus,10.412690706065742,2.0036632380922794e-4,879,0.011846064512020185,139,cold,short-distance,Dippers,11.0150016531,Cinclus cinclus
+Cluster 3,Mergus_merganser,10.330440587084876,1.98783624923966e-4,879,0.011752492135477674,140,very cold,short-distance,Aquatic pursuers,7.9118621485,Mergus merganser
+Cluster 3,Calidris_pugnax,10.171495079170272,1.9572511411193472e-4,879,0.011571666756735237,141,very cold,long-distance,Scolopacids,7.9732949741,Calidris pugnax
+Cluster 3,Lanius_excubitor,9.705032946122797,1.8674921101126084e-4,879,0.011040993112767686,142,cold,sedentary,Shrikes,11.2044136127,Lanius excubitor
+Cluster 3,Circus_pygargus,9.029288686553025,1.7374619412088965e-4,879,0.010272228312347014,143,very warm,long-distance,Diurnal raptors,13.6904029809,Circus pygargus
+Cluster 3,Thalasseus_sandvicensis,7.283522034134621,1.4015325870698632e-4,879,0.008286145658856225,144,medium,short-and long-distance,Terns,12.309341223,Thalasseus sandvicensis
+Cluster 3,Anas_acuta,7.203649347902446,1.3861630759945116e-4,879,0.008195277983961828,145,very cold,short-distance,Dabbling ducks,8.5273453088,Anas acuta
+Cluster 3,Ficedula_parva,6.482272702923766,1.2473520899426417e-4,879,0.007374599206966742,146,cold,long-distance,Flycatchers,11.5985667049,Ficedula parva
+Cluster 3,Remiz_pendulinus,6.19425461275151,1.1919301749473638e-4,879,0.007046933575371456,147,very warm,short-distance,Tit-like birds,13.7399153521,Remiz pendulinus
+Cluster 3,Dryobates_minor,6.095794853824501,1.1729840442149342e-4,879,0.006934920197752561,148,cold,sedentary and short-distance,Woodpeckers,11.5509643269,Dryobates minor
+Cluster 3,Panurus_biarmicus,6.0303775118517375,1.1603961044648193e-4,879,0.00686049773817035,149,very warm,sedentary,Reedlings,13.8780278318,Panurus biarmicus
+Cluster 3,Streptopelia_turtur,5.548064229531709,1.0675869141884476e-4,879,0.006311790932345517,150,very warm,long-distance,Columbids,13.7662137901,Streptopelia turtur
+Cluster 3,Limosa_limosa,4.534814163146867,8.726121505735824e-5,879,0.005159060481395752,151,medium,long-distance,Scolopacids,12.0468335512,Limosa limosa
+Cluster 3,Mareca_strepera,4.1058526073597985,7.900691725722542e-5,879,0.004671049610193172,152,warm,short-distance,Dabbling ducks,12.5158986156,Mareca strepera
+Cluster 3,Serinus_serinus,3.604275017842864,6.935530457098114e-5,879,0.004100426641459458,153,very warm,short-distance,Passerine seedeaters,13.8814196118,Serinus serinus
+Cluster 3,Anarhynchus_alexandrinus,3.6017564036896603,6.930684010841169e-5,879,0.004097561323879022,154,very warm,short-and long-distance,Plovers,16.3071703744,Anarhynchus alexandrinus
+Cluster 3,Carpodacus_erythrinus,3.325486961382867,6.39907221041007e-5,879,0.003783261617045355,155,very cold,long-distance,Passerine seedeaters,10.348256227,Carpodacus erythrinus
+Cluster 3,Larus_marinus,1.391812899990357,2.6781976155200298e-5,879,0.001583404891911669,156,very cold,sedentary and short-distance,Gulls,8.3694639418,Larus marinus
+Cluster 3,Larus_fuscus,1.0601915239253559,2.0400747912245297e-5,879,0.0012061337018490965,157,very cold,short-and long-distance,Gulls,8.9178677716,Larus fuscus

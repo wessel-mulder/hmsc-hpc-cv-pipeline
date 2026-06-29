@@ -1,0 +1,163 @@
+"comparison","start_atlas","end_atlas","start_period","end_period","species","n_shared_cells","start_occupied_cells","end_occupied_cells","status_change_log10","start_mean_northing_m","national_mean_northing_m","distribution_class","margin_type","start_margin_northing_m","end_margin_northing_m","margin_shift_km","near_ubiquitous","margin_eligible","main_included","exclusion_reason","distribution_label"
+"1970s to 1990s","1","2","1970s","1990s","Mareca_strepera",2165,17,95,0.747274683910574,6149058.82168547,6197646.36042169,"southerly","northern margin",,6201169.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Mergus_merganser",2165,18,37,0.312929218963689,6103960.78246979,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Anarhynchus_alexandrinus",2165,40,11,-0.560667306169737,6213669.11580312,6197646.36042169,"northerly","southern margin",6213669.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Chlidonias_niger",2165,37,13,-0.454258371760158,6159050.87255988,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Larus_fuscus",2165,18,50,0.443697499232713,6210316.32744481,6197646.36042169,"northerly","southern margin",,6204351.84724831,,FALSE,FALSE,FALSE,"start occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Larus_marinus",2165,38,119,0.495763364775721,6210320.43159259,6197646.36042169,"northerly","southern margin",,6092971.60983111,,FALSE,FALSE,FALSE,"start occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Thalasseus_sandvicensis",2165,50,29,-0.236572006437063,6220994.11580312,6197646.36042169,"northerly","southern margin",6192044.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Tringa_glareola",2165,66,28,-0.372385904199649,6196915.32792433,6197646.36042169,"southerly","northern margin",6246419.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Tringa_ochropus",2165,27,38,0.148419832457823,6182954.3922263,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Columba_palumbus",2165,1896,2054,0.0347621062592119,6195997.10815529,6197646.36042169,"southerly","northern margin",6377044.11580312,6380419.11580312,3.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Streptopelia_turtur",2165,18,32,0.2498774732166,6154098.82674585,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Coturnix_coturnix",2165,36,116,0.508155488459631,6233960.78246979,6197646.36042169,"northerly","southern margin",,6096199.85434008,,FALSE,FALSE,FALSE,"start occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Crex_crex",2165,86,12,-0.855317205195943,6184604.62192426,6197646.36042169,"southerly","northern margin",6259669.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Porzana_porzana",2165,57,25,-0.357934847000454,6193647.06418193,6197646.36042169,"southerly","northern margin",6237044.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Acrocephalus_arundinaceus",2165,56,15,-0.572096767950519,6165113.91368674,6197646.36042169,"southerly","northern margin",6196116.83284019,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Alauda_arvensis",2165,2076,2120,0.00910851175233118,6196441.30989428,6197646.36042169,"southerly","northern margin",6379669.11580312,6380419.11580312,0.75,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Carpodacus_erythrinus",2165,6,122,1.3082085802911,6163264.56300581,6197646.36042169,"southerly","northern margin",,6323794.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Certhia_brachydactyla",2165,32,206,0.808717242049247,6097450.36580312,6197646.36042169,"southerly","northern margin",,6195169.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Cinclus_cinclus",2165,12,14,0.0669467896306132,6207395.76819101,6197646.36042169,"northerly","southern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Curruca_communis",2165,1892,2047,0.0341967105967317,6194788.1945742,6197646.36042169,"southerly","northern margin",6379419.11580312,6379794.11580312,0.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Emberiza_citrinella",2165,2023,2060,0.00787133759834872,6197249.02815291,6197646.36042169,"southerly","northern margin",6379544.11580312,6379919.11580312,0.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Ficedula_parva",2165,8,13,0.210853365314893,6173071.59438496,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Fringilla_coelebs",2165,1990,2094,0.0221236009331169,6196602.94742787,6197646.36042169,"southerly","northern margin",6377794.11580312,6379919.11580312,2.125,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Hirundo_rustica",2165,1943,2034,0.0198781479869433,6195987.11182745,6197646.36042169,"southerly","northern margin",6378794.11580312,6379044.11580312,0.25,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Lanius_excubitor",2165,23,18,-0.106455330914287,6154902.81145529,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Locustella_luscinioides",2165,29,22,-0.11997531707675,6148574.04882354,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Motacilla_alba",2165,1662,2017,0.0840748787646733,6193766.79764056,6197646.36042169,"southerly","northern margin",6377919.11580312,6379794.11580312,1.875,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Panurus_biarmicus",2165,28,82,0.466655821041497,6197651.25866026,6197646.36042169,"northerly","southern margin",,6118919.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Parus_major",2165,1960,2064,0.0224536215986977,6195904.45890546,6197646.36042169,"southerly","northern margin",6378919.11580312,6380419.11580312,1.5,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Phylloscopus_trochilus",2165,1913,2021,0.0238513434880081,6195548.83220698,6197646.36042169,"southerly","northern margin",6378544.11580312,6379294.11580312,0.75,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Regulus_ignicapilla",2165,45,27,-0.221848749616356,6137960.78246979,6197646.36042169,"southerly","northern margin",6145794.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Remiz_pendulinus",2165,11,91,0.917648707162869,6200668.48467514,6197646.36042169,"northerly","southern margin",,6117532.02169319,,FALSE,FALSE,FALSE,"start occupied cells < 40","Northerly species
+southern margin"
+"1970s to 1990s","1","2","1970s","1990s","Serinus_serinus",2165,11,20,0.259637310505756,6165701.8246185,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Sturnus_vulgaris",2165,1970,2026,0.0121732148626687,6195263.22972342,6197646.36042169,"southerly","northern margin",6378419.11580312,6379419.11580312,1,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Troglodytes_troglodytes",2165,1769,2033,0.0604095457283155,6194066.61492788,6197646.36042169,"southerly","northern margin",6376044.11580312,6380044.11580312,4,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Turdus_merula",2165,2055,2109,0.0112647535273984,6196798.38465012,6197646.36042169,"southerly","northern margin",6379794.11580312,6380544.11580312,0.75,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Botaurus_stellaris",2165,34,69,0.307370173695,6153029.40992077,6197646.36042169,"southerly","northern margin",,6233044.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Dryobates_minor",2165,7,52,0.870905303620542,6123700.69355063,6197646.36042169,"southerly","northern margin",,6145874.00239911,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Podiceps_nigricollis",2165,31,54,0.241032065988696,6192455.4061257,6197646.36042169,"southerly","northern margin",,6239294.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1970s to 1990s","1","2","1970s","1990s","Asio_flammeus",2165,45,15,-0.477121254719662,6172553.64620047,6197646.36042169,"southerly","northern margin",6185211.08750014,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Anas_acuta",2165,58,21,-0.441208698829018,6159363.08132036,6197646.36042169,"southerly","northern margin",6196044.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Mergus_merganser",2165,37,80,0.334888262924949,6113645.46715447,6197646.36042169,"southerly","northern margin",,6119777.0362895,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Anarhynchus_alexandrinus",2165,11,8,-0.138302698166281,6160475.93398494,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Calidris_alpina",2165,77,21,-0.564271430438563,6229696.71320572,6197646.36042169,"northerly","southern margin",6155294.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Calidris_pugnax",2165,45,13,-0.539269161468507,6196071.8935809,6197646.36042169,"southerly","northern margin",6210544.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Chlidonias_niger",2165,13,5,-0.414973347970818,6187294.11580312,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Thalasseus_sandvicensis",2165,29,19,-0.183644396946127,6208673.42614795,6197646.36042169,"northerly","southern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Tringa_glareola",2165,28,19,-0.16840443038939,6249318.02535215,6197646.36042169,"northerly","southern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Tringa_ochropus",2165,38,31,-0.0884219027825375,6180165.34862711,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Columba_palumbus",2165,2054,2104,0.010445296220442,6198505.60007905,6197646.36042169,"northerly","southern margin",6064794.11580312,6063794.11580312,-1,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Streptopelia_turtur",2165,32,32,0,6103387.86580312,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Crex_crex",2165,12,165,1.13830269816628,6164377.44913645,6197646.36042169,"southerly","northern margin",,6340794.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Porzana_porzana",2165,25,82,0.515873843711679,6200760.89449803,6197646.36042169,"northerly","southern margin",,6157794.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Acrocephalus_arundinaceus",2165,15,30,0.301029995663981,6185294.11580312,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Alauda_arvensis",2165,2120,2118,-0.000409905157285262,6198083.45009687,6197646.36042169,"northerly","southern margin",6063294.11580312,6062919.11580312,-0.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Carpodacus_erythrinus",2165,122,37,-0.518158106607753,6204207.57987997,6197646.36042169,"northerly","southern margin",6097292.45625965,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Chloris_chloris",2165,1961,2023,0.0135182891030207,6197558.2717821,6197646.36042169,"southerly","northern margin",6379794.11580312,6379419.11580312,-0.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Cinclus_cinclus",2165,14,10,-0.146128035678238,6200770.47348764,6197646.36042169,"northerly","southern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Curruca_communis",2165,2047,2133,0.0178730127869231,6198455.76270109,6197646.36042169,"northerly","southern margin",6063794.11580312,6062919.11580312,-0.875,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Cyanistes_caeruleus",2165,1945,2028,0.0181483449995718,6198597.91676257,6197646.36042169,"northerly","southern margin",6064294.11580312,6064294.11580312,0,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Emberiza_citrinella",2165,2060,2080,0.00419611459360815,6199225.37245494,6197646.36042169,"northerly","southern margin",6064544.11580312,6063794.11580312,-0.75,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Ficedula_parva",2165,13,13,0,6165461.61895387,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Fringilla_coelebs",2165,2094,2102,0.00165603434939985,6198029.96752219,6197646.36042169,"northerly","southern margin",6064169.11580312,6063794.11580312,-0.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Hirundo_rustica",2165,2034,2040,0.00127921883917293,6198062.08473514,6197646.36042169,"northerly","southern margin",6063669.11580312,6064169.11580312,0.5,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Lanius_excubitor",2165,18,6,-0.477121254719662,6195905.22691423,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Locustella_luscinioides",2165,22,14,-0.196294645143968,6165021.38853039,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Motacilla_alba",2165,2017,2056,0.00831721211047266,6198387.13744575,6197646.36042169,"northerly","southern margin",6064044.11580312,6063294.11580312,-0.75,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Oriolus_oriolus",2165,66,22,-0.477121254719662,6150930.47943948,6197646.36042169,"southerly","northern margin",6192294.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Parus_major",2165,2064,2092,0.0058519872400629,6198309.5583902,6197646.36042169,"northerly","southern margin",6064294.11580312,6064169.11580312,-0.125,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Phylloscopus_collybita",2165,1852,2111,0.0568472509617408,6195246.40706302,6197646.36042169,"southerly","northern margin",6375794.11580312,6380544.11580312,4.75,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Phylloscopus_trochilus",2165,2021,2009,-0.00258637676705485,6198207.46241357,6197646.36042169,"northerly","southern margin",6064169.11580312,6064419.11580312,0.25,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Regulus_ignicapilla",2165,27,167,0.791352706988596,6101183.00469201,6197646.36042169,"southerly","northern margin",,6257044.11580312,,FALSE,FALSE,FALSE,"start occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Remiz_pendulinus",2165,91,29,-0.496643394422138,6180530.5579526,6197646.36042169,"southerly","northern margin",6243669.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Serinus_serinus",2165,20,16,-0.0969100130080564,6142791.55053054,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Sturnus_vulgaris",2165,2026,1964,-0.0134979575733308,6198177.0113387,6197646.36042169,"northerly","southern margin",6065044.11580312,6064544.11580312,-0.5,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Sylvia_atricapilla",2165,1881,2075,0.0426293054977327,6195977.51329146,6197646.36042169,"southerly","northern margin",6379169.11580312,6380544.11580312,1.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Troglodytes_troglodytes",2165,2033,2101,0.0142886737679139,6197838.26806978,6197646.36042169,"northerly","southern margin",6063669.11580312,6064169.11580312,0.5,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Turdus_merula",2165,2109,2122,0.00266879982583547,6198468.07194334,6197646.36042169,"northerly","southern margin",6064169.11580312,6063794.11580312,-0.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Northerly species
+southern margin"
+"1990s to 2010s","2","3","1990s","2010s","Turdus_philomelos",2165,1918,2024,0.0233619053331167,6196107.58938039,6197646.36042169,"southerly","northern margin",6375044.11580312,6380419.11580312,5.375,TRUE,TRUE,FALSE,"occupied cells > 2000 in at least one atlas","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Asio_flammeus",2165,15,8,-0.273001272063738,6164294.11580312,6197646.36042169,"southerly","northern margin",,,,FALSE,FALSE,FALSE,"start occupied cells < 40; end occupied cells < 40","Southerly species
+northern margin"
+"1990s to 2010s","2","3","1990s","2010s","Athene_noctua",2165,110,26,-0.626419337187407,6260248.66125766,6197646.36042169,"northerly","southern margin",6195919.11580312,,,FALSE,FALSE,FALSE,"end occupied cells < 40","Northerly species
+southern margin"

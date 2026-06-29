@@ -1,0 +1,14 @@
+foraging_guild,n_top20_species,total_changed_cells,total_gained_cells,total_lost_cells,mean_turnover_fraction,species
+Diurnal raptors,3,2278,1837,441,0.4399382000772499,Falco_tinnunculus; Accipiter_nisus; Buteo_buteo
+Passerine seedeaters,3,2144,1669,475,0.41405948242564694,Carduelis_carduelis; Acanthis_flammea; Pyrrhula_pyrrhula
+Marsh warblers,2,1411,582,829,0.40874855156431056,Acrocephalus_schoenobaenus; Acrocephalus_palustris
+Omnivorous corvids,2,1370,898,472,0.39687137891077634,Garrulus_glandarius; Coloeus_monedula
+Low flycatching feeders,2,1329,709,620,0.3849942062572422,Phoenicurus_phoenicurus; Saxicola_rubetra
+Flycatchers,1,768,533,235,0.44495944380069524,Muscicapa_striata
+Dabbling ducks,1,687,456,231,0.3980301274623407,Tadorna_tadorna
+Columbids,1,679,501,178,0.39339513325608344,Streptopelia_decaocto
+Thrushes,1,676,570,106,0.39165701042873696,Turdus_viscivorus
+Open-land insectivores,1,658,302,356,0.38122827346465815,Anthus_pratensis
+Aerial insectivores,1,652,203,449,0.37775202780996525,Riparia_riparia
+Gallinaceous birds,1,641,374,267,0.37137891077636154,Perdix_perdix
+Scolopacids,1,625,197,428,0.36210892236384706,Gallinago_gallinago

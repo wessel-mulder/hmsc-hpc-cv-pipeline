@@ -1,0 +1,103 @@
+"species","species_label","comparison","Absent both","Gain","Loss","Present both","net_change","turnover"
+"Acrocephalus_arundinaceus","Great Reed Warbler
+Acrocephalus arundinaceus","1970s to 1990s",2097,12,53,3,-41,65
+"Acrocephalus_arundinaceus","Great Reed Warbler
+Acrocephalus arundinaceus","1970s to 2010s",2086,23,49,7,-26,72
+"Acrocephalus_arundinaceus","Great Reed Warbler
+Acrocephalus arundinaceus","1990s to 2010s",2121,29,14,1,15,43
+"Acrocephalus_palustris","Marsh Warbler
+Acrocephalus palustris","1970s to 1990s",716,612,200,637,412,812
+"Acrocephalus_palustris","Marsh Warbler
+Acrocephalus palustris","1970s to 2010s",407,921,129,708,792,1050
+"Acrocephalus_palustris","Marsh Warbler
+Acrocephalus palustris","1990s to 2010s",342,574,194,1055,380,768
+"Acrocephalus_schoenobaenus","Sedge Warbler
+Acrocephalus schoenobaenus","1970s to 1990s",915,124,753,373,-629,877
+"Acrocephalus_schoenobaenus","Sedge Warbler
+Acrocephalus schoenobaenus","1970s to 2010s",878,161,718,408,-557,879
+"Acrocephalus_schoenobaenus","Sedge Warbler
+Acrocephalus schoenobaenus","1990s to 2010s",1369,299,227,270,72,526
+"Acrocephalus_scirpaceus","European Reed Warbler
+Acrocephalus scirpaceus","1970s to 1990s",559,484,229,893,255,713
+"Acrocephalus_scirpaceus","European Reed Warbler
+Acrocephalus scirpaceus","1970s to 2010s",593,450,242,880,208,692
+"Acrocephalus_scirpaceus","European Reed Warbler
+Acrocephalus scirpaceus","1990s to 2010s",528,260,307,1070,-47,567
+"Curruca_communis","Common Whitethroat
+Curruca communis","1970s to 1990s",36,237,82,1810,155,319
+"Curruca_communis","Common Whitethroat
+Curruca communis","1970s to 2010s",20,253,12,1880,241,265
+"Curruca_communis","Common Whitethroat
+Curruca communis","1990s to 2010s",17,101,15,2032,86,116
+"Curruca_curruca","Lesser Whitethroat
+Curruca curruca","1970s to 1990s",112,372,238,1443,134,610
+"Curruca_curruca","Lesser Whitethroat
+Curruca curruca","1970s to 2010s",81,403,90,1591,313,493
+"Curruca_curruca","Lesser Whitethroat
+Curruca curruca","1990s to 2010s",59,291,112,1703,179,403
+"Curruca_nisoria","Barred Warbler
+Curruca nisoria","1970s to 1990s",2144,1,18,2,-17,19
+"Curruca_nisoria","Barred Warbler
+Curruca nisoria","1970s to 2010s",2145,0,20,0,-20,20
+"Curruca_nisoria","Barred Warbler
+Curruca nisoria","1990s to 2010s",2162,0,3,0,-3,3
+"Hippolais_icterina","Icterine Warbler
+Hippolais icterina","1970s to 1990s",168,351,352,1294,-1,703
+"Hippolais_icterina","Icterine Warbler
+Hippolais icterina","1970s to 2010s",156,363,301,1345,62,664
+"Hippolais_icterina","Icterine Warbler
+Hippolais icterina","1990s to 2010s",166,354,291,1354,63,645
+"Locustella_fluviatilis","River Warbler
+Locustella fluviatilis","1970s to 1990s",2153,12,0,0,12,12
+"Locustella_fluviatilis","River Warbler
+Locustella fluviatilis","1970s to 2010s",2149,16,0,0,16,16
+"Locustella_fluviatilis","River Warbler
+Locustella fluviatilis","1990s to 2010s",2138,15,11,1,4,26
+"Locustella_luscinioides","Savi's Warbler
+Locustella luscinioides","1970s to 1990s",2119,17,24,5,-7,41
+"Locustella_luscinioides","Savi's Warbler
+Locustella luscinioides","1970s to 2010s",2126,10,25,4,-15,35
+"Locustella_luscinioides","Savi's Warbler
+Locustella luscinioides","1990s to 2010s",2134,9,17,5,-8,26
+"Locustella_naevia","Common Grasshopper Warbler
+Locustella naevia","1970s to 1990s",1619,314,124,108,190,438
+"Locustella_naevia","Common Grasshopper Warbler
+Locustella naevia","1970s to 2010s",1482,451,121,111,330,572
+"Locustella_naevia","Common Grasshopper Warbler
+Locustella naevia","1990s to 2010s",1399,344,204,218,140,548
+"Phylloscopus_collybita","Northern Chiffchaff
+Phylloscopus collybita","1970s to 1990s",254,765,59,1087,706,824
+"Phylloscopus_collybita","Northern Chiffchaff
+Phylloscopus collybita","1970s to 2010s",49,970,5,1141,965,975
+"Phylloscopus_collybita","Northern Chiffchaff
+Phylloscopus collybita","1990s to 2010s",49,264,5,1847,259,269
+"Phylloscopus_sibilatrix","Wood Warbler
+Phylloscopus sibilatrix","1970s to 1990s",1075,306,414,370,-108,720
+"Phylloscopus_sibilatrix","Wood Warbler
+Phylloscopus sibilatrix","1970s to 2010s",1076,305,405,379,-100,710
+"Phylloscopus_sibilatrix","Wood Warbler
+Phylloscopus sibilatrix","1990s to 2010s",1172,317,309,367,8,626
+"Phylloscopus_trochiloides","Greenish Warbler
+Phylloscopus trochiloides","1970s to 1990s",2157,8,0,0,8,8
+"Phylloscopus_trochiloides","Greenish Warbler
+Phylloscopus trochiloides","1970s to 2010s",2156,9,0,0,9,9
+"Phylloscopus_trochiloides","Greenish Warbler
+Phylloscopus trochiloides","1990s to 2010s",2150,7,6,2,1,13
+"Phylloscopus_trochilus","Willow Warbler
+Phylloscopus trochilus","1970s to 1990s",57,195,87,1826,108,282
+"Phylloscopus_trochilus","Willow Warbler
+Phylloscopus trochilus","1970s to 2010s",61,191,95,1818,96,286
+"Phylloscopus_trochilus","Willow Warbler
+Phylloscopus trochilus","1990s to 2010s",53,91,103,1918,-12,194
+"Sylvia_atricapilla","Blackcap
+Sylvia atricapilla","1970s to 1990s",167,434,117,1447,317,551
+"Sylvia_atricapilla","Blackcap
+Sylvia atricapilla","1970s to 2010s",63,538,27,1537,511,565
+"Sylvia_atricapilla","Blackcap
+Sylvia atricapilla","1990s to 2010s",58,226,32,1849,194,258
+"Sylvia_borin","Garden Warbler
+Sylvia borin","1970s to 1990s",131,333,197,1504,136,530
+"Sylvia_borin","Garden Warbler
+Sylvia borin","1970s to 2010s",125,339,155,1546,184,494
+"Sylvia_borin","Garden Warbler
+Sylvia borin","1990s to 2010s",114,214,166,1671,48,380

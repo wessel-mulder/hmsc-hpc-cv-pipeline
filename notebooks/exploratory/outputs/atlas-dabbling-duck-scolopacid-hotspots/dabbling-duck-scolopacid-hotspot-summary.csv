@@ -1,0 +1,7 @@
+"group","atlas","period","n_cells","species_pool_size","occupied_cells","hotspot_threshold","hotspot_cells","hotspot_percent_of_all_cells","max_richness","mean_richness"
+"Dabbling ducks","1","1970s",2165,8,1604,3,303,13.9953810623557,7,1.38475750577367
+"Dabbling ducks","2","1990s",2165,8,1930,3,362,16.7205542725173,7,1.75150115473441
+"Dabbling ducks","3","2010s",2165,8,1753,3,251,11.5935334872979,6,1.40230946882217
+"Scolopacids","1","1970s",2165,11,1351,3,307,14.1801385681293,7,1.1810623556582
+"Scolopacids","2","1990s",2165,11,1209,3,208,9.60739030023095,6,0.964434180138568
+"Scolopacids","3","2010s",2165,11,1085,3,123,5.68129330254042,6,0.757043879907621

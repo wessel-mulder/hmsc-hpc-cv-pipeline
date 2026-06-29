@@ -1,0 +1,205 @@
+"comparison_id","foraging_guild_consensus","change_class","n_species","comparison_label","guild_species_count","proportion_within_guild","percentage_within_guild"
+"1990s_minus_1970s","Aerial insectivores","Decrease",1,"1990s minus 1970s",4,0.25,25
+"2010s_minus_1990s","Aerial insectivores","Decrease",1,"2010s minus 1990s",4,0.25,25
+"1990s_minus_1970s","Aquatic pursuers","Decrease",0,"1990s minus 1970s",6,0,0
+"2010s_minus_1990s","Aquatic pursuers","Decrease",0,"2010s minus 1990s",6,0,0
+"1990s_minus_1970s","Buntings","Decrease",1,"1990s minus 1970s",3,0.333333333333333,33.3333333333333
+"2010s_minus_1990s","Buntings","Decrease",0,"2010s minus 1990s",3,0,0
+"1990s_minus_1970s","Columbids","Decrease",0,"1990s minus 1970s",4,0,0
+"2010s_minus_1990s","Columbids","Decrease",0,"2010s minus 1990s",4,0,0
+"1990s_minus_1970s","Cuckoos","Decrease",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Cuckoos","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Dabbling ducks","Decrease",0,"1990s minus 1970s",7,0,0
+"2010s_minus_1990s","Dabbling ducks","Decrease",3,"2010s minus 1990s",7,0.428571428571429,42.8571428571429
+"1990s_minus_1970s","Dippers","Decrease",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Dippers","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Diurnal raptors","Decrease",0,"1990s minus 1970s",7,0,0
+"2010s_minus_1990s","Diurnal raptors","Decrease",2,"2010s minus 1990s",7,0.285714285714286,28.5714285714286
+"1990s_minus_1970s","Diving ducks","Decrease",0,"1990s minus 1970s",3,0,0
+"2010s_minus_1990s","Diving ducks","Decrease",0,"2010s minus 1990s",3,0,0
+"1990s_minus_1970s","Flycatchers","Decrease",0,"1990s minus 1970s",3,0,0
+"2010s_minus_1990s","Flycatchers","Decrease",1,"2010s minus 1990s",3,0.333333333333333,33.3333333333333
+"1990s_minus_1970s","Foliage gleaners","Decrease",0,"1990s minus 1970s",9,0,0
+"2010s_minus_1990s","Foliage gleaners","Decrease",0,"2010s minus 1990s",9,0,0
+"1990s_minus_1970s","Gallinaceous birds","Decrease",0,"1990s minus 1970s",2,0,0
+"2010s_minus_1990s","Gallinaceous birds","Decrease",1,"2010s minus 1990s",2,0.5,50
+"1990s_minus_1970s","Grazing waterfowl","Decrease",0,"1990s minus 1970s",2,0,0
+"2010s_minus_1990s","Grazing waterfowl","Decrease",0,"2010s minus 1990s",2,0,0
+"1990s_minus_1970s","Gulls","Decrease",1,"1990s minus 1970s",5,0.2,20
+"2010s_minus_1990s","Gulls","Decrease",0,"2010s minus 1990s",5,0,0
+"1990s_minus_1970s","Kingfishers","Decrease",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Kingfishers","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Low flycatching feeders","Decrease",1,"1990s minus 1970s",9,0.111111111111111,11.1111111111111
+"2010s_minus_1990s","Low flycatching feeders","Decrease",1,"2010s minus 1990s",9,0.111111111111111,11.1111111111111
+"1990s_minus_1970s","Marsh warblers","Decrease",1,"1990s minus 1970s",6,0.166666666666667,16.6666666666667
+"2010s_minus_1990s","Marsh warblers","Decrease",0,"2010s minus 1990s",6,0,0
+"1990s_minus_1970s","Nigthjars","Decrease",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Nigthjars","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Omnivorous corvids","Decrease",0,"1990s minus 1970s",7,0,0
+"2010s_minus_1990s","Omnivorous corvids","Decrease",1,"2010s minus 1990s",7,0.142857142857143,14.2857142857143
+"1990s_minus_1970s","Open-land insectivores","Decrease",1,"1990s minus 1970s",6,0.166666666666667,16.6666666666667
+"2010s_minus_1990s","Open-land insectivores","Decrease",0,"2010s minus 1990s",6,0,0
+"1990s_minus_1970s","Orioles","Decrease",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Orioles","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Owls","Decrease",1,"1990s minus 1970s",5,0.2,20
+"2010s_minus_1990s","Owls","Decrease",0,"2010s minus 1990s",5,0,0
+"1990s_minus_1970s","Passerine seedeaters","Decrease",0,"1990s minus 1970s",11,0,0
+"2010s_minus_1990s","Passerine seedeaters","Decrease",1,"2010s minus 1990s",11,0.0909090909090909,9.09090909090909
+"1990s_minus_1970s","Plovers","Decrease",0,"1990s minus 1970s",6,0,0
+"2010s_minus_1990s","Plovers","Decrease",0,"2010s minus 1990s",6,0,0
+"1990s_minus_1970s","Rails","Decrease",0,"1990s minus 1970s",5,0,0
+"2010s_minus_1990s","Rails","Decrease",2,"2010s minus 1990s",5,0.4,40
+"1990s_minus_1970s","Reedlings","Decrease",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Reedlings","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Scolopacids","Decrease",1,"1990s minus 1970s",9,0.111111111111111,11.1111111111111
+"2010s_minus_1990s","Scolopacids","Decrease",1,"2010s minus 1990s",9,0.111111111111111,11.1111111111111
+"1990s_minus_1970s","Shrikes","Decrease",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Shrikes","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Starlings","Decrease",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Starlings","Decrease",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Terns","Decrease",0,"1990s minus 1970s",4,0,0
+"2010s_minus_1990s","Terns","Decrease",0,"2010s minus 1990s",4,0,0
+"1990s_minus_1970s","Thrushes","Decrease",0,"1990s minus 1970s",4,0,0
+"2010s_minus_1990s","Thrushes","Decrease",1,"2010s minus 1990s",4,0.25,25
+"1990s_minus_1970s","Tit-like birds","Decrease",0,"1990s minus 1970s",12,0,0
+"2010s_minus_1990s","Tit-like birds","Decrease",1,"2010s minus 1990s",12,0.0833333333333333,8.33333333333333
+"1990s_minus_1970s","Wading birds","Decrease",0,"1990s minus 1970s",2,0,0
+"2010s_minus_1990s","Wading birds","Decrease",0,"2010s minus 1990s",2,0,0
+"1990s_minus_1970s","Woodpeckers","Decrease",0,"1990s minus 1970s",5,0,0
+"2010s_minus_1990s","Woodpeckers","Decrease",0,"2010s minus 1990s",5,0,0
+"1990s_minus_1970s","Aerial insectivores","Stable",3,"1990s minus 1970s",4,0.75,75
+"2010s_minus_1990s","Aerial insectivores","Stable",3,"2010s minus 1990s",4,0.75,75
+"1990s_minus_1970s","Aquatic pursuers","Stable",4,"1990s minus 1970s",6,0.666666666666667,66.6666666666667
+"2010s_minus_1990s","Aquatic pursuers","Stable",6,"2010s minus 1990s",6,1,100
+"1990s_minus_1970s","Buntings","Stable",2,"1990s minus 1970s",3,0.666666666666667,66.6666666666667
+"2010s_minus_1990s","Buntings","Stable",3,"2010s minus 1990s",3,1,100
+"1990s_minus_1970s","Columbids","Stable",2,"1990s minus 1970s",4,0.5,50
+"2010s_minus_1990s","Columbids","Stable",3,"2010s minus 1990s",4,0.75,75
+"1990s_minus_1970s","Cuckoos","Stable",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Cuckoos","Stable",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Dabbling ducks","Stable",6,"1990s minus 1970s",7,0.857142857142857,85.7142857142857
+"2010s_minus_1990s","Dabbling ducks","Stable",4,"2010s minus 1990s",7,0.571428571428571,57.1428571428571
+"1990s_minus_1970s","Dippers","Stable",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Dippers","Stable",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Diurnal raptors","Stable",2,"1990s minus 1970s",7,0.285714285714286,28.5714285714286
+"2010s_minus_1990s","Diurnal raptors","Stable",4,"2010s minus 1990s",7,0.571428571428571,57.1428571428571
+"1990s_minus_1970s","Diving ducks","Stable",2,"1990s minus 1970s",3,0.666666666666667,66.6666666666667
+"2010s_minus_1990s","Diving ducks","Stable",3,"2010s minus 1990s",3,1,100
+"1990s_minus_1970s","Flycatchers","Stable",2,"1990s minus 1970s",3,0.666666666666667,66.6666666666667
+"2010s_minus_1990s","Flycatchers","Stable",2,"2010s minus 1990s",3,0.666666666666667,66.6666666666667
+"1990s_minus_1970s","Foliage gleaners","Stable",8,"1990s minus 1970s",9,0.888888888888889,88.8888888888889
+"2010s_minus_1990s","Foliage gleaners","Stable",9,"2010s minus 1990s",9,1,100
+"1990s_minus_1970s","Gallinaceous birds","Stable",2,"1990s minus 1970s",2,1,100
+"2010s_minus_1990s","Gallinaceous birds","Stable",0,"2010s minus 1990s",2,0,0
+"1990s_minus_1970s","Grazing waterfowl","Stable",1,"1990s minus 1970s",2,0.5,50
+"2010s_minus_1990s","Grazing waterfowl","Stable",1,"2010s minus 1990s",2,0.5,50
+"1990s_minus_1970s","Gulls","Stable",4,"1990s minus 1970s",5,0.8,80
+"2010s_minus_1990s","Gulls","Stable",5,"2010s minus 1990s",5,1,100
+"1990s_minus_1970s","Kingfishers","Stable",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Kingfishers","Stable",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Low flycatching feeders","Stable",6,"1990s minus 1970s",9,0.666666666666667,66.6666666666667
+"2010s_minus_1990s","Low flycatching feeders","Stable",7,"2010s minus 1990s",9,0.777777777777778,77.7777777777778
+"1990s_minus_1970s","Marsh warblers","Stable",2,"1990s minus 1970s",6,0.333333333333333,33.3333333333333
+"2010s_minus_1990s","Marsh warblers","Stable",5,"2010s minus 1990s",6,0.833333333333333,83.3333333333333
+"1990s_minus_1970s","Nigthjars","Stable",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Nigthjars","Stable",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Omnivorous corvids","Stable",3,"1990s minus 1970s",7,0.428571428571429,42.8571428571429
+"2010s_minus_1990s","Omnivorous corvids","Stable",4,"2010s minus 1990s",7,0.571428571428571,57.1428571428571
+"1990s_minus_1970s","Open-land insectivores","Stable",5,"1990s minus 1970s",6,0.833333333333333,83.3333333333333
+"2010s_minus_1990s","Open-land insectivores","Stable",6,"2010s minus 1990s",6,1,100
+"1990s_minus_1970s","Orioles","Stable",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Orioles","Stable",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Owls","Stable",3,"1990s minus 1970s",5,0.6,60
+"2010s_minus_1990s","Owls","Stable",5,"2010s minus 1990s",5,1,100
+"1990s_minus_1970s","Passerine seedeaters","Stable",5,"1990s minus 1970s",11,0.454545454545455,45.4545454545455
+"2010s_minus_1990s","Passerine seedeaters","Stable",10,"2010s minus 1990s",11,0.909090909090909,90.9090909090909
+"1990s_minus_1970s","Plovers","Stable",5,"1990s minus 1970s",6,0.833333333333333,83.3333333333333
+"2010s_minus_1990s","Plovers","Stable",6,"2010s minus 1990s",6,1,100
+"1990s_minus_1970s","Rails","Stable",3,"1990s minus 1970s",5,0.6,60
+"2010s_minus_1990s","Rails","Stable",3,"2010s minus 1990s",5,0.6,60
+"1990s_minus_1970s","Reedlings","Stable",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Reedlings","Stable",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Scolopacids","Stable",8,"1990s minus 1970s",9,0.888888888888889,88.8888888888889
+"2010s_minus_1990s","Scolopacids","Stable",8,"2010s minus 1990s",9,0.888888888888889,88.8888888888889
+"1990s_minus_1970s","Shrikes","Stable",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Shrikes","Stable",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Starlings","Stable",1,"1990s minus 1970s",1,1,100
+"2010s_minus_1990s","Starlings","Stable",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Terns","Stable",4,"1990s minus 1970s",4,1,100
+"2010s_minus_1990s","Terns","Stable",4,"2010s minus 1990s",4,1,100
+"1990s_minus_1970s","Thrushes","Stable",2,"1990s minus 1970s",4,0.5,50
+"2010s_minus_1990s","Thrushes","Stable",3,"2010s minus 1990s",4,0.75,75
+"1990s_minus_1970s","Tit-like birds","Stable",7,"1990s minus 1970s",12,0.583333333333333,58.3333333333333
+"2010s_minus_1990s","Tit-like birds","Stable",8,"2010s minus 1990s",12,0.666666666666667,66.6666666666667
+"1990s_minus_1970s","Wading birds","Stable",2,"1990s minus 1970s",2,1,100
+"2010s_minus_1990s","Wading birds","Stable",2,"2010s minus 1990s",2,1,100
+"1990s_minus_1970s","Woodpeckers","Stable",4,"1990s minus 1970s",5,0.8,80
+"2010s_minus_1990s","Woodpeckers","Stable",5,"2010s minus 1990s",5,1,100
+"1990s_minus_1970s","Aerial insectivores","Increase",0,"1990s minus 1970s",4,0,0
+"2010s_minus_1990s","Aerial insectivores","Increase",0,"2010s minus 1990s",4,0,0
+"1990s_minus_1970s","Aquatic pursuers","Increase",2,"1990s minus 1970s",6,0.333333333333333,33.3333333333333
+"2010s_minus_1990s","Aquatic pursuers","Increase",0,"2010s minus 1990s",6,0,0
+"1990s_minus_1970s","Buntings","Increase",0,"1990s minus 1970s",3,0,0
+"2010s_minus_1990s","Buntings","Increase",0,"2010s minus 1990s",3,0,0
+"1990s_minus_1970s","Columbids","Increase",2,"1990s minus 1970s",4,0.5,50
+"2010s_minus_1990s","Columbids","Increase",1,"2010s minus 1990s",4,0.25,25
+"1990s_minus_1970s","Cuckoos","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Cuckoos","Increase",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Dabbling ducks","Increase",1,"1990s minus 1970s",7,0.142857142857143,14.2857142857143
+"2010s_minus_1990s","Dabbling ducks","Increase",0,"2010s minus 1990s",7,0,0
+"1990s_minus_1970s","Dippers","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Dippers","Increase",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Diurnal raptors","Increase",5,"1990s minus 1970s",7,0.714285714285714,71.4285714285714
+"2010s_minus_1990s","Diurnal raptors","Increase",1,"2010s minus 1990s",7,0.142857142857143,14.2857142857143
+"1990s_minus_1970s","Diving ducks","Increase",1,"1990s minus 1970s",3,0.333333333333333,33.3333333333333
+"2010s_minus_1990s","Diving ducks","Increase",0,"2010s minus 1990s",3,0,0
+"1990s_minus_1970s","Flycatchers","Increase",1,"1990s minus 1970s",3,0.333333333333333,33.3333333333333
+"2010s_minus_1990s","Flycatchers","Increase",0,"2010s minus 1990s",3,0,0
+"1990s_minus_1970s","Foliage gleaners","Increase",1,"1990s minus 1970s",9,0.111111111111111,11.1111111111111
+"2010s_minus_1990s","Foliage gleaners","Increase",0,"2010s minus 1990s",9,0,0
+"1990s_minus_1970s","Gallinaceous birds","Increase",0,"1990s minus 1970s",2,0,0
+"2010s_minus_1990s","Gallinaceous birds","Increase",1,"2010s minus 1990s",2,0.5,50
+"1990s_minus_1970s","Grazing waterfowl","Increase",1,"1990s minus 1970s",2,0.5,50
+"2010s_minus_1990s","Grazing waterfowl","Increase",1,"2010s minus 1990s",2,0.5,50
+"1990s_minus_1970s","Gulls","Increase",0,"1990s minus 1970s",5,0,0
+"2010s_minus_1990s","Gulls","Increase",0,"2010s minus 1990s",5,0,0
+"1990s_minus_1970s","Kingfishers","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Kingfishers","Increase",1,"2010s minus 1990s",1,1,100
+"1990s_minus_1970s","Low flycatching feeders","Increase",2,"1990s minus 1970s",9,0.222222222222222,22.2222222222222
+"2010s_minus_1990s","Low flycatching feeders","Increase",1,"2010s minus 1990s",9,0.111111111111111,11.1111111111111
+"1990s_minus_1970s","Marsh warblers","Increase",3,"1990s minus 1970s",6,0.5,50
+"2010s_minus_1990s","Marsh warblers","Increase",1,"2010s minus 1990s",6,0.166666666666667,16.6666666666667
+"1990s_minus_1970s","Nigthjars","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Nigthjars","Increase",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Omnivorous corvids","Increase",4,"1990s minus 1970s",7,0.571428571428571,57.1428571428571
+"2010s_minus_1990s","Omnivorous corvids","Increase",2,"2010s minus 1990s",7,0.285714285714286,28.5714285714286
+"1990s_minus_1970s","Open-land insectivores","Increase",0,"1990s minus 1970s",6,0,0
+"2010s_minus_1990s","Open-land insectivores","Increase",0,"2010s minus 1990s",6,0,0
+"1990s_minus_1970s","Orioles","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Orioles","Increase",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Owls","Increase",1,"1990s minus 1970s",5,0.2,20
+"2010s_minus_1990s","Owls","Increase",0,"2010s minus 1990s",5,0,0
+"1990s_minus_1970s","Passerine seedeaters","Increase",6,"1990s minus 1970s",11,0.545454545454545,54.5454545454545
+"2010s_minus_1990s","Passerine seedeaters","Increase",0,"2010s minus 1990s",11,0,0
+"1990s_minus_1970s","Plovers","Increase",1,"1990s minus 1970s",6,0.166666666666667,16.6666666666667
+"2010s_minus_1990s","Plovers","Increase",0,"2010s minus 1990s",6,0,0
+"1990s_minus_1970s","Rails","Increase",2,"1990s minus 1970s",5,0.4,40
+"2010s_minus_1990s","Rails","Increase",0,"2010s minus 1990s",5,0,0
+"1990s_minus_1970s","Reedlings","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Reedlings","Increase",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Scolopacids","Increase",0,"1990s minus 1970s",9,0,0
+"2010s_minus_1990s","Scolopacids","Increase",0,"2010s minus 1990s",9,0,0
+"1990s_minus_1970s","Shrikes","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Shrikes","Increase",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Starlings","Increase",0,"1990s minus 1970s",1,0,0
+"2010s_minus_1990s","Starlings","Increase",0,"2010s minus 1990s",1,0,0
+"1990s_minus_1970s","Terns","Increase",0,"1990s minus 1970s",4,0,0
+"2010s_minus_1990s","Terns","Increase",0,"2010s minus 1990s",4,0,0
+"1990s_minus_1970s","Thrushes","Increase",2,"1990s minus 1970s",4,0.5,50
+"2010s_minus_1990s","Thrushes","Increase",0,"2010s minus 1990s",4,0,0
+"1990s_minus_1970s","Tit-like birds","Increase",5,"1990s minus 1970s",12,0.416666666666667,41.6666666666667
+"2010s_minus_1990s","Tit-like birds","Increase",3,"2010s minus 1990s",12,0.25,25
+"1990s_minus_1970s","Wading birds","Increase",0,"1990s minus 1970s",2,0,0
+"2010s_minus_1990s","Wading birds","Increase",0,"2010s minus 1990s",2,0,0
+"1990s_minus_1970s","Woodpeckers","Increase",1,"1990s minus 1970s",5,0.2,20
+"2010s_minus_1990s","Woodpeckers","Increase",0,"2010s minus 1990s",5,0,0
