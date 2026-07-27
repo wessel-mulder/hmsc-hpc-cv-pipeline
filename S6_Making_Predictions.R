@@ -10,7 +10,6 @@ set.seed(369)
 
 ### MY FLAGS 
 ngrid <- 30
-thin2 <- 50
 overwrite_gradients <- TRUE
 skip_covariates <- FALSE # skip the first part of the script which constructs gradients & predicts over them 
 atlas_subset <- NULL # set to NULL for all atlas rows, or a number for a subset  
@@ -26,13 +25,11 @@ overwrite_prediction <- TRUE # overwrite atlas predictions if they've already be
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 ### Set up directories ####
-pattern2match <- "2026-02-10"
-  
-matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
-folders2match <- matching_folders[1]
-for(folders2match in matching_folders){
-models_description = folders2match
+# Get arguments from command line
+args <- commandArgs(trailingOnly = TRUE)
+# Default value if no argument is provided, otherwise use the first argument
+thin2 <- if(length(args) > 0) as.numeric(args[1]) else 50
+models_description <- args[2]
 
 getwd()
 localDir = "./HmscOutputs"
@@ -46,10 +43,18 @@ samples_list = c(250)
 thin_list = c(100)
 transient = 100000
 nChains = 4
-nfolds = 5
+nfolds = 10
 
-nParallel = detectCores() - 1
-print(nParallel)
+# If you are using SLURM:
+n_cores <- as.numeric(Sys.getenv("SLURM_CPUS_PER_TASK"))
+
+# If you are using PBS/Torque:
+# n_cores <- as.numeric(Sys.getenv("PBS_NUM_PPN"))
+
+# Add a failsafe just in case you run this script locally later:
+if(is.na(n_cores) || n_cores == "") {
+  n_cores <- parallel::detectCores() - 1 
+}
 
 nst = length(thin_list)
 #Note that changing the species and traits only effect the graphical outputs and
@@ -144,38 +149,36 @@ if(file.exists(filename)){
       postlist <- poolMcmcChains(m$postList,thin=thin2)
       ptm_tot = proc.time()
       ptm = ptm_tot
-      for(k in 1:(length(covariates))){
-        covariate = covariates[[k]]
-
+      Preds <- mclapply(1:length(covariates), function(k) {
+        covariate <- covariates[[k]]
         
-        cli_h2("Calculating predictions for {covariate}")
-
-        cli_progress_step("Starting to construction Gradient:")
-        Gradient = constructGradient(m,focalVariable = covariate, ngrid=ngrid)
-
-        cli_progress_step("Starting to construction Gradient2:")
-        Gradient2 = constructGradient(m,focalVariable = covariate,non.focalVariables = 1,ngrid=ngrid)
-
-        cli_progress_step("Making predictions based on Gradient 1:")
-        predY = predict(m, Gradient=Gradient, expected = TRUE,nParallel = nParallel,useSocket=F,
-                        post = postlist)
-
-        cli_progress_step("Making predictions based on Gradient2:")
-        predY2 = predict(m, Gradient=Gradient2, expected = TRUE,nParallel = nParallel,useSocket=F,
-                         post = postlist)
-        cli_process_done()
+        # Note: cli outputs are removed here because multiple workers 
+        # printing to the console simultaneously creates a mess.
         
-        Preds[[k]]$predY = predY 
-        Preds[[k]]$predY2 = predY2 
-        Preds[[k]]$Gradient = Gradient
-        Preds[[k]]$Gradient2 = Gradient2
-      }
+        Gradient  <- constructGradient(m, focalVariable = covariate, ngrid=ngrid)
+        Gradient2 <- constructGradient(m, focalVariable = covariate, non.focalVariables = 1, ngrid=ngrid)
+
+        # CRITICAL: Set nParallel = 1 inside predict. 
+        # If you don't, you will cause "nested parallelization" and crash the node.
+        predY  <- predict(m, Gradient=Gradient, expected = TRUE, 
+                          nParallel = 10, useSocket = F, post = postlist)
+                          
+        predY2 <- predict(m, Gradient=Gradient2, expected = TRUE, 
+                          nParallel = 10, useSocket = F, post = postlist)
+        
+        # Return the results as a list for this specific covariate
+        list(
+          predY = predY,
+          predY2 = predY2,
+          Gradient = Gradient,
+          Gradient2 = Gradient2
+        )
+      }, mc.cores = 8)
       names(Preds) = covariates
       save(Preds, file = outfile)
       computational.time = proc.time() - ptm_tot
       cat(sprintf("Total Time taken: %.2f s \nCurrent time: %s\n\n", computational.time[3],format(Sys.time(), "%H:%M:%S")))
     }
-    str(Preds)
     cli_h1("Plotting graphs")
     for(k in 1:(length(covariates))){
       par(mfrow=c(2,1))
@@ -230,147 +233,147 @@ if(file.exists(filename)){
   while(!is.null(dev.list())){
     dev.off()
   }
-  
-  ### NOW CHECK FOR SOME ATLAS TESTS 
-  filename = file.path(TestDir,'test_atlases.RData')
-  #filename = file.path(ModelDir,sprintf("Fitted/FittedR_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
-  if(file.exists(filename)){
-    ptm = proc.time()
-
-    outfiletest = file.path(TestDir,sprintf("Preds/AtlasPreds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
-    
-    load(filename)
-    cli_h1("Running tests")
-    if(file.exists(file.path(outfiletest)) & !overwrite_prediction){
-      cli_alert_success("Predictions already calculated")
-    } else {
-      Atlases = testing_list
-      atlas_test <- Atlases[[2]]
-      tests<-lapply(Atlases,function(atlas_test){
-
-        cli_h2(sprintf('Starting test for Atlas'))
-        atlas_data <- atlas_test
-
-        if(length(atlas_subset)>0){
-          subset <- atlas_subset
-        }else{
-          subset <- nrow(atlas_data$X)
-        }
-        X_sub <- atlas_data$X[1:subset,]
-        Design_sub <- atlas_data$Design[1:subset,]
-        Y_sub <- atlas_data$Y[1:subset,]
-        
-        # 1. IDENTIFY TRAINING SITES
-        # Get the list of sites the model was actually trained on
-        train_sites <- unique(as.character(m$studyDesign$site))
-        
-        # 2. FILTER ATLAS TO MATCH MODEL
-        # Only keep rows in the Atlas that correspond to sites in the model
-        keep_rows <- as.character(Design_sub$site) %in% train_sites
-        
-        if(sum(keep_rows) == 0) {
-          cli_alert_danger("No matching sites found between Model and Atlas! Check your site naming.")
-          stop("Stopping to prevent crash.")
-        }
-        table(keep_rows)
-        # Apply the filter
-        X_sub_filtered <- X_sub[keep_rows, , drop=FALSE]
-        Design_sub_filtered <- Design_sub[keep_rows, , drop=FALSE]
-        Y_sub_filtered <- Y_sub[keep_rows, , drop=FALSE] # If you need Y for testing
-        
-        cli_alert_info(paste("Filtered prediction set from", nrow(Design_sub), "to", nrow(Design_sub_filtered), "sites matching the model."))
-        
-        # 1. First, make sure you are working with clean, unique data
-        proj_xycoords_unique <- unique(
-          data.frame(
-            site = as.character(Design_sub_filtered$site), # Convert to character immediately
-            X = Design_sub_filtered$lon,
-            Y = Design_sub_filtered$lat,
-            stringsAsFactors = FALSE
-          )
-        )
-        
-        # 2. Filter out any NAs that might have slipped in (Critical for the 'leading minor' error)
-        proj_xycoords_unique <- proj_xycoords_unique[!is.na(proj_xycoords_unique$X), ]
-        
-        # 3. Set rownames using the character vector
-        rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
-        
-        # 4. Remove the site column so only X and Y remain for sData
-        proj_xycoords_unique$site <- NULL
-        
-        # 5. NOW Ensure your Design_sub matches these sites exactly
-        Design_sub_filtered$site <- factor(as.character(Design_sub_filtered$site), 
-                                  levels = rownames(proj_xycoords_unique))
-        
-        struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
-        struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
-        
-        ### GET SPATIAL PREDICTIONS 
-        cli_h3('Spatial predictions')
-        preds <- predict(m,
-                XData = X_sub_filtered,
-                studyDesign = Design_sub_filtered,
-                ranLevels = list('site'=struc_space),
-                nParallel = nParallel,useSocket=F)
-        
-        ### GET NON-SPATIAL PREDICTIONS 
-        cli_h3('Non-spatial predictions')
-        Design_dummy <- data.frame(site = factor(rep("dummy", nrow(X_sub_filtered))))
-        struc_nospatial <- HmscRandomLevel(
-          units = "dummy"
-        )
-        preds_nospatial <- predict(
-          m,
-          XData = X_sub_filtered,
-          studyDesign = Design_dummy,
-          ranLevels = list(site = struc_nospatial),
-          expected = TRUE,
-          nParallel = nParallel,
-          useSocket = FALSE
-        )
-        
-
-        # reduce dimentions
-        EpredY = Reduce('+', preds)/length(preds) # convert to 2d 
-        predArray = abind::abind(EpredY, along=3)
-        # also for spatial
-        Epreds_nospatialY = Reduce('+', preds_nospatial)/length(preds_nospatial)
-        predArray_nonspatial = abind::abind(Epreds_nospatialY,along=3)
-        
-        
-        ### get fake model for the fit  
-        hM_test <- Hmsc(Y = Y_sub_filtered, 
-                XData = X_sub_filtered, 
-                studyDesign = Design_sub_filtered[,'site',drop=F],
-                ranLevels = list('site'=struc_space),
-                distr = m$distr) # Ensure distribution matches
-        
-        ### 
-        test_fit = evaluateModelFit(hM_test, predArray)
-        test_fit_nonspatial = evaluateModelFit(hM_test, predArray_nonspatial)
-        # spatial 
-        atlas_data$Ypred = predArray
-        atlas_data$fit_test = test_fit
-        #nonspatial
-        atlas_data$Ypred_nonspatial = predArray_nonspatial
-        atlas_data$fit_test_nonspatial = test_fit_nonspatial
-        atlas_data
-        
-        })
-      names(tests) <- names(Atlases)
-      if(!dir.exists(file.path(TestDir,"Preds"))){
-        dir.create(file.path(TestDir,"Preds"))
-      }
-      save(tests, file = outfiletest)
-      computational.time = proc.time() - ptm
-      cat("Time taken:", computational.time[3],"s \n\n")
-
-      }
-    }
-  }
-
 }
+#   ### NOW CHECK FOR SOME ATLAS TESTS 
+#   filename = file.path(TestDir,'test_atlases.RData')
+#   #filename = file.path(ModelDir,sprintf("Fitted/FittedR_samples_%.4d_thin_%.2d_chains_%.1d.Rdata", samples, thin, nChains))
+#   if(file.exists(filename)){
+#     ptm = proc.time()
+
+#     outfiletest = file.path(TestDir,sprintf("Preds/AtlasPreds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
+    
+#     load(filename)
+#     cli_h1("Running tests")
+#     if(file.exists(file.path(outfiletest)) & !overwrite_prediction){
+#       cli_alert_success("Predictions already calculated")
+#     } else {
+#       Atlases = testing_list
+#       atlas_test <- Atlases[[2]]
+#       tests<-lapply(Atlases,function(atlas_test){
+
+#         cli_h2(sprintf('Starting test for Atlas'))
+#         atlas_data <- atlas_test
+
+#         if(length(atlas_subset)>0){
+#           subset <- atlas_subset
+#         }else{
+#           subset <- nrow(atlas_data$X)
+#         }
+#         X_sub <- atlas_data$X[1:subset,]
+#         Design_sub <- atlas_data$Design[1:subset,]
+#         Y_sub <- atlas_data$Y[1:subset,]
+        
+#         # 1. IDENTIFY TRAINING SITES
+#         # Get the list of sites the model was actually trained on
+#         train_sites <- unique(as.character(m$studyDesign$site))
+        
+#         # 2. FILTER ATLAS TO MATCH MODEL
+#         # Only keep rows in the Atlas that correspond to sites in the model
+#         keep_rows <- as.character(Design_sub$site) %in% train_sites
+        
+#         if(sum(keep_rows) == 0) {
+#           cli_alert_danger("No matching sites found between Model and Atlas! Check your site naming.")
+#           stop("Stopping to prevent crash.")
+#         }
+#         table(keep_rows)
+#         # Apply the filter
+#         X_sub_filtered <- X_sub[keep_rows, , drop=FALSE]
+#         Design_sub_filtered <- Design_sub[keep_rows, , drop=FALSE]
+#         Y_sub_filtered <- Y_sub[keep_rows, , drop=FALSE] # If you need Y for testing
+        
+#         cli_alert_info(paste("Filtered prediction set from", nrow(Design_sub), "to", nrow(Design_sub_filtered), "sites matching the model."))
+        
+#         # 1. First, make sure you are working with clean, unique data
+#         proj_xycoords_unique <- unique(
+#           data.frame(
+#             site = as.character(Design_sub_filtered$site), # Convert to character immediately
+#             X = Design_sub_filtered$lon,
+#             Y = Design_sub_filtered$lat,
+#             stringsAsFactors = FALSE
+#           )
+#         )
+        
+#         # 2. Filter out any NAs that might have slipped in (Critical for the 'leading minor' error)
+#         proj_xycoords_unique <- proj_xycoords_unique[!is.na(proj_xycoords_unique$X), ]
+        
+#         # 3. Set rownames using the character vector
+#         rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
+        
+#         # 4. Remove the site column so only X and Y remain for sData
+#         proj_xycoords_unique$site <- NULL
+        
+#         # 5. NOW Ensure your Design_sub matches these sites exactly
+#         Design_sub_filtered$site <- factor(as.character(Design_sub_filtered$site), 
+#                                   levels = rownames(proj_xycoords_unique))
+        
+#         struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
+#         struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
+        
+#         ### GET SPATIAL PREDICTIONS 
+#         cli_h3('Spatial predictions')
+#         preds <- predict(m,
+#                 XData = X_sub_filtered,
+#                 studyDesign = Design_sub_filtered,
+#                 ranLevels = list('site'=struc_space),
+#                 nParallel = nParallel,useSocket=F)
+        
+#         ### GET NON-SPATIAL PREDICTIONS 
+#         cli_h3('Non-spatial predictions')
+#         Design_dummy <- data.frame(site = factor(rep("dummy", nrow(X_sub_filtered))))
+#         struc_nospatial <- HmscRandomLevel(
+#           units = "dummy"
+#         )
+#         preds_nospatial <- predict(
+#           m,
+#           XData = X_sub_filtered,
+#           studyDesign = Design_dummy,
+#           ranLevels = list(site = struc_nospatial),
+#           expected = TRUE,
+#           nParallel = nParallel,
+#           useSocket = FALSE
+#         )
+        
+
+#         # reduce dimentions
+#         EpredY = Reduce('+', preds)/length(preds) # convert to 2d 
+#         predArray = abind::abind(EpredY, along=3)
+#         # also for spatial
+#         Epreds_nospatialY = Reduce('+', preds_nospatial)/length(preds_nospatial)
+#         predArray_nonspatial = abind::abind(Epreds_nospatialY,along=3)
+        
+        
+#         ### get fake model for the fit  
+#         hM_test <- Hmsc(Y = Y_sub_filtered, 
+#                 XData = X_sub_filtered, 
+#                 studyDesign = Design_sub_filtered[,'site',drop=F],
+#                 ranLevels = list('site'=struc_space),
+#                 distr = m$distr) # Ensure distribution matches
+        
+#         ### 
+#         test_fit = evaluateModelFit(hM_test, predArray)
+#         test_fit_nonspatial = evaluateModelFit(hM_test, predArray_nonspatial)
+#         # spatial 
+#         atlas_data$Ypred = predArray
+#         atlas_data$fit_test = test_fit
+#         #nonspatial
+#         atlas_data$Ypred_nonspatial = predArray_nonspatial
+#         atlas_data$fit_test_nonspatial = test_fit_nonspatial
+#         atlas_data
+        
+#         })
+#       names(tests) <- names(Atlases)
+#       if(!dir.exists(file.path(TestDir,"Preds"))){
+#         dir.create(file.path(TestDir,"Preds"))
+#       }
+#       save(tests, file = outfiletest)
+#       computational.time = proc.time() - ptm
+#       cat("Time taken:", computational.time[3],"s \n\n")
+
+#       }
+#     }
+#   }
+
+# }
 
 # 
 # plot(tests$atlas_1$fit_test_nonspatial$AUC~tests$atlas_1$fit_test$AUC)

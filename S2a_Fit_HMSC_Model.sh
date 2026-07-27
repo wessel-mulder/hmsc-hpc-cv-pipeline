@@ -11,7 +11,7 @@
 # Load Conda into the shell
 module restore myhmscstack 
 source /opt/software/anaconda3/2021.05/etc/profile.d/conda.sh
-conda activate my_hmsc_env
+conda activate hmsc_fix
 
 echo "=== TensorFlow GPU sanity check ==="
 

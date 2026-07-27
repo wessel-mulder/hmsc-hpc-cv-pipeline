@@ -12,7 +12,7 @@ require(Hmsc)
 require(dplyr)
 require(ape)
 input <- '.'
-coveragelevels <- 'good_and_average'
+coveragelevels <- 'good'
 min_occs <- 5
 
 

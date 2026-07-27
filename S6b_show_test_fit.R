@@ -118,7 +118,7 @@ if(file.exists(filename)){
   atlas_num <- as.numeric(str_extract(modelnames, "(?<=Atlas)\\d+"))
   
 
-  pdf(file = file.path(TestDir,paste0("/",models_description,"_model_fit_nfolds_",nfolds,".pdf")))
+  pdf(file = file.path(TestDir,paste0("/",models_description,"_model_fit_withatlas_nfolds_",nfolds,".pdf")))
 
   if(file.exists(testfilename)){
     extract_fit <- function(tests, atlas_name) {

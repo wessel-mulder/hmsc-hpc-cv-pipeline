@@ -35,7 +35,7 @@ plot_CV = function(type){
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 ### Set up directories ####
-pattern2match <- "2026-02-10"
+pattern2match <- "2026-03-27"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
@@ -55,7 +55,7 @@ thin_list = c(100)
 transient = 100000
 nParallel = 10
 nChains = 4
-nfolds = 5
+nfolds = 10
 
 nst = length(thin_list)
 

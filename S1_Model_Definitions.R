@@ -20,7 +20,7 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 guild_models <- c('All')
 variable_models <- c('All')   # exclude dominant, exclude ocean 
 coverages <- c('GoodAverage')
-atlas_models <- c(1,2)
+atlas_models <- c(3)
 min_occs2run <- c(5)
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
