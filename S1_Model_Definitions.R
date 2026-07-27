@@ -135,6 +135,17 @@ struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
 struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
 nrow(struc_space$s)
 
+# set factors of traits to determine level orders 
+# mig
+Tr$Migration_a3_DOF <- as.factor(Tr$Migration_a3_DOF)
+most_common <- names(which.max(table(Tr$Migration_a3_DOF)))
+Tr$Migration_a3_DOF <- relevel(Tr$Migration_a3_DOF, ref = most_common)
+# guild
+Tr$foraging_guild_consensus <- as.factor(Tr$foraging_guild_consensus)
+most_common <- names(which.max(table(Tr$foraging_guild_consensus)))
+Tr$foraging_guild_consensus <- relevel(Tr$foraging_guild_consensus, ref = most_common)
+
+X_sub
 
 model = Hmsc(Y = Y_sub,
                      XData = X_sub,
@@ -234,3 +245,4 @@ save(testing_list,
 }
 }
 }
+
