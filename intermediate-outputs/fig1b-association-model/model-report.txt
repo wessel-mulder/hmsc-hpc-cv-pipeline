@@ -1,0 +1,159 @@
+Exploratory analysis of 95% posterior-support classifications; not an area-adjusted model.
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: supported ~ variable * atlas + (1 | species) + (1 | species:variable)
+   Data: dat
+Control: ctrl
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+   2821.8    2919.8   -1393.9    2787.8      2338 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.9204 -0.5759  0.2857  0.5159  2.6656 
+
+Random effects:
+ Groups           Name        Variance Std.Dev.
+ species:variable (Intercept) 1.8159   1.3476  
+ species          (Intercept) 0.9091   0.9535  
+Number of obs: 2355, groups:  species:variable, 785; species, 157
+
+Fixed effects:
+                                   Estimate Std. Error z value Pr(>|z|)    
+(Intercept)                         0.55489    0.24532   2.262 0.023706 *  
+variableCropland                    0.01786    0.32805   0.054 0.956582    
+variablePasture                    -2.18048    0.34797  -6.266 3.70e-10 ***
+variableForest                      0.93982    0.34101   2.756 0.005851 ** 
+variableGrass/shrubland            -2.20569    0.34646  -6.366 1.94e-10 ***
+atlas1990s                         -0.04089    0.28594  -0.143 0.886299    
+atlas2010s                          0.41915    0.29052   1.443 0.149093    
+variableCropland:atlas1990s        -0.16233    0.40392  -0.402 0.687764    
+variablePasture:atlas1990s          1.45091    0.41392   3.505 0.000456 ***
+variableForest:atlas1990s          -0.14535    0.41831  -0.347 0.728239    
+variableGrass/shrubland:atlas1990s  0.69278    0.41258   1.679 0.093125 .  
+variableCropland:atlas2010s        -0.25375    0.40866  -0.621 0.534640    
+variablePasture:atlas2010s          1.14428    0.41608   2.750 0.005957 ** 
+variableForest:atlas2010s          -0.51330    0.42268  -1.214 0.224596    
+variableGrass/shrubland:atlas2010s  0.66768    0.41346   1.615 0.106340    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Data: dat
+Models:
+additive: supported ~ variable + atlas + (1 | species) + (1 | species:variable)
+full: supported ~ variable * atlas + (1 | species) + (1 | species:variable)
+         npar    AIC    BIC  logLik -2*log(L)  Chisq Df Pr(>Chisq)    
+additive    9 2835.8 2887.7 -1408.9    2817.8                         
+full       17 2821.8 2919.8 -1393.9    2787.8 30.023  8  0.0002095 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Singular fit: FALSE 
+Convergence messages:
+NULL
+
+Species-intercept-only sensitivity:
+Data: dat
+Models:
+simple_add: supported ~ variable + atlas + (1 | species)
+simple: supported ~ variable * atlas + (1 | species)
+           npar    AIC    BIC  logLik -2*log(L)  Chisq Df Pr(>Chisq)   
+simple_add    8 2926.7 2972.8 -1455.4    2910.7                        
+simple       16 2918.3 3010.6 -1443.2    2886.3 24.387  8   0.001973 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Observed totals:
+# A tibble: 15 × 5
+   variable        atlas n_species n_supported percent_supported
+   <fct>           <fct>     <int>       <int>             <dbl>
+ 1 Urban           1970s       157          92              58.6
+ 2 Urban           1990s       157          91              58.0
+ 3 Urban           2010s       157         102              65.0
+ 4 Cropland        1970s       157          93              59.2
+ 5 Cropland        1990s       157          88              56.1
+ 6 Cropland        2010s       157          97              61.8
+ 7 Pasture         1970s       157          39              24.8
+ 8 Pasture         1990s       157          73              46.5
+ 9 Pasture         2010s       157          77              49.0
+10 Forest          1970s       157         114              72.6
+11 Forest          1990s       157         110              70.1
+12 Forest          2010s       157         112              71.3
+13 Grass/shrubland 1970s       157          38              24.2
+14 Grass/shrubland 1990s       157          53              33.8
+15 Grass/shrubland 2010s       157          64              40.8
+
+Population-average expected counts (random effects integrated):
+          variable atlas expected_n_supported
+1            Urban 1970s             93.04268
+2         Cropland 1970s             93.50132
+3          Pasture 1970s             38.80004
+4           Forest 1970s            115.44465
+5  Grass/shrubland 1970s             38.28143
+6            Urban 1990s             91.98958
+7         Cropland 1990s             88.23699
+8          Pasture 1990s             72.80397
+9           Forest 1990s            111.34855
+10 Grass/shrubland 1990s             52.87379
+11           Urban 2010s            103.52587
+12        Cropland 2010s             97.70304
+13         Pasture 2010s             76.85530
+14          Forest 2010s            113.39870
+15 Grass/shrubland 2010s             63.72405
+
+Atlas contrasts; p_holm_all_15 controls all 15 comparisons:
+variable = Urban:
+ contrast      odds.ratio        SE  df asymp.LCL asymp.UCL null z.ratio
+ 1970s / 1990s  1.0417328 0.2978692 Inf 0.5947946 1.8245078    1   0.143
+ 1970s / 2010s  0.6576087 0.1910481 Inf 0.3721148 1.1621392    1  -1.443
+ 1990s / 2010s  0.6312642 0.1833328 Inf 0.3572760 1.1153689    1  -1.584
+ p.value p_holm_all_15
+  0.8863     1.0000000
+  0.1491     1.0000000
+  0.1132     1.0000000
+
+variable = Cropland:
+ contrast      odds.ratio        SE  df asymp.LCL asymp.UCL null z.ratio
+ 1970s / 1990s  1.2253380 0.3496233 Inf 0.7004615 2.1435200    1   0.712
+ 1970s / 2010s  0.8475623 0.2438537 Inf 0.4822484 1.4896094    1  -0.575
+ 1990s / 2010s  0.6916967 0.1984935 Inf 0.3941393 1.2138966    1  -1.284
+ p.value p_holm_all_15
+  0.4763     1.0000000
+  0.5654     1.0000000
+  0.1990     1.0000000
+
+variable = Pasture:
+ contrast      odds.ratio        SE  df asymp.LCL asymp.UCL null z.ratio
+ 1970s / 1990s  0.2441372 0.0730218 Inf 0.1358434 0.4387625    1  -4.714
+ 1970s / 2010s  0.2094170 0.0628689 Inf 0.1162716 0.3771815    1  -5.208
+ 1990s / 2010s  0.8577842 0.2376559 Inf 0.4983632 1.4764208    1  -0.554
+ p.value p_holm_all_15
+ <0.0001     0.0000340
+ <0.0001     0.0000029
+  0.5798     1.0000000
+
+variable = Forest:
+ contrast      odds.ratio        SE  df asymp.LCL asymp.UCL null z.ratio
+ 1970s / 1990s  1.2047042 0.3678736 Inf 0.6621462 2.1918304    1   0.610
+ 1970s / 2010s  1.0987323 0.3371836 Inf 0.6021040 2.0049901    1   0.307
+ 1990s / 2010s  0.9120349 0.2767862 Inf 0.5031380 1.6532397    1  -0.303
+ p.value p_holm_all_15
+  0.5419     1.0000000
+  0.7590     1.0000000
+  0.7616     1.0000000
+
+variable = Grass/shrubland:
+ contrast      odds.ratio        SE  df asymp.LCL asymp.UCL null z.ratio
+ 1970s / 1990s  0.5210586 0.1549396 Inf 0.2909223 0.9332458    1  -2.192
+ 1970s / 2010s  0.3372851 0.0997014 Inf 0.1889653 0.6020219    1  -3.677
+ 1990s / 2010s  0.6473075 0.1826279 Inf 0.3723550 1.1252892    1  -1.542
+ p.value p_holm_all_15
+  0.0284     0.3402933
+  0.0002     0.0030717
+  0.1232     1.0000000
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the log odds ratio scale 
+Tests are performed on the log odds ratio scale 
+
+Limitations: thresholded estimated outcomes; original HMSC posterior uncertainty and phylogenetic dependence are not propagated. Atlas includes changes in environment and sampling coverage.

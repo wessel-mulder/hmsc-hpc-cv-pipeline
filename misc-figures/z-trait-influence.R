@@ -130,7 +130,7 @@ make_effect_sizes <- function(dir, pattern, effect = "Beta") {
   return(merged)
 }
 
-gamma <- make_effect_sizes('HmscOutputs','2026-03-13',effect='Gamma') %>% 
+gamma <- make_effect_sizes('HmscOutputs', pattern, effect = 'Gamma') %>% 
   drop_na()
 
 print(gamma,n=100)
@@ -894,6 +894,5 @@ print(p_combined)
 
 gamma_plot
 
-ggsave("gamma_circles.pdf", p_combined, width = 18, height = 10)
-ggsave("misc-figures/gamma_circles.png", p_combined, width = 18, height = 10, dpi = 300)
+ggsave("misc-figures/z-trait-influence-gamma-circles.png", p_combined, width = 18, height = 10, dpi = 300)
 

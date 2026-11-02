@@ -130,5 +130,5 @@ ggplot(plot_data_clean,
                                                   fill='firebrick3'))) 
 
 plot_data_clean$atlas[plot_data_clean$VP > 0.6]
-ggsave("misc-figures/env-vp-atlas-boxplots.png")
+ggsave("misc-figures/z-env-vp-atlas-boxplots.png")
 

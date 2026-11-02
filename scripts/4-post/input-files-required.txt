@@ -1,0 +1,198 @@
+Input files required by scripts/4-data-visualisation
+Generated: 2026-08-25
+
+Scope
+-----
+This inventory covers runnable R and Python scripts under scripts/4-data-visualisation.
+It lists files read by each script. Output files written by the scripts are not listed
+unless another visualization script reads them as a prerequisite input.
+
+Shared model patterns
+---------------------
+Current HMSC model folders used by most manuscript/support figures:
+
+  HmscOutputs/2026-07-27_13-28-41_Atlas1_MinOccs5_CoverageGoodAverage/
+  HmscOutputs/2026-07-27_13-28-41_Atlas2_MinOccs5_CoverageGoodAverage/
+  HmscOutputs/2026-07-27_13-28-41_Atlas3_MinOccs5_CoverageGoodAverage/
+
+Current compact HMSC summary folders used by Figure 1 and Figure 2:
+
+  intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas1_MinOccs5_CoverageGoodAverage/
+  intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas2_MinOccs5_CoverageGoodAverage/
+  intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas3_MinOccs5_CoverageGoodAverage/
+
+Current model files, where required:
+
+  HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+  HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_samples_0250_thin_100_chains_4_nfolds_10.rdata
+  HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_preCV_samples_0250_thin_100_chains_4.Rdata
+
+Shared shapefile sidecar note
+-----------------------------
+When a script names a .shp file, the corresponding .dbf and .shx files are also
+required, and .prj/.cpg should be kept with the shapefile when present.
+
+Per-script inputs
+-----------------
+
+scripts/4-data-visualisation/fig1-vp-effect-sizes.R
+
+  Required compact HMSC summary exports:
+    intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Results/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverageparameter_estimates_VP_.csv
+    intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Results/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverageparameter_estimates_Beta_.xlsx
+    intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Results/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverageparameter_estimates_Gamma_.xlsx
+
+scripts/4-data-visualisation/fig2-trait-influence-gamma-atlas-support.R
+
+  Required helper script:
+    scripts/support_scripts/project_paths.R
+
+  Required compact HMSC summary exports:
+    intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Results/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverageparameter_estimates_Gamma_.xlsx
+
+  Required derived HMSC input object:
+    data-new/derived/hmsc-inputs/preprocessed_data_min_occs_is_5_coverage_is_good_and_average.RData
+
+scripts/4-data-visualisation/fig10-gwr-richness-turnover-materials/fig10-gwr-richness-turnover.R
+
+  Required for the default cached run:
+    intermediate-outputs/gwr-output/fig10-gwr-richness-turnover/gwr/models/2026-03-13-gwr-fits-richness-beta-100km.rds
+    intermediate-outputs/gwr-output/fig10-gwr-richness-turnover/gwr/models/2026-03-13-gwr-analysis-inputs-100km.rds
+    data-new/derived/atlas-grid/dof-5km-grid/DK5km_ED50grid_approx_kvadrkod_DOF.shp
+
+  Additional files required only for --force-refit or when the GWR cache is missing/stale:
+    scripts/4-data-visualisation/fig10-gwr-richness-turnover-materials/figure_data_helpers.R
+    support_scripts/project_paths.R
+    HmscOutputs/2026-03-13_06-58-56_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+
+  Optional cache used during --force-refit if present; otherwise recomputed from fitted HMSC models:
+    HmscOutputs/2026-03-13_06-58-56_Atlas*_MinOccs5_CoverageGoodAverage/Results/Preds/predicted-values.rdata
+
+  Note:
+    figure_data_helpers.R currently sources support_scripts/project_paths.R.
+    The publication helper currently lives at scripts/support_scripts/project_paths.R,
+    so the helper source path should be checked before relying on --force-refit.
+
+scripts/4-data-visualisation/fig10-gwr-richness-turnover-materials/figure_data_helpers.R
+
+  Helper script. When sourced directly, its immediate source dependency is:
+    support_scripts/project_paths.R
+
+  Depending on which helper functions are called, it can also read:
+    HmscOutputs/<model>/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/<model>/Models/Fitted/MF_samples_0250_thin_100_chains_4_nfolds_10.rdata
+    HmscOutputs/<model>/Results/Preds/predicted-values.rdata
+    HmscOutputs/<model>/Results/Preds/Preds_<model>_HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/<model>/Results/<model>parameter_estimates_VP_.csv
+    HmscOutputs/<model>/Results/<model>parameter_estimates_Beta_.xlsx
+    HmscOutputs/<model>/Results/<model>parameter_estimates_Gamma_.xlsx
+
+scripts/4-data-visualisation/methods-analysis-grid-cells.R
+
+  Required fitted HMSC models:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+
+  Required grid shapefile:
+    data-new/derived/atlas-grid/dof-5km-grid/DK5km_ED50grid_approx_kvadrkod_DOF.shp
+
+scripts/4-data-visualisation/methods-audit/make_methods_audit_csvs.R
+
+  Required fitted HMSC models:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+
+  Required derived data:
+    data-new/derived/traits/birdTraits-merged-subset.csv
+    data-new/derived/environmental/X_Environmental.csv
+    data-new/derived/atlas-grid/grids-ocean-thresholds/grids_ocean_thresholds.shp
+    data-new/derived/occurrences/Y_occurrences.csv
+
+  Required raw/source-like data:
+    data-new/raw/effort/dækning atlas1+2.xlsx
+    data-new/raw/traits/birdTraits-merged-all.xlsx
+
+scripts/4-data-visualisation/methods-audit/make_supplementary_methods_tables_docx.py
+
+  Required generated methods-audit tables:
+    manuscript-outputs/tables/methods-audit/grid_cell_processing_summary.csv
+    manuscript-outputs/tables/methods-audit/species_processing_summary.csv
+    manuscript-outputs/tables/methods-audit/modelled_species_traits_prevalence.csv
+
+  Upstream script for those tables:
+    scripts/4-data-visualisation/methods-audit/make_methods_audit_csvs.R
+
+scripts/4-data-visualisation/sfig-component-influence-sankey-bump.R
+
+  Required compact HMSC summary exports:
+    intermediate-outputs/hmsc-output/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Results/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverageparameter_estimates_VP_.csv
+
+scripts/4-data-visualisation/sfig-gwr-driver-proportions-sankey-bump.R
+
+  Required cached GWR dominant-driver table:
+    intermediate-outputs/gwr-output/fig10-gwr-richness-turnover/gwr/2026-03-13-gwr-dominant-drivers-100km.csv
+
+scripts/4-data-visualisation/sfig-full-vs-cv-accuracy.R
+
+  Required fitted HMSC models and metric files:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_samples_0250_thin_100_chains_4_nfolds_10.rdata
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_preCV_samples_0250_thin_100_chains_4.Rdata
+
+scripts/4-data-visualisation/sfig-raptor-species-full-tjur-prevalence-trends.R
+
+  Required fitted HMSC models and full-model metrics:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_preCV_samples_0250_thin_100_chains_4.Rdata
+
+  Required generated methods-audit table:
+    manuscript-outputs/tables/methods-audit/modelled_species_traits_prevalence.csv
+
+scripts/4-data-visualisation/sfig2-prevalence-vs-cv-auc-tjur.R
+
+  Required fitted HMSC models and CV metrics:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_samples_0250_thin_100_chains_4_nfolds_10.rdata
+
+scripts/4-data-visualisation/sfig3-diurnal-raptors-cv-accuracy.R
+
+  Required fitted HMSC models and CV metrics:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_samples_0250_thin_100_chains_4_nfolds_10.rdata
+
+scripts/4-data-visualisation/sfig3-diurnal-raptors-cv-accuracy-tests.R
+
+  Required fitted HMSC models and CV metrics:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_samples_0250_thin_100_chains_4_nfolds_10.rdata
+
+scripts/4-data-visualisation/sfig4-guild-cv-accuracy-temporal-change.R
+
+  Required fitted HMSC models and CV metrics:
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/HPC_samples_0250_thin_100_chains_4.Rdata
+    HmscOutputs/2026-07-27_13-28-41_Atlas*_MinOccs5_CoverageGoodAverage/Models/Fitted/MF_samples_0250_thin_100_chains_4_nfolds_10.rdata
+
+  Required generated methods-audit table:
+    manuscript-outputs/tables/methods-audit/modelled_species_traits_prevalence.csv
+
+scripts/4-data-visualisation/sfig4-tjur-r2-guild-prevalence-tests.R
+
+  Required generated support table:
+    manuscript-outputs/tables/supplement/2026-07-27-sfig4-guild-cv-accuracy-temporal-change-species-values.csv
+
+  Required generated methods-audit table:
+    manuscript-outputs/tables/methods-audit/modelled_species_traits_prevalence.csv
+
+  Upstream script for the species-values table:
+    scripts/4-data-visualisation/sfig4-guild-cv-accuracy-temporal-change.R
+
+scripts/4-data-visualisation/supplementary-material/create_supplementary_figure_docx.py
+
+  Required generated supplementary figures:
+    manuscript-outputs/figures/supplement/2026-07-27-sfig-full-vs-cv-accuracy.png
+    manuscript-outputs/figures/supplement/2026-07-27-sfig2-prevalence-vs-cv-auc-tjur.png
+    manuscript-outputs/figures/supplement/2026-07-27-sfig-component-influence-sankey-bump.png
+
+  Upstream scripts for those figures:
+    scripts/4-data-visualisation/sfig-full-vs-cv-accuracy.R
+    scripts/4-data-visualisation/sfig2-prevalence-vs-cv-auc-tjur.R
+    scripts/4-data-visualisation/sfig-component-influence-sankey-bump.R
+

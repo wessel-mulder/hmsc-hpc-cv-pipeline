@@ -1,0 +1,11 @@
+"contrast","comparison","comparison_guild","n_raptors","n_comparison","median_change_raptors","median_change_comparison","median_difference_raptors_minus_comparison","null_size","method","p_permutation_two_sided","p_fdr_bh","random_seed"
+"1990s - 1970s","Diurnal raptors vs Foliage gleaners","Foliage gleaners",7,9,0.00132293534188593,-0.0505772535377523,0.0519001888796382,11440,"exact_label_permutation",0.0266608391608392,0.266608391608392,NA
+"1990s - 1970s","Diurnal raptors vs Low flycatching feeders","Low flycatching feeders",7,9,0.00132293534188593,-0.0370378235509625,0.0383607588928484,11440,"exact_label_permutation",0.294143356643357,0.735358391608392,NA
+"1990s - 1970s","Diurnal raptors vs Tit-like birds","Tit-like birds",7,12,0.00132293534188593,0.0110698345515099,-0.00974689920962394,50388,"exact_label_permutation",0.704374057315234,0.8881,NA
+"1990s - 1970s","Diurnal raptors vs selected non-raptor guilds pooled","Selected non-raptor guilds pooled",7,42,0.00132293534188593,-0.00292046389222096,0.00424339923410689,99999,"monte_carlo_label_permutation",0.71048,0.8881,42
+"1990s - 1970s","Diurnal raptors vs Passerine seedeaters","Passerine seedeaters",7,12,0.00132293534188593,0.00973445017715268,-0.00841151483526675,50388,"exact_label_permutation",0.968881479717393,0.968881479717393,NA
+"2010s - 1970s","Diurnal raptors vs Foliage gleaners","Foliage gleaners",7,9,0.0143227930518024,-0.041679743600812,0.0560025366526144,11440,"exact_label_permutation",0.123251748251748,0.597319347319347,NA
+"2010s - 1970s","Diurnal raptors vs Low flycatching feeders","Low flycatching feeders",7,9,0.0143227930518024,-0.0671276637197346,0.081450456771537,11440,"exact_label_permutation",0.179195804195804,0.597319347319347,NA
+"2010s - 1970s","Diurnal raptors vs selected non-raptor guilds pooled","Selected non-raptor guilds pooled",7,42,0.0143227930518024,-0.014645790169444,0.0289685832212465,99999,"monte_carlo_label_permutation",0.43575,0.8715,42
+"2010s - 1970s","Diurnal raptors vs Tit-like birds","Tit-like birds",7,12,0.0143227930518024,-0.00180087291189439,0.0161236659636968,50388,"exact_label_permutation",0.621020877986822,0.8881,NA
+"2010s - 1970s","Diurnal raptors vs Passerine seedeaters","Passerine seedeaters",7,12,0.0143227930518024,0.019234869422469,-0.00491207637066665,50388,"exact_label_permutation",0.893268238469477,0.968881479717393,NA

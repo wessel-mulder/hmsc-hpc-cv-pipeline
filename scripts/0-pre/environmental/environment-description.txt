@@ -1,0 +1,101 @@
+X_ENVIRONMENT.CSV: PROCESSING AND VARIABLE DICTIONARY
+
+CONTENTS
+One row per atlas grid cell and atlas period: 2,165 cells x 3 atlases =
+6,495 rows. There are 21 columns. All supplied grid cells are retained;
+shared bird-survey coverage filters must be applied downstream.
+Values are not standardised. NA means missing, not zero.
+
+CODE AND PROCESSING
+Entry point (run from the repository root):
+  scripts/0-pre/preparing-environment.R
+Helpers:
+  scripts/0-pre/environmental/process-hilda.R
+  scripts/0-pre/environmental/process-chelsacruts.R
+
+The code reads the original Danish 5-km atlas grid and annual HILDA+ v2
+land-use/cover rasters. It crops the rasters to the grid extent and calculates
+class areas using exact polygon overlap fractions multiplied by pixel area.
+Original classes remain separate: forest and crop types are not combined.
+
+CHELSAcruts V1.0 monthly tmin, tmax and precipitation rasters are read directly
+from the remote source and cropped to the grid extent, with local crops cached
+for reuse. The grid polygons are transformed to the raster CRS; the raster
+pixels are not resampled. Climate extraction uses exact overlaps weighted by
+pixel area. Source temperature values are divided by 10 to obtain degrees C;
+precipitation is unscaled. Source -32768 pixels are treated as missing.
+No previously prepared climate shapefiles are used.
+
+Breeding season is March-June. Monthly mean temperature is (tmin+tmax)/2.
+The four monthly temperatures are averaged with equal weights; the four
+monthly precipitation totals are summed. These annual breeding-season metrics
+are then averaged over the climate years for each atlas. Missing months and
+years are not silently omitted. Spatial means exclude missing raster pixels.
+
+HILDA percentages and heterogeneity are calculated separately for each year
+and then averaged over the atlas years. Heterogeneity is the mean of annual
+diversity values, not diversity calculated from period-averaged percentages.
+Climate and land-cover summaries are joined using the grid-cell and atlas IDs.
+Area diagnostics and temporal metadata remain in the intermediate per-atlas
+folders rather than in the final predictor matrix.
+
+PERIODS
+Atlas 1: HILDA 1971-1974; climate 1971-1974.
+Atlas 2: HILDA 1993-1996; climate 1993-1996.
+Atlas 3: HILDA 2014-2017; climate 2014-2016.
+CHELSAcruts ends in 2016; no 2017 climate values are imputed.
+
+VARIABLES
+survey          Unique site-atlas key, formatted <kvadratkod>_<atlas>.
+kvadratkod      Original atlas grid-cell identifier.
+atlas           Atlas number: 1, 2 or 3.
+tmean_breeding  Mean March-June temperature, degrees C.
+prec_breeding   Total March-June precipitation, mm per breeding season,
+                averaged across the climate years.
+hh              Simpson compositional diversity: 1 - sum(p_i^2), where p_i
+                is the area proportion of original HILDA class i. ALL 15
+                classes contribute, including ocean and inland water.
+                No source classes are merged. Higher values indicate more
+                compositional diversity; this is not a fragmentation index.
+                With 15 equally represented classes the maximum is 14/15;
+                a single-class cell has zero diversity.
+pct_class_*     Percentage coverage (0-100) of each original HILDA class.
+                The denominator is all valid sampled cell area, including
+                ocean and inland water. Missing source pixels (99 or NA)
+                are excluded. Complete rows sum to 100% across 15 classes.
+
+HILDA+ V2 CLASS CODES AND COLUMN LABELS
+Code  Column         Class label
+0     pct_class_0    Ocean
+11    pct_class_11   Urban areas
+22    pct_class_22   Annual crops
+23    pct_class_23   Tree crops
+24    pct_class_24   Agroforestry
+33    pct_class_33   Pasture/rangeland
+40    pct_class_40   Forest, unknown/other type
+41    pct_class_41   Forest, evergreen needleleaf
+42    pct_class_42   Forest, evergreen broadleaf
+43    pct_class_43   Forest, deciduous needleleaf
+44    pct_class_44   Forest, deciduous broadleaf
+45    pct_class_45   Forest, mixed
+55    pct_class_55   Unmanaged grass/shrubland
+66    pct_class_66   Sparse/no vegetation
+77    pct_class_77   Inland water
+
+IMPORTANT: pct_class_44 is deciduous broadleaf forest only, not total forest.
+Likewise pct_class_22 is annual crops only, not all agricultural classes.
+Any subsequent combination of classes is left to the analyst.
+
+SOURCES
+HILDA+ v2: https://doi.org/10.1594/PANGAEA.974335
+CHELSAcruts V1.0: https://doi.org/10.16904/envidat.159
+
+CHECKS AND LIMITATIONS
+X_environment_missingness.csv reports missing values by column.
+The current matrix contains 21 missing temperature records and nine missing
+precipitation records. FD02 lacks temperature for all three atlases despite
+having more than 25% HILDA land area. Missing values have not been imputed.
+Precipitation differs materially from the legacy environmental matrix; the
+cause of those legacy differences has not been established. Earlier expanded
+figures and comparison tables may include variables removed from this final
+matrix. Existing downstream model inputs have not been overwritten.

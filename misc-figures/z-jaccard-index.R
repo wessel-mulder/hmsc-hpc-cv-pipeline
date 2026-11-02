@@ -174,6 +174,3 @@ null_model_results <- evaluate_jaccard_null_models_fast(
 
 # View the final statistical output
 print(null_model_results)
-
-# Optional: Save results to CSV
-# write.csv(null_model_results, file = "jaccard_null_model_results.csv", row.names = FALSE)
