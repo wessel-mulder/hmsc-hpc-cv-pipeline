@@ -35,3 +35,12 @@ Corvus corone proxy. Raw data access is not required merely to run S1.
 
 Local validation: S1 constructed all three atlas model objects successfully;
 each retained 155 species and 155 matching tree tips from the full 226-tip tree.
+
+## Visualise the shared input
+
+```sh
+Rscript data-shared/visualise-s0-species.R
+```
+
+Run from the repository root. The script, PNG summary and supporting CSVs are
+stored here beside the S0 RData.
