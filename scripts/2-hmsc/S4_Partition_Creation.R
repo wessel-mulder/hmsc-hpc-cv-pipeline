@@ -1,36 +1,143 @@
-# Ten random folds; four independently seeded initialization files per fold.
-source('scripts/2-hmsc/helpers/pipeline.R')
-suppressPackageStartupMessages({library(Hmsc);library(jsonify)})
-for (name in model_names()) {
-  p <- paths(name); hM <- read_fit(p)
-  input_md5 <- unname(tools::md5sum(p$fitted))
-  threads <- cfg$nfolds*cfg$chains
-  destinations <- file.path(p$temp,sprintf('temp_samples_%04d_thin_%02d_thread_%d.rds',cfg$samples,cfg$thin,seq_len(threads)))
-  for (destination in destinations) check_destination(destination)
-  if (file.exists(p$folds)) {
-    previous <- read_objects(p$folds,c('partition','seeds','input_md5','row_ids','idfold'))
-    stopifnot(identical(previous$input_md5,input_md5),identical(previous$row_ids,rownames(hM$Y)),
-              length(previous$seeds)==threads,identical(sort(unique(previous$partition)),seq_len(cfg$nfolds)))
-    partition <- previous$partition; seeds <- previous$seeds
-    message('Reusing saved fold assignments and seeds')
+cat("Script started\n"); flush.console()
+
+remove(list=ls())
+set.seed(369)
+### Loading packages####
+.libPaths(c("~/Rlibs", .libPaths()))
+
+require(jsonify)
+require(RColorBrewer)
+require(farver)
+require(scales)
+require(Hmsc)
+require(cli)
+require(vioplot)
+require(colorspace)
+
+
+### Set up directories ####
+pattern2match <- "2026-07-27"
+  
+matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
+matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
+
+for(folders2match in matching_folders){
+models_description = folders2match
+
+getwd()
+localDir = "./HmscOutputs"
+ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
+TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
+
+samples_list = c(250)
+thin_list = c(100)
+nChains = 4
+nfolds = 10
+
+#Only run for the longest model run
+for(Lst in length(samples_list):1){
+  thin = thin_list[Lst]
+  samples = samples_list[Lst]
+  filename.in = file.path(ModelDir,sprintf("HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",
+                                           samples, thin, nChains))
+  message("Input file:", filename.in)
+  filename.out = file.path(ModelDir,sprintf("MF_samples_%.4d_thin_%.2d_chains_%.1d_nfolds_%.1d.Rdata",
+                                            samples, thin, nChains,nfolds))
+  
+  if(file.exists(filename.out)){
+    cat("---------------------------\nthin = ",as.character(thin),
+        "; samples = ",as.character(samples),
+        "\nmodel fit had been computed already\n")
+    break
   } else {
-    partition <- createPartition(hM,nfolds=cfg$nfolds)
-    seeds <- sample.int(.Machine$integer.max,threads)
-  }
-  idfold <- rep(seq_len(cfg$nfolds),each=cfg$chains)
-  row_ids <- rownames(hM$Y)
-  hM1 <- lapply(seq_len(cfg$nfolds),function(k) make_fold_model(hM,partition!=k))
-  save(partition,seeds,input_md5,row_ids,idfold,threads,hM1,hM,file=p$folds)
-  write.csv(data.frame(survey=row_ids,fold=partition),file.path(p$temp,'CV_fold_assignments.csv'),row.names=FALSE)
-  write.csv(data.frame(thread=seq_len(threads),fold=idfold,seed=seeds),file.path(p$temp,'CV_thread_seeds.csv'),row.names=FALSE)
-  for (i in seq_len(threads)) {
-    set.seed(seeds[i])
-    init <- sampleMcmc(hM1[[idfold[i]]],samples=cfg$samples,thin=cfg$thin,
-                       transient=cfg$transient,adaptNf=hM$adaptNf,nChains=1,nParallel=1,
-                       updater=hM$updater,verbose=1,engine='HPC')
-    saveRDS(to_json(init),destinations[i])
-    message('Exported CV thread ',i,'/',threads,' for ',name)
-  }
-  provenance(p$temp,'S4_Partition_Creation',p$fitted,
-             'Random-fold interpolation; full-run predictor scaling retained as in Hmsc CV.')
+    if(file.exists(filename.in)){
+      cat("---------------------------\nthin = ",
+          as.character(thin),"; samples = ",as.character(samples),
+          "\n",date(),"\n")
+      load(file = filename.in) #models
+      hM = fitted_model$posteriors
+      if(is.null(hM$dfPi)){
+        cat("No study Design defined, setting to NA's due to bug in function that requires it")
+        hM$dfPi = data.frame(temp = factor(rep(NA, dim(hM$Y)[1])))
+      }
+      
+      rm(fitted_model)
+      
+      partition = createPartition(hM, nfolds = nfolds)
+      thin = 1
+      start = 1
+      ## STAGE 1: Basic housekeeping
+      parts <- sort(unique(partition))
+      nfolds <- length(parts)
+      if (thin > 1 || start > 1)
+        postN <- sum(sapply(hM$postList, function(z)
+          length(seq(from=start, to=length(z), by=thin))))
+      else
+        postN <- Reduce(sum, lapply(hM$postList, length))
+      ## output array
+      predArray <- array(NA, c(hM$ny, hM$ns, postN))
+      ## STEP 1: define new Hmsc model for each nfolds partition
+      ## only implement for the simple case first
+      if (is.list(hM$X))
+        stop("not yet implemented for a list of model matrices")
+      ## Pack setting training model into one function
+      setHmsc <- function(k, hM) {
+        train <- k != partition
+        ## X can be a list of matrices
+        XTrain <- if(is.matrix(hM$X))
+          hM$X[train, , drop=FALSE]
+        else if(is.list(hM$X))
+          lapply(hM$X, function(a) a[train, , drop=FALSE])
+        m <- Hmsc(Y = hM$Y[train, , drop=FALSE], X = XTrain,
+                  XRRR = hM$XRRR[train, , drop=FALSE],
+                  ncRRR = hM$ncRRR, XSelect = hM$XSelect,
+                  distr = hM$distr,
+                  studyDesign = droplevels(hM$dfPi[train,, drop=FALSE]),
+                  Tr = hM$Tr, C = hM$C, ranLevels = hM$rL)
+        ## old code calls here setPriors, but that does nothing as its
+        ## result is not saved, and it is currently skipped: CHECK
+        ## THIS!
+        m$YScalePar <- hM$YScalePar
+        m$YScaled <- scale(m$Y, m$YScalePar[1,], m$YScalePar[2,])
+        m$XInterceptInd <- hM$XInterceptInd
+        m$XScalePar <- hM$XScalePar
+        m$XScaled <- scale(m$X, m$XScalePar[1,], m$XScalePar[2,])
+        m$TrInterceptInd <- hM$TrInterceptInd
+        m$TrScalePar <- hM$TrScalePar
+        m$TrScaled <- scale(m$Tr, m$TrScalePar[1,], m$TrScalePar[2,])
+        m
+      }
+      ## parallelism would only slow-down (due to start-off time)
+      hM1 <- lapply(parts, function(k) setHmsc(k, hM))
+      ## STEP 2: sample Hmsc models for each nfolds * nChains case
+      chains <- length(hM$postList)
+      threads <- nfolds * chains
+      idfold <- rep(parts, each = chains)
+      seeds <- sample.int(.Machine$integer.max, threads)
+      ## to be called in parallel for each chain x fold, and
+      ## therefore we set nChains=1, nParallel=1 within
+      
+      ##Loop over all the modes to make nfolds*nchains sets of training and testing data
+      message(hM$transient)
+      message(hM$adaptNf)
+      for(i in 1:threads){
+        set.seed(seeds[i])
+        k <- idfold[i]
+        message("Writing temp files for thread ", i, "/", threads)
+        m <- sampleMcmc(hM1[[k]], samples = hM$samples, thin = hM$thin,
+                        transient = hM$transient, adaptNf = hM$adaptNf,
+                        initPar = hM$initPar, nChains = 1, nParallel = 1,
+                        updater = hM$updater, verbose = hM$verbose,
+                        alignPost = FALSE, engine = "HPC")
+        #Call the gibs sampler on each thread, each thread is 1 chain so we can simple take the output and convert it to Rdata
+        filename = file.path(TempDir,sprintf("temp_samples_%.4d_thin_%.2d_thread_%.1d.rds", hM$samples, hM$thin,i))
+        saveRDS(to_json(m), file = filename)
+      }
+      save(idfold,threads, hM1, hM, partition, file = file.path(TempDir,sprintf("temp_fold_info_samples_%.4d_thin_%.2d.rdata",hM$samples, hM$thin)))
+      break
+    } else {
+      message("No input files found for samples ",samples, " thin ", thin)
+    }
+  } 
+}
 }

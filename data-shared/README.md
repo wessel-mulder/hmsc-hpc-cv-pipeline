@@ -10,7 +10,7 @@ This folder is tracked in Git. The local `Data/` and `data-new/` folders are not
 S0 refreshes the shared RData whenever it runs successfully. The source data
 and intermediate tables stay in the local `data-new/` directory.
 
-On the HPC, pull this repository, install/load R packages Hmsc and ape,
+On the HPC, pull this repository, install/load R packages Hmsc, dplyr and ape,
 then run from the repository root:
 
 ```sh
@@ -20,14 +20,10 @@ Rscript scripts/2-hmsc/S1_Model_Definitions.R
 
 S1 reads only the RData in this folder, including its bundled tree. Its current settings create
 separate unfitted models for Atlases 1, 2 and 3. It writes model definitions,
-script provenance under ignored `HmscOutputs/`. Cross-atlas test files are not generated.
+script provenance and cross-atlas test inputs under ignored `HmscOutputs/`.
 Set `CH1_MODEL_OUTPUT_DIR` to choose another output location. S1 constructs
-models; it does not sample or submit an HPC fitting job. It passes raw predictors
-to Hmsc with `XScale=TRUE`, storing the training means and standard deviations.
-The shared run configuration is `scripts/2-hmsc/run-config.tsv`, with run date
-`2026-11-02`. Downstream summaries and predictions use all retained draws by
-default. See `scripts/2-hmsc/README.md` for the full HPC command sequence.
-Production fitting has not yet been run for this dataset.
+models; it does not sample or submit an HPC fitting job. Sampling settings and
+predictor-scaling/prediction conventions require separate review before fitting.
 
 The predictors are breeding temperature, breeding precipitation, heterogeneity,
 class-22 cropland, urban, pasture, grass/shrub, deciduous forest (43+44), evergreen
