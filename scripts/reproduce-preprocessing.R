@@ -23,7 +23,8 @@ record('1/5: rebuilding species-level traits and explicit Corvus cornix STI prox
 prepare_trait_table(output_dir=file.path(pre,'Tr'))
 record('2/5: rebuilding IOC rank tree and PNG')
 prepare_taxonomy(taxa_file=file.path(pre,'Tr/Trait_table.csv'),output_dir=file.path(pre,'taxonomy'))
-Sys.setenv(CH1_PREPROCESSING_DERIVED=pre,CH1_HMSC_DERIVED=hmsc)
+Sys.setenv(CH1_PREPROCESSING_DERIVED=pre,CH1_HMSC_DERIVED=hmsc,
+           CH1_SHARED_DATA_DIR=if(verify)file.path(root,'data-shared') else 'data-shared')
 record('3/5: rebuilding environmental data from original HILDA states and monthly CHELSAcruts crops')
 env_log <- file.path(report_dir,'environment-rebuild.log')
 options <- c('scripts/0-pre/preparing-environment.R','--refresh-landuse','--workers=3')
@@ -37,7 +38,7 @@ z<-new.env();load(file.path(hmsc,file_name),envir=z)
 x<-read.csv(file.path(pre,'environmental/X_environment.csv'))
 t<-read.csv(file.path(pre,'Tr/Trait_table.csv'));tree<-ape::read.tree(file.path(pre,'taxonomy/tree_fromPD.tre'))
 stopifnot(nrow(x)==6495,ncol(x)==21,nrow(t)==226,length(tree$tip.label)==226,
-          setequal(t$species,tree$tip.label),!anyNA(z$X),!anyNA(z$Tr),ncol(z$X)==10,
+          setequal(t$species,tree$tip.label),setequal(z$phy$tip.label,tree$tip.label),!anyNA(z$X),!anyNA(z$Tr),ncol(z$X)==10,
           identical(rownames(z$X),rownames(z$Y)),identical(rownames(z$Y),rownames(z$Design)),
           identical(colnames(z$Y),rownames(z$Tr)),all(colnames(z$Y)%in%tree$tip.label))
 j<-match(rownames(z$X),x$survey)
@@ -51,7 +52,7 @@ for(a in 1:3)stopifnot(all(colSums(z$Y[z$Design$atlas==a,,drop=FALSE])>=5))
 # Compare regenerated objects numerically; binary RData compression bytes may differ.
 if(verify){
   baseline<-new.env();load(file.path('data-new/2-hmsc/derived',file_name),envir=baseline)
-  for(name in c('X','Y','Tr','Design')){
+  for(name in c('X','Y','Tr','Design','phy')){
     eq<-all.equal(z[[name]],baseline[[name]],tolerance=1e-7)
     if(!isTRUE(eq))stop('Saved ',name,' differs from regeneration: ',paste(eq,collapse='; '))
     record(paste('PASS regenerated',name,'matches saved RData'))

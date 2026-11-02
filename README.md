@@ -5,6 +5,7 @@ This repository is being organized as the publication-facing reproducibility arc
 ## Folder map
 
 - `scripts/`: publication-facing scripts, ordered from preprocessing through HMSC fitting and figure/table generation.
+- `data-shared/`: portable S0 RData (including taxonomy tree) tracked for running S1 on the HPC.
 - `data-new/0-pre/raw/`: source-like inputs that are small enough to keep locally here. Check source permissions before public release.
 - `data-new/0-pre/derived/`: lightweight analysis-ready products used by the HMSC prep and figure/table scripts.
 - `intermediate-outputs/`: compact model summaries, GWR summaries/caches, and the reproducibility index.
@@ -43,7 +44,17 @@ Rscript scripts/reproduce-preprocessing.R --verify --offline
 
 This offline command requires the local downloaded HILDA states and CHELSAcruts
 crop cache. These bulky inputs and Hmsc chains/checkpoints/prediction arrays are
-excluded from Git; see `data-new/LOCAL_DATA.md`. Smaller raw inputs and derived
-products are tracked. Original occurrence/design compilation is outside this
-audit. S1 loads the new S0 dataset, but model construction/fitting/prediction
-has not been validated for the revised analysis; scaling still needs review.
+excluded from Git; see `scripts/0-pre/README.md`. The complete local `Data/` and `data-new/` folders are excluded from Git. Only the portable model inputs under `data-shared/` are shared. Original occurrence/design compilation is outside this
+audit. S1 model construction has been checked for all three atlases using only the shared RData. Sampling and prediction have not been run; scaling still needs review.
+
+## HPC model definitions
+
+After pulling this repository on the HPC, run from the repository root:
+
+```sh
+Rscript scripts/2-hmsc/S1_Model_Definitions.R
+```
+
+S1 reads its RData, including the bundled tree, from `data-shared/`; no local `data-new/` files are
+needed for this step. S0 refreshes these portable inputs when rerun locally.
+S1 constructs unfitted models; sampling and job submission remain separate.

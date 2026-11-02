@@ -91,3 +91,9 @@ explorations; `figures/current/` corresponds to the current final matrix.
 S1 and subsequent model-fitting/prediction scripts have not been executed for
 this revised dataset. S1 still needs its paths and predictor selection updated,
 and a consistent scaling convention, before new models can be prepared.
+
+## Sharing model inputs
+
+`Data/` and `data-new/` are local-only. S0 exports the final RData (including the full taxonomy tree)
+to tracked `data-shared/`, allowing S1 to run on the HPC without raw data.
+The verification runner redirects this export to its staging directory.

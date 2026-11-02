@@ -1,5 +1,0 @@
-S0 heterogeneity update: validated 10 predictors, 5443 surveys and 155 species.
-hh exactly matches X_environment.csv by survey; no missing predictor values.
-The previous nine predictors and Y, Tr, Design match the pre-audit baseline.
-The earlier full-rebuild reports describe the nine-predictor version; S0 was regenerated and independently verified after adding hh.
-The reproduction script now expects 10 variables and checks hh against its source.

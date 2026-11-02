@@ -12,8 +12,9 @@ require(dplyr)
 require(ape)
 #### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
-localDir = "./HmscOutputs"
-dataDir = "./data-new/2-hmsc/derived"
+localDir = Sys.getenv("CH1_MODEL_OUTPUT_DIR", "./HmscOutputs")
+dir.create(localDir, recursive = TRUE, showWarnings = FALSE)
+dataDir = "./data-shared"
 date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 
 #### Model specs ####
@@ -56,7 +57,7 @@ input_file <- file.path(dataDir, sprintf("preprocessed_data_min_occs_is_%s_cover
                                          min_occs, coveragerename))
 if (!file.exists(input_file)) stop("S0 output not found: ", input_file, ". Run scripts/2-hmsc/S0_Data_Definitions.R first.")
 load(input_file)
-stopifnot(all(c("X", "Y", "Tr", "Design") %in% ls()),
+stopifnot(all(c("X", "Y", "Tr", "Design", "phy") %in% ls()),
           identical(rownames(X), rownames(Y)),
           identical(rownames(Y), rownames(Design)),
           identical(colnames(Y), rownames(Tr)))
@@ -85,8 +86,12 @@ TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " 
 
 print(XFormula)
 ### GET PHYLOGENY
-phy <- read.tree(file.path("data-new", "0-pre", "derived", "taxonomy", "tree_fromPD.tre"))
+# phy is bundled by S0; reload above restores the full tree for each model.
+if (!inherits(phy, "phylo")) stop("S0 phy must be an ape phylo tree")
+missing_tips <- setdiff(colnames(Y), phy$tip.label)
+if (length(missing_tips)) stop("Model species missing from bundled tree: ", paste(missing_tips, collapse=", "))
 phy <- keep.tip(phy,colnames(Y))
+stopifnot(setequal(phy$tip.label,colnames(Y)),length(phy$tip.label)==ncol(Y))
 
 pd_matrix <- cophenetic.phylo(phy)
 pd_matrix <- pd_matrix[sort(rownames(pd_matrix)), sort(colnames(pd_matrix))]
@@ -186,7 +191,7 @@ if(!dir.exists(save.dir)){
 } else {
   cat(sprintf("\n%1$s\nWARNING\n%1$s\nThis model has been ran before, unfitted model file being over written\n",strrep("-",10)))
 }
-save(models, file = file.path(save.dir, "/Unfitted/unfitted_models.RData"))
+save(models, file = file.path(save.dir, "Unfitted", "unfitted_models.RData"))
 
 #### Store a copy of the script #### 
 # --- Backup this script in Unfitted folder ---

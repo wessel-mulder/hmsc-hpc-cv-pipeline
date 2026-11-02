@@ -102,15 +102,20 @@ stopifnot(identical(rownames(X),rownames(Y)),identical(rownames(X),rownames(Desi
           all(as.matrix(X[grepl('^perc_',names(X))])<=100+1e-8),
           all(water_pct[match(ids,e$survey)]<=75),
           isTRUE(all.equal(X$perc_cropland,e$pct_class_22[match(ids,e$survey)])))
+# Bundle the full species-level taxonomy tree; S1 prunes it to its selected species.
+tree_file <- file.path(derived_dir,'taxonomy/tree_fromPD.tre')
+if(!file.exists(tree_file)) stop('Taxonomy tree missing; run scripts/0-pre/preparing-taxonomy.R first.')
+phy <- ape::read.tree(tree_file)
+stopifnot(inherits(phy,'phylo'),!anyDuplicated(phy$tip.label),all(colnames(Y) %in% phy$tip.label))
 # The original per-atlas coverage filtering is retained; no new common-cell restriction.
 dir.create(output_dir,recursive=TRUE,showWarnings=FALSE)
 output_file <- file.path(output_dir,sprintf('preprocessed_data_min_occs_is_%s_coverage_is_%s_forest_split.RData',min_occs,coveragelevels))
-save(X,Y,Tr,Design,file=output_file)
+save(X,Y,Tr,Design,phy,file=output_file)
 
 # Read back the saved artifact independently.
 check <- new.env(parent=emptyenv()); load(output_file,envir=check)
-stopifnot(setequal(ls(check),c('X','Y','Tr','Design')),identical(check$X,X),identical(check$Y,Y),
-          identical(check$Tr,Tr),identical(check$Design,Design))
+stopifnot(setequal(ls(check),c('X','Y','Tr','Design','phy')),identical(check$X,X),identical(check$Y,Y),
+          identical(check$Tr,Tr),identical(check$Design,Design),identical(check$phy,phy))
 
 # Human-readable audit files accompany the RData.
 selection <- data.frame(survey=e$survey,atlas=e$atlas,ocean_freshwater_pct=water_pct,
@@ -122,7 +127,7 @@ write.csv(data.frame(species=rownames(counts),counts,retained=species_ok),
 write.csv(missing_traits,file.path(output_dir,'forest_split_missing_traits.csv'),row.names=FALSE)
 writeLines(c('S0 HMSC INPUTS: FOREST-SPLIT DATASET',
              paste('RData:',output_file),
-             'Objects: X, Y, Tr, Design. X/Y/Design rows and Y columns/Tr rows explicitly aligned.',
+             'Objects: X, Y, Tr, Design, phy (full tree; pruned in S1). X/Y/Design rows and Y columns/Tr rows explicitly aligned.',
              'Filter out ocean class 0 + freshwater class 77 >75%; exactly 75% retained. Applied per site-atlas row.',
              'Coverage: Good/Average for Atlases 1-2; corrected Atlas 2 UNDS_KOD_1. Atlas 3 retains original assumed-Good rule.',
              'Require complete selected predictors and occurrences. Species require >=5 presences in every atlas.',
@@ -140,8 +145,16 @@ writeLines(c('S0 HMSC INPUTS: FOREST-SPLIT DATASET',
              capture.output(table(Design$atlas)),
              'Shared sites across all atlases:',
              as.character(length(Reduce(intersect,lapply(1:3,function(a)as.character(Design$site[Design$atlas==a]))))),
-             'S1 still requires its predictor selection and input paths to be updated before it can use this dataset.'),
+             'S1 reads the portable RData from data-shared and prunes phy to the selected model species.'),
            file.path(output_dir,'forest_split_description.txt'))
 message('Saved and read-back verified: ',output_file)
 message(nrow(X),' surveys; ',ncol(Y),' species; ',ncol(X),' predictors.')
 print(table(Design$atlas))
+
+# Portable HPC bundle. Local raw and derived data remain outside Git.
+shared_dir <- Sys.getenv('CH1_SHARED_DATA_DIR','data-shared')
+dir.create(shared_dir,recursive=TRUE,showWarnings=FALSE)
+destination <- file.path(shared_dir,basename(output_file))
+if(!file.copy(output_file,destination,overwrite=TRUE))stop('Cannot export shared input: ',destination)
+stopifnot(unname(tools::md5sum(output_file))==unname(tools::md5sum(destination)))
+message('Shared RData (including full phy tree) exported to ',shared_dir)

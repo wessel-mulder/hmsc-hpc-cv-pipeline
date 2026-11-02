@@ -33,8 +33,16 @@ Run these scripts from the repository root unless submitting a Slurm script from
 S0 now reads the new `data-new/0-pre` inputs and writes the ten-predictor
 forest-split RData plus audits to `data-new/2-hmsc/derived/`. Reproduce and
 validate it with `scripts/reproduce-preprocessing.R`; see `scripts/0-pre/README.md`.
-S1 and subsequent scripts retain historical paths and assumptions. They have
-not been run on this revised dataset and must be adapted before use. In
-particular, S1's input RData/tree paths, variable selection and predictor scaling
-need review. The current audit establishes reproducibility through S0, not
-fitted model results or downstream predictions.
+S1 loads the portable shared RData and its bundled tree. Model construction
+has been tested for all three atlases: 10 environmental variables, 155 species
+and 155 tree tips per model. No MCMC fitting or prediction has been run for the
+revised dataset; subsequent scripts and scaling conventions require review.
+
+## Portable HPC inputs
+
+S0 also exports its final RData with bundled taxonomy tree into tracked `data-shared/`.
+Local `Data/` and `data-new/` are no longer tracked. S1 loads exclusively from
+`data-shared/` and creates its output root if necessary. Run S1 from the
+repository root on the HPC; set `CH1_MODEL_OUTPUT_DIR` for another output path.
+This supersedes the older path caveats above. Fitting and prediction scaling
+still require their own checks; no MCMC sampling is performed by S1.

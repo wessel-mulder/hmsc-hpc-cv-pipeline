@@ -19,3 +19,7 @@ misc-figures/
 /intermediate-outputs/hmsc-output/**/Models/
 /intermediate-outputs/hmsc-output/**/Tests/
 /intermediate-outputs/hmsc-output/**/Results/Preds/
+
+# Local working datasets; only portable HPC inputs in data-shared are shared.
+/data-new/
+/Data/
