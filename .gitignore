@@ -6,3 +6,16 @@
 HmscOutputs
 Hmsc
 notebooks
+Rplots.pdf
+.codex-work/
+Data/
+misc-figures/
+
+# Downloaded global rasters and reusable climate crop cache (local only).
+/data-new/0-pre/raw/hildap_vGLOB-2.0_geotiff_wgs84/
+/data-new/0-pre/raw/chelsacruts-v1-grid-crops/
+
+# Bulky Hmsc models, chain/checkpoint files and prediction arrays (local only).
+/intermediate-outputs/hmsc-output/**/Models/
+/intermediate-outputs/hmsc-output/**/Tests/
+/intermediate-outputs/hmsc-output/**/Results/Preds/

@@ -1,0 +1,33 @@
+"variable","label","file","missing_absolute","relative_shared_sites"
+"tmean_year","Annual mean temperature (°C)","data-new/0-pre/derived/environmental/figures/maps/tmean_year-absolute-relative.png",21,2158
+"tmean_breeding","Breeding mean temperature (°C)","data-new/0-pre/derived/environmental/figures/maps/tmean_breeding-absolute-relative.png",21,2158
+"tmean_winter","Winter mean minimum temperature (°C)","data-new/0-pre/derived/environmental/figures/maps/tmean_winter-absolute-relative.png",21,2158
+"prec_year","Annual precipitation (mm/year)","data-new/0-pre/derived/environmental/figures/maps/prec_year-absolute-relative.png",9,2162
+"prec_breeding","Breeding precipitation (mm/season)","data-new/0-pre/derived/environmental/figures/maps/prec_breeding-absolute-relative.png",9,2162
+"prec_winter","Winter precipitation (mm/season)","data-new/0-pre/derived/environmental/figures/maps/prec_winter-absolute-relative.png",9,2162
+"pct_0","Ocean cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_0-absolute-relative.png",0,2165
+"pct_11","Urban cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_11-absolute-relative.png",0,2165
+"pct_22","Cropland cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_22-absolute-relative.png",0,2165
+"pct_33","Pasture / rangeland cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_33-absolute-relative.png",0,2165
+"pct_44","Forest cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_44-absolute-relative.png",0,2165
+"pct_55","Unmanaged grass / shrub cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_55-absolute-relative.png",0,2165
+"pct_66","Sparse / no vegetation cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_66-absolute-relative.png",0,2165
+"pct_77","Inland water cover (%)","data-new/0-pre/derived/environmental/figures/maps/pct_77-absolute-relative.png",0,2165
+"hh","Simpson diversity: whole cell","data-new/0-pre/derived/environmental/figures/maps/hh-absolute-relative.png",0,2165
+"hh_land","Simpson diversity: land only","data-new/0-pre/derived/environmental/figures/maps/hh_land-absolute-relative.png",114,2127
+"unique","Land-cover class count (annual mode)","data-new/0-pre/derived/environmental/figures/maps/unique-absolute-relative.png",0,2165
+"pct_land_11","Urban cover, land denominator (%)","data-new/0-pre/derived/environmental/figures/maps/pct_land_11-absolute-relative.png",114,2127
+"pct_land_22","Cropland cover, land denominator (%)","data-new/0-pre/derived/environmental/figures/maps/pct_land_22-absolute-relative.png",114,2127
+"pct_land_33","Pasture / rangeland cover, land denominator (%)","data-new/0-pre/derived/environmental/figures/maps/pct_land_33-absolute-relative.png",114,2127
+"pct_land_44","Forest cover, land denominator (%)","data-new/0-pre/derived/environmental/figures/maps/pct_land_44-absolute-relative.png",114,2127
+"pct_land_55","Unmanaged grass / shrub cover, land denominator (%)","data-new/0-pre/derived/environmental/figures/maps/pct_land_55-absolute-relative.png",114,2127
+"pct_land_66","Sparse / no vegetation cover, land denominator (%)","data-new/0-pre/derived/environmental/figures/maps/pct_land_66-absolute-relative.png",114,2127
+"pct_class_22","Annual crops (%) — original class 22","data-new/0-pre/derived/environmental/figures/maps/pct_class_22-absolute-relative.png",0,2165
+"pct_class_23","Tree crops (%) — original class 23","data-new/0-pre/derived/environmental/figures/maps/pct_class_23-absolute-relative.png",0,2165
+"pct_class_24","Agroforestry (%) — original class 24","data-new/0-pre/derived/environmental/figures/maps/pct_class_24-absolute-relative.png",0,2165
+"pct_class_40","Forest unknown (%) — original class 40","data-new/0-pre/derived/environmental/figures/maps/pct_class_40-absolute-relative.png",0,2165
+"pct_class_41","Forest evergreen needleleaf (%) — original class 41","data-new/0-pre/derived/environmental/figures/maps/pct_class_41-absolute-relative.png",0,2165
+"pct_class_42","Forest evergreen broadleaf (%) — original class 42","data-new/0-pre/derived/environmental/figures/maps/pct_class_42-absolute-relative.png",0,2165
+"pct_class_43","Forest deciduous needleleaf (%) — original class 43","data-new/0-pre/derived/environmental/figures/maps/pct_class_43-absolute-relative.png",0,2165
+"pct_class_44","Forest deciduous broadleaf (%) — original class 44","data-new/0-pre/derived/environmental/figures/maps/pct_class_44-absolute-relative.png",0,2165
+"pct_class_45","Forest mixed (%) — original class 45","data-new/0-pre/derived/environmental/figures/maps/pct_class_45-absolute-relative.png",0,2165

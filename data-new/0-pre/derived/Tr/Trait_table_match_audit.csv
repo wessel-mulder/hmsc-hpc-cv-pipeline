@@ -1,0 +1,229 @@
+"species","source_taxon","collapsed_to_species","source_latin_DOF","source_foraging_guild_consensus","source_Migration_a3_DOF","migration_description","sti_lookup_name","sti_source_species","sti_match","missing_guild","missing_migration","missing_STI"
+"Accipiter_nisus","Accipiter_nisus",FALSE,"Accipiter nisus","Diurnal raptors",1.5,"resident and short-distance migrant","Accipiter_nisus","Accipiter nisus","exact",FALSE,FALSE,FALSE
+"Aquila_chrysaetos","Aquila_chrysaetos",FALSE,"Aquila chrysaetos","Diurnal raptors",1,"resident","Aquila_chrysaetos","Aquila chrysaetos","exact",FALSE,FALSE,FALSE
+"Astur_gentilis","Astur_gentilis",FALSE,"Astur gentilis","Diurnal raptors",1,"resident","Accipiter_gentilis","Accipiter gentilis","S0_name_crosswalk",FALSE,FALSE,FALSE
+"Buteo_buteo","Buteo_buteo",FALSE,"Buteo buteo","Diurnal raptors",1.5,"resident and short-distance migrant","Buteo_buteo","Buteo buteo","exact",FALSE,FALSE,FALSE
+"Circus_aeruginosus","Circus_aeruginosus",FALSE,"Circus aeruginosus","Diurnal raptors",2.5,"short- and long-distance migrant","Circus_aeruginosus","Circus aeruginosus","exact",FALSE,FALSE,FALSE
+"Circus_cyaneus","Circus_cyaneus",FALSE,"Circus cyaneus","Diurnal raptors",2,"short-distance migrant","Circus_cyaneus","Circus cyaneus","exact",FALSE,FALSE,FALSE
+"Circus_pygargus","Circus_pygargus",FALSE,"Circus pygargus","Diurnal raptors",3,"long-distance migrant","Circus_pygargus","Circus pygargus","exact",FALSE,FALSE,FALSE
+"Haliaeetus_albicilla","Haliaeetus_albicilla",FALSE,"Haliaeetus albicilla","Diurnal raptors",1.5,"resident and short-distance migrant","Haliaeetus_albicilla","Haliaeetus albicilla","exact",FALSE,FALSE,FALSE
+"Milvus_milvus","Milvus_milvus",FALSE,"Milvus milvus","Diurnal raptors",1.5,"resident and short-distance migrant","Milvus_milvus","Milvus milvus","exact",FALSE,FALSE,FALSE
+"Pandion_haliaetus","Pandion_haliaetus",FALSE,"Pandion haliaetus","Diurnal raptors",3,"long-distance migrant","Pandion_haliaetus","Pandion haliaetus","exact",FALSE,FALSE,FALSE
+"Pernis_apivorus","Pernis_apivorus",FALSE,"Pernis apivorus","Diurnal raptors",3,"long-distance migrant","Pernis_apivorus","Pernis apivorus","exact",FALSE,FALSE,FALSE
+"Aix_galericulata","Aix_galericulata",FALSE,"Aix galericulata",NA,NA,NA,"Aix_galericulata","Aix galericulata","exact",TRUE,TRUE,FALSE
+"Alopochen_aegyptiaca","Alopochen_aegyptiaca",FALSE,"Alopochen aegyptiaca","Grazing waterfowl",2,"short-distance migrant","Alopochen_aegyptiaca",NA,"unmatched",FALSE,FALSE,TRUE
+"Anas_acuta","Anas_acuta",FALSE,"Anas acuta","Dabbling ducks",2,"short-distance migrant","Anas_acuta","Anas acuta","exact",FALSE,FALSE,FALSE
+"Anas_crecca","Anas_crecca",FALSE,"Anas crecca","Dabbling ducks",2,"short-distance migrant","Anas_crecca","Anas crecca","exact",FALSE,FALSE,FALSE
+"Anas_platyrhynchos","Anas_platyrhynchos",FALSE,"Anas platyrhynchos","Dabbling ducks",1.5,"resident and short-distance migrant","Anas_platyrhynchos","Anas platyrhynchos","exact",FALSE,FALSE,FALSE
+"Anser_anser","Anser_anser",FALSE,"Anser anser","Grazing waterfowl",1.5,"resident and short-distance migrant","Anser_anser","Anser anser","exact",FALSE,FALSE,FALSE
+"Anser_caerulescens","Anser_caerulescens",FALSE,"Anser caerulescens","Grazing waterfowl",3,"long-distance migrant","Anser_caerulescens",NA,"unmatched",FALSE,FALSE,TRUE
+"Aythya_ferina","Aythya_ferina",FALSE,"Aythya ferina","Diving ducks",2,"short-distance migrant","Aythya_ferina","Aythya ferina","exact",FALSE,FALSE,FALSE
+"Aythya_fuligula","Aythya_fuligula",FALSE,"Aythya fuligula","Diving ducks",2,"short-distance migrant","Aythya_fuligula","Aythya fuligula","exact",FALSE,FALSE,FALSE
+"Aythya_marila","Aythya_marila",FALSE,"Aythya marila","Diving duck",NA,NA,"Aythya_marila","Aythya marila","exact",FALSE,TRUE,FALSE
+"Branta_canadensis","Branta_canadensis",FALSE,"Branta canadensis","Grazing waterfowl",1.5,"resident and short-distance migrant","Branta_canadensis","Branta canadensis","exact",FALSE,FALSE,FALSE
+"Branta_leucopsis","Branta_leucopsis",FALSE,"Branta leucopsis","Grazing waterfowl",2,"short-distance migrant","Branta_leucopsis","Branta leucopsis","exact",FALSE,FALSE,FALSE
+"Bucephala_clangula","Bucephala_clangula",FALSE,"Bucephala clangula","Diving ducks",1,"resident","Bucephala_clangula","Bucephala clangula","exact",FALSE,FALSE,FALSE
+"Clangula_hyemalis","Clangula_hyemalis",FALSE,"Clangula hyemalis","Diving duck",NA,NA,"Clangula_hyemalis","Clangula hyemalis","exact",FALSE,TRUE,FALSE
+"Cygnus_cygnus","Cygnus_cygnus",FALSE,"Cygnus cygnus","Grazing waterfowl",1.5,"resident and short-distance migrant","Cygnus_cygnus","Cygnus cygnus","exact",FALSE,FALSE,FALSE
+"Cygnus_olor","Cygnus_olor",FALSE,"Cygnus olor","Grazing waterfowl",1.5,"resident and short-distance migrant","Cygnus_olor","Cygnus olor","exact",FALSE,FALSE,FALSE
+"Mareca_penelope","Mareca_penelope",FALSE,"Mareca penelope","Grazing waterfowl",2,"short-distance migrant","Mareca_penelope","Mareca penelope","exact",FALSE,FALSE,FALSE
+"Mareca_strepera","Mareca_strepera",FALSE,"Mareca strepera","Dabbling ducks",2,"short-distance migrant","Mareca_strepera","Mareca strepera","exact",FALSE,FALSE,FALSE
+"Mergellus_albellus","Mergellus_albellus",FALSE,"Mergellus albellus","Diving duck",NA,NA,"Mergellus_albellus","Mergellus albellus","exact",FALSE,TRUE,FALSE
+"Mergus_merganser","Mergus_merganser",FALSE,"Mergus merganser","Aquatic pursuers",2,"short-distance migrant","Mergus_merganser","Mergus merganser","exact",FALSE,FALSE,FALSE
+"Mergus_serrator","Mergus_serrator",FALSE,"Mergus serrator","Aquatic pursuers",2,"short-distance migrant","Mergus_serrator","Mergus serrator","exact",FALSE,FALSE,FALSE
+"Netta_rufina","Netta_rufina",FALSE,"Netta rufina","Dabbling ducks",2,"short-distance migrant","Netta_rufina","Netta rufina","exact",FALSE,FALSE,FALSE
+"Somateria_mollissima","Somateria_mollissima",FALSE,"Somateria mollissima","Diving ducks",2,"short-distance migrant","Somateria_mollissima","Somateria mollissima","exact",FALSE,FALSE,FALSE
+"Spatula_clypeata","Spatula_clypeata",FALSE,"Spatula clypeata","Dabbling ducks",2,"short-distance migrant","Spatula_clypeata","Spatula clypeata","exact",FALSE,FALSE,FALSE
+"Spatula_querquedula","Spatula_querquedula",FALSE,"Spatula querquedula","Dabbling ducks",3,"long-distance migrant","Spatula_querquedula","Spatula querquedula","exact",FALSE,FALSE,FALSE
+"Tadorna_ferruginea","Tadorna_ferruginea",FALSE,"Tadorna ferruginea","Dabbling ducks",NA,NA,"Tadorna_ferruginea","Tadorna ferruginea","exact",FALSE,TRUE,FALSE
+"Tadorna_tadorna","Tadorna_tadorna",FALSE,"Tadorna tadorna","Dabbling ducks",2,"short-distance migrant","Tadorna_tadorna","Tadorna tadorna","exact",FALSE,FALSE,FALSE
+"Upupa_epops","Upupa_epops",FALSE,"Upupa epops","Hoopoes",NA,NA,"Upupa_epops","Upupa epops","exact",FALSE,TRUE,FALSE
+"Apus_apus","Apus_apus",FALSE,"Apus apus","Aerial insectivores",3,"long-distance migrant","Apus_apus","Apus apus","exact",FALSE,FALSE,FALSE
+"Caprimulgus_europaeus","Caprimulgus_europaeus",FALSE,"Caprimulgus europaeus","Nigthjars",3,"long-distance migrant","Caprimulgus_europaeus","Caprimulgus europaeus","exact",FALSE,FALSE,FALSE
+"Actitis_hypoleucos","Actitis_hypoleucos",FALSE,"Actitis hypoleucos","Scolopacids",3,"long-distance migrant","Actitis_hypoleucos","Actitis hypoleucos","exact",FALSE,FALSE,FALSE
+"Alca_torda","Alca_torda",FALSE,"Alca torda","Aquatic pursuers",2,"short-distance migrant","Alca_torda","Alca torda","exact",FALSE,FALSE,FALSE
+"Anarhynchus_alexandrinus","Anarhynchus_alexandrinus",FALSE,"Anarhynchus alexandrinus","Plovers",2.5,"short- and long-distance migrant","Charadrius_alexandrinus","Charadrius alexandrinus","S0_name_crosswalk",FALSE,FALSE,FALSE
+"Arenaria_interpres","Arenaria_interpres",FALSE,"Arenaria interpres","Scolopacids",2,"short-distance migrant","Arenaria_interpres","Arenaria interpres","exact",FALSE,FALSE,FALSE
+"Calidris_alpina","Calidris_alpina",FALSE,"Calidris alpina","Scolopacids",3,"long-distance migrant","Calidris_alpina","Calidris alpina","exact",FALSE,FALSE,FALSE
+"Calidris_pugnax","Calidris_pugnax",FALSE,"Calidris pugnax","Scolopacids",3,"long-distance migrant","Calidris_pugnax","Calidris pugnax","exact",FALSE,FALSE,FALSE
+"Cepphus_grylle","Cepphus_grylle",FALSE,"Cepphus grylle","Aquatic pursuers",1.5,"resident and short-distance migrant","Cepphus_grylle","Cepphus grylle","exact",FALSE,FALSE,FALSE
+"Charadrius_dubius","Charadrius_dubius",FALSE,"Charadrius dubius","Plovers",2.5,"short- and long-distance migrant","Charadrius_dubius","Charadrius dubius","exact",FALSE,FALSE,FALSE
+"Charadrius_hiaticula","Charadrius_hiaticula",FALSE,"Charadrius hiaticula","Plovers",2,"short-distance migrant","Charadrius_hiaticula","Charadrius hiaticula","exact",FALSE,FALSE,FALSE
+"Chlidonias_leucopterus","Chlidonias_leucopterus",FALSE,"Chlidonias leucopterus","Terns",3,"long-distance migrant","Chlidonias_leucopterus","Chlidonias leucopterus","exact",FALSE,FALSE,FALSE
+"Chlidonias_niger","Chlidonias_niger",FALSE,"Chlidonias niger","Terns",3,"long-distance migrant","Chlidonias_niger","Chlidonias niger","exact",FALSE,FALSE,FALSE
+"Chroicocephalus_ridibundus","Chroicocephalus_ridibundus",FALSE,"Chroicocephalus ridibundus","Gulls",2,"short-distance migrant","Larus_ridibundus","Larus ridibundus","S0_name_crosswalk",FALSE,FALSE,FALSE
+"Gallinago_gallinago","Gallinago_gallinago",FALSE,"Gallinago gallinago","Scolopacids",2,"short-distance migrant","Gallinago_gallinago","Gallinago gallinago","exact",FALSE,FALSE,FALSE
+"Gelochelidon_nilotica","Gelochelidon_nilotica",FALSE,"Gelochelidon nilotica","Terns",3,"long-distance migrant","Gelochelidon_nilotica","Gelochelidon nilotica","exact",FALSE,FALSE,FALSE
+"Haematopus_ostralegus","Haematopus_ostralegus",FALSE,"Haematopus ostralegus","Plovers",2,"short-distance migrant","Haematopus_ostralegus","Haematopus ostralegus","exact",FALSE,FALSE,FALSE
+"Himantopus_himantopus","Himantopus_himantopus",FALSE,"Himantopus himantopus","Plovers",3,"long-distance migrant","Himantopus_himantopus","Himantopus himantopus","exact",FALSE,FALSE,FALSE
+"Hydrocoloeus_minutus","Hydrocoloeus_minutus",FALSE,"Hydrocoloeus minutus","Gulls",2,"short-distance migrant","Hydrocoloeus_minutus","Hydrocoloeus minutus","exact",FALSE,FALSE,FALSE
+"Hydroprogne_caspia","Hydroprogne_caspia",FALSE,"Hydroprogne caspia","Terns",3,"long-distance migrant","Hydroprogne_caspia","Hydroprogne caspia","exact",FALSE,FALSE,FALSE
+"Ichthyaetus_melanocephalus","Ichthyaetus_melanocephalus",FALSE,"Ichthyaetus melanocephalus","Gulls",2,"short-distance migrant","Ichthyaetus_melanocephalus",NA,"unmatched",FALSE,FALSE,TRUE
+"Larus_argentatus","Larus_argentatus",FALSE,"Larus argentatus","Gulls",1.5,"resident and short-distance migrant","Larus_argentatus","Larus argentatus","exact",FALSE,FALSE,FALSE
+"Larus_canus","Larus_canus",FALSE,"Larus canus","Gulls",1.5,"resident and short-distance migrant","Larus_canus","Larus canus","exact",FALSE,FALSE,FALSE
+"Larus_fuscus","Larus_fuscus",FALSE,"Larus fuscus","Gulls",2.5,"short- and long-distance migrant","Larus_fuscus","Larus fuscus","exact",FALSE,FALSE,FALSE
+"Larus_marinus","Larus_marinus",FALSE,"Larus marinus","Gulls",1.5,"resident and short-distance migrant","Larus_marinus","Larus marinus","exact",FALSE,FALSE,FALSE
+"Limosa_limosa","Limosa_limosa",FALSE,"Limosa limosa","Scolopacids",3,"long-distance migrant","Limosa_limosa","Limosa limosa","exact",FALSE,FALSE,FALSE
+"Lymnocryptes_minimus","Lymnocryptes_minimus",FALSE,"Lymnocryptes minimus",NA,NA,NA,"Lymnocryptes_minimus","Lymnocryptes minimus","exact",TRUE,TRUE,FALSE
+"Numenius_arquata","Numenius_arquata",FALSE,"Numenius arquata","Scolopacids",2,"short-distance migrant","Numenius_arquata","Numenius arquata","exact",FALSE,FALSE,FALSE
+"Pluvialis_apricaria","Pluvialis_apricaria",FALSE,"Pluvialis apricaria","Plovers",2,"short-distance migrant","Pluvialis_apricaria","Pluvialis apricaria","exact",FALSE,FALSE,FALSE
+"Recurvirostra_avosetta","Recurvirostra_avosetta",FALSE,"Recurvirostra avosetta","Plovers",2.5,"short- and long-distance migrant","Recurvirostra_avosetta","Recurvirostra avosetta","exact",FALSE,FALSE,FALSE
+"Rissa_tridactyla","Rissa_tridactyla",FALSE,"Rissa tridactyla","Gulls",3,"long-distance migrant","Rissa_tridactyla","Rissa tridactyla","exact",FALSE,FALSE,FALSE
+"Scolopax_rusticola","Scolopax_rusticola",FALSE,"Scolopax rusticola","Scolopacids",1.5,"resident and short-distance migrant","Scolopax_rusticola","Scolopax rusticola","exact",FALSE,FALSE,FALSE
+"Sterna_hirundo","Sterna_hirundo",FALSE,"Sterna hirundo","Terns",3,"long-distance migrant","Sterna_hirundo","Sterna hirundo","exact",FALSE,FALSE,FALSE
+"Sterna_paradisaea","Sterna_paradisaea",FALSE,"Sterna paradisaea","Terns",3,"long-distance migrant","Sterna_paradisaea","Sterna paradisaea","exact",FALSE,FALSE,FALSE
+"Sternula_albifrons","Sternula_albifrons",FALSE,"Sternula albifrons","Terns",3,"long-distance migrant","Sternula_albifrons","Sternula albifrons","exact",FALSE,FALSE,FALSE
+"Thalasseus_sandvicensis","Thalasseus_sandvicensis",FALSE,"Thalasseus sandvicensis","Terns",2.5,"short- and long-distance migrant","Thalasseus_sandvicensis","Thalasseus sandvicensis","exact",FALSE,FALSE,FALSE
+"Tringa_glareola","Tringa_glareola",FALSE,"Tringa glareola","Scolopacids",3,"long-distance migrant","Tringa_glareola","Tringa glareola","exact",FALSE,FALSE,FALSE
+"Tringa_ochropus","Tringa_ochropus",FALSE,"Tringa ochropus","Scolopacids",2.5,"short- and long-distance migrant","Tringa_ochropus","Tringa ochropus","exact",FALSE,FALSE,FALSE
+"Tringa_totanus","Tringa_totanus",FALSE,"Tringa totanus","Scolopacids",2,"short-distance migrant","Tringa_totanus","Tringa totanus","exact",FALSE,FALSE,FALSE
+"Uria_aalge","Uria_aalge",FALSE,"Uria aalge","Aquatic pursuers",2,"short-distance migrant","Uria_aalge","Uria aalge","exact",FALSE,FALSE,FALSE
+"Vanellus_vanellus","Vanellus_vanellus",FALSE,"Vanellus vanellus","Plovers",2,"short-distance migrant","Vanellus_vanellus","Vanellus vanellus","exact",FALSE,FALSE,FALSE
+"Ciconia_ciconia","Ciconia_ciconia",FALSE,"Ciconia ciconia","Wading birds",3,"long-distance migrant","Ciconia_ciconia","Ciconia ciconia","exact",FALSE,FALSE,FALSE
+"Ciconia_nigra","Ciconia_nigra",FALSE,"Ciconia nigra","Wading birds",NA,NA,"Ciconia_nigra","Ciconia nigra","exact",FALSE,TRUE,FALSE
+"Columba_livia","Columba_livia",FALSE,"Columba livia",NA,1,"resident","Columba_livia","Columba livia","exact",TRUE,FALSE,FALSE
+"Columba_oenas","Columba_oenas",FALSE,"Columba oenas","Columbids",2,"short-distance migrant","Columba_oenas","Columba oenas","exact",FALSE,FALSE,FALSE
+"Columba_palumbus","Columba_palumbus",FALSE,"Columba palumbus","Columbids",1.5,"resident and short-distance migrant","Columba_palumbus","Columba palumbus","exact",FALSE,FALSE,FALSE
+"Streptopelia_decaocto","Streptopelia_decaocto",FALSE,"Streptopelia decaocto","Columbids",1,"resident","Streptopelia_decaocto","Streptopelia decaocto","exact",FALSE,FALSE,FALSE
+"Streptopelia_turtur","Streptopelia_turtur",FALSE,"Streptopelia turtur","Columbids",3,"long-distance migrant","Streptopelia_turtur","Streptopelia turtur","exact",FALSE,FALSE,FALSE
+"Alcedo_atthis","Alcedo_atthis",FALSE,"Alcedo atthis","Kingfishers",1,"resident","Alcedo_atthis","Alcedo atthis","exact",FALSE,FALSE,FALSE
+"Merops_apiaster","Merops_apiaster",FALSE,"Merops apiaster","Beeeaters",3,"long-distance migrant","Merops_apiaster","Merops apiaster","exact",FALSE,FALSE,FALSE
+"Cuculus_canorus","Cuculus_canorus",FALSE,"Cuculus canorus","Cuckoos",3,"long-distance migrant","Cuculus_canorus","Cuculus canorus","exact",FALSE,FALSE,FALSE
+"Falco_peregrinus","Falco_peregrinus",FALSE,"Falco peregrinus","Diurnal raptors",1.5,"resident and short-distance migrant","Falco_peregrinus","Falco peregrinus","exact",FALSE,FALSE,FALSE
+"Falco_subbuteo","Falco_subbuteo",FALSE,"Falco subbuteo","Diurnal raptors",3,"long-distance migrant","Falco_subbuteo","Falco subbuteo","exact",FALSE,FALSE,FALSE
+"Falco_tinnunculus","Falco_tinnunculus",FALSE,"Falco tinnunculus","Diurnal raptors",1.5,"resident and short-distance migrant","Falco_tinnunculus","Falco tinnunculus","exact",FALSE,FALSE,FALSE
+"Coturnix_coturnix","Coturnix_coturnix",FALSE,"Coturnix coturnix","Gallinaceous birds",2.5,"short- and long-distance migrant","Coturnix_coturnix","Coturnix coturnix","exact",FALSE,FALSE,FALSE
+"Lyrurus_tetrix","Lyrurus_tetrix",FALSE,"Lyrurus tetrix","Gallinaceous birds",1,"resident","Lyrurus_tetrix","Lyrurus tetrix","exact",FALSE,FALSE,FALSE
+"Perdix_perdix","Perdix_perdix",FALSE,"Perdix perdix","Gallinaceous birds",1,"resident","Perdix_perdix","Perdix perdix","exact",FALSE,FALSE,FALSE
+"Phasianus_colchicus","Phasianus_colchicus",FALSE,"Phasianus colchicus","Gallinaceous birds",1,"resident","Phasianus_colchicus","Phasianus colchicus","exact",FALSE,FALSE,FALSE
+"Crex_crex","Crex_crex",FALSE,"Crex crex","Rails",3,"long-distance migrant","Crex_crex","Crex crex","exact",FALSE,FALSE,FALSE
+"Fulica_atra","Fulica_atra",FALSE,"Fulica atra","Rails",1.5,"resident and short-distance migrant","Fulica_atra","Fulica atra","exact",FALSE,FALSE,FALSE
+"Gallinula_chloropus","Gallinula_chloropus",FALSE,"Gallinula chloropus","Rails",1.5,"resident and short-distance migrant","Gallinula_chloropus","Gallinula chloropus","exact",FALSE,FALSE,FALSE
+"Grus_grus","Grus_grus",FALSE,"Grus grus","Wading birds",1.5,"resident and short-distance migrant","Grus_grus","Grus grus","exact",FALSE,FALSE,FALSE
+"Porzana_porzana","Porzana_porzana",FALSE,"Porzana porzana","Rails",3,"long-distance migrant","Porzana_porzana","Porzana porzana","exact",FALSE,FALSE,FALSE
+"Rallus_aquaticus","Rallus_aquaticus",FALSE,"Rallus aquaticus","Rails",1.5,"resident and short-distance migrant","Rallus_aquaticus","Rallus aquaticus","exact",FALSE,FALSE,FALSE
+"Acanthis_flammea","Acanthis_flammea_cabaret",TRUE,"Acanthis flammea cabaret","Passerine seedeaters",2,"short-distance migrant","Acanthis_flammea","Acanthis flammea","exact",FALSE,FALSE,FALSE
+"Acrocephalus_arundinaceus","Acrocephalus_arundinaceus",FALSE,"Acrocephalus arundinaceus","Marsh warblers",3,"long-distance migrant","Acrocephalus_arundinaceus","Acrocephalus arundinaceus","exact",FALSE,FALSE,FALSE
+"Acrocephalus_dumetorum","Acrocephalus_dumetorum",FALSE,"Acrocephalus dumetorum","Marsh wablers",NA,NA,"Acrocephalus_dumetorum","Acrocephalus dumetorum","exact",FALSE,TRUE,FALSE
+"Acrocephalus_palustris","Acrocephalus_palustris",FALSE,"Acrocephalus palustris","Marsh warblers",3,"long-distance migrant","Acrocephalus_palustris","Acrocephalus palustris","exact",FALSE,FALSE,FALSE
+"Acrocephalus_schoenobaenus","Acrocephalus_schoenobaenus",FALSE,"Acrocephalus schoenobaenus","Marsh warblers",3,"long-distance migrant","Acrocephalus_schoenobaenus","Acrocephalus schoenobaenus","exact",FALSE,FALSE,FALSE
+"Acrocephalus_scirpaceus","Acrocephalus_scirpaceus",FALSE,"Acrocephalus scirpaceus","Marsh warblers",3,"long-distance migrant","Acrocephalus_scirpaceus","Acrocephalus scirpaceus","exact",FALSE,FALSE,FALSE
+"Aegithalos_caudatus","Aegithalos_caudatus",FALSE,"Aegithalos caudatus","Tit-like birds",1,"resident","Aegithalos_caudatus","Aegithalos caudatus","exact",FALSE,FALSE,FALSE
+"Alauda_arvensis","Alauda_arvensis",FALSE,"Alauda arvensis","Open-land insectivores",1.5,"resident and short-distance migrant","Alauda_arvensis","Alauda arvensis","exact",FALSE,FALSE,FALSE
+"Anthus_campestris","Anthus_campestris",FALSE,"Anthus campestris","Open-land insectivores",3,"long-distance migrant","Anthus_campestris","Anthus campestris","exact",FALSE,FALSE,FALSE
+"Anthus_petrosus","Anthus_petrosus",FALSE,"Anthus petrosus","Open-land insectivores",1.5,"resident and short-distance migrant","Anthus_petrosus",NA,"unmatched",FALSE,FALSE,TRUE
+"Anthus_pratensis","Anthus_pratensis",FALSE,"Anthus pratensis","Open-land insectivores",2,"short-distance migrant","Anthus_pratensis","Anthus pratensis","exact",FALSE,FALSE,FALSE
+"Anthus_trivialis","Anthus_trivialis",FALSE,"Anthus trivialis","Low flycatching feeders",3,"long-distance migrant","Anthus_trivialis","Anthus trivialis","exact",FALSE,FALSE,FALSE
+"Carduelis_carduelis","Carduelis_carduelis",FALSE,"Carduelis carduelis","Passerine seedeaters",1.5,"resident and short-distance migrant","Carduelis_carduelis","Carduelis carduelis","exact",FALSE,FALSE,FALSE
+"Carpodacus_erythrinus","Carpodacus_erythrinus",FALSE,"Carpodacus erythrinus","Passerine seedeaters",3,"long-distance migrant","Carpodacus_erythrinus","Carpodacus erythrinus","exact",FALSE,FALSE,FALSE
+"Certhia_brachydactyla","Certhia_brachydactyla",FALSE,"Certhia brachydactyla","Tit-like birds",1,"resident","Certhia_brachydactyla","Certhia brachydactyla","exact",FALSE,FALSE,FALSE
+"Certhia_familiaris","Certhia_familiaris",FALSE,"Certhia familiaris","Tit-like birds",1,"resident","Certhia_familiaris","Certhia familiaris","exact",FALSE,FALSE,FALSE
+"Chloris_chloris","Chloris_chloris",FALSE,"Chloris chloris","Passerine seedeaters",1.5,"resident and short-distance migrant","Chloris_chloris","Chloris chloris","exact",FALSE,FALSE,FALSE
+"Cinclus_cinclus","Cinclus_cinclus",FALSE,"Cinclus cinclus","Dippers",2,"short-distance migrant","Cinclus_cinclus","Cinclus cinclus","exact",FALSE,FALSE,FALSE
+"Coccothraustes_coccothraustes","Coccothraustes_coccothraustes",FALSE,"Coccothraustes coccothraustes","Passerine seedeaters",1,"resident","Coccothraustes_coccothraustes","Coccothraustes coccothraustes","exact",FALSE,FALSE,FALSE
+"Coloeus_monedula","Coloeus_monedula",FALSE,"Coloeus monedula","Omnivorous corvids",1.5,"resident and short-distance migrant","Corvus_monedula","Corvus monedula","S0_name_crosswalk",FALSE,FALSE,FALSE
+"Corvus_corax","Corvus_corax",FALSE,"Corvus corax","Omnivorous corvids",1,"resident","Corvus_corax","Corvus corax","exact",FALSE,FALSE,FALSE
+"Corvus_cornix","Corvus_cornix",FALSE,"Corvus cornix","Omnivorous corvids",1,"resident","Corvus_corone","Corvus corone","user_authorised_STI_proxy",FALSE,FALSE,FALSE
+"Corvus_corone","Corvus_corone",FALSE,"Corvus corone","Omnivorous corvids",1,"resident","Corvus_corone","Corvus corone","exact",FALSE,FALSE,FALSE
+"Corvus_frugilegus","Corvus_frugilegus",FALSE,"Corvus frugilegus","Omnivorous corvids",1,"resident","Corvus_frugilegus","Corvus frugilegus","exact",FALSE,FALSE,FALSE
+"Curruca_communis","Curruca_communis",FALSE,"Curruca communis","Foliage gleaners",3,"long-distance migrant","Sylvia_communis","Sylvia communis","S0_name_crosswalk",FALSE,FALSE,FALSE
+"Curruca_curruca","Curruca_curruca",FALSE,"Curruca curruca","Foliage gleaners",3,"long-distance migrant","Sylvia_curruca","Sylvia curruca","S0_name_crosswalk",FALSE,FALSE,FALSE
+"Curruca_nisoria","Curruca_nisoria",FALSE,"Curruca nisoria","Foliage gleaners",3,"long-distance migrant","Curruca_nisoria",NA,"unmatched",FALSE,FALSE,TRUE
+"Cyanistes_caeruleus","Cyanistes_caeruleus",FALSE,"Cyanistes caeruleus","Tit-like birds",1,"resident","Cyanistes_caeruleus","Cyanistes caeruleus","exact",FALSE,FALSE,FALSE
+"Delichon_urbicum","Delichon_urbicum",FALSE,"Delichon urbicum","Aerial insectivores",3,"long-distance migrant","Delichon_urbicum","Delichon urbicum","exact",FALSE,FALSE,FALSE
+"Emberiza_calandra","Emberiza_calandra",FALSE,"Emberiza calandra","Buntings",1,"resident","Emberiza_calandra","Emberiza calandra","exact",FALSE,FALSE,FALSE
+"Emberiza_citrinella","Emberiza_citrinella",FALSE,"Emberiza citrinella","Buntings",1,"resident","Emberiza_citrinella","Emberiza citrinella","exact",FALSE,FALSE,FALSE
+"Emberiza_hortulana","Emberiza_hortulana",FALSE,"Emberiza hortulana",NA,NA,NA,"Emberiza_hortulana","Emberiza hortulana","exact",TRUE,TRUE,FALSE
+"Emberiza_schoeniclus","Emberiza_schoeniclus",FALSE,"Emberiza schoeniclus","Buntings",1.5,"resident and short-distance migrant","Emberiza_schoeniclus","Emberiza schoeniclus","exact",FALSE,FALSE,FALSE
+"Erithacus_rubecula","Erithacus_rubecula",FALSE,"Erithacus rubecula","Low flycatching feeders",1,"resident","Erithacus_rubecula","Erithacus rubecula","exact",FALSE,FALSE,FALSE
+"Ficedula_albicollis","Ficedula_albicollis",FALSE,"Ficedula albicollis","Flycatchers",NA,NA,"Ficedula_albicollis","Ficedula albicollis","exact",FALSE,TRUE,FALSE
+"Ficedula_hypoleuca","Ficedula_hypoleuca",FALSE,"Ficedula hypoleuca","Flycatchers",3,"long-distance migrant","Ficedula_hypoleuca","Ficedula hypoleuca","exact",FALSE,FALSE,FALSE
+"Ficedula_parva","Ficedula_parva",FALSE,"Ficedula parva","Flycatchers",3,"long-distance migrant","Ficedula_parva","Ficedula parva","exact",FALSE,FALSE,FALSE
+"Fringilla_coelebs","Fringilla_coelebs",FALSE,"Fringilla coelebs","Foliage gleaners",1.5,"resident and short-distance migrant","Fringilla_coelebs","Fringilla coelebs","exact",FALSE,FALSE,FALSE
+"Fringilla_montifringilla","Fringilla_montifringilla",FALSE,"Fringilla montifringilla","Foliage gleaners",2,"short-distance migrant","Fringilla_montifringilla","Fringilla montifringilla","exact",FALSE,FALSE,FALSE
+"Galerida_cristata","Galerida_cristata",FALSE,"Galerida cristata","Open-land insectivores",1,"resident","Galerida_cristata","Galerida cristata","exact",FALSE,FALSE,FALSE
+"Garrulus_glandarius","Garrulus_glandarius",FALSE,"Garrulus glandarius","Omnivorous corvids",1,"resident","Garrulus_glandarius","Garrulus glandarius","exact",FALSE,FALSE,FALSE
+"Hippolais_icterina","Hippolais_icterina",FALSE,"Hippolais icterina","Foliage gleaners",3,"long-distance migrant","Hippolais_icterina","Hippolais icterina","exact",FALSE,FALSE,FALSE
+"Hirundo_rustica","Hirundo_rustica",FALSE,"Hirundo rustica","Aerial insectivores",3,"long-distance migrant","Hirundo_rustica","Hirundo rustica","exact",FALSE,FALSE,FALSE
+"Lanius_collurio","Lanius_collurio",FALSE,"Lanius collurio","Shrikes",3,"long-distance migrant","Lanius_collurio","Lanius collurio","exact",FALSE,FALSE,FALSE
+"Lanius_excubitor","Lanius_excubitor",FALSE,"Lanius excubitor","Shrikes",1,"resident","Lanius_excubitor","Lanius excubitor","exact",FALSE,FALSE,FALSE
+"Linaria_cannabina","Linaria_cannabina",FALSE,"Linaria cannabina","Passerine seedeaters",2,"short-distance migrant","Linaria_cannabina","Linaria cannabina","exact",FALSE,FALSE,FALSE
+"Locustella_fluviatilis","Locustella_fluviatilis",FALSE,"Locustella fluviatilis","Marsh warblers",3,"long-distance migrant","Locustella_fluviatilis","Locustella fluviatilis","exact",FALSE,FALSE,FALSE
+"Locustella_luscinioides","Locustella_luscinioides",FALSE,"Locustella luscinioides","Marsh warblers",3,"long-distance migrant","Locustella_luscinioides","Locustella luscinioides","exact",FALSE,FALSE,FALSE
+"Locustella_naevia","Locustella_naevia",FALSE,"Locustella naevia","Marsh warblers",3,"long-distance migrant","Locustella_naevia","Locustella naevia","exact",FALSE,FALSE,FALSE
+"Lophophanes_cristatus","Lophophanes_cristatus",FALSE,"Lophophanes cristatus","Tit-like birds",1,"resident","Lophophanes_cristatus","Lophophanes cristatus","exact",FALSE,FALSE,FALSE
+"Loxia_curvirostra","Loxia_curvirostra",FALSE,"Loxia curvirostra","Passerine seedeaters",1.5,"resident and short-distance migrant","Loxia_curvirostra","Loxia curvirostra","exact",FALSE,FALSE,FALSE
+"Loxia_leucoptera","Loxia_leucoptera",FALSE,"Loxia leucoptera","Passerine seedeaters",1.5,"resident and short-distance migrant","Loxia_leucoptera","Loxia leucoptera","exact",FALSE,FALSE,FALSE
+"Loxia_pytyopsittacus","Loxia_pytyopsittacus",FALSE,"Loxia pytyopsittacus","Passerine seedeaters",1,"resident","Loxia_pytyopsittacus","Loxia pytyopsittacus","exact",FALSE,FALSE,FALSE
+"Lullula_arborea","Lullula_arborea",FALSE,"Lullula arborea","Open-land insectivores",2,"short-distance migrant","Lullula_arborea","Lullula arborea","exact",FALSE,FALSE,FALSE
+"Luscinia_luscinia","Luscinia_luscinia",FALSE,"Luscinia luscinia","Low flycatching feeders",3,"long-distance migrant","Luscinia_luscinia","Luscinia luscinia","exact",FALSE,FALSE,FALSE
+"Luscinia_megarhynchos","Luscinia_megarhynchos",FALSE,"Luscinia megarhynchos","Low flycatching feeders",3,"long-distance migrant","Luscinia_megarhynchos","Luscinia megarhynchos","exact",FALSE,FALSE,FALSE
+"Luscinia_svecica","Luscinia_svecica",FALSE,"Luscinia svecica","Low flycatching feeders",2,"short-distance migrant","Luscinia_svecica","Luscinia svecica","exact",FALSE,FALSE,FALSE
+"Motacilla_alba","Motacilla_alba",FALSE,"Motacilla alba","Open-land insectivores",2,"short-distance migrant","Motacilla_alba","Motacilla alba","exact",FALSE,FALSE,FALSE
+"Motacilla_alba","Motacilla_alba_yarrellii",TRUE,"Motacilla alba yarrellii","Open-land insectivores",2,"short-distance migrant","Motacilla_alba","Motacilla alba","exact",FALSE,FALSE,FALSE
+"Motacilla_cinerea","Motacilla_cinerea",FALSE,"Motacilla cinerea","Open-land insectivores",1.5,"resident and short-distance migrant","Motacilla_cinerea","Motacilla cinerea","exact",FALSE,FALSE,FALSE
+"Motacilla_flava","Motacilla_flava",FALSE,"Motacilla flava","Open-land insectivores",3,"long-distance migrant","Motacilla_flava","Motacilla flava","exact",FALSE,FALSE,FALSE
+"Motacilla_flava","Motacilla_flava_flavissima",TRUE,"Motacilla flava flavissima","Open-land insectivores",3,"long-distance migrant","Motacilla_flava","Motacilla flava","exact",FALSE,FALSE,FALSE
+"Muscicapa_striata","Muscicapa_striata",FALSE,"Muscicapa striata","Flycatchers",3,"long-distance migrant","Muscicapa_striata","Muscicapa striata","exact",FALSE,FALSE,FALSE
+"Nucifraga_caryocatactes","Nucifraga_caryocatactes",FALSE,"Nucifraga caryocatactes","Omnivorous corvids",1,"resident","Nucifraga_caryocatactes","Nucifraga caryocatactes","exact",FALSE,FALSE,FALSE
+"Oenanthe_oenanthe","Oenanthe_oenanthe",FALSE,"Oenanthe oenanthe","Low flycatching feeders",3,"long-distance migrant","Oenanthe_oenanthe","Oenanthe oenanthe","exact",FALSE,FALSE,FALSE
+"Oriolus_oriolus","Oriolus_oriolus",FALSE,"Oriolus oriolus","Orioles",3,"long-distance migrant","Oriolus_oriolus","Oriolus oriolus","exact",FALSE,FALSE,FALSE
+"Panurus_biarmicus","Panurus_biarmicus",FALSE,"Panurus biarmicus","Reedlings",1,"resident","Panurus_biarmicus","Panurus biarmicus","exact",FALSE,FALSE,FALSE
+"Parus_major","Parus_major",FALSE,"Parus major","Tit-like birds",1.5,"resident and short-distance migrant","Parus_major","Parus major","exact",FALSE,FALSE,FALSE
+"Passer_domesticus","Passer_domesticus",FALSE,"Passer domesticus","Passerine seedeaters",1,"resident","Passer_domesticus","Passer domesticus","exact",FALSE,FALSE,FALSE
+"Passer_montanus","Passer_montanus",FALSE,"Passer montanus","Passerine seedeaters",1,"resident","Passer_montanus","Passer montanus","exact",FALSE,FALSE,FALSE
+"Periparus_ater","Periparus_ater",FALSE,"Periparus ater","Tit-like birds",1,"resident","Periparus_ater","Periparus ater","exact",FALSE,FALSE,FALSE
+"Phoenicurus_ochruros","Phoenicurus_ochruros",FALSE,"Phoenicurus ochruros","Low flycatching feeders",1.5,"resident and short-distance migrant","Phoenicurus_ochruros","Phoenicurus ochruros","exact",FALSE,FALSE,FALSE
+"Phoenicurus_phoenicurus","Phoenicurus_phoenicurus",FALSE,"Phoenicurus phoenicurus","Low flycatching feeders",3,"long-distance migrant","Phoenicurus_phoenicurus","Phoenicurus phoenicurus","exact",FALSE,FALSE,FALSE
+"Phylloscopus_collybita","Phylloscopus_collybita",FALSE,"Phylloscopus collybita","Foliage gleaners",2,"short-distance migrant","Phylloscopus_collybita","Phylloscopus collybita","exact",FALSE,FALSE,FALSE
+"Phylloscopus_sibilatrix","Phylloscopus_sibilatrix",FALSE,"Phylloscopus sibilatrix","Foliage gleaners",3,"long-distance migrant","Phylloscopus_sibilatrix","Phylloscopus sibilatrix","exact",FALSE,FALSE,FALSE
+"Phylloscopus_trochiloides","Phylloscopus_trochiloides",FALSE,"Phylloscopus trochiloides","Foliage gleaners",3,"long-distance migrant","Phylloscopus_trochiloides","Phylloscopus trochiloides","exact",FALSE,FALSE,FALSE
+"Phylloscopus_trochilus","Phylloscopus_trochilus",FALSE,"Phylloscopus trochilus","Foliage gleaners",3,"long-distance migrant","Phylloscopus_trochilus","Phylloscopus trochilus","exact",FALSE,FALSE,FALSE
+"Pica_pica","Pica_pica",FALSE,"Pica pica","Omnivorous corvids",1,"resident","Pica_pica","Pica pica","exact",FALSE,FALSE,FALSE
+"Poecile_montanus","Poecile_montanus",FALSE,"Poecile montanus","Tit-like birds",1,"resident","Poecile_montanus","Poecile montanus","exact",FALSE,FALSE,FALSE
+"Poecile_palustris","Poecile_palustris",FALSE,"Poecile palustris","Tit-like birds",1,"resident","Poecile_palustris","Poecile palustris","exact",FALSE,FALSE,FALSE
+"Prunella_modularis","Prunella_modularis",FALSE,"Prunella modularis","Low flycatching feeders",1.5,"resident and short-distance migrant","Prunella_modularis","Prunella modularis","exact",FALSE,FALSE,FALSE
+"Pyrrhula_pyrrhula","Pyrrhula_pyrrhula",FALSE,"Pyrrhula pyrrhula","Passerine seedeaters",2,"short-distance migrant","Pyrrhula_pyrrhula","Pyrrhula pyrrhula","exact",FALSE,FALSE,FALSE
+"Regulus_ignicapilla","Regulus_ignicapilla",FALSE,"Regulus ignicapilla","Tit-like birds",2,"short-distance migrant","Regulus_ignicapilla","Regulus ignicapilla","exact",FALSE,FALSE,FALSE
+"Regulus_regulus","Regulus_regulus",FALSE,"Regulus regulus","Tit-like birds",2,"short-distance migrant","Regulus_regulus","Regulus regulus","exact",FALSE,FALSE,FALSE
+"Remiz_pendulinus","Remiz_pendulinus",FALSE,"Remiz pendulinus","Tit-like birds",2,"short-distance migrant","Remiz_pendulinus","Remiz pendulinus","exact",FALSE,FALSE,FALSE
+"Riparia_riparia","Riparia_riparia",FALSE,"Riparia riparia","Aerial insectivores",3,"long-distance migrant","Riparia_riparia","Riparia riparia","exact",FALSE,FALSE,FALSE
+"Saxicola_rubetra","Saxicola_rubetra",FALSE,"Saxicola rubetra","Low flycatching feeders",3,"long-distance migrant","Saxicola_rubetra","Saxicola rubetra","exact",FALSE,FALSE,FALSE
+"Saxicola_rubicola","Saxicola_rubicola",FALSE,"Saxicola rubicola","Low flycatching feeders",2,"short-distance migrant","Saxicola_rubicola",NA,"unmatched",FALSE,FALSE,TRUE
+"Serinus_serinus","Serinus_serinus",FALSE,"Serinus serinus","Passerine seedeaters",2,"short-distance migrant","Serinus_serinus","Serinus serinus","exact",FALSE,FALSE,FALSE
+"Sitta_europaea","Sitta_europaea",FALSE,"Sitta europaea","Tit-like birds",1,"resident","Sitta_europaea","Sitta europaea","exact",FALSE,FALSE,FALSE
+"Spinus_spinus","Spinus_spinus",FALSE,"Spinus spinus","Passerine seedeaters",1.5,"resident and short-distance migrant","Spinus_spinus","Spinus spinus","exact",FALSE,FALSE,FALSE
+"Sturnus_vulgaris","Sturnus_vulgaris",FALSE,"Sturnus vulgaris","Starlings",2,"short-distance migrant","Sturnus_vulgaris","Sturnus vulgaris","exact",FALSE,FALSE,FALSE
+"Sylvia_atricapilla","Sylvia_atricapilla",FALSE,"Sylvia atricapilla","Foliage gleaners",2,"short-distance migrant","Sylvia_atricapilla","Sylvia atricapilla","exact",FALSE,FALSE,FALSE
+"Sylvia_borin","Sylvia_borin",FALSE,"Sylvia borin","Foliage gleaners",3,"long-distance migrant","Sylvia_borin","Sylvia borin","exact",FALSE,FALSE,FALSE
+"Troglodytes_troglodytes","Troglodytes_troglodytes",FALSE,"Troglodytes troglodytes","Low flycatching feeders",1,"resident","Troglodytes_troglodytes","Troglodytes troglodytes","exact",FALSE,FALSE,FALSE
+"Turdus_iliacus","Turdus_iliacus",FALSE,"Turdus iliacus","Thrushes",2,"short-distance migrant","Turdus_iliacus","Turdus iliacus","exact",FALSE,FALSE,FALSE
+"Turdus_merula","Turdus_merula",FALSE,"Turdus merula","Thrushes",1,"resident","Turdus_merula","Turdus merula","exact",FALSE,FALSE,FALSE
+"Turdus_philomelos","Turdus_philomelos",FALSE,"Turdus philomelos","Thrushes",2,"short-distance migrant","Turdus_philomelos","Turdus philomelos","exact",FALSE,FALSE,FALSE
+"Turdus_pilaris","Turdus_pilaris",FALSE,"Turdus pilaris","Thrushes",2,"short-distance migrant","Turdus_pilaris","Turdus pilaris","exact",FALSE,FALSE,FALSE
+"Turdus_torquatus","Turdus_torquatus",FALSE,"Turdus torquatus","Thrushes",NA,NA,"Turdus_torquatus","Turdus torquatus","exact",FALSE,TRUE,FALSE
+"Turdus_viscivorus","Turdus_viscivorus",FALSE,"Turdus viscivorus","Thrushes",2,"short-distance migrant","Turdus_viscivorus","Turdus viscivorus","exact",FALSE,FALSE,FALSE
+"Ardea_alba","Ardea_alba",FALSE,"Ardea alba","Wading birds",2,"short-distance migrant","Ardea_alba","Ardea alba","exact",FALSE,FALSE,FALSE
+"Ardea_cinerea","Ardea_cinerea",FALSE,"Ardea cinerea","Wading birds",1.5,"resident and short-distance migrant","Ardea_cinerea","Ardea cinerea","exact",FALSE,FALSE,FALSE
+"Botaurus_stellaris","Botaurus_stellaris",FALSE,"Botaurus stellaris","Wading birds",1.5,"resident and short-distance migrant","Botaurus_stellaris","Botaurus stellaris","exact",FALSE,FALSE,FALSE
+"Platalea_leucorodia","Platalea_leucorodia",FALSE,"Platalea leucorodia","Wading birds",2.5,"short- and long-distance migrant","Platalea_leucorodia","Platalea leucorodia","exact",FALSE,FALSE,FALSE
+"Dendrocopos_major","Dendrocopos_major",FALSE,"Dendrocopos major","Woodpeckers",1,"resident","Dendrocopos_major","Dendrocopos major","exact",FALSE,FALSE,FALSE
+"Dendrocoptes_medius","Dendrocoptes_medius",FALSE,"Dendrocoptes medius","Woodpeckers",NA,NA,"Dendrocoptes_medius","Dendrocoptes medius","exact",FALSE,TRUE,FALSE
+"Dryobates_minor","Dryobates_minor",FALSE,"Dryobates minor","Woodpeckers",1.5,"resident and short-distance migrant","Dryobates_minor","Dryobates minor","exact",FALSE,FALSE,FALSE
+"Dryocopus_martius","Dryocopus_martius",FALSE,"Dryocopus martius","Woodpeckers",1,"resident","Dryocopus_martius","Dryocopus martius","exact",FALSE,FALSE,FALSE
+"Jynx_torquilla","Jynx_torquilla",FALSE,"Jynx torquilla","Woodpeckers",2,"short-distance migrant","Jynx_torquilla","Jynx torquilla","exact",FALSE,FALSE,FALSE
+"Picus_viridis","Picus_viridis",FALSE,"Picus viridis","Woodpeckers",1,"resident","Picus_viridis","Picus viridis","exact",FALSE,FALSE,FALSE
+"Podiceps_auritus","Podiceps_auritus",FALSE,"Podiceps auritus","Aquatic pursuers",1.5,"resident and short-distance migrant","Podiceps_auritus","Podiceps auritus","exact",FALSE,FALSE,FALSE
+"Podiceps_cristatus","Podiceps_cristatus",FALSE,"Podiceps cristatus","Aquatic pursuers",2,"short-distance migrant","Podiceps_cristatus","Podiceps cristatus","exact",FALSE,FALSE,FALSE
+"Podiceps_grisegena","Podiceps_grisegena",FALSE,"Podiceps grisegena","Aquatic pursuers",2,"short-distance migrant","Podiceps_grisegena","Podiceps grisegena","exact",FALSE,FALSE,FALSE
+"Podiceps_nigricollis","Podiceps_nigricollis",FALSE,"Podiceps nigricollis","Aquatic pursuers",2,"short-distance migrant","Podiceps_nigricollis","Podiceps nigricollis","exact",FALSE,FALSE,FALSE
+"Tachybaptus_ruficollis","Tachybaptus_ruficollis",FALSE,"Tachybaptus ruficollis","Aquatic pursuers",1.5,"resident and short-distance migrant","Tachybaptus_ruficollis","Tachybaptus ruficollis","exact",FALSE,FALSE,FALSE
+"Fulmarus_glacialis","Fulmarus_glacialis",FALSE,"Fulmarus glacialis","Marine ""something""",NA,NA,"Fulmarus_glacialis","Fulmarus glacialis","exact",FALSE,TRUE,FALSE
+"Aegolius_funereus","Aegolius_funereus",FALSE,"Aegolius funereus","Owls",1,"resident","Aegolius_funereus","Aegolius funereus","exact",FALSE,FALSE,FALSE
+"Asio_flammeus","Asio_flammeus",FALSE,"Asio flammeus","Owls",1.5,"resident and short-distance migrant","Asio_flammeus","Asio flammeus","exact",FALSE,FALSE,FALSE
+"Asio_otus","Asio_otus",FALSE,"Asio otus","Owls",1,"resident","Asio_otus","Asio otus","exact",FALSE,FALSE,FALSE
+"Athene_noctua","Athene_noctua",FALSE,"Athene noctua","Owls",1,"resident","Athene_noctua","Athene noctua","exact",FALSE,FALSE,FALSE
+"Bubo_bubo","Bubo_bubo",FALSE,"Bubo bubo","Owls",1,"resident","Bubo_bubo","Bubo bubo","exact",FALSE,FALSE,FALSE
+"Strix_aluco","Strix_aluco",FALSE,"Strix aluco","Owls",1,"resident","Strix_aluco","Strix aluco","exact",FALSE,FALSE,FALSE
+"Tyto_alba","Tyto_alba",FALSE,"Tyto alba","Owls",1,"resident","Tyto_alba","Tyto alba","exact",FALSE,FALSE,FALSE
+"Phalacrocorax_carbo","Phalacrocorax_carbo",FALSE,"Phalacrocorax carbo","Aquatic pursuers",2,"short-distance migrant","Phalacrocorax_carbo","Phalacrocorax carbo","exact",FALSE,FALSE,FALSE

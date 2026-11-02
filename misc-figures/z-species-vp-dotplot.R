@@ -193,7 +193,7 @@ subset$species <- factor(subset$species,
 #   ) 
 # 
 # plot_data_clean$atlas[plot_data_clean$VP > 0.6]
-# ggsave("misc-figures/env-vp-species-points.png")
+# ggsave("misc-figures/z-species-vp-dotplot-species-points.png")
 if(atlas==1){yearlabel = '1970s'}
 if(atlas==2){yearlabel = '1990s'}
 if(atlas==3){yearlabel = '2010s'}
@@ -225,7 +225,7 @@ ggplot(subset,
     legend.position = 'bottom',
     guide_legend(reverse=T)
   ) 
-ggsave(sprintf("misc-figures/%s-env-vp-species-stacked-atlas-%s.png",pattern2match,atlas))
+ggsave(sprintf("misc-figures/%s-z-species-vp-dotplot-stacked-atlas-%s.png",pattern2match,atlas))
 
 
 # guild-seperated --------------------------------------------------------------------
@@ -262,7 +262,7 @@ ggsave(sprintf("misc-figures/%s-env-vp-species-stacked-atlas-%s.png",pattern2mat
 #     legend.justification = "left"
 #   )
 # 
-# ggsave("misc-figures/env-vp-species-byguild-horizontal-box.png",
+# ggsave("misc-figures/z-species-vp-dotplot-species-byguild-horizontal-box.png",
 #        height = 10,width = 25)
 # 
 
@@ -303,7 +303,7 @@ ggplot(subset_ordered,
     legend.justification = "left"
   )
 
-ggsave(sprintf("misc-figures/%s-xfig-env-vp-median-byguild-vertical-stack-atlas-%s.png",pattern2match,atlas),
+ggsave(sprintf("misc-figures/%s-z-species-vp-dotplot-median-byguild-vertical-stack-atlas-%s.png",pattern2match,atlas),
        height = 10,width = 25)
 
 
@@ -467,7 +467,7 @@ fg_summary <- summarise_trait_group(subset_ordered,
 # plot_trait_variance(fg_summary, trait_label = "Foraging guild",
 #                     guild_order = row_order)
 # 
-# ggsave(sprintf('misc-figures/%s-xfig-guilds-guilds-vp-points-variability.png', pattern), 
+# ggsave(sprintf('misc-figures/%s-z-species-vp-dotplot-guilds-vp-points-variability.png', pattern), 
 #        width = 7.5, height = 7.5)
 
 
@@ -659,7 +659,7 @@ plot_trait_bubble(fg_summary,
                   var_order   = col_order,
                   var_colors  = var_colors,
                   sd_type     = "temporal")
-ggsave(sprintf("misc-figures/%s-env-vp-guild-bubble-temporalvariabaility.png",pattern2match))
+ggsave(sprintf("misc-figures/%s-z-species-vp-dotplot-guild-bubble-temporalvariabaility.png",pattern2match))
 
 # GUILD - ENVIRONMENT - DOTPLOT - ATLAS SEPEARTE --------------------------
 
@@ -703,5 +703,5 @@ ggplot(VP_mean,
 
   facet_grid(~variable_clean) +
   theme_minimal()
-ggsave(sprintf("misc-figures/%s-env-vp-guild-bubble-temporalvariabaility-atlas-seperated.png",pattern2match))
+ggsave(sprintf("misc-figures/%s-z-species-vp-dotplot-guild-bubble-temporalvariabaility-atlas-separated.png",pattern2match))
 

@@ -1,0 +1,20 @@
+IOC 15.1 TAXONOMIC TREE
+Reproduce: Rscript scripts/0-pre/preparing-taxonomy.R (repository root).
+IOC source: data-new/0-pre/raw/taxonomy/IOC_Names_File_Plus-15.1_wide.csv
+Target taxa: data-new/0-pre/derived/Tr/Trait_table.csv
+Target set: all taxa in Trait_table.csv, one tip per species, with subspecies collapsed upstream.
+Tip labels use underscores and match Trait_table.csv. No rarity/occurrence or status filters.
+Taxonomy ranks: Aves, order, family, genus, species; subspecies are collapsed upstream in preparing-traits.R.
+Pairwise distances: different orders 8; same order/different families 6;
+same family/different genera 4; same genus/different species 2;
+identical species 0; no subspecies tips.
+Build: UPGMA (average-linkage clustering), then collapse zero-length internal edges.
+These are arbitrary rank-distance units, not divergence times or estimated evolutionary rates.
+This is a taxonomy-based surrogate tree, not an independently inferred phylogeny.
+For Hmsc, prune to the final retained species set; phylogenetic interpretations require this limitation.
+Missing/ambiguous taxonomy or duplicate target taxa cause a clear error; no parent-species substitution.
+Tips: 226
+Species-level tips: 226
+Subspecies tips: 0
+Validation: exact target-tip agreement, patristic distances match the rank matrix, and nonnegative ultrametric edges.
+ape version: 5.8.1

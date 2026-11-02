@@ -1,0 +1,27 @@
+terra 1.9.50
+Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
+HILDA+ v2: 1971
+HILDA+ v2: 1972
+HILDA+ v2: 1973
+HILDA+ v2: 1974
+HILDA+ v2: 1993
+HILDA+ v2: 1994
+HILDA+ v2: 1995
+HILDA+ v2: 1996
+HILDA+ v2: 2014
+HILDA+ v2: 2015
+HILDA+ v2: 2016
+HILDA+ v2: 2017
+Summarising climate: atlas 1, 1971
+Summarising climate: atlas 1, 1972
+Summarising climate: atlas 1, 1973
+Summarising climate: atlas 1, 1974
+Summarising climate: atlas 2, 1993
+Summarising climate: atlas 2, 1994
+Summarising climate: atlas 2, 1995
+Summarising climate: atlas 2, 1996
+Summarising climate: atlas 3, 2014
+Summarising climate: atlas 3, 2015
+Summarising climate: atlas 3, 2016
+Saved 6495 rows and 21 columns to data-new/0-pre/derived/environmental/X_environment.csv
+[1] TRUE

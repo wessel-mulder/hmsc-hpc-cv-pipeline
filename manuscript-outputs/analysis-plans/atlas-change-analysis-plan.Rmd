@@ -1,0 +1,468 @@
+---
+title: "Changes across three Danish bird atlases: analysis plan"
+date: "2026-10-20"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dev = "png", dpi = 160, echo = TRUE,
+                      warning = FALSE, message = FALSE, error = FALSE)
+# Locate the checkout when knitting from this document's directory or repo root.
+root <- normalizePath(getwd())
+while (!file.exists(file.path(root, "data-new/derived/occurrences/Y_occurrences.csv"))) {
+  parent <- dirname(root)
+  if (identical(parent, root)) stop("Cannot locate project data")
+  root <- parent
+}
+knitr::opts_knit$set(root.dir = root)
+```
+
+# Purpose and scope
+
+Describe changes in recorded breeding-bird occurrence across three atlases before
+analysing environmental explanations. This plan covers the four questions discussed:
+complete occurrence change (proposal Q1), occupancy distributions (Q2), local
+community change (Q4), and spatial homogenisation/heterogenisation (Q5).
+The separate geographical space–time model (proposal Q3) is outside this four-question
+plan. Analysis 1 is implemented below using observed data. Analyses 2–4 remain planned.
+The executable sections audit the common sample and calculate occurrence change.
+
+Source: Carsten's *Analysing the changes in bird distributions among the three Danish
+breeding bird atlases*, supplied as `Possibilities for Danish BirdAtlas Analysis of
+changes over time..pdf`. Examples in that proposal are simulated. Its bibliography
+and inferential procedures have not been independently validated here.
+
+# One shared study sample
+
+## Agreed cell rule
+
+Use exactly the same cells for all three atlases and all four primary analyses.
+A cell must have Good or Average effort in **both Atlas 1 and Atlas 2**, have
+**strictly more than 25% land**, and have an identifiable occurrence row in all
+three atlases. Missing land or Atlas 1/2 effort values do not qualify. Atlas 3
+coverage is assumed Good in every cell because no effort estimate exists; no
+Atlas 3 effort filter is applied. Missing observations
+must never be converted silently to absences.
+
+Here, land percentage means the grid attribute `pct_lnd`, not the percentage of
+any particular habitat. The rule estimates change within the retained Danish grid,
+not automatically all of Denmark. Each retained grid cell receives equal weight;
+occupancy counts are not estimates of occupied habitat area.
+
+The current `scripts/1-hmsc-prep/S0_Data_Definitions.R` maps effort codes 1 and 2 to
+Good and Average. Atlas 1 uses `UNDS_KODE_`; Atlas 2 uses the corrected `UNDS_KOD_1`.
+It uses `pct_lnd >= 25`, whereas this plan follows the requested `> 25` rule.
+It filters survey rows separately rather than requiring a three-atlas common grid.
+No effort estimate exists for Atlas 3. As agreed, assume Good coverage in all
+Atlas 3 cells. This is an explicit analysis assumption, not measured effort, and
+does not require a further coverage decision.
+
+Do not source S0 directly: it clears the workspace, filters species for HMSC, and
+requires complete environmental predictors. These descriptive questions do not
+require environmental or trait completeness. Build the shared matrices from the
+occurrence table before those filters.
+
+## Reproducible input audit
+
+```{r common-grid-audit}
+suppressPackageStartupMessages({library(sf); library(readxl)})
+design <- read.csv("data-new/derived/design/studyDesign.csv")
+y <- read.csv("data-new/derived/occurrences/Y_occurrences.csv", check.names = FALSE)
+land <- st_read(paste0("data-new/derived/atlas-grid/grids-ocean-thresholds/",
+                      "grids_ocean_thresholds.shp"), quiet = TRUE)
+f <- "data-new/raw/effort/dækning atlas1+2.xlsx"
+e1 <- read_excel(f, sheet = "kvadrater atlas1")
+e2 <- read_excel(f, sheet = "kvadrater atlas2")
+stopifnot(!anyDuplicated(design$survey), !anyDuplicated(y$survey),
+          !anyDuplicated(land$kvdrtkd), !anyDuplicated(e1$KVADRATKOD),
+          !anyDuplicated(e2$KVADRATKOD))
+good1 <- as.character(e1$KVADRATKOD[e1$UNDS_KODE_ %in% c(1, 2)])
+good2 <- as.character(e2$KVADRATKOD[e2$UNDS_KOD_1 %in% c(1, 2)])
+common <- Reduce(intersect, lapply(1:3, function(a) {
+  as.character(design$site[design$atlas == a & design$survey %in% y$survey])
+}))
+effort_cells <- Reduce(intersect, list(common, good1, good2))
+land_cells <- as.character(land$kvdrtkd[!is.na(land$pct_lnd) & land$pct_lnd > 25])
+cells <- sort(intersect(effort_cells, land_cells))
+stopifnot(length(cells) > 0)
+species_columns <- setdiff(names(y), "survey")
+atlases <- lapply(1:3, function(a) {
+  ids <- paste(cells, a, sep = "_")
+  stopifnot(all(ids %in% y$survey))
+  z <- as.matrix(y[match(ids, y$survey), species_columns, drop = FALSE])
+  rownames(z) <- cells
+  stopifnot(!anyNA(z), all(z %in% c(0, 1)))
+  z
+})
+names(atlases) <- paste0("Atlas", 1:3)
+stopifnot(all(vapply(atlases, function(z)
+  identical(dimnames(z), dimnames(atlases[[1]])), logical(1))))
+knitr::kable(data.frame(
+  stage = c("Rows available in all atlases", "Good/Average in both early atlases",
+            "Also strictly >25% land"),
+  cells = c(length(common), length(effort_cells), length(cells))))
+knitr::kable(data.frame(
+  atlas = names(atlases), cells = vapply(atlases, nrow, integer(1)),
+  supplied_species = vapply(atlases, ncol, integer(1)),
+  empty_rows = vapply(atlases, function(z) sum(rowSums(z) == 0), integer(1))))
+cat("Species absent in all three retained matrices:",
+    sum(Reduce(`+`, lapply(atlases, colSums)) == 0), "\n")
+```
+
+Before freezing the sample, produce a cell inclusion/exclusion table with each
+criterion, an inclusion map (PNG), and a species inclusion table. Investigate empty
+rows if any occur. Atlas 3 has no additional effort requirement. If a row represents missing survey
+data, exclude that cell from **all** atlases and rerun the entire analysis. Do not
+create a different valid-cell subset for each question.
+
+## Species and occurrence definitions: agreed
+
+Recommended primary pool: the fixed union of taxonomically comparable breeding
+species recorded at least once in the final shared grid across any atlas. Retain
+zeros within individual atlases so that arrivals and disappearances remain visible.
+Species absent from the retained grid in all three atlases contribute no observed
+change; exclude them from the primary pool and report their names separately.
+
+As agreed, retain all rare species: apply no minimum-occurrence threshold in any
+atlas. Do not inherit S0's minimum-five-occurrences-in-every-atlas rule, which would
+exclude rare species, arrivals and disappearances. This decision applies throughout
+all four primary analyses. A fixed HMSC-compatible pool can be a secondary comparison.
+Do not require traits or fitted-model availability for inclusion.
+
+Occurrence definitions and taxonomy were resolved upstream before this analysis,
+as confirmed by the user. Use the supplied species columns without additional
+taxonomic or breeding-status filtering. All rare species are retained.
+
+# Comparisons and interpretation
+
+Calculate Atlas 1–2, 2–3 and 1–3 using identical rows and columns. Treat 1–3 as the
+long-term summary and the two successive comparisons as its temporal context.
+They overlap and are not independent replicates. Use actual atlas survey windows
+in labels; verify them before converting changes to annual rates. Atlas midpoints
+in S0 are not a substitute for checking survey dates.
+
+Primary inference concerns recorded occurrence. Effort filtering improves
+comparability but does not estimate detection probabilities or establish that all
+observed gains/losses are biological colonisations/extirpations.
+
+# Analysis 1: magnitude and balance of occurrence change
+
+For each comparison count persistent presences (a), losses (b), gains (c), and
+persistent absences (d) across the N by S matrix. Report:
+
+- Total changed entries, b+c, and net recorded change, c-b.
+- H = (b+c)/(NS): fraction of all entries that changed.
+- J = (b+c)/(a+b+c): fraction of the temporal union that changed.
+- Counts by species and by cell to identify contributions to national totals.
+
+Check a+b+c+d=NS and c-b equals the change in total presences. H depends on the
+species pool and includes joint absences; report both H and J with denominators.
+Whole-matrix J is union-weighted across cells, not the unweighted mean local J.
+
+Outputs: a three-comparison summary table; PNG bars for persistence, loss and gain
+on common scales; ranked species contributions. Keep persistent absences in the
+table even if omitted from the bars. No independent-entry binomial significance test.
+
+## Definitions and denominators
+
+Following Q1 of the proposal (pp. 2–3), a changed occurrence entry is a loss
+(1 to 0) or gain (0 to 1) for a particular species in a particular cell.
+The primary percentage is **100(b+c)/(NS)**, including persistent absences in
+its denominator. We also report whole-matrix Jaccard **100(b+c)/(a+b+c)**,
+which excludes persistent absences.
+
+Total occupancy R is the sum of presences across the matrix (species–cell records),
+not the number of occupied grid cells or individual birds. Its net change is
+**R_later - R_earlier = c-b**. We report both **100(c-b)/R_earlier** (relative
+change from the earlier total) and **100(c-b)/(NS)** (percentage-point change
+in the fraction of entries occupied). These denominators distinguish turnover
+from net change and avoid confusing relative percentages with percentage points.
+
+These are descriptive calculations for the retained sample, without independent-entry
+significance tests. All comparisons use the same cells and all supplied species.
+Occurrence definitions and taxonomy have already been resolved upstream, as confirmed
+by the user; no additional taxonomy or breeding-status filtering is applied here.
+
+```{r analysis1-calculations}
+output_dir <- file.path("manuscript-outputs", "atlas-occurrence-change")
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+N <- nrow(atlases[[1]])
+S <- ncol(atlases[[1]])
+NS <- N * S
+pairs <- list(c(1, 2), c(2, 3), c(1, 3))
+transition_counts <- function(x, y) {
+  c(persistent_presence = sum(x == 1 & y == 1),
+    losses = sum(x == 1 & y == 0), gains = sum(x == 0 & y == 1),
+    persistent_absence = sum(x == 0 & y == 0))
+}
+results <- do.call(rbind, lapply(pairs, function(k) {
+  x <- atlases[[k[1]]]; y <- atlases[[k[2]]]
+  counts <- transition_counts(x, y)
+  a <- unname(counts[1]); b <- unname(counts[2])
+  c <- unname(counts[3]); d <- unname(counts[4])
+  earlier <- sum(x); later <- sum(y)
+  stopifnot(sum(counts) == NS, earlier == a+b, later == a+c,
+            later-earlier == c-b, sum(x != y) == b+c)
+  data.frame(comparison = paste0("Atlas ", k[1], "–", k[2]),
+    cells = N, species = S, entries = NS,
+    persistent_presence = a, losses = b, gains = c, persistent_absence = d,
+    changed_entries = b+c, changed_entries_pct = 100*(b+c)/NS,
+    jaccard_pct = if (a+b+c > 0) 100*(b+c)/(a+b+c) else NA_real_,
+    earlier_occupancy = earlier, later_occupancy = later,
+    net_occupancy_change = c-b,
+    occupancy_relative_change_pct = if (earlier > 0) 100*(c-b)/earlier else NA_real_,
+    occupancy_change_pp = 100*(c-b)/NS)
+}))
+occupancy_totals <- data.frame(
+  atlas = paste("Atlas", 1:3), cells = N, species = S, entries = NS,
+  total_occupancy = vapply(atlases, sum, numeric(1)),
+  occupied_entries_pct = 100*vapply(atlases, mean, numeric(1)))
+# Save the exact common sample and unrounded numerical summaries.
+write.csv(data.frame(site = cells, land_pct = land$pct_lnd[match(cells, land$kvdrtkd)],
+  atlas1_effort_code = e1$UNDS_KODE_[match(cells, e1$KVADRATKOD)],
+  atlas2_effort_code = e2$UNDS_KOD_1[match(cells, e2$KVADRATKOD)],
+  atlas3_effort = "Good (assumed)"),
+  file.path(output_dir, "shared-cell-manifest.csv"), row.names = FALSE)
+write.csv(data.frame(species = colnames(atlases[[1]])),
+          file.path(output_dir, "species-manifest.csv"), row.names = FALSE)
+write.csv(results, file.path(output_dir, "pairwise-occurrence-change.csv"), row.names = FALSE)
+write.csv(occupancy_totals, file.path(output_dir, "atlas-occupancy-totals.csv"), row.names = FALSE)
+```
+
+## Results
+
+The shared sample contains **`r format(N, big.mark=',')` cells** and
+**`r S` species**, giving **`r format(NS, big.mark=',')` species–cell entries**
+per atlas. All entries are binary and non-missing, and all three matrices have
+identical row and column order. No minimum-occurrence filter was applied.
+
+```{r analysis1-tables, echo=FALSE}
+knitr::kable(occupancy_totals[, c("atlas", "total_occupancy", "occupied_entries_pct")],
+  digits = 2, col.names = c("Atlas", "Total presences", "Entries occupied (%)"),
+  caption = "Total recorded occupancy on the shared grid.")
+knitr::kable(results[, c("comparison", "changed_entries", "changed_entries_pct",
+                         "jaccard_pct")], digits = 2,
+  col.names = c("Comparison", "Changed entries", "Changed / all entries (%)",
+                "Changed / temporal union (%)"),
+  caption = "Gross occurrence change: losses plus gains.")
+knitr::kable(results[, c("comparison", "net_occupancy_change",
+                         "occupancy_relative_change_pct", "occupancy_change_pp")],
+  digits = 2, col.names = c("Comparison", "Net presences gained/lost",
+                           "Change from earlier total (%)", "Occupied entries change (pp)"),
+  caption = "Net occupancy change: gains minus losses.")
+knitr::kable(results[, c("comparison", "persistent_presence", "losses", "gains",
+                         "persistent_absence")],
+  col.names = c("Comparison", "Persistent presence", "Losses", "Gains", "Persistent absence"),
+  caption = "Complete transition accounting (each row sums to the same N × S).")
+```
+
+```{r analysis1-interpretation, echo=FALSE, results='asis'}
+for (i in seq_len(nrow(results))) {
+  z <- results[i, ]
+  cat(sprintf("- **%s:** %.2f%% of all occurrence entries changed (%s losses and %s gains). Total occupancy %s by %s records (%+.2f%% relative to the earlier total), changing the fraction of entries occupied by %+.2f percentage points.\n\n",
+    z$comparison, z$changed_entries_pct,
+    format(z$losses, big.mark=","), format(z$gains, big.mark=","),
+    if (z$net_occupancy_change >= 0) "increased" else "decreased",
+    format(abs(z$net_occupancy_change), big.mark=","),
+    z$occupancy_relative_change_pct, z$occupancy_change_pp))
+}
+```
+
+Gross change counts both gains and losses; net occupancy change allows them to
+cancel. Their difference shows how much rearrangement is hidden by the change in
+total presences. These are changes in recorded distributions within the shared
+sample, not estimates of bird abundance change.
+
+```{r analysis1-figure, echo=FALSE, fig.width=11, fig.height=4.5, fig.cap="Gross occurrence change and net occupancy change for the same cells and species. Panel denominators differ and are labelled explicitly."}
+library(ggplot2)
+plot_data <- rbind(
+  data.frame(comparison = results$comparison,
+    metric = "Changed entries (% of all entries)", value = results$changed_entries_pct),
+  data.frame(comparison = results$comparison,
+    metric = "Net occupancy change (% of earlier total)",
+    value = results$occupancy_relative_change_pct))
+plot_data$comparison <- factor(plot_data$comparison, levels = results$comparison)
+plot_data$metric <- factor(plot_data$metric, levels = unique(plot_data$metric))
+p <- ggplot(plot_data, aes(comparison, value, fill = metric)) +
+  geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.4) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%.2f%%", value)),
+            vjust = ifelse(plot_data$value >= 0, -0.5, 1.4), size = 4) +
+  facet_wrap(~metric, scales = "free_y") +
+  scale_fill_manual(values = c("#287D8E", "#D98437")) +
+  scale_y_continuous(expand = expansion(mult = c(.15, .2))) +
+  labs(x = NULL, y = "Percent", subtitle = paste(format(N, big.mark=","),
+       "shared cells ·", S, "species")) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.x = element_blank(), strip.text = element_text(face = "bold"))
+ggsave(file.path(output_dir, "occurrence-and-occupancy-change.png"), p,
+       width = 11, height = 4.5, dpi = 200, bg = "white")
+print(p)
+```
+
+```{r analysis1-session, include=FALSE}
+writeLines(capture.output(sessionInfo()), file.path(output_dir, "session-info.txt"))
+```
+
+
+# Analysis 2: occupancy distribution and species-specific range changes
+
+For every species and atlas calculate occupied-cell count r and occupancy p=r/N.
+Use the same N and species list everywhere. Produce:
+
+1. Identical-bin histograms, explicitly separating zero occupancy.
+2. Overlaid empirical cumulative distributions (ECDFs).
+3. Species-matched scatterplots for each comparison, with equality lines.
+4. A species table of counts, signed changes and gains/losses, highlighting the
+   largest expansions/contractions and changes to/from zero.
+
+Summarise medians, 10th/90th percentiles, zeros and occupancy classes (proposed
+reporting bins: 0, >0–10%, >10–50%, >50%; these are not ecological thresholds).
+Report Wasserstein-1 distance W1=mean(abs(sort(p_later)-sort(p_earlier))), mean
+signed species change, and mean absolute matched change M.
+
+Check W1 <= M <= H. W1 measures distributional change without retaining species
+identity; M retains identity but not geography. Mean occupancy and mean cell richness
+are algebraically related, not independent evidence. Report proportional differences
+in percentage points, alongside raw occupied-cell counts.
+
+Primary analysis is descriptive. Do not add an independent-sample KS test or interpret
+a non-significant test as distributional stability. A formal repeated-distribution
+test or equivalence claim would require a separate inferential target and calibration.
+Use alternative histogram bins and a presence-only distribution as labelled sensitivities.
+
+# Analysis 3: local community change and departures from a null
+
+## Observed change
+
+For each cell and comparison calculate a_i, b_i, c_i, raw richness change c_i-b_i,
+and temporal Jaccard TBI_i=(b_i+c_i)/(a_i+b_i+c_i). Split TBI into loss contribution
+b_i/union and gain contribution c_i/union. These sum to TBI and preserve direction.
+
+Outputs: PNG maps of TBI, raw losses, raw gains and net richness change, with
+consistent scales across comparisons; distributions and a cell-level result table.
+A high proportion in a species-poor cell can reflect only a few changes, so retain
+raw counts. Optional replacement/nestedness partitions answer a different question
+and should not be labelled loss/gain components.
+
+## Conditional allocation model
+
+For each species and atlas pair, fix the earlier map and observed numbers of losses
+and gains. Allocate losses among earlier occupied cells and gains among earlier
+unoccupied cells. Repeat and compute local TBI each time.
+
+This asks whether local change is unusually concentrated **given national species
+transition totals**. It preserves endpoint occupancies and species transition counts,
+but not later cell richness, spatial clustering or dependence among species' changes.
+It does not test whether national change occurred or identify environmental drivers.
+
+The major unresolved choice is which locations are eligible for exchange:
+unrestricted national allocation is a transparent benchmark; regional allocation
+conditions additionally on regional transitions. Define regions independently of the
+observed changes, inspect eligible-cell counts, and examine sensitivity. Spatial
+blocks for uncertainty estimation are a separate choice from these allocation strata.
+
+Report observed TBI, mean expected TBI and observed-minus-expected TBI. For inferential
+maps, also use each full null distribution and explicitly choose multiplicity control.
+Holm across all cells and three comparisons controls familywise error if individual
+p-values are valid, but can require very large simulation counts. With m tests, at
+least ceiling(m/0.05)-1 simulations are needed merely for the minimum plus-one
+p-value to reach the first 5% Holm threshold. This is not a precision recommendation.
+FDR requires a justified procedure for the dependence structure. Continuous excess
+maps can be reported without declaring cells significant.
+
+Run a small pilot for correctness and runtime; choose final repetitions from the
+required tail resolution and Monte Carlo precision. Save seed, constraints and
+simulation settings. Each pair's null is separate, not a coherent joint three-atlas
+simulation.
+
+# Analysis 4: homogenisation or heterogenisation among cells
+
+Within each atlas, calculate Jaccard dissimilarity for all unordered distinct cell
+pairs and take their equal-weight mean beta. For each temporal comparison calculate
+Delta_beta = beta_later-beta_earlier. Negative values indicate observed
+homogenisation; positive values indicate heterogenisation.
+
+Outputs: a table and PNG of atlas means and signed differences; use the same spatial
+extent, species pool and cell-pair weighting in all atlases. Do not treat the
+N(N-1)/2 distances as independent observations.
+
+Use the same conditional allocation model as Analysis 3 to calculate the null
+distribution of Delta_beta. This assesses the spatial arrangement of gains and losses
+conditional on national transitions. Report the observed sign separately from its
+position in the null distribution. A positive change below the null expectation is
+less heterogenisation than expected, not observed homogenisation.
+
+Pre-specify a two-sided departure test unless there is a directional hypothesis
+chosen before inspecting results; define the family of three global comparisons.
+The null does not preserve individual cell richness. Fixing both row totals and
+species transition totals would require a separately validated constrained sampler.
+
+A national all-pairs average mixes spatial distances. Recommended secondary analysis:
+repeat within pre-defined distance bands or neighbourhoods, fixed across atlases,
+to distinguish nearby from broad-scale change. Choose distances from ecological
+scale and grid geometry, not from the most striking result. Optional
+replacement/nestedness partitions may explain which component changes.
+
+For computational efficiency, calculate the observed all-pairs statistic exactly
+in chunks if needed. Do not recompute an expensive national distance matrix for every
+replicate used only to refine local p-values. Use a separate, adequate global simulation
+budget from the same null model; if sampling pairs, fix the pair sample across atlases
+and replicates and quantify approximation error.
+
+# Cross-cutting choices and proposed defaults
+
+| Choice | Proposed primary treatment | Status |
+|---|---|---|
+| Shared cells | Good/Average in both early atlases, >25% land, rows in all three | User specified; audit passed |
+| Atlas 3 effort | Assume Good in all cells; no effort estimate exists | User specified |
+| Species pool | Fixed union observed in retained cells; retain period-specific zeros | Upstream definitions accepted; rare species retained |
+| Minimum occurrences | Retain all rare species; no minimum threshold in any atlas | User specified |
+| Missing values | Never interpret as zero; resolve and freeze one common mask | Required |
+| Genuine empty communities | Investigate first; if real, explicitly define double-empty Jaccard | Unresolved if present |
+| Weighting | Equal cells, equal species contributions as defined, equal distinct cell pairs | Recommended |
+| Atlas contrasts | All three; long-term summary plus successive intervals | Recommended |
+| Allocation null | Fixed baseline and species gains/losses; compare national and justified regional constraints | Region choice pending |
+| Local significance | Excess maps primary; corrected tests only with defensible null and adequate precision | Decision pending |
+| Global null comparisons | Two-sided unless pre-specified directional hypothesis; adjust three comparisons | Recommended |
+| Confidence intervals | Only with explicit spatial-process target and checked block design | Optional, separate from allocation null |
+| Sensitivities | Good-only shared grid; species pool; bins; null strata; spatial scale | Recompute all relevant contrasts consistently |
+| Figures | PNG only | User specified |
+
+A fixed set of recorded atlas entries has directly calculable descriptive statistics.
+Confidence intervals require a target beyond those fixed entries. If spatial-process
+uncertainty is wanted, resample entire spatial blocks carrying all species and all
+three atlas histories together. Inspect spatial dependence and regional variation,
+choose several defensible block sizes/layouts, and assess coverage before interpreting
+intervals. Such intervals do not correct detection error. Do not bootstrap the list
+of pairwise distances or independently resample each atlas.
+
+For a genuine pair of empty communities, Jaccard's denominator is zero. Possible
+policy: assign zero dissimilarity, explicitly treating joint absence as similarity,
+and check sensitivity. For one empty and one nonempty community Jaccard is one.
+Apply any chosen policy to observations and all simulations; never silently drop
+undefined replicates. If emptiness represents missing coverage, fix the common
+sample instead.
+
+# Work sequence and completion checks
+
+1. Use the upstream occurrence definitions and taxonomy, retaining all rare species
+   and assuming Good Atlas 3 coverage. The shared cell and species manifests are
+   saved by Analysis 1; the current sample has no empty or missing rows.
+2. Build aligned binary matrices and validate identifiers, dimensions and counts.
+3. Complete all four descriptive analyses and inspect species/cell contributors.
+4. Agree allocation strata and inferential claims; pilot null simulations and
+   check preserved transition totals exactly.
+5. Run appropriately sized null analyses, multiplicity control and selected
+   sensitivities. Add spatial-process intervals only if justified and useful.
+6. Write results around effect sizes, directions, species and places. Link patterns
+   to subsequent environmental analyses without claiming causation here.
+
+The final R Markdown should retain the explanations above beside executable sections,
+load saved expensive simulations rather than rerunning them on every knit, record
+session information and seeds, and produce tables plus PNG figures. Every sensitivity
+uses its own explicitly labelled fixed sample across all three atlases; it does not
+silently change the primary grid.

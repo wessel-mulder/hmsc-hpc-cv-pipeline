@@ -1,53 +1,49 @@
-# HMSCPipeLine
-A pipeline for running HMSC
+# Chapter 1 HMSC Reproducibility Repository
 
-This readme file is a work in progress
+This repository is being organized as the publication-facing reproducibility archive for Chapter 1. Its practical target is to reproduce the current manuscript figures and tables from documented derived data products plus local-only bulky model artifacts.
 
-# Instuctions
-## Data format
-The code is written assuming that your data are stored in csv files, this is preferable for long term data storage as these files will remain readable. Alternatively, data can be stored as a RData file, with an object for each input matrix.
-Matrix formats are as follows:
+## Folder map
 
-__ADD TABLE__
+- `scripts/`: publication-facing scripts, ordered from preprocessing through HMSC fitting and figure/table generation.
+- `data-new/0-pre/raw/`: source-like inputs that are small enough to keep locally here. Check source permissions before public release.
+- `data-new/0-pre/derived/`: lightweight analysis-ready products used by the HMSC prep and figure/table scripts.
+- `intermediate-outputs/`: compact model summaries, GWR summaries/caches, and the reproducibility index.
+- `manuscript-outputs/`: final manuscript figures and tables promoted from the working analysis folders.
 
-## HPC VS R
-There are two methods for fitting the model, one outputs an RDS file which can be fitted using the Tensorflow based HPC fitting.
+The older `Data/`, `HmscOutputs/`, `misc-figures/`, and `.codex-work/` folders are migration and provenance sources. New publication-facing work should avoid writing there.
 
-# File structure
-There are multiple ways to structure how the outputs are saved. For the HPC approach, I currently make use of single model runs withing stored as follows:
-- Hmsc outputs
-  - <Model_Name>
-    - Models
-      - Fitted
-      - INITS
-      - Raw_HPC
-      - Temp
-      - Unfitted
-    - Results
-      - Preds
+## Quick start
 
-For R based fitting fewer output files are required and if you wish to set up multiple models as listed in the University of Helsinkis HMSC Course pipeline a completelly different file structure can be used.
+Run commands from the repository root.
 
-# HPC
-## General format
-The Fit_HMSC_Model and Fit_HMSC_Model_KFold are set up so that they can be submitted using SLRUM as follows:
+```sh
+Rscript scripts/4-post/fig1-vp-effect-sizes.R
+Rscript scripts/4-post/fig2-trait-influence-gamma-atlas-support.R
+Rscript scripts/4-post/methods-analysis-grid-cells.R
+Rscript scripts/4-post/sfig-full-vs-cv-accuracy.R
+Rscript scripts/4-post/sfig-raptor-species-full-tjur-prevalence-trends.R
+Rscript scripts/4-post/sfig-component-influence-sankey-bump.R
+Rscript scripts/4-post/fig10-gwr-richness-turnover-materials/fig10-gwr-richness-turnover.R
+Rscript scripts/4-post/methods-audit/make_methods_audit_csvs.R
+python3 scripts/4-post/methods-audit/make_supplementary_methods_tables_docx.py
+```
 
-sbatch --export=ALL,SAMP=<samples>,THIN=<thin>,AREA=<Area>,NAME=<Model_name> Fit_HMSC_Model.sh
+Some scripts still require local-only fitted model artifacts under `HmscOutputs/`, especially scripts that read full fitted posteriors or prediction arrays. These are documented in `intermediate-outputs/README.md` and `intermediate-outputs/reproducibility-index.csv`.
 
-- Samples: The number of samples
-- Thin: Model thinning
-- Area: If you are formatting you files so that there is a folder for each area that contains the Hmsc outputs folder use this. Else feel free to remove it from you local version of the batch script
-- Model name: The name of the model. This is the name of the colder which countains the models Models and Results subfolders.
+## Current reproducibility status
 
-NOTE: Samples and thin are only used for file matching, you must have ran and uploaded the output of S2_Model_Fitting_HPC_Version to the HPC storeage for it to run correctly 
+The current raw-input-to-S0 workflow has been rebuilt and verified: species-level
+traits, IOC taxonomy/tree, original-class environmental data, current diagnostic
+figures and the 10-predictor forest-split Hmsc input RData. Results and commands
+are documented in `scripts/0-pre/README.md` and `data-new/reproducibility/`.
 
-Fuzzy matching works for job submition, personally I recomned Fit_*el.sh and Fit_*old.sh rather then typing out the full names
+```sh
+Rscript scripts/reproduce-preprocessing.R --verify --offline
+```
 
-## File notes
-The HPC scripts assume that your data on the HPC storage is in the same folder structure as described above, however, the unfitted folder is not required and the RAW_HPC folder is named sampled.
-Sampled HPC files are merged on your local machine by S2b_HPC_output_merger, there is no need to retain the unmerged outputs locally.
-
-Batch scripts should be stored in the folder that contains are the subfolders for each Area, the way they point to files expects this. There might still be some residual file locating errors in your local setup, please double check all pointers.
-## R Scripts
-S4a_Partition_Creation and S4b_HPC_Post_Processing are required to be stored on the HPC in the same file location as the batch scripts.
-
+This offline command requires the local downloaded HILDA states and CHELSAcruts
+crop cache. These bulky inputs and Hmsc chains/checkpoints/prediction arrays are
+excluded from Git; see `data-new/LOCAL_DATA.md`. Smaller raw inputs and derived
+products are tracked. Original occurrence/design compilation is outside this
+audit. S1 loads the new S0 dataset, but model construction/fitting/prediction
+has not been validated for the revised analysis; scaling still needs review.

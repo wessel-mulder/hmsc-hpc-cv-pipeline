@@ -1,0 +1,4 @@
+atlas,period,total_starting_grid_cells,filtered_area,filtered_incomplete_environmental_variables,filtered_effort,grid_cells_retained
+1,1970s,2165,260,1,128,1776
+2,1990s,2165,260,1,54,1850
+3,2010s,2165,260,1,0,1904

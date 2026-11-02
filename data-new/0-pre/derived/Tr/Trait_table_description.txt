@@ -1,0 +1,25 @@
+TRAIT_TABLE.CSV: DATA AND PROCESSING DESCRIPTION
+Reproduce: Rscript scripts/0-pre/preparing-traits.R (from repository root).
+Trait source: data-new/0-pre/raw/traits/birdTraits-merged-all.xlsx ; sheet birdTraits-merged.
+STI source: data-new/0-pre/raw/sti/STI_Devictor.csv ; columns SPECIES and STI.
+Output columns:
+species: latin_DOF with spaces replaced by underscores; IOC subspecies collapsed to their species names.
+foraging_guild: unchanged foraging_guild_consensus from the workbook.
+migratory_strategy: unchanged numeric Migration_a3_DOF coding:
+  1 = resident
+  1.5 = resident and short-distance migrant
+  2 = short-distance migrant
+  2.5 = short- and long-distance migrant
+  3 = long-distance migrant
+STI: unchanged numeric value from the supplied Devictor file; not standardised.
+All workbook taxa retained at species level; duplicate species collapsed only if nonmissing trait values agree.
+Match species names after whitespace/underscore normalisation; apply only the six S0 name substitutions when no exact match exists.
+Subspecies are explicitly collapsed to IOC parent species BEFORE matching species-level STI. User-authorised exception: Corvus cornix is assigned the Corvus corone STI, explicitly labelled as a proxy in the audit.
+NA means unavailable, not zero. No missing values are filled except the explicit Corvus cornix STI proxy.
+Trait_table_match_audit.csv preserves original names, lookup names, match method and migration descriptions.
+Trait_table_missing_values.csv lists any rows missing guild, migration or STI.
+Rows: 226
+STI matched: 220
+STI unmatched/missing: 6
+Missing foraging guild: 4
+Missing migratory strategy: 14

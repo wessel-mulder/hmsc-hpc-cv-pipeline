@@ -1,0 +1,45 @@
+# Exploratory second-stage model of thresholded HMSC support, five land-cover predictors.
+suppressPackageStartupMessages({library(dplyr);library(tidyr);library(readxl);library(lme4);library(emmeans)})
+vars <- c(perc_urban='Urban',perc_cropland='Cropland',perc_pasture='Pasture',perc_forest='Forest',perc_grass_shrub='Grass/shrubland')
+folders <- list.dirs('intermediate-outputs/hmsc-output',recursive=FALSE,full.names=TRUE)
+folders <- folders[grepl('2026-07-27.*Atlas[123]_MinOccs5_CoverageGoodAverage$',folders)]
+stopifnot(length(folders)==3)
+dat <- bind_rows(lapply(folders,function(folder){
+ atlas <- c('1970s','1990s','2010s')[as.integer(sub('.*Atlas([123])_.*','\\1',folder))]
+ p <- read_excel(file.path(folder,'Results',paste0(basename(folder),'parameter_estimates_Beta_.xlsx')),sheet='Pr(x>0)')
+ p |> select(species=Species,all_of(names(vars))) |> pivot_longer(-species,names_to='variable',values_to='prob_positive') |>
+ mutate(atlas=atlas, variable=unname(vars[variable]),supported=as.integer(prob_positive>=.95 | prob_positive<=.05))
+})) |> mutate(atlas=factor(atlas,levels=c('1970s','1990s','2010s')),variable=factor(variable,levels=unname(vars)),species=factor(species))
+stopifnot(!anyNA(dat),all(table(dat$species)==15),nlevels(dat$species)==157)
+ctrl <- glmerControl(optimizer='bobyqa',optCtrl=list(maxfun=200000))
+full <- glmer(supported~variable*atlas+(1|species)+(1|species:variable),data=dat,family=binomial,control=ctrl)
+additive <- update(full,.~.-variable:atlas)
+lrt <- anova(additive,full,test='Chisq')
+# Sensitivity to the extra within-species, within-variable dependence term.
+simple <- glmer(supported~variable*atlas+(1|species),data=dat,family=binomial,control=ctrl)
+simple_add <- update(simple,.~.-variable:atlas)
+contr <- as.data.frame(summary(pairs(emmeans(full,~atlas|variable),adjust='none'),type='response',infer=c(TRUE,TRUE)))
+contr$p_holm_all_15 <- p.adjust(contr$p.value,method='holm')
+counts <- dat |> group_by(variable,atlas) |> summarise(n_species=n(),n_supported=sum(supported),percent_supported=100*mean(supported),.groups='drop')
+# Integrate over both random intercepts to obtain population-average expected counts.
+sd_re <- sqrt(sum(as.data.frame(VarCorr(full))$vcov))
+new <- expand.grid(variable=levels(dat$variable),atlas=levels(dat$atlas))
+eta <- predict(full,newdata=new,re.form=NA,type='link')
+new$expected_n_supported <- vapply(eta,function(z)157*integrate(function(u)plogis(z+sd_re*u)*dnorm(u),-Inf,Inf)$value,numeric(1))
+out <- 'intermediate-outputs/fig1b-association-model'
+write.csv(dat,file.path(out,'species-support.csv'),row.names=FALSE)
+write.csv(counts,file.path(out,'association-counts.csv'),row.names=FALSE)
+write.csv(new,file.path(out,'expected-counts.csv'),row.names=FALSE)
+write.csv(contr,file.path(out,'atlas-contrasts.csv'),row.names=FALSE)
+saveRDS(list(full=full,additive=additive,species_only=simple),file.path(out,'models.rds'))
+sink(file.path(out,'model-report.txt'))
+cat('Exploratory analysis of 95% posterior-support classifications; not an area-adjusted model.\n')
+print(summary(full));print(lrt)
+cat('\nSingular fit:',isSingular(full),'\nConvergence messages:\n');print(full@optinfo$conv$lme4$messages)
+cat('\nSpecies-intercept-only sensitivity:\n');print(anova(simple_add,simple,test='Chisq'))
+cat('\nObserved totals:\n');print(counts,n=15)
+cat('\nPopulation-average expected counts (random effects integrated):\n');print(new)
+cat('\nAtlas contrasts; p_holm_all_15 controls all 15 comparisons:\n');print(contr)
+cat('\nLimitations: thresholded estimated outcomes; original HMSC posterior uncertainty and phylogenetic dependence are not propagated. Atlas includes changes in environment and sampling coverage.\n')
+sink()
+print(lrt);cat('singular:',isSingular(full),'\n');print(full@optinfo$conv$lme4$messages);print(counts,n=15);print(contr)
