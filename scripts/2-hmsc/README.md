@@ -1,48 +1,98 @@
-# 2 HMSC Fitting
+# Hmsc fitting workflow
 
-This folder contains scripts and Slurm launchers for the HMSC model-fitting workflow.
+Run every command from the repository root, including Slurm submissions.
+`run-config.tsv` defines the run date **2026-11-02**, 250 retained samples per
+chain, sampler thinning 100, transient 100000, four chains, ten random folds,
+and seed 369. Environment variables with the same names override defaults.
+`CH1_MODEL_OUTPUT_DIR` defaults to ignored `HmscOutputs/`.
 
-## Main Workflow
+Downstream `CH1_POSTERIOR_THIN=1` uses **all retained post-burn-in draws**:
+1000 for a production four-chain fit. S3 and S7 always summarise all retained
+draws. Sampler thinning 100 is unchanged. `CH1_OVERWRITE=false` prevents
+accidental replacement; set it to `true` deliberately to regenerate outputs.
+`CH1_NPARALLEL` defaults to one locally and the Slurm CPU allocation on HPC,
+with any explicit value capped to that allocation.
 
-- `S2_Model_Fitting_HPC_Version.R`: prepares HMSC model objects for TensorFlow/HPC fitting by exporting JSON/RDS objects.
-- `S2a_Fit_HMSC_Model.sh`: Slurm launcher for fitting full HMSC models on the HPC.
-- `S2b_HPC_output_merger.R`: merges sampled HPC output back into fitted HMSC model objects.
-- `S3_check_model_fit_TensorFlow.R`: checks fitted model convergence and diagnostics.
-- `S4_Partition_Creation.R`: creates cross-validation partitions and exports fold-specific model objects.
-- `S4a_Fit_HMSC_Model_KFold.sh`: Slurm launcher for cross-validation fitting.
-- `S4a_Fit_HMSC_Model_KFold_Launch.sh`: convenience launcher for submitting cross-validation jobs.
-- `S4b_HPC_Post_Processing.R`: post-processes HPC and cross-validation output, including model-fit metrics.
-- `S4b_HPC_Post_Processing_Launch.sh`: Slurm launcher for post-processing jobs.
-- `S5_show_model_fit.R`: summarizes model fit.
-- `S6_Making_Predictions.R`: creates model predictions and prediction-based tests.
-- `S6b_show_test_fit.R`: summarizes held-out/test prediction performance.
-- `S7_Show_parameter_estimates.R`: extracts variance partitioning, model fit, and parameter summaries.
+## Commands
 
-## Helper Folder
+```sh
+Rscript scripts/2-hmsc/S1_Model_Definitions.R
+Rscript scripts/2-hmsc/S2_Model_Fitting_HPC_Version.R
+bash scripts/2-hmsc/S2a_Fit_HMSC_Model_Launch.sh
+# Wait for all full-fit jobs to finish successfully.
+Rscript scripts/2-hmsc/S2b_HPC_output_merger.R
+Rscript scripts/2-hmsc/S3_check_model_fit_TensorFlow.R
+Rscript scripts/2-hmsc/S4_Partition_Creation.R
+bash scripts/2-hmsc/S4a_Fit_HMSC_Model_KFold_Launch.sh
+# Wait for all CV jobs to finish successfully.
+sbatch scripts/2-hmsc/S4b_HPC_Post_Processing_Launch.sh
+# Wait for post-processing to finish.
+Rscript scripts/2-hmsc/S5_show_model_fit.R
+Rscript scripts/2-hmsc/S6_Making_Predictions.R
+Rscript scripts/2-hmsc/S7_Show_parameter_estimates.R
+```
 
-- `S7_Show_parameter_estimates_scripts/`: helper scripts used by `S7_Show_parameter_estimates.R`.
+Inspect convergence diagnostics before interpreting models or continuing to
+costly downstream work. Submission scripts do not establish Slurm dependencies.
+The GPU jobs restore `myhmscstack`, source the existing cluster Conda setup,
+and activate `CH1_CONDA_ENV` (default `hmsc_fix`). CPU post-processing uses
+`CH1_POSTPROCESS_CONDA_ENV` (default `my_hmsc_env`), preserving the existing
+cluster environments. Check that the GPU environment
+contains the compatible Python Hmsc/TensorFlow versions before production use.
 
-## Current Path Caveat
+S1 uses the portable S0 RData in `data-shared/`, with 5443 surveys, 155 species
+and ten environmental predictors. It prunes the bundled IOC taxonomic surrogate
+tree to model species, treats migration and guild as factors, and passes raw
+predictors to Hmsc (`XScale=TRUE`). Spatial random effects retain the Full
+method and five latent factors. S1 does not run MCMC.
 
-These scripts still assume the original `HmscOutputs/` directory convention. In the publication structure, bulky fitted models and prediction objects should remain outside GitHub or in an external archive. Compact summaries needed for figures currently belong under `intermediate-outputs/hmsc-output/`.
+S2 exports initialization files. The new full-fit launcher submits all three
+atlases. S2b requires exactly chains 0–3 and the configured draw counts before
+merging. GPU workers record configuration, software and input checksums, write
+to temporary output names, and rename only on successful completion.
 
-Run these scripts from the repository root unless submitting a Slurm script from the HPC-side working directory.
+S3 exports parameter-level Rhat and ESS diagnostics plus summaries. It disables
+coda's additional automatic burn-in because sampler transient was already
+removed. Undefined diagnostics remain explicit. All figures are PNGs.
 
-## Current S0 dataset and readiness
+S4 saves fold assignments and independent thread seeds and exports 40 files per
+atlas. Re-running with `CH1_OVERWRITE=true` reuses those assignments/seeds and
+requires the fitted input checksum to match. The CV launcher submits threads
+1–40 for every atlas. S4b imports one fold at a time, concatenates chains,
+checks exact prediction dimensions, and computes MF, MFCV and WAIC. Filenames
+consistently use `.rdata` for model-fit results.
 
-S0 now reads the new `data-new/0-pre` inputs and writes the ten-predictor
-forest-split RData plus audits to `data-new/2-hmsc/derived/`. Reproduce and
-validate it with `scripts/reproduce-preprocessing.R`; see `scripts/0-pre/README.md`.
-S1 loads the portable shared RData and its bundled tree. Model construction
-has been tested for all three atlases: 10 environmental variables, 155 species
-and 155 tree tips per model. No MCMC fitting or prediction has been run for the
-revised dataset; subsequent scripts and scaling conventions require review.
+Validation uses **random folds**, measuring interpolation among sampled cells,
+not spatially blocked transfer. Full-run predictor scaling is retained within
+folds, matching Hmsc's existing CV convention. It uses no held-out responses
+to estimate those predictor means/standard deviations.
 
-## Portable HPC inputs
+S5 exports species-level training/CV metrics with finite-value plotting checks.
+S6 saves environmental response curves separately per variable, using stored
+training scaling. Its default uses all retained draws. Cross-atlas tests are
+removed; S6b is retired and only displays an explanatory error.
+S7 exports posterior means, intervals and sign supports, existing Beta/Gamma/
+Omega workbooks, variance partitions, and all five latent-factor Alpha
+summaries. Latent-factor identities are not comparable between independent
+atlas models. Output figures use separate numbered PNG pages.
 
-S0 also exports its final RData with bundled taxonomy tree into tracked `data-shared/`.
-Local `Data/` and `data-new/` are no longer tracked. S1 loads exclusively from
-`data-shared/` and creates its output root if necessary. Run S1 from the
-repository root on the HPC; set `CH1_MODEL_OUTPUT_DIR` for another output path.
-This supersedes the older path caveats above. Fitting and prediction scaling
-still require their own checks; no MCMC sampling is performed by S1.
+Each R stage also accepts one configured model folder name as its sole argument.
+The resolver requires exactly one folder per atlas/date and rejects ambiguous
+runs. Stage provenance records effective settings, input checksums and R
+versions. Production outputs remain outside Git tracking.
+
+## Local validation
+
+```sh
+Rscript scripts/2-hmsc/tests/check-S1-model-definitions.R /path/to/S1/output
+Rscript scripts/2-hmsc/tests/check-pipeline.R /tmp/new-unique-smoke-output
+```
+
+The smoke test uses tiny, deliberately short R fits and exercises HPC
+serialization/import with R-generated posterior draws. It is a functionality
+check, not evidence of model convergence or validation of the cluster's Python
+sampler. It checks all three atlases, retained draw counts, five Alpha factors,
+raw-predictor scaling equivalence, missing-chain rejection, prediction
+shape checks and ambiguous-folder rejection. No HPC jobs are submitted.
+Real-data S1 construction and S2 initialization exports have also been checked
+for all three atlases. Production MCMC and cluster execution remain to be run.

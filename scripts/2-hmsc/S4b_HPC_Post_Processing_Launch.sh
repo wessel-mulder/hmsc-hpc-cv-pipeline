@@ -1,22 +1,22 @@
 #!/bin/bash
-#!/bin/bash
 #SBATCH --partition=cpuqueue
 #SBATCH --cpus-per-task=20
 #SBATCH --mem-per-cpu=2GB
-#SBATCH --time=03:00:00
-#SBATCH --array=0-1
-#SBATCH --mail-type=BEGIN,END,FAIL   # Alerts for start, finish, and crashes
+#SBATCH --time=04:00:00
+#SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=bhr597@sund.ku.dk
-
-# Load Conda into the shell
-module restore myhmscstack 
+#SBATCH --array=0-2
+# Run from repository root: sbatch scripts/2-hmsc/S4b_HPC_Post_Processing_Launch.sh
+set -euo pipefail
+source scripts/2-hmsc/helpers/config.sh
+: "${SLURM_ARRAY_TASK_ID:?Submit as an array job}"
+module restore myhmscstack
 source /opt/software/anaconda3/2021.05/etc/profile.d/conda.sh
-conda activate my_hmsc_env
-
-MODELS=(
-  "2026-03-13_06-58-56_Atlas1_MinOccs5_CoverageGoodAverage"
-  "2026-03-13_06-58-56_Atlas2_MinOccs5_CoverageGoodAverage"
-)
-THIN_VAL=10
-
-srun Rscript --verbose S4b_HPC_Post_Processing.R $THIN_VAL "${MODELS[$SLURM_ARRAY_TASK_ID]}"
+conda activate "$CH1_POSTPROCESS_CONDA_ENV"
+models_file=$(mktemp)
+trap 'rm -f "$models_file"' EXIT
+Rscript scripts/2-hmsc/helpers/list-models.R > "$models_file"
+models=()
+while IFS= read -r model; do models+=("$model"); done < "$models_file"
+(( SLURM_ARRAY_TASK_ID >= 0 && SLURM_ARRAY_TASK_ID < ${#models[@]} )) || exit 1
+srun Rscript scripts/2-hmsc/S4b_HPC_Post_Processing.R "${models[$SLURM_ARRAY_TASK_ID]}"

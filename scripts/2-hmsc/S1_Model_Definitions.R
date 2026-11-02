@@ -1,232 +1,99 @@
-#### Hmsc analyses on ####
-#General cleaning of the workspace
-remove(list=ls())
-print('loading libraries')
+# Construct separate, unfitted atlas models from the portable S0 inputs.
+# Run from repository root: Rscript scripts/2-hmsc/S1_Model_Definitions.R
+# CH1_MODEL_OUTPUT_DIR may redirect outputs (default: HmscOutputs).
+source('scripts/2-hmsc/helpers/pipeline.R')
+suppressPackageStartupMessages({library(Hmsc); library(ape)})
 
-# 1. SET THE LIBPATH GLOBALLY FIRST
-# This ensures any parallel workers created later inherit this path
-.libPaths(c("~/Rlibs", .libPaths()))
+input_file <- 'data-shared/preprocessed_data_min_occs_is_5_coverage_is_good_and_average_forest_split.RData'
+output_dir <- cfg$root
+atlas_models <- 1:3
+run_id <- cfg$run_date
 
-require(Hmsc)
-require(dplyr)
-require(ape)
-#### Set up directories #### 
-#If you are using RStudio this will set the working directory to exactly where the file is 
-localDir = Sys.getenv("CH1_MODEL_OUTPUT_DIR", "./HmscOutputs")
-dir.create(localDir, recursive = TRUE, showWarnings = FALSE)
-dataDir = "./data-shared"
-date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+# S0 owns filtering, predictor selection and alignment. Load its five objects once.
+if (!file.exists(input_file)) stop('S0 output not found: ', input_file)
+inputs <- new.env(parent=emptyenv())
+load(input_file, envir=inputs)
+stopifnot(all(c('X','Y','Tr','Design','phy') %in% ls(inputs)))
+X <- inputs$X; Y <- inputs$Y; Tr <- inputs$Tr; Design <- inputs$Design
+expected_predictors <- c('tmean_breeding','prec_breeding','hh','perc_cropland',
+                         'perc_urban','perc_pasture','perc_grass_shrub',
+                         'perc_forest_deciduous','perc_forest_evergreen','perc_forest_mixed_other')
+stopifnot(identical(colnames(X),expected_predictors),
+          identical(rownames(X),rownames(Y)), identical(rownames(Y),rownames(Design)),
+          identical(colnames(Y),rownames(Tr)), !anyDuplicated(rownames(X)),
+          all(vapply(X,is.numeric,logical(1))), all(is.finite(as.matrix(X))),
+          !anyNA(Y), all(as.matrix(Y) %in% c(0,1)), !anyNA(Tr),
+          all(atlas_models %in% as.integer(as.character(Design$atlas))),
+          all(is.finite(Design$lon)), all(is.finite(Design$lat)))
 
-#### Model specs ####
-guild_models <- c('All')
-variable_models <- c('All')   # 10 S0 predictors: climate, heterogeneity, seven cover variables 
-coverages <- c('GoodAverage')
-atlas_models <- c(1,2,3)
-min_occs2run <- c(5)
-guild2run <- guild_models[[1]]
-variable2run <- variable_models[[1]]
-atlas_model <- atlas_models[[1]]
-min_occs <- min_occs2run[[1]]
-coverage <- coverages[[1]]
-
-for(coverage in coverages){
-for(min_occs in min_occs2run){
-for(atlas_model in atlas_models){
-for(guild2run in guild_models){
-for(variable2run in variable_models){
-# assign correct names 
-guild <- guild2run
-variables <- variable2run
-atlas <- atlas_model
-# make description
-model_description = paste(as.character(date),
-                          #guild,
-                          #variables,
-                          paste('Atlas',atlas,sep=''),
-                          paste('MinOccs',min_occs,sep=''),
-                          paste('Coverage',coverage,sep=''),
-                          sep='_')
-
-#### Edit the data ####
-# If the data are saved as an RData file
-# S0 retains >=5 occurrences in each atlas and ocean + freshwater <=75%,
-# with the configured survey-coverage rule and complete environmental predictors.
-if(coverage=='Good'){coveragerename='good'}
-if(coverage=='GoodAverage'){coveragerename='good_and_average'}
-input_file <- file.path(dataDir, sprintf("preprocessed_data_min_occs_is_%s_coverage_is_%s_forest_split.RData",
-                                         min_occs, coveragerename))
-if (!file.exists(input_file)) stop("S0 output not found: ", input_file, ". Run scripts/2-hmsc/S0_Data_Definitions.R first.")
-load(input_file)
-stopifnot(all(c("X", "Y", "Tr", "Design", "phy") %in% ls()),
-          identical(rownames(X), rownames(Y)),
-          identical(rownames(Y), rownames(Design)),
-          identical(colnames(Y), rownames(Tr)))
-
-# Subset environmental data 
-X <- X %>%
-  {
-    if (variables == "LandusePercs") {
-      select(., matches("^perc_"))
-    } else if (variables == 'Climate') {
-      select(., tmean_breeding,prec_breeding)
-    } else if (variables == 'All') {
-      select(., tmean_breeding,prec_breeding, hh,matches("^perc_"))
-      
-    }
-  }
-# Grab species from the guild 
-if(guild != 'All'){
-Y <- Y %>%
-  select(any_of(rownames(Tr)[Tr$foraging_guild_consensus == guild]))
+# Migration codes are categories, not a continuous gradient. Preserve reference choices.
+for (trait in c('Migration_a3_DOF','foraging_guild_consensus')) {
+  Tr[[trait]] <- factor(Tr[[trait]])
+  reference <- names(which.max(table(Tr[[trait]])))
+  Tr[[trait]] <- relevel(Tr[[trait]], ref=reference)
 }
-#### Prepare for model ####
-# Define model formulas for environmental and trait data
-XFormula <- as.formula(paste("~", paste(colnames(X), collapse = "+"), sep = " "))
-TrFormula <- as.formula(paste("~", paste(colnames(Tr), collapse = "+"), sep = " "))
+XFormula <- reformulate(colnames(X))
+TrFormula <- reformulate(colnames(Tr))
 
-print(XFormula)
-### GET PHYLOGENY
-# phy is bundled by S0; reload above restores the full tree for each model.
-if (!inherits(phy, "phylo")) stop("S0 phy must be an ape phylo tree")
-missing_tips <- setdiff(colnames(Y), phy$tip.label)
-if (length(missing_tips)) stop("Model species missing from bundled tree: ", paste(missing_tips, collapse=", "))
+# All atlas models share S0's species set, so validate and prune the tree once.
+phy <- inputs$phy
+if (!inherits(phy,'phylo')) stop('S0 phy must be an ape phylo tree')
+missing_tips <- setdiff(colnames(Y),phy$tip.label)
+if (length(missing_tips)) stop('Species missing from tree: ',paste(missing_tips,collapse=', '))
 phy <- keep.tip(phy,colnames(Y))
 stopifnot(setequal(phy$tip.label,colnames(Y)),length(phy$tip.label)==ncol(Y))
 
-pd_matrix <- cophenetic.phylo(phy)
-pd_matrix <- pd_matrix[sort(rownames(pd_matrix)), sort(colnames(pd_matrix))]
-pd_matrix
+# Retain provenance for both batch execution and interactive sourcing.
+file_arg <- grep('^--file=',commandArgs(trailingOnly=FALSE),value=TRUE)
+script_path <- if (length(file_arg)) sub('^--file=','',file_arg[1]) else
+  if (length(sys.frames()) && !is.null(sys.frames()[[1]]$ofile)) sys.frames()[[1]]$ofile else
+  if (requireNamespace('rstudioapi',quietly=TRUE) && rstudioapi::isAvailable())
+    rstudioapi::getSourceEditorContext()$path else NULL
+if (!is.null(script_path) && file.exists(script_path)) script_path <- normalizePath(script_path)
 
-# check if species-lists are identical
-setdiff(rownames(pd_matrix),names(Y))
-# stunning 
+for (atlas in atlas_models) {
+  idx <- which(as.character(Design$atlas)==as.character(atlas))
+  Y_sub <- Y[idx,,drop=FALSE]
+  X_sub <- X[idx,,drop=FALSE]
+  Design_sub <- droplevels(Design[idx,,drop=FALSE])
+  stopifnot(identical(rownames(Y_sub),rownames(X_sub)),
+            identical(rownames(Y_sub),rownames(Design_sub)),
+            all(vapply(X_sub,sd,numeric(1))>0))
 
-#### Grab training atlas data ####
-pattern <- paste0("_(", paste(atlas, collapse = "|"), ")$")
+  # Projected coordinates are supplied by S0 (legacy lon/lat names, EPSG:23032).
+  coordinates <- unique(data.frame(site=as.character(Design_sub$site),
+                                   X=Design_sub$lon,Y=Design_sub$lat))
+  if (anyDuplicated(coordinates$site)) stop('Inconsistent coordinates for the same site')
+  rownames(coordinates) <- coordinates$site
+  coordinates$site <- NULL
+  struc_space <- HmscRandomLevel(sData=coordinates,sMethod='Full')
+  struc_space <- setPriors(struc_space,nfMin=5,nfMax=5)
 
-Y_sub <- Y[rownames(Y)[grep(pattern, rownames(Y))],,drop=F]
-X_sub <- X[rownames(X)[grep(pattern, rownames(X))],,drop=F]
-Design_sub <- Design[rownames(Design)[grep(pattern, rownames(Design))],,drop=F]
-Design_sub$atlas <- droplevels(Design_sub$atlas)
-Design_sub$site <- droplevels(Design_sub$site)
-
-# Are the rownames identical (including order)?
-identical(rownames(Y_sub), rownames(X_sub))
-identical(rownames(Y_sub), rownames(Design_sub))
-
-setequal(rownames(Y_sub), rownames(X_sub))
-setequal(rownames(Y_sub), rownames(Design_sub))
-
-# set identical
-X_sub      <- X_sub[rownames(Y_sub), , drop = FALSE]
-Design_sub <- Design_sub[rownames(Y_sub), , drop = FALSE]
-
-stopifnot(
-  identical(rownames(Y_sub), rownames(X_sub)),
-  identical(rownames(Y_sub), rownames(Design_sub))
-)
-
-setdiff(colnames(Y_sub),
-        rownames(Tr))
-
-# get random effects for space
-proj_xycoords_unique <- unique(
-  data.frame(
-    site = Design_sub$site,
-    X    = Design_sub$lon,
-    Y    = Design_sub$lat,
-    stringsAsFactors = FALSE
-  )
-)
-rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
-proj_xycoords_unique$site <- NULL
-
-struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
-struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
-nrow(struc_space$s)
-
-# set factors of traits to determine level orders 
-# mig
-Tr$Migration_a3_DOF <- as.factor(Tr$Migration_a3_DOF)
-most_common <- names(which.max(table(Tr$Migration_a3_DOF)))
-Tr$Migration_a3_DOF <- relevel(Tr$Migration_a3_DOF, ref = most_common)
-# guild
-Tr$foraging_guild_consensus <- as.factor(Tr$foraging_guild_consensus)
-most_common <- names(which.max(table(Tr$foraging_guild_consensus)))
-Tr$foraging_guild_consensus <- relevel(Tr$foraging_guild_consensus, ref = most_common)
-
-# scale 
-vars_to_scale <- colnames(X_sub)
-X_sub[vars_to_scale] <- scale(X_sub[vars_to_scale])
-
-model = Hmsc(Y = Y_sub,
-                     XData = X_sub,
-                     XFormula = XFormula,
-                     TrData = Tr,
-                     TrFormula = TrFormula,
-                     phyloTree = phy,
-                     studyDesign = Design_sub[,c('site'),drop=F],
-                     ranLevels = list('site'=struc_space),
-                     distr='probit')
-print(model)
-#### Save model ####
-#These lists are left over from the orginal pipeline which had multiple models
-#defined at the same time
-models = list(model)
-names(models) = c(model_description)
-
-#Check if the model with this description has been created before, if not create
-#both the model and results directories and all sub folders
-ModelDir = file.path(localDir, sprintf("%s",model_description))
-save.dir = file.path(ModelDir, "Models")
-results.dir = file.path(ModelDir, "Results")
-test.dir = file.path(ModelDir, "Tests")
-
-if(!dir.exists(save.dir)){
-  dir.create(ModelDir)
-  dir.create(save.dir)
-  for(x in c("Fitted","Raw_HPC","Unfitted","INITS","Temp","Logs","Logs_CV","Sampled")){dir.create(file.path(save.dir,x))}
-  if(!dir.exists(results.dir)){dir.create(results.dir)}
-  if(!dir.exists(test.dir)){dir.create(test.dir)}
-} else {
-  cat(sprintf("\n%1$s\nWARNING\n%1$s\nThis model has been ran before, unfitted model file being over written\n",strrep("-",10)))
+  # Hmsc is the single scaling owner; retain raw XData and training scale parameters.
+  model <- Hmsc(Y=Y_sub,XData=X_sub,XFormula=XFormula,XScale=TRUE,
+                TrData=Tr,TrFormula=TrFormula,phyloTree=phy,
+                studyDesign=Design_sub[,'site',drop=FALSE],
+                ranLevels=list(site=struc_space),distr='probit')
+  model_description <- paste0(run_id,'_Atlas',atlas,'_MinOccs5_CoverageGoodAverage')
+  # S2 loads models[[1]]; preserve this interface and the existing directory structure.
+  models <- setNames(list(model),model_description)
+  model_dir <- file.path(output_dir,model_description)
+  folders <- c(file.path('Models',c('Fitted','Raw_HPC','Unfitted','INITS','Temp','Logs','Logs_CV','Sampled')),
+               'Results','Tests')
+  for (folder in folders) dir.create(file.path(model_dir,folder),recursive=TRUE,showWarnings=FALSE)
+  unfitted_dir <- file.path(model_dir,'Models','Unfitted')
+  destination <- file.path(unfitted_dir,'unfitted_models.RData')
+  if (file.exists(destination)) stop('Refusing to overwrite an existing model: ',destination)
+  save(models,file=destination)
+  if (!is.null(script_path) && file.exists(script_path)) {
+    if (!file.copy(script_path,file.path(unfitted_dir,paste0(run_id,'_S1_Model_Definitions.R'))))
+      stop('Could not copy S1 for provenance')
+  } else warning('Could not locate S1 for provenance')
+  writeLines(c(paste('S0 input:',input_file),paste('Input MD5:',unname(tools::md5sum(input_file))),
+               paste('Training atlas:',atlas),'Predictor scaling: Hmsc XScale=TRUE; XData is unscaled.',
+               'Spatial method: Full; latent factors fixed at five. Distribution: probit.',
+               'No cross-atlas test files generated.',capture.output(sessionInfo())),
+             file.path(unfitted_dir,'model_definition_notes.txt'))
+  provenance(unfitted_dir,'S1_Model_Definitions',input_file)
+  message('Saved Atlas ',atlas,': ',nrow(Y_sub),' surveys, ',ncol(Y_sub),' species, ',ncol(X_sub),' predictors -> ',destination)
 }
-save(models, file = file.path(save.dir, "Unfitted", "unfitted_models.RData"))
-
-#### Store a copy of the script #### 
-# --- Backup this script in Unfitted folder ---
-args <- commandArgs(trailingOnly = FALSE)
-script_path <- NULL
-
-# Detect current script path
-file_arg <- grep("--file=", args, value = TRUE)
-if (length(file_arg) > 0) {
-  # Works for Rscript or batch jobs
-  script_path <- normalizePath(sub("--file=", "", file_arg))
-} else if (requireNamespace("rstudioapi", quietly = TRUE) &&
-           rstudioapi::isAvailable()) {
-  # Fallback for interactive runs in RStudio
-  script_path <- normalizePath(rstudioapi::getSourceEditorContext()$path)
-} else if (!is.null(sys.frames()) && !is.null(sys.frames()[[1]]$ofile)) {
-  # Another fallback
-  script_path <- normalizePath(sys.frames()[[1]]$ofile)
-}
-
-if (!is.null(script_path) && file.exists(script_path)) {
-  backup_file <- file.path(
-    save.dir, "Unfitted",
-    paste0(format(Sys.time(), "%Y-%m-%d_%H-%M-%S_"), basename(script_path))
-  )
-  file.copy(script_path, backup_file, overwrite = TRUE)
-  message("Script copied to: ", backup_file)
-} else {
-  warning("Could not determine script path for backup")
-}
-
-}
-}
-}
-}
-}
-
-

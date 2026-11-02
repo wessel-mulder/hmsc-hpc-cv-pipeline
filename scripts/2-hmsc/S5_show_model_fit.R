@@ -1,93 +1,25 @@
-print('loading packages')
-.libPaths(c("~/Rlibs", .libPaths()))
-require(Hmsc)
-require(cli)
-
-#Define the plotting function
-plot_CV = function(type){
-  #This sets the limits and values that change based on the metric, it outputs a
-  #list where item 1 is abs(lower limit), item 2 is upper limit, item 3 is vline
-  #value and item 4 is hline value
-  limit = switch(type,
-                 "RMSE"= c(rep(max(cMF[[type]],cMFCV[[type]]),2),0,0),
-                 "AUC" = c(0,1,0.5,0.5),
-                 "O.AUC" = c(0,1,0.5,0.5),
-                 c(rep(1,2),0,0))
-  plot(cMF[[type]],cMFCV[[type]],xlim=c(-limit[1],limit[2]),ylim=c(-limit[1],limit[2]),
-       xlab = "explanatory power",
-       ylab = "predictive power",
-       main=sprintf("%s:\n%s thin = %i, samples = %i\nMF: mean(%1$s) = %.4f MFSCV: mean(%1$s) = %.4f",
-                    type,modelnames,thin,samples,mean(cMF[[type]],na.rm=TRUE),
-                    mean(cMFCV[[type]],na.rm=TRUE)))
-  
-  # 
-  # main=paste0(modelnames,", thin = ",
-  #             as.character(thin),
-  #             ", samples = ",as.character(samples),
-  #             ": Tjur R2.\n",
-  #             "mean(MF) = ",as.character(mean(cMF[[type]],na.rm=TRUE)),
-  #             ", mean(MFCV) = ",as.character(mean(cMFCV[[type]],na.rm=TRUE))))
-  abline(0,1)
-  abline(v=limit[3])
-  abline(h=limit[4])
-}
-
-### Set up directories #### 
-#If you are using RStudio this will set the working directory to exactly where the file is 
-### Set up directories ####
-pattern2match <- "2026-02-10"
-  
-matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
-matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
-
-for(folders2match in matching_folders){
-models_description = folders2match
-
-getwd()
-localDir = "./HmscOutputs"
-ModelDir = file.path(localDir, sprintf("%s/Models/Fitted",models_description))
-TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
-ResultDir = file.path(localDir, sprintf("%s/Results",models_description))
-
-
-samples_list = c(250)
-thin_list = c(100)
-transient = 100000
-nParallel = 10
-nChains = 4
-nfolds = 5
-
-nst = length(thin_list)
-
-for (Lst in nst:1) {
-  thin = thin_list[Lst]
-  samples = samples_list[Lst]
-  
-  filename = file.path(ModelDir,sprintf("MF_samples_%.4d_thin_%.2d_chains_%.1d_nfolds_%.1d.rdata",
-                                        samples, thin, nChains,nfolds))
-  if(file.exists(filename)){
-    cli_alert_success("Check good\nFile: {.file {filename}} exists")
-    break} else{
-      cli_alert_danger("Check BAD\nFile: {.file {filename}} does not exist\nRun computing model fit script for:\nThin: {.strong  {thin}} \tSamples: {.strong  {samples}}\tChains: {.strong  {nChains}}\tFolds: {.strong  {nfolds}}")
-    }
-}
-
-if(file.exists(filename)){
-  cli_progress_step("Loading File")
-  load(filename)
-  cli_progress_done()
-  modelnames = models_description
-  
-  pdf(file = file.path(ResultDir,paste0("/",models_description,"_model_fit_nfolds_",nfolds,".pdf")))
-  
-  cMF = MF
-  cMFCV = MFCV
-  
-  for(x in names(cMF)){
-    cli_progress_step("Plotting {x}")
-    plot_CV(x)
-    cli_progress_done()
+source('scripts/2-hmsc/helpers/pipeline.R')
+for (name in model_names()) {
+  p <- paths(name); result <- read_objects(p$fit,c('MF','MFCV'))
+  metrics <- intersect(names(result$MF),names(result$MFCV))
+  destination <- file.path(p$results,'model_fit_by_species.csv');check_destination(destination)
+  m <- read_objects(p$unfitted,'models')$models[[1]]
+  output <- list()
+  open_png(file.path(p$results,'model_fit'))
+  for (metric in metrics) {
+    x <- result$MF[[metric]]; y <- result$MFCV[[metric]]
+    if (!is.numeric(x) || !is.numeric(y) || length(x)!=m$ns || length(y)!=m$ns) next
+    output[[metric]] <- data.frame(species=colnames(m$Y),metric=metric,training=x,CV=y)
+    keep <- is.finite(x)&is.finite(y)
+    if (!any(keep)) {plot.new();title(paste(metric,': no finite estimates'));next}
+    limits <- range(c(x[keep],y[keep]))
+    if (diff(limits)==0) limits <- limits+c(-.05,.05)
+    plot(x[keep],y[keep],xlim=limits,ylim=limits,pch=19,cex=.6,
+         xlab='Training fit',ylab=paste(cfg$nfolds,'fold CV fit'),main=paste(name,metric,sep='\n'))
+    abline(0,1,lty=2)
+    if (metric %in% c('AUC','O.AUC')) {abline(h=.5,v=.5,col='grey')}
   }
   dev.off()
-}
+  write.csv(do.call(rbind,output),destination,row.names=FALSE)
+  provenance(p$results,'S5_show_model_fit',c(p$fit,p$unfitted))
 }
