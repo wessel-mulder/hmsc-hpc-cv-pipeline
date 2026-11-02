@@ -4,7 +4,7 @@
 SAMPLES=250
 THIN=100
 MODELS=(
-"2026-03-27_06-25-56_Atlas3_MinOccs5_CoverageGoodAverage"
+  "2026-07-27_13-28-41_Atlas3_MinOccs5_CoverageGoodAverage"
 )
 
 for MODEL in "${MODELS[@]}"; do

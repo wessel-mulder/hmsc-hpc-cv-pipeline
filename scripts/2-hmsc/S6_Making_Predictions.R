@@ -12,6 +12,7 @@ set.seed(369)
 ngrid <- 30
 overwrite_gradients <- TRUE
 skip_covariates <- FALSE # skip the first part of the script which constructs gradients & predicts over them 
+richness_only <- TRUE # compute/plot only richness gradients for the new models
 atlas_subset <- NULL # set to NULL for all atlas rows, or a number for a subset  
 overwrite_prediction <- TRUE # overwrite atlas predictions if they've already been made 
 
@@ -115,7 +116,8 @@ if(file.exists(filename)){
     env.list = 0
   }
   
-  pdf(file= file.path(ResultDir,paste0(models_description,"predictions.pdf")))
+  plot_suffix <- if (richness_only) "_richness_only" else ""
+  pdf(file = file.path(ResultDir, paste0(models_description, "predictions", plot_suffix, ".pdf")))
   if(all(env.list==0)){
     if(m$XFormula=="~."){
       covariates = colnames(m$XData)
@@ -134,7 +136,8 @@ if(file.exists(filename)){
   if(length(covariates)>0){
     #Note that I use different file names for the R fitted and HPC fitted models
     #just to keep track
-    outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",models_description, m$samples, m$thin, nChains))
+    suffix <- if (richness_only) "_richness_only" else ""
+    outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_HPC_samples_%.4d_thin_%.2d_chains_%.1d%s.Rdata",models_description, m$samples, m$thin, nChains, suffix))
 
     #outfile = file.path(ResultDir,sprintf("Preds/Preds_%s_R_samples_%.4d_thin_%.2d_chains_%.1d.Rdata",model_description, m$samples, m$thin, nChains))
     cli_h1("Making predictions")
@@ -149,6 +152,8 @@ if(file.exists(filename)){
       postlist <- poolMcmcChains(m$postList,thin=thin2)
       ptm_tot = proc.time()
       ptm = ptm_tot
+      prediction_workers <- min(n_cores, length(covariates))
+      cli_alert_info("Using {prediction_workers} parallel covariate workers")
       Preds <- mclapply(1:length(covariates), function(k) {
         covariate <- covariates[[k]]
         
@@ -161,10 +166,10 @@ if(file.exists(filename)){
         # CRITICAL: Set nParallel = 1 inside predict. 
         # If you don't, you will cause "nested parallelization" and crash the node.
         predY  <- predict(m, Gradient=Gradient, expected = TRUE, 
-                          nParallel = 10, useSocket = F, post = postlist)
+                          nParallel = 1, useSocket = F, post = postlist)
                           
         predY2 <- predict(m, Gradient=Gradient2, expected = TRUE, 
-                          nParallel = 10, useSocket = F, post = postlist)
+                          nParallel = 1, useSocket = F, post = postlist)
         
         # Return the results as a list for this specific covariate
         list(
@@ -173,54 +178,70 @@ if(file.exists(filename)){
           Gradient = Gradient,
           Gradient2 = Gradient2
         )
-      }, mc.cores = 8)
+      }, mc.cores = prediction_workers)
       names(Preds) = covariates
       save(Preds, file = outfile)
       computational.time = proc.time() - ptm_tot
       cat(sprintf("Total Time taken: %.2f s \nCurrent time: %s\n\n", computational.time[3],format(Sys.time(), "%H:%M:%S")))
     }
     cli_h1("Plotting graphs")
-    for(k in 1:(length(covariates))){
-      par(mfrow=c(2,1))
-      pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, yshow = 0, measure="S", showData = TRUE, 
-                        main = paste0(modelnames,": summed response (total effect)"))
-      if(inherits(pl, "ggplot")){
-        print(pl + labs(title=paste0(modelnames,": summed response (total effect)")))
-      }
-      pl = plotGradient(m, Preds[[k]]$Gradient2, pred=Preds[[k]]$predY2, yshow = 0, measure="S", showData = TRUE, 
-                        main = paste0(modelnames,": summed response (marginal effect)"))
-      if(inherits(pl, "ggplot")){
-        print(pl + labs(title=paste0(modelnames,": summed response (marginal effect)")))
-      }
-      # only if species are supplied to list
-      if(!species.list==0){
-      for(l in 1:length(species.list)){
+    if (richness_only) {
+      for(k in 1:(length(covariates))){
         par(mfrow=c(2,1))
-        pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, yshow = if(m$distr[1,1]==2){c(-0.1,1.1)}else{0}, measure="Y",index=species.list[l], showData = TRUE, 
-                          main = paste0(modelnames,": example species (total effect)"))
+        pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, yshow = 0, measure="S", showData = TRUE,
+                          main = paste0(modelnames,": richness gradient (total effect)"))
         if(inherits(pl, "ggplot")){
-          print(pl + labs(title=paste0(modelnames,": example species (total effect)")))
+          print(pl + labs(title=paste0(modelnames,": richness gradient (total effect)")))
         }
-        pl = plotGradient(m, Preds[[k]]$Gradient2, pred=Preds[[k]]$predY2, yshow = if(m$distr[1,1]==2){c(-0.1,1.1)}else{0}, measure="Y",index=species.list[l], showData = TRUE, 
-                          main = paste0(modelnames,": example species (marginal effect)"))
+        pl = plotGradient(m, Preds[[k]]$Gradient2, pred=Preds[[k]]$predY2, yshow = 0, measure="S", showData = TRUE,
+                          main = paste0(modelnames,": richness gradient (marginal effect)"))
         if(inherits(pl, "ggplot")){
-          print(pl + labs(title=paste0(modelnames,": example species (marginal effect)")))
+          print(pl + labs(title=paste0(modelnames,": richness gradient (marginal effect)")))
         }
-      }}
-      if(m$nt>1){
-        traitSelection = 2:m$nt
-        if(!all(trait.list==0)) traitSelection = trait.list
-        for(l in traitSelection){
-          par(mfrow=c(2,1))
-          pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, measure="T",index=l, showData = TRUE,yshow = 0,
-                            main = paste0(modelnames,": community weighted mean trait (total effect)"))
-          if(inherits(pl, "ggplot")){
-            print(pl + labs(title=paste0(modelnames,": community weighted mean trait (total effect)")))
-          }
-          pl = plotGradient(m, Preds[[k]]$Gradient2, pred=Preds[[k]]$predY2, measure="T",index=l, showData = TRUE, yshow = 0,
-                            main = paste0(modelnames,": community weighted mean trait (marginal effect)"))
-          if(inherits(pl, "ggplot")){
-            print(pl + labs(title=paste0(modelnames,": community weighted mean trait (marginal effect)")))
+      }
+    } else {
+      for(k in 1:(length(covariates))){
+        par(mfrow=c(2,1))
+        pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, yshow = 0, measure="S", showData = TRUE,
+                          main = paste0(modelnames,": summed response (total effect)"))
+        if(inherits(pl, "ggplot")){
+          print(pl + labs(title=paste0(modelnames,": summed response (total effect)")))
+        }
+        pl = plotGradient(m, Preds[[k]]$Gradient2, pred=Preds[[k]]$predY2, yshow = 0, measure="S", showData = TRUE,
+                          main = paste0(modelnames,": summed response (marginal effect)"))
+        if(inherits(pl, "ggplot")){
+          print(pl + labs(title=paste0(modelnames,": summed response (marginal effect)")))
+        }
+        # only if species are supplied to list
+        if(!species.list==0){
+          for(l in 1:length(species.list)){
+            par(mfrow=c(2,1))
+            pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, yshow = if(m$distr[1,1]==2){c(-0.1,1.1)}else{0}, measure="Y",index=species.list[l], showData = TRUE,
+                              main = paste0(modelnames,": example species (total effect)"))
+            if(inherits(pl, "ggplot")){
+              print(pl + labs(title=paste0(modelnames,": example species (total effect)")))
+            }
+            pl = plotGradient(m, Preds[[k]]$Gradient2, pred=Preds[[k]]$predY2, yshow = if(m$distr[1,1]==2){c(-0.1,1.1)}else{0}, measure="Y",index=species.list[l], showData = TRUE,
+                              main = paste0(modelnames,": example species (marginal effect)"))
+            if(inherits(pl, "ggplot")){
+              print(pl + labs(title=paste0(modelnames,": example species (marginal effect)")))
+            }
+          }}
+        if(m$nt>1){
+          traitSelection = 2:m$nt
+          if(!all(trait.list==0)) traitSelection = trait.list
+          for(l in traitSelection){
+            par(mfrow=c(2,1))
+            pl = plotGradient(m, Preds[[k]]$Gradient, pred=Preds[[k]]$predY, measure="T",index=l, showData = TRUE,yshow = 0,
+                              main = paste0(modelnames,": community weighted mean trait (total effect)"))
+            if(inherits(pl, "ggplot")){
+              print(pl + labs(title=paste0(modelnames,": community weighted mean trait (total effect)")))
+            }
+            pl = plotGradient(m, Preds[[k]]$Gradient2, pred=Preds[[k]]$predY2, measure="T",index=l, showData = TRUE, yshow = 0,
+                              main = paste0(modelnames,": community weighted mean trait (marginal effect)"))
+            if(inherits(pl, "ggplot")){
+              print(pl + labs(title=paste0(modelnames,": community weighted mean trait (marginal effect)")))
+            }
           }
         }
       }

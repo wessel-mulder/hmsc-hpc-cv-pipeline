@@ -91,7 +91,7 @@ c.Hmsc = getS3method("c","Hmsc")
 # Get arguments from command line
 args <- commandArgs(trailingOnly = TRUE)
 # Default value if no argument is provided, otherwise use the first argument
-thin2 <- if(length(args) > 0) as.numeric(args[1]) else 50
+thin2 <- if(length(args) > 0) as.numeric(args[1]) else 1
 models_description <- args[2]
 
 # ### Set up directories ####
@@ -114,8 +114,11 @@ TempDir = file.path(localDir,sprintf("%s/Models/Temp",models_description))
 samples_list = c(250)
 thin_list = c(100)
 transient = 100000
-nParallel = detectCores() - 1
-print(nParallel)
+allocated_cpus <- suppressWarnings(as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", "1")))
+if (is.na(allocated_cpus) || allocated_cpus < 1L) allocated_cpus <- 1L
+nParallel <- max(1L, allocated_cpus - 1L)
+message("Using ", nParallel, " parallel workers from ", allocated_cpus,
+        " SLURM CPUs")
 nChains = 4
 nfolds = 10
 
@@ -133,7 +136,6 @@ for(Lst in length(samples_list):1){
     message("Reading in Fold information")
     load(file = filename.in)
     postN <- Reduce(sum, lapply(hM$postList, length))
-    predArray <- array(NA, c(hM$ny, hM$ns, postN))
     mods = vector("list", threads)
     # for(i in 1:threads){
     #   temp_fitted = file.path(TempDir,sprintf("Sampled_HPC_samples_%.4d_thin_%.2d_thread_%.1d.rds", samples, thin,i))
@@ -189,20 +191,61 @@ for(Lst in length(samples_list):1){
     #Combine predictions: this is still a loop
     idfold <- sapply(mods, attr, which = "fold")
     parts <- sort(unique(partition))
-    print(partition)
     #This might be used in the future if I package up this code better, but for now its always set to NULL
     partition.sp = NULL
     Yc = NULL
     expected=TRUE
 
+    CheckpointDir <- file.path(TempDir, "postprocess_checkpoints")
+    dir.create(CheckpointDir, recursive = TRUE, showWarnings = FALSE)
+
+    checkpoint_file <- function(stage) {
+      file.path(
+        CheckpointDir,
+        sprintf("%s_samples_%04d_thin_%02d_predthin_%02d.rds",
+                stage, samples, thin, thin2)
+      )
+    }
+
+    atomic_save_rds <- function(object, path, compress = TRUE) {
+      temporary_path <- paste0(path, ".tmp-", Sys.getpid())
+      on.exit(unlink(temporary_path), add = TRUE)
+      saveRDS(object, temporary_path, compress = compress)
+      if (!file.rename(temporary_path, path)) {
+        stop("Could not finalize checkpoint: ", path)
+      }
+    }
+
+    validate_prediction_checkpoint <- function(checkpoint, p, val) {
+      expected_rows <- which(val)
+      valid <- is.list(checkpoint) &&
+        identical(checkpoint$model, models_description) &&
+        identical(checkpoint$partition, p) &&
+        identical(checkpoint$rows, expected_rows) &&
+        identical(checkpoint$dimensions, c(hM$ny, hM$ns, postN)) &&
+        identical(checkpoint$samples, samples) &&
+        identical(checkpoint$thin, thin) &&
+        identical(checkpoint$thin2, thin2)
+      if (!valid) {
+        stop("Checkpoint metadata mismatch for partition ", p,
+             ": ", checkpoint_file(sprintf("cv_partition_%02d", p)))
+      }
+      invisible(TRUE)
+    }
+
     for (p in parts) {
       message("predictions for partition ", p)
-      print(partition)
-      print(p)
-      str(idfold)
-      str(p)
-      str(partition)
       val <- partition == p
+      partition_checkpoint <- checkpoint_file(sprintf("cv_partition_%02d", p))
+
+      if (file.exists(partition_checkpoint)) {
+        checkpoint <- readRDS(partition_checkpoint)
+        validate_prediction_checkpoint(checkpoint, p, val)
+        message("Partition ", p, " already complete; skipping prediction")
+        rm(checkpoint, val)
+        next
+      }
+
       m <- do.call(c.Hmsc, mods[which(idfold == p)])
       m <- alignPosterior(m)
       postList <- poolMcmcChains(m$postList, start=1, thin=thin2)
@@ -227,45 +270,74 @@ for(Lst in length(samples_list):1){
                                  useSocket = useSocket)
       }
       cat(sprintf("current mermory usage Ncels: %.1f MB Ncels: %.1f MB\n", gc()[3], gc()[4]))
-      cat("High memory use section, writing predictions to array\n")
-      predArray[val,,] <- simplify2array(pred1)
-      cat(sprintf("current mermory usage Ncels: %.1f MB Ncels: %.1f MB\n", gc()[3], gc()[4]))
+      cat("Writing completed partition checkpoint\n")
+      checkpoint <- list(
+        model = models_description,
+        partition = p,
+        rows = which(val),
+        predictions = simplify2array(pred1),
+        dimensions = c(hM$ny, hM$ns, postN),
+        samples = samples,
+        thin = thin,
+        thin2 = thin2
+      )
+      atomic_save_rds(checkpoint, partition_checkpoint, compress = FALSE)
+      message("Saved checkpoint for partition ", p)
       cat("Cleaning up memory\n")
-      rm(pred1,val,m,postList,Xval,dfPi)
+      rm(pred1, checkpoint, val, m, postList, Xval, dfPi)
       cat("Memory clean complete\n")
       cat(sprintf("current mermory usage Ncels: %.1f MB Ncels: %.1f MB\n", gc()[3], gc()[4]))
     }
+    rm(mods, idfold)
+    gc()
+    message("All partition checkpoints are present; assembling predArray")
+    predArray <- array(NA_real_, c(hM$ny, hM$ns, postN))
+    for (p in parts) {
+      val <- partition == p
+      partition_checkpoint <- checkpoint_file(sprintf("cv_partition_%02d", p))
+      if (!file.exists(partition_checkpoint)) {
+        stop("Missing prediction checkpoint for partition ", p)
+      }
+      checkpoint <- readRDS(partition_checkpoint)
+      validate_prediction_checkpoint(checkpoint, p, val)
+      predArray[checkpoint$rows,,] <- checkpoint$predictions
+      rm(checkpoint, val)
+    }
     ### MF FOR NORMAL 
-    preds = computePredictedValues(hM)
-    cat("Calculating MF\n")
-    MF = evaluateModelFit(hM, predY=preds)
-    # --- NEW: Add Boyce Index to MF ---
-    cat("Calculating Boyce Index for MF\n")
-    # We calculate the mean prediction across posterior samples
-    mean_preds = apply(preds, c(1,2), mean) 
-    # Loop through each species to get Boyce
-    # MF$Boyce = sapply(1:ncol(hM$Y), function(i) {
-    #   ecospat.boyce(fit = mean_preds[,i], 
-    #                 obs = mean_preds[hM$Y[,i] == 1, i], 
-    #                 nclass = 0, plot.main = FALSE)$Cor
-    # })
-    rm(pred)
+    mf_checkpoint <- checkpoint_file("MF")
+    if (file.exists(mf_checkpoint)) {
+      message("Loading MF checkpoint")
+      MF <- readRDS(mf_checkpoint)
+    } else {
+      preds <- computePredictedValues(hM)
+      cat("Calculating MF\n")
+      MF <- evaluateModelFit(hM, predY=preds)
+      atomic_save_rds(MF, mf_checkpoint)
+      rm(preds)
+      gc()
+    }
     
     ### MF FOR CV 
-    cat("Calculating MFCV\n")
-    MFCV = evaluateModelFit(hM, predY=predArray)
-    cat("Calculating Boyce Index for MFCV\n")
-    mean_predCV = apply(predArray, c(1,2), mean)
-    # MFCV$Boyce = sapply(1:ncol(hM$Y), function(i) {
-    #   # We use the actual observations from hM$Y
-    #   ecospat.boyce(fit = mean_predCV[,i], 
-    #                 obs = mean_predCV[hM$Y[,i] == 1, i], 
-    #                 nclass = 0, plot.main = FALSE)$Cor
-    # })
+    mfcv_checkpoint <- checkpoint_file("MFCV")
+    if (file.exists(mfcv_checkpoint)) {
+      message("Loading MFCV checkpoint")
+      MFCV <- readRDS(mfcv_checkpoint)
+    } else {
+      cat("Calculating MFCV\n")
+      MFCV <- evaluateModelFit(hM, predY=predArray)
+      atomic_save_rds(MFCV, mfcv_checkpoint)
+    }
     
     rm(predArray)
-    cat("Calculating WAIC\n")
-    WAIC = computeWAIC(hM)
+    waic_checkpoint <- checkpoint_file("WAIC")
+    if (file.exists(waic_checkpoint)) {
+      message("Loading WAIC checkpoint")
+      WAIC <- readRDS(waic_checkpoint)
+    } else {
+      cat("Calculating WAIC\n")
+      WAIC <- computeWAIC(hM)
+      atomic_save_rds(WAIC, waic_checkpoint)
+    }
     computational.time = proc.time() - ptm
     cat("Time taken:", computational.time[3],"s \n\n")
     cat(sprintf("max mermory usage\n\tNcels: %.2f MB\n\tNcels: %.2f MB\n\tTotal: %.2f MB\n", gc()[11], gc()[12], gc()[11] + gc()[12]))

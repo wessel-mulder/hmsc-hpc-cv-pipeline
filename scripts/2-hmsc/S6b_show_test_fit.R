@@ -4,6 +4,7 @@ remove(list=ls())
 require(Hmsc)
 require(cli)
 require(tidyverse)
+require(stringr)
 
 
 #Define the plotting function
@@ -65,7 +66,7 @@ plot_CV = function(type,modelled_atlas){
 ### Set up directories #### 
 #If you are using RStudio this will set the working directory to exactly where the file is 
 
-pattern2match <- "2026-02-10"
+pattern2match <- "2026-07-27"
   
 matching_folders <- list.dirs('HmscOutputs', recursive = FALSE, full.names = F)
 matching_folders <- matching_folders[grepl(pattern2match, basename(matching_folders))]
@@ -86,7 +87,7 @@ thin_list = c(100)
 transient = 100000
 nParallel = 10
 nChains = 4
-nfolds = 5
+nfolds = 10
 
 nst = length(thin_list)
 

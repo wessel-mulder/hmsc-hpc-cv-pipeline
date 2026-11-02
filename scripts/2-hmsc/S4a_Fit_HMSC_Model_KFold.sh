@@ -4,7 +4,7 @@
 #SBATCH --mem-per-cpu=1GB
 #SBATCH --gpus-per-node=1
 #SBATCH --time=03:00:00
-#SBATCH --array=1-40
+#SBATCH --array=19,22,23,24
 #SBATCH --output=HmscOutputs/%x/Models/Logs_CV/%x_%A_%a.log
 #SBATCH --error=HmscOutputs/%x/Models/Logs_CV/%x_%A_%a.log
 
