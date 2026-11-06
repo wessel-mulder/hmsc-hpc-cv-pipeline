@@ -23,6 +23,15 @@ variable_models <- c('All')   # 10 S0 predictors: climate, heterogeneity, seven 
 coverages <- c('GoodAverage')
 atlas_models <- c(1,2,3)
 min_occs2run <- c(5)
+# Choose c("spatial", "none") to prepare both versions for each atlas.
+# Use "spatial" alone for environment + space, or "none" for environment only.
+# "none" removes all site latent factors; it does not substitute non-spatial ones.
+spatial_models <- c("spatial", "none")
+spatial_n_factors <- 5L
+stopifnot(length(spatial_models) > 0L, !anyDuplicated(spatial_models),
+          all(spatial_models %in% c("spatial", "none")),
+          length(spatial_n_factors) == 1L, is.finite(spatial_n_factors),
+          spatial_n_factors >= 1L, spatial_n_factors == as.integer(spatial_n_factors))
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
 atlas_model <- atlas_models[[1]]
@@ -34,6 +43,7 @@ for(min_occs in min_occs2run){
 for(atlas_model in atlas_models){
 for(guild2run in guild_models){
 for(variable2run in variable_models){
+for(spatial_model in spatial_models){
 # assign correct names 
 guild <- guild2run
 variables <- variable2run
@@ -45,6 +55,11 @@ model_description = paste(as.character(date),
                           paste('Atlas',atlas,sep=''),
                           paste('MinOccs',min_occs,sep=''),
                           paste('Coverage',coverage,sep=''),
+                          if (spatial_model == "spatial") {
+                            paste0("EnvironmentSpace_nf", spatial_n_factors)
+                          } else {
+                            "EnvironmentOnly"
+                          },
                           sep='_')
 
 #### Edit the data ####
@@ -129,7 +144,11 @@ stopifnot(
 setdiff(colnames(Y_sub),
         rownames(Tr))
 
-# get random effects for space
+# Only construct spatial random effects for the environment + space version.
+# Retain site identifiers in studyDesign for both versions, but an empty
+# ranLevels list means Hmsc has zero random levels in the environment-only model.
+random_levels <- list()
+if (spatial_model == "spatial") {
 proj_xycoords_unique <- unique(
   data.frame(
     site = Design_sub$site,
@@ -142,8 +161,10 @@ rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
 proj_xycoords_unique$site <- NULL
 
 struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
-struc_space <- setPriors(struc_space,nfMin=5,nfMax=5) # set priors to limit latent factors
+struc_space <- setPriors(struc_space, nfMin=spatial_n_factors, nfMax=spatial_n_factors)
 nrow(struc_space$s)
+random_levels <- list(site = struc_space)
+}
 
 # set factors of traits to determine level orders 
 # mig
@@ -166,8 +187,9 @@ model = Hmsc(Y = Y_sub,
                      TrFormula = TrFormula,
                      phyloTree = phy,
                      studyDesign = Design_sub[,c('site'),drop=F],
-                     ranLevels = list('site'=struc_space),
+                     ranLevels = random_levels,
                      distr='probit')
+stopifnot(model$nr == if (spatial_model == "spatial") 1L else 0L)
 print(model)
 #### Save model ####
 #These lists are left over from the orginal pipeline which had multiple models
@@ -223,6 +245,7 @@ if (!is.null(script_path) && file.exists(script_path)) {
   warning("Could not determine script path for backup")
 }
 
+}
 }
 }
 }
