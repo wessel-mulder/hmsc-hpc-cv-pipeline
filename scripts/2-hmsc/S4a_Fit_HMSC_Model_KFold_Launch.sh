@@ -4,7 +4,9 @@
 SAMPLES=250
 THIN=100
 MODELS=(
-  "2026-07-27_13-28-41_Atlas3_MinOccs5_CoverageGoodAverage"
+  #"2026-11-02_06-55-21_Atlas1_MinOccs5_CoverageGoodAverage"
+  #"2026-11-02_06-55-21_Atlas2_MinOccs5_CoverageGoodAverage"
+  "2026-11-02_06-55-21_Atlas3_MinOccs5_CoverageGoodAverage"
 )
 
 for MODEL in "${MODELS[@]}"; do
@@ -14,5 +16,5 @@ for MODEL in "${MODELS[@]}"; do
   sbatch \
     --job-name="$MODEL" \
     --export=NAME="$MODEL",SAMP=$SAMPLES,THIN=$THIN \
-    S4a_Fit_HMSC_Model_KFold.sh
+    scripts/2-hmsc/S4a_Fit_HMSC_Model_KFold.sh
 done
