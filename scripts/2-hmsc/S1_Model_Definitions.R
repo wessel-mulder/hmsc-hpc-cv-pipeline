@@ -26,7 +26,7 @@ min_occs2run <- c(5)
 # Choose c("spatial", "none") to prepare both versions for each atlas.
 # Use "spatial" alone for environment + space, or "none" for environment only.
 # "none" removes all site latent factors; it does not substitute non-spatial ones.
-spatial_models <- c("spatial", "none")
+spatial_models <- c("none")
 spatial_n_factors <- 5L
 stopifnot(length(spatial_models) > 0L, !anyDuplicated(spatial_models),
           all(spatial_models %in% c("spatial", "none")),
