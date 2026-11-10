@@ -1,0 +1,1288 @@
+"atlas","parameter","rhat"
+1,"(Intercept)::(Intercept)",1.00498869200485
+1,"tmean_breeding::(Intercept)",1.00142113346574
+1,"prec_breeding::(Intercept)",0.999399781367605
+1,"hh::(Intercept)",0.9989589439456
+1,"perc_cropland::(Intercept)",1.00112791046639
+1,"perc_urban::(Intercept)",0.99899744043747
+1,"perc_pasture::(Intercept)",0.998173813580454
+1,"perc_grass_shrub::(Intercept)",0.99888939363287
+1,"perc_forest_deciduous::(Intercept)",1.00070567291075
+1,"perc_forest_evergreen::(Intercept)",1.0022918774842
+1,"perc_forest_mixed_other::(Intercept)",1.0022452429236
+1,"(Intercept)::Migration_a3_DOF1",0.999323371535013
+1,"tmean_breeding::Migration_a3_DOF1",0.999512101636987
+1,"prec_breeding::Migration_a3_DOF1",1.00626242983107
+1,"hh::Migration_a3_DOF1",0.999124387377777
+1,"perc_cropland::Migration_a3_DOF1",1.00130875834555
+1,"perc_urban::Migration_a3_DOF1",0.998033257134489
+1,"perc_pasture::Migration_a3_DOF1",0.998196266146111
+1,"perc_grass_shrub::Migration_a3_DOF1",1.00055435010905
+1,"perc_forest_deciduous::Migration_a3_DOF1",0.999170075712542
+1,"perc_forest_evergreen::Migration_a3_DOF1",1.00037131860894
+1,"perc_forest_mixed_other::Migration_a3_DOF1",1.0031288484277
+1,"(Intercept)::Migration_a3_DOF1.5",1.00141745224802
+1,"tmean_breeding::Migration_a3_DOF1.5",0.99854975227221
+1,"prec_breeding::Migration_a3_DOF1.5",1.0002097250219
+1,"hh::Migration_a3_DOF1.5",0.999542251018137
+1,"perc_cropland::Migration_a3_DOF1.5",0.999015569389879
+1,"perc_urban::Migration_a3_DOF1.5",0.999184913915018
+1,"perc_pasture::Migration_a3_DOF1.5",1.00067333535828
+1,"perc_grass_shrub::Migration_a3_DOF1.5",1.00471966687386
+1,"perc_forest_deciduous::Migration_a3_DOF1.5",0.99959203543258
+1,"perc_forest_evergreen::Migration_a3_DOF1.5",0.998428959111631
+1,"perc_forest_mixed_other::Migration_a3_DOF1.5",0.999690612595081
+1,"(Intercept)::Migration_a3_DOF2",1.0000705855722
+1,"tmean_breeding::Migration_a3_DOF2",0.99820820260984
+1,"prec_breeding::Migration_a3_DOF2",1.00321021895061
+1,"hh::Migration_a3_DOF2",1.00220625723963
+1,"perc_cropland::Migration_a3_DOF2",1.00100057369494
+1,"perc_urban::Migration_a3_DOF2",0.998809244147457
+1,"perc_pasture::Migration_a3_DOF2",1.00081785546781
+1,"perc_grass_shrub::Migration_a3_DOF2",1.00378074878823
+1,"perc_forest_deciduous::Migration_a3_DOF2",1.00009208008378
+1,"perc_forest_evergreen::Migration_a3_DOF2",0.999458811954082
+1,"perc_forest_mixed_other::Migration_a3_DOF2",1.00105968689637
+1,"(Intercept)::Migration_a3_DOF2.5",1.0064655359001
+1,"tmean_breeding::Migration_a3_DOF2.5",1.00043447817225
+1,"prec_breeding::Migration_a3_DOF2.5",0.999964450778476
+1,"hh::Migration_a3_DOF2.5",1.00046053466757
+1,"perc_cropland::Migration_a3_DOF2.5",0.998496555893373
+1,"perc_urban::Migration_a3_DOF2.5",0.998292143564805
+1,"perc_pasture::Migration_a3_DOF2.5",1.00169764480331
+1,"perc_grass_shrub::Migration_a3_DOF2.5",1.00444692390976
+1,"perc_forest_deciduous::Migration_a3_DOF2.5",1.00201132948634
+1,"perc_forest_evergreen::Migration_a3_DOF2.5",1.00613169476793
+1,"perc_forest_mixed_other::Migration_a3_DOF2.5",1.00137850462535
+1,"(Intercept)::foraging_guild_consensusAerial insectivores",1.00045535628639
+1,"tmean_breeding::foraging_guild_consensusAerial insectivores",1.00455112875496
+1,"prec_breeding::foraging_guild_consensusAerial insectivores",1.00005168764295
+1,"hh::foraging_guild_consensusAerial insectivores",1.00053744076165
+1,"perc_cropland::foraging_guild_consensusAerial insectivores",0.998977069845606
+1,"perc_urban::foraging_guild_consensusAerial insectivores",1.00173340724092
+1,"perc_pasture::foraging_guild_consensusAerial insectivores",0.998114714687486
+1,"perc_grass_shrub::foraging_guild_consensusAerial insectivores",0.999752787868208
+1,"perc_forest_deciduous::foraging_guild_consensusAerial insectivores",1.00127843586465
+1,"perc_forest_evergreen::foraging_guild_consensusAerial insectivores",1.00279762872746
+1,"perc_forest_mixed_other::foraging_guild_consensusAerial insectivores",0.998794933055615
+1,"(Intercept)::foraging_guild_consensusAquatic pursuers",1.00184810374558
+1,"tmean_breeding::foraging_guild_consensusAquatic pursuers",0.999924961121089
+1,"prec_breeding::foraging_guild_consensusAquatic pursuers",0.998484031786913
+1,"hh::foraging_guild_consensusAquatic pursuers",0.999517441442617
+1,"perc_cropland::foraging_guild_consensusAquatic pursuers",0.999116871678214
+1,"perc_urban::foraging_guild_consensusAquatic pursuers",1.0005350400862
+1,"perc_pasture::foraging_guild_consensusAquatic pursuers",0.999380196188413
+1,"perc_grass_shrub::foraging_guild_consensusAquatic pursuers",1.00319137842474
+1,"perc_forest_deciduous::foraging_guild_consensusAquatic pursuers",1.00405563449331
+1,"perc_forest_evergreen::foraging_guild_consensusAquatic pursuers",0.998159816289112
+1,"perc_forest_mixed_other::foraging_guild_consensusAquatic pursuers",0.999496229805119
+1,"(Intercept)::foraging_guild_consensusBuntings",1.0000998432338
+1,"tmean_breeding::foraging_guild_consensusBuntings",0.999690381620619
+1,"prec_breeding::foraging_guild_consensusBuntings",0.99942682231881
+1,"hh::foraging_guild_consensusBuntings",1.00006399303677
+1,"perc_cropland::foraging_guild_consensusBuntings",0.999084097242014
+1,"perc_urban::foraging_guild_consensusBuntings",0.999213677686752
+1,"perc_pasture::foraging_guild_consensusBuntings",0.999232308664323
+1,"perc_grass_shrub::foraging_guild_consensusBuntings",0.998504462814317
+1,"perc_forest_deciduous::foraging_guild_consensusBuntings",1.00111382157098
+1,"perc_forest_evergreen::foraging_guild_consensusBuntings",0.998193011756283
+1,"perc_forest_mixed_other::foraging_guild_consensusBuntings",0.998756296243698
+1,"(Intercept)::foraging_guild_consensusColumbids",0.999898651477872
+1,"tmean_breeding::foraging_guild_consensusColumbids",1.00094984115163
+1,"prec_breeding::foraging_guild_consensusColumbids",1.00084987868979
+1,"hh::foraging_guild_consensusColumbids",0.999465284313218
+1,"perc_cropland::foraging_guild_consensusColumbids",0.99840347322845
+1,"perc_urban::foraging_guild_consensusColumbids",1.00147395574363
+1,"perc_pasture::foraging_guild_consensusColumbids",1.00057090265754
+1,"perc_grass_shrub::foraging_guild_consensusColumbids",0.998234058272244
+1,"perc_forest_deciduous::foraging_guild_consensusColumbids",1.00086109759951
+1,"perc_forest_evergreen::foraging_guild_consensusColumbids",0.998213753382398
+1,"perc_forest_mixed_other::foraging_guild_consensusColumbids",1.00016964326407
+1,"(Intercept)::foraging_guild_consensusCuckoos",0.99944107131505
+1,"tmean_breeding::foraging_guild_consensusCuckoos",1.00066545533043
+1,"prec_breeding::foraging_guild_consensusCuckoos",0.999802135299028
+1,"hh::foraging_guild_consensusCuckoos",0.998919344466227
+1,"perc_cropland::foraging_guild_consensusCuckoos",0.999083245626515
+1,"perc_urban::foraging_guild_consensusCuckoos",0.998918159635574
+1,"perc_pasture::foraging_guild_consensusCuckoos",1.00244567173198
+1,"perc_grass_shrub::foraging_guild_consensusCuckoos",1.00022794140853
+1,"perc_forest_deciduous::foraging_guild_consensusCuckoos",0.999698561478556
+1,"perc_forest_evergreen::foraging_guild_consensusCuckoos",0.99909300543229
+1,"perc_forest_mixed_other::foraging_guild_consensusCuckoos",0.999836002645803
+1,"(Intercept)::foraging_guild_consensusDabbling ducks",1.0009575517482
+1,"tmean_breeding::foraging_guild_consensusDabbling ducks",0.998603566541492
+1,"prec_breeding::foraging_guild_consensusDabbling ducks",0.999775315493552
+1,"hh::foraging_guild_consensusDabbling ducks",1.00122119694455
+1,"perc_cropland::foraging_guild_consensusDabbling ducks",0.999255617855788
+1,"perc_urban::foraging_guild_consensusDabbling ducks",0.999500909463462
+1,"perc_pasture::foraging_guild_consensusDabbling ducks",1.00407809227506
+1,"perc_grass_shrub::foraging_guild_consensusDabbling ducks",1.01222052076256
+1,"perc_forest_deciduous::foraging_guild_consensusDabbling ducks",1.00285375743748
+1,"perc_forest_evergreen::foraging_guild_consensusDabbling ducks",0.999631822787361
+1,"perc_forest_mixed_other::foraging_guild_consensusDabbling ducks",1.00081938462988
+1,"(Intercept)::foraging_guild_consensusDippers",0.998791835815167
+1,"tmean_breeding::foraging_guild_consensusDippers",0.9988383500527
+1,"prec_breeding::foraging_guild_consensusDippers",1.00074203810142
+1,"hh::foraging_guild_consensusDippers",0.998121648344372
+1,"perc_cropland::foraging_guild_consensusDippers",0.999876235020519
+1,"perc_urban::foraging_guild_consensusDippers",1.00106192367551
+1,"perc_pasture::foraging_guild_consensusDippers",0.998664357063572
+1,"perc_grass_shrub::foraging_guild_consensusDippers",1.00843483523845
+1,"perc_forest_deciduous::foraging_guild_consensusDippers",1.00059261648667
+1,"perc_forest_evergreen::foraging_guild_consensusDippers",1.00197481689391
+1,"perc_forest_mixed_other::foraging_guild_consensusDippers",0.999900733824315
+1,"(Intercept)::foraging_guild_consensusDiurnal raptors",0.998523649207486
+1,"tmean_breeding::foraging_guild_consensusDiurnal raptors",1.00100346336914
+1,"prec_breeding::foraging_guild_consensusDiurnal raptors",0.998572224268132
+1,"hh::foraging_guild_consensusDiurnal raptors",0.999332274914905
+1,"perc_cropland::foraging_guild_consensusDiurnal raptors",0.998606126203181
+1,"perc_urban::foraging_guild_consensusDiurnal raptors",0.99852197293991
+1,"perc_pasture::foraging_guild_consensusDiurnal raptors",0.998821332400714
+1,"perc_grass_shrub::foraging_guild_consensusDiurnal raptors",0.999954792879801
+1,"perc_forest_deciduous::foraging_guild_consensusDiurnal raptors",1.00205071890752
+1,"perc_forest_evergreen::foraging_guild_consensusDiurnal raptors",0.999394646711424
+1,"perc_forest_mixed_other::foraging_guild_consensusDiurnal raptors",1.0004293680632
+1,"(Intercept)::foraging_guild_consensusDiving ducks",0.99849309365823
+1,"tmean_breeding::foraging_guild_consensusDiving ducks",0.999356687620395
+1,"prec_breeding::foraging_guild_consensusDiving ducks",0.998407818995318
+1,"hh::foraging_guild_consensusDiving ducks",1.0025356314568
+1,"perc_cropland::foraging_guild_consensusDiving ducks",1.00093951805492
+1,"perc_urban::foraging_guild_consensusDiving ducks",1.00044159372964
+1,"perc_pasture::foraging_guild_consensusDiving ducks",1.0025116297233
+1,"perc_grass_shrub::foraging_guild_consensusDiving ducks",1.01260053847675
+1,"perc_forest_deciduous::foraging_guild_consensusDiving ducks",0.999668454291565
+1,"perc_forest_evergreen::foraging_guild_consensusDiving ducks",0.99918082340884
+1,"perc_forest_mixed_other::foraging_guild_consensusDiving ducks",1.0006107076938
+1,"(Intercept)::foraging_guild_consensusFlycatchers",1.00072192381954
+1,"tmean_breeding::foraging_guild_consensusFlycatchers",0.998988731214931
+1,"prec_breeding::foraging_guild_consensusFlycatchers",1.00284974065694
+1,"hh::foraging_guild_consensusFlycatchers",0.999699295631992
+1,"perc_cropland::foraging_guild_consensusFlycatchers",1.00014289647518
+1,"perc_urban::foraging_guild_consensusFlycatchers",1.00051689900955
+1,"perc_pasture::foraging_guild_consensusFlycatchers",1.0011139613144
+1,"perc_grass_shrub::foraging_guild_consensusFlycatchers",1.00088304961999
+1,"perc_forest_deciduous::foraging_guild_consensusFlycatchers",1.00050059012587
+1,"perc_forest_evergreen::foraging_guild_consensusFlycatchers",1.00001896604076
+1,"perc_forest_mixed_other::foraging_guild_consensusFlycatchers",1.00123176825411
+1,"(Intercept)::foraging_guild_consensusFoliage gleaners",1.00021247076566
+1,"tmean_breeding::foraging_guild_consensusFoliage gleaners",1.00276081123772
+1,"prec_breeding::foraging_guild_consensusFoliage gleaners",1.00085697033746
+1,"hh::foraging_guild_consensusFoliage gleaners",0.998677844803535
+1,"perc_cropland::foraging_guild_consensusFoliage gleaners",0.999785296622617
+1,"perc_urban::foraging_guild_consensusFoliage gleaners",0.999469433846745
+1,"perc_pasture::foraging_guild_consensusFoliage gleaners",1.00103184045431
+1,"perc_grass_shrub::foraging_guild_consensusFoliage gleaners",0.998344576517048
+1,"perc_forest_deciduous::foraging_guild_consensusFoliage gleaners",0.999692094950456
+1,"perc_forest_evergreen::foraging_guild_consensusFoliage gleaners",0.998666282383116
+1,"perc_forest_mixed_other::foraging_guild_consensusFoliage gleaners",1.00295223245599
+1,"(Intercept)::foraging_guild_consensusGallinaceous birds",0.998631546041893
+1,"tmean_breeding::foraging_guild_consensusGallinaceous birds",0.99903542074846
+1,"prec_breeding::foraging_guild_consensusGallinaceous birds",1.00134417475417
+1,"hh::foraging_guild_consensusGallinaceous birds",0.998158664754815
+1,"perc_cropland::foraging_guild_consensusGallinaceous birds",0.99903179168782
+1,"perc_urban::foraging_guild_consensusGallinaceous birds",1.00102037242294
+1,"perc_pasture::foraging_guild_consensusGallinaceous birds",1.00381230010481
+1,"perc_grass_shrub::foraging_guild_consensusGallinaceous birds",1.00162788765763
+1,"perc_forest_deciduous::foraging_guild_consensusGallinaceous birds",0.998892974692677
+1,"perc_forest_evergreen::foraging_guild_consensusGallinaceous birds",1.00063286591877
+1,"perc_forest_mixed_other::foraging_guild_consensusGallinaceous birds",0.999980660953368
+1,"(Intercept)::foraging_guild_consensusGrazing waterfowl",0.998909384012462
+1,"tmean_breeding::foraging_guild_consensusGrazing waterfowl",0.998321501229878
+1,"prec_breeding::foraging_guild_consensusGrazing waterfowl",0.99818878154619
+1,"hh::foraging_guild_consensusGrazing waterfowl",1.00120849030313
+1,"perc_cropland::foraging_guild_consensusGrazing waterfowl",0.998169029012847
+1,"perc_urban::foraging_guild_consensusGrazing waterfowl",0.998957378263261
+1,"perc_pasture::foraging_guild_consensusGrazing waterfowl",1.00191492100648
+1,"perc_grass_shrub::foraging_guild_consensusGrazing waterfowl",1.01132966326791
+1,"perc_forest_deciduous::foraging_guild_consensusGrazing waterfowl",0.999230076062406
+1,"perc_forest_evergreen::foraging_guild_consensusGrazing waterfowl",1.00230832789973
+1,"perc_forest_mixed_other::foraging_guild_consensusGrazing waterfowl",1.00010505744086
+1,"(Intercept)::foraging_guild_consensusGulls",1.00253166109711
+1,"tmean_breeding::foraging_guild_consensusGulls",1.00001325904843
+1,"prec_breeding::foraging_guild_consensusGulls",0.998707046201534
+1,"hh::foraging_guild_consensusGulls",0.998450987431337
+1,"perc_cropland::foraging_guild_consensusGulls",1.00307040788363
+1,"perc_urban::foraging_guild_consensusGulls",1.0048650018135
+1,"perc_pasture::foraging_guild_consensusGulls",1.0000227335966
+1,"perc_grass_shrub::foraging_guild_consensusGulls",0.998545445685604
+1,"perc_forest_deciduous::foraging_guild_consensusGulls",0.999175566532892
+1,"perc_forest_evergreen::foraging_guild_consensusGulls",0.998501237926738
+1,"perc_forest_mixed_other::foraging_guild_consensusGulls",0.998972758362017
+1,"(Intercept)::foraging_guild_consensusKingfishers",1.00032117331033
+1,"tmean_breeding::foraging_guild_consensusKingfishers",1.00201292534073
+1,"prec_breeding::foraging_guild_consensusKingfishers",0.999616298693033
+1,"hh::foraging_guild_consensusKingfishers",1.00063375500202
+1,"perc_cropland::foraging_guild_consensusKingfishers",1.00026362150736
+1,"perc_urban::foraging_guild_consensusKingfishers",0.998851897201156
+1,"perc_pasture::foraging_guild_consensusKingfishers",1.00143428111687
+1,"perc_grass_shrub::foraging_guild_consensusKingfishers",0.99882375938606
+1,"perc_forest_deciduous::foraging_guild_consensusKingfishers",1.00290224351597
+1,"perc_forest_evergreen::foraging_guild_consensusKingfishers",1.00143430414731
+1,"perc_forest_mixed_other::foraging_guild_consensusKingfishers",1.00117623570471
+1,"(Intercept)::foraging_guild_consensusLow flycatching feeders",0.99857358951757
+1,"tmean_breeding::foraging_guild_consensusLow flycatching feeders",1.00257069121548
+1,"prec_breeding::foraging_guild_consensusLow flycatching feeders",1.00242475469339
+1,"hh::foraging_guild_consensusLow flycatching feeders",0.999307683672855
+1,"perc_cropland::foraging_guild_consensusLow flycatching feeders",0.999441239402311
+1,"perc_urban::foraging_guild_consensusLow flycatching feeders",1.00003729529689
+1,"perc_pasture::foraging_guild_consensusLow flycatching feeders",0.998922723996555
+1,"perc_grass_shrub::foraging_guild_consensusLow flycatching feeders",0.999919778246413
+1,"perc_forest_deciduous::foraging_guild_consensusLow flycatching feeders",1.00270982200304
+1,"perc_forest_evergreen::foraging_guild_consensusLow flycatching feeders",1.0031273471422
+1,"perc_forest_mixed_other::foraging_guild_consensusLow flycatching feeders",1.00221003332427
+1,"(Intercept)::foraging_guild_consensusMarsh warblers",1.00037987485046
+1,"tmean_breeding::foraging_guild_consensusMarsh warblers",1.00240308876013
+1,"prec_breeding::foraging_guild_consensusMarsh warblers",1.00462739730876
+1,"hh::foraging_guild_consensusMarsh warblers",0.99884637288485
+1,"perc_cropland::foraging_guild_consensusMarsh warblers",1.00034557774477
+1,"perc_urban::foraging_guild_consensusMarsh warblers",0.998402181734207
+1,"perc_pasture::foraging_guild_consensusMarsh warblers",0.998575194488119
+1,"perc_grass_shrub::foraging_guild_consensusMarsh warblers",1.00328583653089
+1,"perc_forest_deciduous::foraging_guild_consensusMarsh warblers",1.00218133155658
+1,"perc_forest_evergreen::foraging_guild_consensusMarsh warblers",0.999800898965181
+1,"perc_forest_mixed_other::foraging_guild_consensusMarsh warblers",1.00145990585966
+1,"(Intercept)::foraging_guild_consensusNigthjars",1.00278087879125
+1,"tmean_breeding::foraging_guild_consensusNigthjars",1.000603450349
+1,"prec_breeding::foraging_guild_consensusNigthjars",0.998968156772059
+1,"hh::foraging_guild_consensusNigthjars",0.999668356000326
+1,"perc_cropland::foraging_guild_consensusNigthjars",0.999893891441802
+1,"perc_urban::foraging_guild_consensusNigthjars",1.00047807299925
+1,"perc_pasture::foraging_guild_consensusNigthjars",0.99970080135371
+1,"perc_grass_shrub::foraging_guild_consensusNigthjars",1.0010433279584
+1,"perc_forest_deciduous::foraging_guild_consensusNigthjars",0.999148755237836
+1,"perc_forest_evergreen::foraging_guild_consensusNigthjars",0.998021931440112
+1,"perc_forest_mixed_other::foraging_guild_consensusNigthjars",1.00085366622704
+1,"(Intercept)::foraging_guild_consensusOmnivorous corvids",0.998002625335541
+1,"tmean_breeding::foraging_guild_consensusOmnivorous corvids",1.00110646107006
+1,"prec_breeding::foraging_guild_consensusOmnivorous corvids",0.999438940117213
+1,"hh::foraging_guild_consensusOmnivorous corvids",0.998558919386859
+1,"perc_cropland::foraging_guild_consensusOmnivorous corvids",0.999938667432914
+1,"perc_urban::foraging_guild_consensusOmnivorous corvids",1.00029204253615
+1,"perc_pasture::foraging_guild_consensusOmnivorous corvids",0.998175605633498
+1,"perc_grass_shrub::foraging_guild_consensusOmnivorous corvids",1.00077925688873
+1,"perc_forest_deciduous::foraging_guild_consensusOmnivorous corvids",0.999371106989686
+1,"perc_forest_evergreen::foraging_guild_consensusOmnivorous corvids",1.00019331442683
+1,"perc_forest_mixed_other::foraging_guild_consensusOmnivorous corvids",0.999297166582256
+1,"(Intercept)::foraging_guild_consensusOpen-land insectivores",0.999114886466358
+1,"tmean_breeding::foraging_guild_consensusOpen-land insectivores",1.00195347059384
+1,"prec_breeding::foraging_guild_consensusOpen-land insectivores",1.00354216360363
+1,"hh::foraging_guild_consensusOpen-land insectivores",0.999656492248125
+1,"perc_cropland::foraging_guild_consensusOpen-land insectivores",1.00081842148229
+1,"perc_urban::foraging_guild_consensusOpen-land insectivores",0.998791055471534
+1,"perc_pasture::foraging_guild_consensusOpen-land insectivores",1.0019774837039
+1,"perc_grass_shrub::foraging_guild_consensusOpen-land insectivores",1.00194978027293
+1,"perc_forest_deciduous::foraging_guild_consensusOpen-land insectivores",1.0058978862924
+1,"perc_forest_evergreen::foraging_guild_consensusOpen-land insectivores",0.999166293520221
+1,"perc_forest_mixed_other::foraging_guild_consensusOpen-land insectivores",0.999383940164089
+1,"(Intercept)::foraging_guild_consensusOrioles",1.00067193531779
+1,"tmean_breeding::foraging_guild_consensusOrioles",0.999539564718608
+1,"prec_breeding::foraging_guild_consensusOrioles",0.998170924040278
+1,"hh::foraging_guild_consensusOrioles",1.0030393768856
+1,"perc_cropland::foraging_guild_consensusOrioles",1.00022955958712
+1,"perc_urban::foraging_guild_consensusOrioles",0.99875604542436
+1,"perc_pasture::foraging_guild_consensusOrioles",1.00272067948462
+1,"perc_grass_shrub::foraging_guild_consensusOrioles",0.9984746830413
+1,"perc_forest_deciduous::foraging_guild_consensusOrioles",1.00068112097667
+1,"perc_forest_evergreen::foraging_guild_consensusOrioles",0.999815238956311
+1,"perc_forest_mixed_other::foraging_guild_consensusOrioles",0.998300452540547
+1,"(Intercept)::foraging_guild_consensusOwls",0.999128727880404
+1,"tmean_breeding::foraging_guild_consensusOwls",0.998947291205896
+1,"prec_breeding::foraging_guild_consensusOwls",1.00120036632986
+1,"hh::foraging_guild_consensusOwls",0.999284019466649
+1,"perc_cropland::foraging_guild_consensusOwls",1.00010812308426
+1,"perc_urban::foraging_guild_consensusOwls",1.00093078296667
+1,"perc_pasture::foraging_guild_consensusOwls",1.00015330590468
+1,"perc_grass_shrub::foraging_guild_consensusOwls",0.999046803351395
+1,"perc_forest_deciduous::foraging_guild_consensusOwls",0.999118421664887
+1,"perc_forest_evergreen::foraging_guild_consensusOwls",0.999539831390663
+1,"perc_forest_mixed_other::foraging_guild_consensusOwls",1.00077263722071
+1,"(Intercept)::foraging_guild_consensusPasserine seedeaters",0.999959614577258
+1,"tmean_breeding::foraging_guild_consensusPasserine seedeaters",0.998453143604891
+1,"prec_breeding::foraging_guild_consensusPasserine seedeaters",1.00322282407367
+1,"hh::foraging_guild_consensusPasserine seedeaters",0.999009545720376
+1,"perc_cropland::foraging_guild_consensusPasserine seedeaters",1.00060581526412
+1,"perc_urban::foraging_guild_consensusPasserine seedeaters",0.99866758966202
+1,"perc_pasture::foraging_guild_consensusPasserine seedeaters",0.998633919417886
+1,"perc_grass_shrub::foraging_guild_consensusPasserine seedeaters",0.998777392100976
+1,"perc_forest_deciduous::foraging_guild_consensusPasserine seedeaters",1.0071988895963
+1,"perc_forest_evergreen::foraging_guild_consensusPasserine seedeaters",0.998200829773823
+1,"perc_forest_mixed_other::foraging_guild_consensusPasserine seedeaters",1.00125644180884
+1,"(Intercept)::foraging_guild_consensusPlovers",1.00143962395579
+1,"tmean_breeding::foraging_guild_consensusPlovers",0.99909772522533
+1,"prec_breeding::foraging_guild_consensusPlovers",0.998682244033372
+1,"hh::foraging_guild_consensusPlovers",0.999307469013094
+1,"perc_cropland::foraging_guild_consensusPlovers",1.00121750479624
+1,"perc_urban::foraging_guild_consensusPlovers",1.00096719428771
+1,"perc_pasture::foraging_guild_consensusPlovers",0.998494183626398
+1,"perc_grass_shrub::foraging_guild_consensusPlovers",1.00108814247832
+1,"perc_forest_deciduous::foraging_guild_consensusPlovers",1.00124055366511
+1,"perc_forest_evergreen::foraging_guild_consensusPlovers",0.998881194958962
+1,"perc_forest_mixed_other::foraging_guild_consensusPlovers",1.00005076843564
+1,"(Intercept)::foraging_guild_consensusRails",0.999943387846824
+1,"tmean_breeding::foraging_guild_consensusRails",1.00021698584634
+1,"prec_breeding::foraging_guild_consensusRails",0.999544971205328
+1,"hh::foraging_guild_consensusRails",0.999775614046275
+1,"perc_cropland::foraging_guild_consensusRails",0.998982334667602
+1,"perc_urban::foraging_guild_consensusRails",0.998859323269647
+1,"perc_pasture::foraging_guild_consensusRails",1.00126196126993
+1,"perc_grass_shrub::foraging_guild_consensusRails",0.999392249917349
+1,"perc_forest_deciduous::foraging_guild_consensusRails",1.00247970882686
+1,"perc_forest_evergreen::foraging_guild_consensusRails",0.998215401444835
+1,"perc_forest_mixed_other::foraging_guild_consensusRails",0.998784700367133
+1,"(Intercept)::foraging_guild_consensusReedlings",0.99882117348518
+1,"tmean_breeding::foraging_guild_consensusReedlings",1.00097834628163
+1,"prec_breeding::foraging_guild_consensusReedlings",1.00096419830861
+1,"hh::foraging_guild_consensusReedlings",0.999769401717451
+1,"perc_cropland::foraging_guild_consensusReedlings",0.998883057930043
+1,"perc_urban::foraging_guild_consensusReedlings",1.00018263264508
+1,"perc_pasture::foraging_guild_consensusReedlings",0.998396801125547
+1,"perc_grass_shrub::foraging_guild_consensusReedlings",0.998069294044585
+1,"perc_forest_deciduous::foraging_guild_consensusReedlings",0.998411860151266
+1,"perc_forest_evergreen::foraging_guild_consensusReedlings",1.00531884198513
+1,"perc_forest_mixed_other::foraging_guild_consensusReedlings",0.999850494735325
+1,"(Intercept)::foraging_guild_consensusScolopacids",0.999735354047339
+1,"tmean_breeding::foraging_guild_consensusScolopacids",1.00128371298367
+1,"prec_breeding::foraging_guild_consensusScolopacids",0.999199773714393
+1,"hh::foraging_guild_consensusScolopacids",0.998080937491422
+1,"perc_cropland::foraging_guild_consensusScolopacids",1.00061335278747
+1,"perc_urban::foraging_guild_consensusScolopacids",1.00214762154073
+1,"perc_pasture::foraging_guild_consensusScolopacids",0.999373222470876
+1,"perc_grass_shrub::foraging_guild_consensusScolopacids",0.999470333059524
+1,"perc_forest_deciduous::foraging_guild_consensusScolopacids",1.00017255237317
+1,"perc_forest_evergreen::foraging_guild_consensusScolopacids",0.999759866203904
+1,"perc_forest_mixed_other::foraging_guild_consensusScolopacids",1.00070961587484
+1,"(Intercept)::foraging_guild_consensusShrikes",1.00294897942968
+1,"tmean_breeding::foraging_guild_consensusShrikes",1.00124230403687
+1,"prec_breeding::foraging_guild_consensusShrikes",0.999852931997987
+1,"hh::foraging_guild_consensusShrikes",0.998835435791368
+1,"perc_cropland::foraging_guild_consensusShrikes",0.998948622369111
+1,"perc_urban::foraging_guild_consensusShrikes",0.998482222889238
+1,"perc_pasture::foraging_guild_consensusShrikes",1.00041346042207
+1,"perc_grass_shrub::foraging_guild_consensusShrikes",0.999536107271868
+1,"perc_forest_deciduous::foraging_guild_consensusShrikes",1.00293187209182
+1,"perc_forest_evergreen::foraging_guild_consensusShrikes",0.998229751345333
+1,"perc_forest_mixed_other::foraging_guild_consensusShrikes",0.999799418143328
+1,"(Intercept)::foraging_guild_consensusStarlings",1.00024193612014
+1,"tmean_breeding::foraging_guild_consensusStarlings",1.00131007483157
+1,"prec_breeding::foraging_guild_consensusStarlings",0.999863424927576
+1,"hh::foraging_guild_consensusStarlings",0.998072635808464
+1,"perc_cropland::foraging_guild_consensusStarlings",0.99936401948718
+1,"perc_urban::foraging_guild_consensusStarlings",1.00170163112646
+1,"perc_pasture::foraging_guild_consensusStarlings",1.00230523463592
+1,"perc_grass_shrub::foraging_guild_consensusStarlings",1.00258508593505
+1,"perc_forest_deciduous::foraging_guild_consensusStarlings",1.00066710848033
+1,"perc_forest_evergreen::foraging_guild_consensusStarlings",0.999153785254306
+1,"perc_forest_mixed_other::foraging_guild_consensusStarlings",0.999616184908213
+1,"(Intercept)::foraging_guild_consensusTerns",0.998828352309093
+1,"tmean_breeding::foraging_guild_consensusTerns",0.99933900530225
+1,"prec_breeding::foraging_guild_consensusTerns",0.998327110515278
+1,"hh::foraging_guild_consensusTerns",1.00043591707484
+1,"perc_cropland::foraging_guild_consensusTerns",1.00410249429776
+1,"perc_urban::foraging_guild_consensusTerns",1.00399854664424
+1,"perc_pasture::foraging_guild_consensusTerns",1.00082096469652
+1,"perc_grass_shrub::foraging_guild_consensusTerns",0.998427088169497
+1,"perc_forest_deciduous::foraging_guild_consensusTerns",1.00035541191785
+1,"perc_forest_evergreen::foraging_guild_consensusTerns",1.00352046028525
+1,"perc_forest_mixed_other::foraging_guild_consensusTerns",1.00054513102015
+1,"(Intercept)::foraging_guild_consensusThrushes",0.998758803361897
+1,"tmean_breeding::foraging_guild_consensusThrushes",1.00248203586892
+1,"prec_breeding::foraging_guild_consensusThrushes",0.998809756119662
+1,"hh::foraging_guild_consensusThrushes",0.99926238670757
+1,"perc_cropland::foraging_guild_consensusThrushes",0.999819016806344
+1,"perc_urban::foraging_guild_consensusThrushes",1.00099609909232
+1,"perc_pasture::foraging_guild_consensusThrushes",0.998382412765331
+1,"perc_grass_shrub::foraging_guild_consensusThrushes",0.999128546553844
+1,"perc_forest_deciduous::foraging_guild_consensusThrushes",1.00032934744502
+1,"perc_forest_evergreen::foraging_guild_consensusThrushes",0.998393629975941
+1,"perc_forest_mixed_other::foraging_guild_consensusThrushes",1.00208276766647
+1,"(Intercept)::foraging_guild_consensusWading birds",0.998842678237431
+1,"tmean_breeding::foraging_guild_consensusWading birds",0.999032009558273
+1,"prec_breeding::foraging_guild_consensusWading birds",0.999583296159668
+1,"hh::foraging_guild_consensusWading birds",0.999540346621383
+1,"perc_cropland::foraging_guild_consensusWading birds",0.99825578871582
+1,"perc_urban::foraging_guild_consensusWading birds",0.99901098684076
+1,"perc_pasture::foraging_guild_consensusWading birds",0.999156510246771
+1,"perc_grass_shrub::foraging_guild_consensusWading birds",0.999374160622533
+1,"perc_forest_deciduous::foraging_guild_consensusWading birds",0.99909952394864
+1,"perc_forest_evergreen::foraging_guild_consensusWading birds",0.998376597406739
+1,"perc_forest_mixed_other::foraging_guild_consensusWading birds",1.00093638217806
+1,"(Intercept)::foraging_guild_consensusWoodpeckers",0.998395295355202
+1,"tmean_breeding::foraging_guild_consensusWoodpeckers",1.00169144615584
+1,"prec_breeding::foraging_guild_consensusWoodpeckers",0.999674189027536
+1,"hh::foraging_guild_consensusWoodpeckers",0.998377064769121
+1,"perc_cropland::foraging_guild_consensusWoodpeckers",1.00395483253712
+1,"perc_urban::foraging_guild_consensusWoodpeckers",0.999781203813113
+1,"perc_pasture::foraging_guild_consensusWoodpeckers",0.999034235626103
+1,"perc_grass_shrub::foraging_guild_consensusWoodpeckers",0.999634100103619
+1,"perc_forest_deciduous::foraging_guild_consensusWoodpeckers",1.00055261582902
+1,"perc_forest_evergreen::foraging_guild_consensusWoodpeckers",1.00098305268474
+1,"perc_forest_mixed_other::foraging_guild_consensusWoodpeckers",1.00056265840406
+1,"(Intercept)::species_thermal_index",1.00613297716663
+1,"tmean_breeding::species_thermal_index",0.99826104970114
+1,"prec_breeding::species_thermal_index",0.999466708210229
+1,"hh::species_thermal_index",0.999054005921905
+1,"perc_cropland::species_thermal_index",0.999370730864343
+1,"perc_urban::species_thermal_index",0.998870266236654
+1,"perc_pasture::species_thermal_index",0.998095319750973
+1,"perc_grass_shrub::species_thermal_index",0.999065014226289
+1,"perc_forest_deciduous::species_thermal_index",1.0038711760983
+1,"perc_forest_evergreen::species_thermal_index",1.00268539390596
+1,"perc_forest_mixed_other::species_thermal_index",0.999901162966757
+2,"(Intercept)::(Intercept)",1.00419776605159
+2,"tmean_breeding::(Intercept)",1.0032970369067
+2,"prec_breeding::(Intercept)",1.00189553484572
+2,"hh::(Intercept)",1.01055595409984
+2,"perc_cropland::(Intercept)",1.00886652006826
+2,"perc_urban::(Intercept)",0.998064938885911
+2,"perc_pasture::(Intercept)",1.01490510833826
+2,"perc_grass_shrub::(Intercept)",1.0027688226273
+2,"perc_forest_deciduous::(Intercept)",0.998812061940064
+2,"perc_forest_evergreen::(Intercept)",0.99924451505749
+2,"perc_forest_mixed_other::(Intercept)",0.998212048360894
+2,"(Intercept)::Migration_a3_DOF1",1.01276758053745
+2,"tmean_breeding::Migration_a3_DOF1",1.01171449960839
+2,"prec_breeding::Migration_a3_DOF1",1.06134531971686
+2,"hh::Migration_a3_DOF1",1.03070717344757
+2,"perc_cropland::Migration_a3_DOF1",1.0059637034538
+2,"perc_urban::Migration_a3_DOF1",1.00728244179205
+2,"perc_pasture::Migration_a3_DOF1",1.00992393262404
+2,"perc_grass_shrub::Migration_a3_DOF1",1.00954021924433
+2,"perc_forest_deciduous::Migration_a3_DOF1",1.00468112033867
+2,"perc_forest_evergreen::Migration_a3_DOF1",1.00260112558304
+2,"perc_forest_mixed_other::Migration_a3_DOF1",1.02368945135664
+2,"(Intercept)::Migration_a3_DOF1.5",0.999326573108978
+2,"tmean_breeding::Migration_a3_DOF1.5",1.00122087692405
+2,"prec_breeding::Migration_a3_DOF1.5",1.01850441600926
+2,"hh::Migration_a3_DOF1.5",1.01122156923791
+2,"perc_cropland::Migration_a3_DOF1.5",1.00292076073791
+2,"perc_urban::Migration_a3_DOF1.5",0.999140518726175
+2,"perc_pasture::Migration_a3_DOF1.5",1.00200986148754
+2,"perc_grass_shrub::Migration_a3_DOF1.5",1.00182600340945
+2,"perc_forest_deciduous::Migration_a3_DOF1.5",1.00377117271745
+2,"perc_forest_evergreen::Migration_a3_DOF1.5",1.00159465767171
+2,"perc_forest_mixed_other::Migration_a3_DOF1.5",1.01195652884221
+2,"(Intercept)::Migration_a3_DOF2",1.00170813596479
+2,"tmean_breeding::Migration_a3_DOF2",1.00620834595023
+2,"prec_breeding::Migration_a3_DOF2",1.00671404149523
+2,"hh::Migration_a3_DOF2",0.999068569219257
+2,"perc_cropland::Migration_a3_DOF2",1.00472945499144
+2,"perc_urban::Migration_a3_DOF2",0.998069573828703
+2,"perc_pasture::Migration_a3_DOF2",1.0006388127456
+2,"perc_grass_shrub::Migration_a3_DOF2",0.998502809264007
+2,"perc_forest_deciduous::Migration_a3_DOF2",1.00600325411074
+2,"perc_forest_evergreen::Migration_a3_DOF2",0.998249418120634
+2,"perc_forest_mixed_other::Migration_a3_DOF2",1.00368729852913
+2,"(Intercept)::Migration_a3_DOF2.5",1.00176790802009
+2,"tmean_breeding::Migration_a3_DOF2.5",1.01473522139802
+2,"prec_breeding::Migration_a3_DOF2.5",1.00802894490933
+2,"hh::Migration_a3_DOF2.5",0.999905176069909
+2,"perc_cropland::Migration_a3_DOF2.5",1.00888758980191
+2,"perc_urban::Migration_a3_DOF2.5",1.00073084342784
+2,"perc_pasture::Migration_a3_DOF2.5",1.00055470110867
+2,"perc_grass_shrub::Migration_a3_DOF2.5",1.00410760556295
+2,"perc_forest_deciduous::Migration_a3_DOF2.5",1.00236967362523
+2,"perc_forest_evergreen::Migration_a3_DOF2.5",1.004542397425
+2,"perc_forest_mixed_other::Migration_a3_DOF2.5",1.00884912453027
+2,"(Intercept)::foraging_guild_consensusAerial insectivores",1.00181979727658
+2,"tmean_breeding::foraging_guild_consensusAerial insectivores",0.998575078203049
+2,"prec_breeding::foraging_guild_consensusAerial insectivores",1.00061672179944
+2,"hh::foraging_guild_consensusAerial insectivores",1.01406804265828
+2,"perc_cropland::foraging_guild_consensusAerial insectivores",0.998468006318382
+2,"perc_urban::foraging_guild_consensusAerial insectivores",0.998360867123153
+2,"perc_pasture::foraging_guild_consensusAerial insectivores",1.00077952969081
+2,"perc_grass_shrub::foraging_guild_consensusAerial insectivores",1.0052703103471
+2,"perc_forest_deciduous::foraging_guild_consensusAerial insectivores",1.0022179261507
+2,"perc_forest_evergreen::foraging_guild_consensusAerial insectivores",0.999836523222931
+2,"perc_forest_mixed_other::foraging_guild_consensusAerial insectivores",1.00211981873743
+2,"(Intercept)::foraging_guild_consensusAquatic pursuers",0.998357735220627
+2,"tmean_breeding::foraging_guild_consensusAquatic pursuers",0.998160339192898
+2,"prec_breeding::foraging_guild_consensusAquatic pursuers",1.00371070701572
+2,"hh::foraging_guild_consensusAquatic pursuers",1.00122765627054
+2,"perc_cropland::foraging_guild_consensusAquatic pursuers",0.998936367480227
+2,"perc_urban::foraging_guild_consensusAquatic pursuers",0.999145252850969
+2,"perc_pasture::foraging_guild_consensusAquatic pursuers",0.999529551336736
+2,"perc_grass_shrub::foraging_guild_consensusAquatic pursuers",0.999721801963663
+2,"perc_forest_deciduous::foraging_guild_consensusAquatic pursuers",0.999993962961446
+2,"perc_forest_evergreen::foraging_guild_consensusAquatic pursuers",0.999286233600727
+2,"perc_forest_mixed_other::foraging_guild_consensusAquatic pursuers",0.998453579303973
+2,"(Intercept)::foraging_guild_consensusBuntings",0.999154633307913
+2,"tmean_breeding::foraging_guild_consensusBuntings",1.00010180401877
+2,"prec_breeding::foraging_guild_consensusBuntings",1.01873009627071
+2,"hh::foraging_guild_consensusBuntings",1.00500954009837
+2,"perc_cropland::foraging_guild_consensusBuntings",1.00780109850395
+2,"perc_urban::foraging_guild_consensusBuntings",1.00637985767038
+2,"perc_pasture::foraging_guild_consensusBuntings",1.00038480309994
+2,"perc_grass_shrub::foraging_guild_consensusBuntings",1.00236181650629
+2,"perc_forest_deciduous::foraging_guild_consensusBuntings",1.00162115163295
+2,"perc_forest_evergreen::foraging_guild_consensusBuntings",1.000900399685
+2,"perc_forest_mixed_other::foraging_guild_consensusBuntings",1.01266745901964
+2,"(Intercept)::foraging_guild_consensusColumbids",0.999286612176313
+2,"tmean_breeding::foraging_guild_consensusColumbids",1.00069540293436
+2,"prec_breeding::foraging_guild_consensusColumbids",0.998872108025337
+2,"hh::foraging_guild_consensusColumbids",0.999848436642389
+2,"perc_cropland::foraging_guild_consensusColumbids",1.00356428267412
+2,"perc_urban::foraging_guild_consensusColumbids",1.00500559452537
+2,"perc_pasture::foraging_guild_consensusColumbids",0.998566713743109
+2,"perc_grass_shrub::foraging_guild_consensusColumbids",1.00014211505048
+2,"perc_forest_deciduous::foraging_guild_consensusColumbids",1.00120835550527
+2,"perc_forest_evergreen::foraging_guild_consensusColumbids",1.00022909031923
+2,"perc_forest_mixed_other::foraging_guild_consensusColumbids",0.998932964202599
+2,"(Intercept)::foraging_guild_consensusCuckoos",0.998318976118988
+2,"tmean_breeding::foraging_guild_consensusCuckoos",0.998478125487046
+2,"prec_breeding::foraging_guild_consensusCuckoos",0.998254219524902
+2,"hh::foraging_guild_consensusCuckoos",1.00418956546267
+2,"perc_cropland::foraging_guild_consensusCuckoos",0.999555484371688
+2,"perc_urban::foraging_guild_consensusCuckoos",1.00088177448946
+2,"perc_pasture::foraging_guild_consensusCuckoos",0.998198915831134
+2,"perc_grass_shrub::foraging_guild_consensusCuckoos",0.99975593590709
+2,"perc_forest_deciduous::foraging_guild_consensusCuckoos",1.00366257105054
+2,"perc_forest_evergreen::foraging_guild_consensusCuckoos",0.998578777743964
+2,"perc_forest_mixed_other::foraging_guild_consensusCuckoos",1.00460882314789
+2,"(Intercept)::foraging_guild_consensusDabbling ducks",1.00099905867054
+2,"tmean_breeding::foraging_guild_consensusDabbling ducks",1.00218871692704
+2,"prec_breeding::foraging_guild_consensusDabbling ducks",0.999720093035481
+2,"hh::foraging_guild_consensusDabbling ducks",1.00154190730766
+2,"perc_cropland::foraging_guild_consensusDabbling ducks",1.00021769964454
+2,"perc_urban::foraging_guild_consensusDabbling ducks",0.999195279304893
+2,"perc_pasture::foraging_guild_consensusDabbling ducks",0.999426578043184
+2,"perc_grass_shrub::foraging_guild_consensusDabbling ducks",0.999464990022465
+2,"perc_forest_deciduous::foraging_guild_consensusDabbling ducks",0.999838254130895
+2,"perc_forest_evergreen::foraging_guild_consensusDabbling ducks",0.99925224201812
+2,"perc_forest_mixed_other::foraging_guild_consensusDabbling ducks",0.998271477012935
+2,"(Intercept)::foraging_guild_consensusDippers",0.998706499270974
+2,"tmean_breeding::foraging_guild_consensusDippers",0.999172129029833
+2,"prec_breeding::foraging_guild_consensusDippers",1.00891133641176
+2,"hh::foraging_guild_consensusDippers",1.00405602789123
+2,"perc_cropland::foraging_guild_consensusDippers",1.00457322839544
+2,"perc_urban::foraging_guild_consensusDippers",1.0023769742479
+2,"perc_pasture::foraging_guild_consensusDippers",1.0001876545124
+2,"perc_grass_shrub::foraging_guild_consensusDippers",1.00128269415075
+2,"perc_forest_deciduous::foraging_guild_consensusDippers",1.00067531094205
+2,"perc_forest_evergreen::foraging_guild_consensusDippers",1.01734101917391
+2,"perc_forest_mixed_other::foraging_guild_consensusDippers",0.999105945123344
+2,"(Intercept)::foraging_guild_consensusDiurnal raptors",0.99991787709595
+2,"tmean_breeding::foraging_guild_consensusDiurnal raptors",0.99947900423306
+2,"prec_breeding::foraging_guild_consensusDiurnal raptors",0.998842512816352
+2,"hh::foraging_guild_consensusDiurnal raptors",1.00028354433656
+2,"perc_cropland::foraging_guild_consensusDiurnal raptors",1.00136661009188
+2,"perc_urban::foraging_guild_consensusDiurnal raptors",1.00280486327631
+2,"perc_pasture::foraging_guild_consensusDiurnal raptors",0.999429954036346
+2,"perc_grass_shrub::foraging_guild_consensusDiurnal raptors",0.998920493818309
+2,"perc_forest_deciduous::foraging_guild_consensusDiurnal raptors",0.998300481933062
+2,"perc_forest_evergreen::foraging_guild_consensusDiurnal raptors",0.999976514718092
+2,"perc_forest_mixed_other::foraging_guild_consensusDiurnal raptors",0.998048106493076
+2,"(Intercept)::foraging_guild_consensusDiving ducks",0.998761737433725
+2,"tmean_breeding::foraging_guild_consensusDiving ducks",0.999292252006164
+2,"prec_breeding::foraging_guild_consensusDiving ducks",0.99827713166939
+2,"hh::foraging_guild_consensusDiving ducks",0.99894518663924
+2,"perc_cropland::foraging_guild_consensusDiving ducks",1.0002559119101
+2,"perc_urban::foraging_guild_consensusDiving ducks",0.999046275392321
+2,"perc_pasture::foraging_guild_consensusDiving ducks",1.00103813313244
+2,"perc_grass_shrub::foraging_guild_consensusDiving ducks",0.998977369928779
+2,"perc_forest_deciduous::foraging_guild_consensusDiving ducks",0.999138331105963
+2,"perc_forest_evergreen::foraging_guild_consensusDiving ducks",1.00123329637758
+2,"perc_forest_mixed_other::foraging_guild_consensusDiving ducks",0.99924945078777
+2,"(Intercept)::foraging_guild_consensusFlycatchers",1.00237031873099
+2,"tmean_breeding::foraging_guild_consensusFlycatchers",0.998966352671118
+2,"prec_breeding::foraging_guild_consensusFlycatchers",0.999176449993414
+2,"hh::foraging_guild_consensusFlycatchers",0.999607745985188
+2,"perc_cropland::foraging_guild_consensusFlycatchers",1.00282868065482
+2,"perc_urban::foraging_guild_consensusFlycatchers",0.998115926566893
+2,"perc_pasture::foraging_guild_consensusFlycatchers",1.00094834906905
+2,"perc_grass_shrub::foraging_guild_consensusFlycatchers",0.999326200259673
+2,"perc_forest_deciduous::foraging_guild_consensusFlycatchers",0.999920653444085
+2,"perc_forest_evergreen::foraging_guild_consensusFlycatchers",0.998615939653898
+2,"perc_forest_mixed_other::foraging_guild_consensusFlycatchers",1.00142594370762
+2,"(Intercept)::foraging_guild_consensusFoliage gleaners",1.00137449505618
+2,"tmean_breeding::foraging_guild_consensusFoliage gleaners",1.00069872010346
+2,"prec_breeding::foraging_guild_consensusFoliage gleaners",1.00432896537557
+2,"hh::foraging_guild_consensusFoliage gleaners",1.00013362799206
+2,"perc_cropland::foraging_guild_consensusFoliage gleaners",1.00007385970221
+2,"perc_urban::foraging_guild_consensusFoliage gleaners",1.00149547872169
+2,"perc_pasture::foraging_guild_consensusFoliage gleaners",0.998494679526566
+2,"perc_grass_shrub::foraging_guild_consensusFoliage gleaners",1.00289305207083
+2,"perc_forest_deciduous::foraging_guild_consensusFoliage gleaners",0.99867422155373
+2,"perc_forest_evergreen::foraging_guild_consensusFoliage gleaners",0.999766267306914
+2,"perc_forest_mixed_other::foraging_guild_consensusFoliage gleaners",0.999403623125852
+2,"(Intercept)::foraging_guild_consensusGallinaceous birds",0.999952415445232
+2,"tmean_breeding::foraging_guild_consensusGallinaceous birds",1.00381516252269
+2,"prec_breeding::foraging_guild_consensusGallinaceous birds",1.00642880831297
+2,"hh::foraging_guild_consensusGallinaceous birds",0.99991677360886
+2,"perc_cropland::foraging_guild_consensusGallinaceous birds",1.00486903413273
+2,"perc_urban::foraging_guild_consensusGallinaceous birds",1.00033552025214
+2,"perc_pasture::foraging_guild_consensusGallinaceous birds",0.998466712404131
+2,"perc_grass_shrub::foraging_guild_consensusGallinaceous birds",0.999352036139489
+2,"perc_forest_deciduous::foraging_guild_consensusGallinaceous birds",0.998891934276869
+2,"perc_forest_evergreen::foraging_guild_consensusGallinaceous birds",0.999359766264309
+2,"perc_forest_mixed_other::foraging_guild_consensusGallinaceous birds",1.00440060704707
+2,"(Intercept)::foraging_guild_consensusGrazing waterfowl",0.9993819066851
+2,"tmean_breeding::foraging_guild_consensusGrazing waterfowl",1.00117315882099
+2,"prec_breeding::foraging_guild_consensusGrazing waterfowl",0.998034132529575
+2,"hh::foraging_guild_consensusGrazing waterfowl",1.00904377320418
+2,"perc_cropland::foraging_guild_consensusGrazing waterfowl",0.998810992375298
+2,"perc_urban::foraging_guild_consensusGrazing waterfowl",0.999495349301187
+2,"perc_pasture::foraging_guild_consensusGrazing waterfowl",1.00514290852967
+2,"perc_grass_shrub::foraging_guild_consensusGrazing waterfowl",1.00029758715933
+2,"perc_forest_deciduous::foraging_guild_consensusGrazing waterfowl",1.00017465218077
+2,"perc_forest_evergreen::foraging_guild_consensusGrazing waterfowl",1.00341759640596
+2,"perc_forest_mixed_other::foraging_guild_consensusGrazing waterfowl",0.998331856534561
+2,"(Intercept)::foraging_guild_consensusGulls",0.998904341933619
+2,"tmean_breeding::foraging_guild_consensusGulls",1.00383210341802
+2,"prec_breeding::foraging_guild_consensusGulls",0.99992446143035
+2,"hh::foraging_guild_consensusGulls",1.01881472989686
+2,"perc_cropland::foraging_guild_consensusGulls",1.00189428576509
+2,"perc_urban::foraging_guild_consensusGulls",1.00061236927364
+2,"perc_pasture::foraging_guild_consensusGulls",1.00885476515592
+2,"perc_grass_shrub::foraging_guild_consensusGulls",1.00764808988365
+2,"perc_forest_deciduous::foraging_guild_consensusGulls",0.998740283511553
+2,"perc_forest_evergreen::foraging_guild_consensusGulls",1.00037220038585
+2,"perc_forest_mixed_other::foraging_guild_consensusGulls",0.99906218046052
+2,"(Intercept)::foraging_guild_consensusKingfishers",0.998141919229661
+2,"tmean_breeding::foraging_guild_consensusKingfishers",1.00181625378218
+2,"prec_breeding::foraging_guild_consensusKingfishers",1.00081073565153
+2,"hh::foraging_guild_consensusKingfishers",0.999462291478818
+2,"perc_cropland::foraging_guild_consensusKingfishers",1.00164807754737
+2,"perc_urban::foraging_guild_consensusKingfishers",0.999539555144773
+2,"perc_pasture::foraging_guild_consensusKingfishers",1.00103630299223
+2,"perc_grass_shrub::foraging_guild_consensusKingfishers",0.998252556413932
+2,"perc_forest_deciduous::foraging_guild_consensusKingfishers",0.999705131444297
+2,"perc_forest_evergreen::foraging_guild_consensusKingfishers",1.00075537712481
+2,"perc_forest_mixed_other::foraging_guild_consensusKingfishers",1.00562785012666
+2,"(Intercept)::foraging_guild_consensusLow flycatching feeders",1.00105686024246
+2,"tmean_breeding::foraging_guild_consensusLow flycatching feeders",0.999209050090184
+2,"prec_breeding::foraging_guild_consensusLow flycatching feeders",1.00274012784559
+2,"hh::foraging_guild_consensusLow flycatching feeders",1.0032182213551
+2,"perc_cropland::foraging_guild_consensusLow flycatching feeders",1.0012692524703
+2,"perc_urban::foraging_guild_consensusLow flycatching feeders",0.999806011838416
+2,"perc_pasture::foraging_guild_consensusLow flycatching feeders",0.999206775348365
+2,"perc_grass_shrub::foraging_guild_consensusLow flycatching feeders",0.999283742770884
+2,"perc_forest_deciduous::foraging_guild_consensusLow flycatching feeders",0.999086479694422
+2,"perc_forest_evergreen::foraging_guild_consensusLow flycatching feeders",1.00041904825131
+2,"perc_forest_mixed_other::foraging_guild_consensusLow flycatching feeders",1.00563508402679
+2,"(Intercept)::foraging_guild_consensusMarsh warblers",0.99911950310191
+2,"tmean_breeding::foraging_guild_consensusMarsh warblers",0.999104625235734
+2,"prec_breeding::foraging_guild_consensusMarsh warblers",0.999689912653265
+2,"hh::foraging_guild_consensusMarsh warblers",0.999670323840211
+2,"perc_cropland::foraging_guild_consensusMarsh warblers",0.9992627853245
+2,"perc_urban::foraging_guild_consensusMarsh warblers",1.00275507218683
+2,"perc_pasture::foraging_guild_consensusMarsh warblers",1.00081754090017
+2,"perc_grass_shrub::foraging_guild_consensusMarsh warblers",1.00253108705174
+2,"perc_forest_deciduous::foraging_guild_consensusMarsh warblers",1.00080920461574
+2,"perc_forest_evergreen::foraging_guild_consensusMarsh warblers",1.00011940163268
+2,"perc_forest_mixed_other::foraging_guild_consensusMarsh warblers",1.0005884232324
+2,"(Intercept)::foraging_guild_consensusNigthjars",1.00009964255558
+2,"tmean_breeding::foraging_guild_consensusNigthjars",1.0016549121054
+2,"prec_breeding::foraging_guild_consensusNigthjars",1.00255304131792
+2,"hh::foraging_guild_consensusNigthjars",0.999123785255289
+2,"perc_cropland::foraging_guild_consensusNigthjars",1.00579734717438
+2,"perc_urban::foraging_guild_consensusNigthjars",1.00659091030255
+2,"perc_pasture::foraging_guild_consensusNigthjars",0.998717807775073
+2,"perc_grass_shrub::foraging_guild_consensusNigthjars",0.998973577998784
+2,"perc_forest_deciduous::foraging_guild_consensusNigthjars",0.998170200304842
+2,"perc_forest_evergreen::foraging_guild_consensusNigthjars",0.998945497670961
+2,"perc_forest_mixed_other::foraging_guild_consensusNigthjars",1.00300926687818
+2,"(Intercept)::foraging_guild_consensusOmnivorous corvids",1.00108394468171
+2,"tmean_breeding::foraging_guild_consensusOmnivorous corvids",1.00141690536887
+2,"prec_breeding::foraging_guild_consensusOmnivorous corvids",1.00069507462726
+2,"hh::foraging_guild_consensusOmnivorous corvids",1.00885408245157
+2,"perc_cropland::foraging_guild_consensusOmnivorous corvids",1.00454496829304
+2,"perc_urban::foraging_guild_consensusOmnivorous corvids",0.998767684473996
+2,"perc_pasture::foraging_guild_consensusOmnivorous corvids",1.00102755194135
+2,"perc_grass_shrub::foraging_guild_consensusOmnivorous corvids",1.00050679696237
+2,"perc_forest_deciduous::foraging_guild_consensusOmnivorous corvids",1.00057093391693
+2,"perc_forest_evergreen::foraging_guild_consensusOmnivorous corvids",0.99856968688136
+2,"perc_forest_mixed_other::foraging_guild_consensusOmnivorous corvids",1.00256806056075
+2,"(Intercept)::foraging_guild_consensusOpen-land insectivores",0.998470742245541
+2,"tmean_breeding::foraging_guild_consensusOpen-land insectivores",1.01141199766401
+2,"prec_breeding::foraging_guild_consensusOpen-land insectivores",1.00044152996998
+2,"hh::foraging_guild_consensusOpen-land insectivores",0.999566390475943
+2,"perc_cropland::foraging_guild_consensusOpen-land insectivores",1.00230626063981
+2,"perc_urban::foraging_guild_consensusOpen-land insectivores",1.00077112041731
+2,"perc_pasture::foraging_guild_consensusOpen-land insectivores",1.00935425658021
+2,"perc_grass_shrub::foraging_guild_consensusOpen-land insectivores",1.00159563798144
+2,"perc_forest_deciduous::foraging_guild_consensusOpen-land insectivores",0.999702059021801
+2,"perc_forest_evergreen::foraging_guild_consensusOpen-land insectivores",0.998561901745195
+2,"perc_forest_mixed_other::foraging_guild_consensusOpen-land insectivores",0.99963391736079
+2,"(Intercept)::foraging_guild_consensusOrioles",0.999733857207201
+2,"tmean_breeding::foraging_guild_consensusOrioles",1.00025897257663
+2,"prec_breeding::foraging_guild_consensusOrioles",1.00140716081492
+2,"hh::foraging_guild_consensusOrioles",1.00198544135632
+2,"perc_cropland::foraging_guild_consensusOrioles",1.00051023594682
+2,"perc_urban::foraging_guild_consensusOrioles",0.998172415604735
+2,"perc_pasture::foraging_guild_consensusOrioles",1.00174250561954
+2,"perc_grass_shrub::foraging_guild_consensusOrioles",0.999845726923345
+2,"perc_forest_deciduous::foraging_guild_consensusOrioles",0.999187269813346
+2,"perc_forest_evergreen::foraging_guild_consensusOrioles",1.00047086567508
+2,"perc_forest_mixed_other::foraging_guild_consensusOrioles",0.999322556614049
+2,"(Intercept)::foraging_guild_consensusOwls",1.00117292816733
+2,"tmean_breeding::foraging_guild_consensusOwls",1.00182678133109
+2,"prec_breeding::foraging_guild_consensusOwls",1.00048235554406
+2,"hh::foraging_guild_consensusOwls",0.998509501969291
+2,"perc_cropland::foraging_guild_consensusOwls",1.00251267883779
+2,"perc_urban::foraging_guild_consensusOwls",0.999818640512696
+2,"perc_pasture::foraging_guild_consensusOwls",0.998973096111341
+2,"perc_grass_shrub::foraging_guild_consensusOwls",0.998753658252855
+2,"perc_forest_deciduous::foraging_guild_consensusOwls",0.998693598961875
+2,"perc_forest_evergreen::foraging_guild_consensusOwls",0.999631878120267
+2,"perc_forest_mixed_other::foraging_guild_consensusOwls",1.00204290213871
+2,"(Intercept)::foraging_guild_consensusPasserine seedeaters",1.00200831154295
+2,"tmean_breeding::foraging_guild_consensusPasserine seedeaters",0.999631038866037
+2,"prec_breeding::foraging_guild_consensusPasserine seedeaters",1.00524269940729
+2,"hh::foraging_guild_consensusPasserine seedeaters",0.998747703125204
+2,"perc_cropland::foraging_guild_consensusPasserine seedeaters",0.999969230488689
+2,"perc_urban::foraging_guild_consensusPasserine seedeaters",1.00198539424588
+2,"perc_pasture::foraging_guild_consensusPasserine seedeaters",1.00122159693907
+2,"perc_grass_shrub::foraging_guild_consensusPasserine seedeaters",0.999495404093666
+2,"perc_forest_deciduous::foraging_guild_consensusPasserine seedeaters",0.999752504352575
+2,"perc_forest_evergreen::foraging_guild_consensusPasserine seedeaters",0.998321716702551
+2,"perc_forest_mixed_other::foraging_guild_consensusPasserine seedeaters",0.999092924405644
+2,"(Intercept)::foraging_guild_consensusPlovers",1.00155926808409
+2,"tmean_breeding::foraging_guild_consensusPlovers",1.00878562572748
+2,"prec_breeding::foraging_guild_consensusPlovers",1.00182653880238
+2,"hh::foraging_guild_consensusPlovers",1.00896873164759
+2,"perc_cropland::foraging_guild_consensusPlovers",1.00474335927079
+2,"perc_urban::foraging_guild_consensusPlovers",1.00022603481246
+2,"perc_pasture::foraging_guild_consensusPlovers",1.00570063997456
+2,"perc_grass_shrub::foraging_guild_consensusPlovers",1.01101830180586
+2,"perc_forest_deciduous::foraging_guild_consensusPlovers",1.00318624234841
+2,"perc_forest_evergreen::foraging_guild_consensusPlovers",1.00234304508325
+2,"perc_forest_mixed_other::foraging_guild_consensusPlovers",1.00331810899766
+2,"(Intercept)::foraging_guild_consensusRails",1.00328105122535
+2,"tmean_breeding::foraging_guild_consensusRails",1.00167408496574
+2,"prec_breeding::foraging_guild_consensusRails",0.999100831617308
+2,"hh::foraging_guild_consensusRails",0.998746525303697
+2,"perc_cropland::foraging_guild_consensusRails",1.0051949178158
+2,"perc_urban::foraging_guild_consensusRails",1.00160948322444
+2,"perc_pasture::foraging_guild_consensusRails",0.999246125193951
+2,"perc_grass_shrub::foraging_guild_consensusRails",1.00121030378432
+2,"perc_forest_deciduous::foraging_guild_consensusRails",0.999717094067222
+2,"perc_forest_evergreen::foraging_guild_consensusRails",0.999188101637491
+2,"perc_forest_mixed_other::foraging_guild_consensusRails",1.00283913234764
+2,"(Intercept)::foraging_guild_consensusReedlings",1.00210603538612
+2,"tmean_breeding::foraging_guild_consensusReedlings",1.00817343250329
+2,"prec_breeding::foraging_guild_consensusReedlings",1.00957380686206
+2,"hh::foraging_guild_consensusReedlings",1.00194473963194
+2,"perc_cropland::foraging_guild_consensusReedlings",1.00012383718921
+2,"perc_urban::foraging_guild_consensusReedlings",0.999956510449701
+2,"perc_pasture::foraging_guild_consensusReedlings",0.998429214016277
+2,"perc_grass_shrub::foraging_guild_consensusReedlings",0.999803413635668
+2,"perc_forest_deciduous::foraging_guild_consensusReedlings",0.998437702536933
+2,"perc_forest_evergreen::foraging_guild_consensusReedlings",1.00021710365708
+2,"perc_forest_mixed_other::foraging_guild_consensusReedlings",1.00025498332362
+2,"(Intercept)::foraging_guild_consensusScolopacids",0.998108079782713
+2,"tmean_breeding::foraging_guild_consensusScolopacids",1.00479552972051
+2,"prec_breeding::foraging_guild_consensusScolopacids",1.00282908428752
+2,"hh::foraging_guild_consensusScolopacids",0.998729576956091
+2,"perc_cropland::foraging_guild_consensusScolopacids",1.00191438122409
+2,"perc_urban::foraging_guild_consensusScolopacids",1.00250938573078
+2,"perc_pasture::foraging_guild_consensusScolopacids",0.998384309972001
+2,"perc_grass_shrub::foraging_guild_consensusScolopacids",1.00241205822014
+2,"perc_forest_deciduous::foraging_guild_consensusScolopacids",0.998403379563511
+2,"perc_forest_evergreen::foraging_guild_consensusScolopacids",0.99867693600065
+2,"perc_forest_mixed_other::foraging_guild_consensusScolopacids",1.00145313719274
+2,"(Intercept)::foraging_guild_consensusShrikes",1.01275439899905
+2,"tmean_breeding::foraging_guild_consensusShrikes",0.999902641690667
+2,"prec_breeding::foraging_guild_consensusShrikes",1.00196248038646
+2,"hh::foraging_guild_consensusShrikes",1.00765999319884
+2,"perc_cropland::foraging_guild_consensusShrikes",0.999809288151988
+2,"perc_urban::foraging_guild_consensusShrikes",1.00357125687446
+2,"perc_pasture::foraging_guild_consensusShrikes",0.999855466796993
+2,"perc_grass_shrub::foraging_guild_consensusShrikes",1.00072675640168
+2,"perc_forest_deciduous::foraging_guild_consensusShrikes",1.00046603375481
+2,"perc_forest_evergreen::foraging_guild_consensusShrikes",0.998850898184069
+2,"perc_forest_mixed_other::foraging_guild_consensusShrikes",0.9984320726523
+2,"(Intercept)::foraging_guild_consensusStarlings",1.0016922162272
+2,"tmean_breeding::foraging_guild_consensusStarlings",1.00000658823843
+2,"prec_breeding::foraging_guild_consensusStarlings",1.00894648070672
+2,"hh::foraging_guild_consensusStarlings",1.01417561336199
+2,"perc_cropland::foraging_guild_consensusStarlings",0.998528309508741
+2,"perc_urban::foraging_guild_consensusStarlings",0.998105013170855
+2,"perc_pasture::foraging_guild_consensusStarlings",1.01397303775144
+2,"perc_grass_shrub::foraging_guild_consensusStarlings",1.00550129623702
+2,"perc_forest_deciduous::foraging_guild_consensusStarlings",1.00562609851406
+2,"perc_forest_evergreen::foraging_guild_consensusStarlings",1.0041532818472
+2,"perc_forest_mixed_other::foraging_guild_consensusStarlings",1.00061182408361
+2,"(Intercept)::foraging_guild_consensusTerns",0.998753502854515
+2,"tmean_breeding::foraging_guild_consensusTerns",1.00113309273038
+2,"prec_breeding::foraging_guild_consensusTerns",1.00261180956948
+2,"hh::foraging_guild_consensusTerns",1.02343909111316
+2,"perc_cropland::foraging_guild_consensusTerns",1.00581852614063
+2,"perc_urban::foraging_guild_consensusTerns",0.999934267229832
+2,"perc_pasture::foraging_guild_consensusTerns",1.00424529732811
+2,"perc_grass_shrub::foraging_guild_consensusTerns",1.00452267365488
+2,"perc_forest_deciduous::foraging_guild_consensusTerns",0.998426259488443
+2,"perc_forest_evergreen::foraging_guild_consensusTerns",1.00783721391295
+2,"perc_forest_mixed_other::foraging_guild_consensusTerns",0.999017665526932
+2,"(Intercept)::foraging_guild_consensusThrushes",0.998767997056731
+2,"tmean_breeding::foraging_guild_consensusThrushes",0.999426852342129
+2,"prec_breeding::foraging_guild_consensusThrushes",1.00417889080786
+2,"hh::foraging_guild_consensusThrushes",1.00037531781268
+2,"perc_cropland::foraging_guild_consensusThrushes",1.01153395306837
+2,"perc_urban::foraging_guild_consensusThrushes",0.998422336501355
+2,"perc_pasture::foraging_guild_consensusThrushes",0.998596330287204
+2,"perc_grass_shrub::foraging_guild_consensusThrushes",0.999566862844164
+2,"perc_forest_deciduous::foraging_guild_consensusThrushes",0.999138315125685
+2,"perc_forest_evergreen::foraging_guild_consensusThrushes",0.998597333769484
+2,"perc_forest_mixed_other::foraging_guild_consensusThrushes",1.00964323402867
+2,"(Intercept)::foraging_guild_consensusWading birds",0.999055186331938
+2,"tmean_breeding::foraging_guild_consensusWading birds",0.999574719175649
+2,"prec_breeding::foraging_guild_consensusWading birds",1.00034062094434
+2,"hh::foraging_guild_consensusWading birds",0.998612224264312
+2,"perc_cropland::foraging_guild_consensusWading birds",1.00328784546952
+2,"perc_urban::foraging_guild_consensusWading birds",0.999553907995947
+2,"perc_pasture::foraging_guild_consensusWading birds",1.00082613824775
+2,"perc_grass_shrub::foraging_guild_consensusWading birds",0.99942333377212
+2,"perc_forest_deciduous::foraging_guild_consensusWading birds",0.999673305904464
+2,"perc_forest_evergreen::foraging_guild_consensusWading birds",0.999683980350076
+2,"perc_forest_mixed_other::foraging_guild_consensusWading birds",0.998720548806463
+2,"(Intercept)::foraging_guild_consensusWoodpeckers",0.999466185292253
+2,"tmean_breeding::foraging_guild_consensusWoodpeckers",1.00946773787262
+2,"prec_breeding::foraging_guild_consensusWoodpeckers",1.00001408046368
+2,"hh::foraging_guild_consensusWoodpeckers",0.998635384435516
+2,"perc_cropland::foraging_guild_consensusWoodpeckers",1.00175926679777
+2,"perc_urban::foraging_guild_consensusWoodpeckers",0.998946484457357
+2,"perc_pasture::foraging_guild_consensusWoodpeckers",1.00023258169235
+2,"perc_grass_shrub::foraging_guild_consensusWoodpeckers",0.999903787323303
+2,"perc_forest_deciduous::foraging_guild_consensusWoodpeckers",0.99950767211978
+2,"perc_forest_evergreen::foraging_guild_consensusWoodpeckers",1.00307170955549
+2,"perc_forest_mixed_other::foraging_guild_consensusWoodpeckers",1.00026424898415
+2,"(Intercept)::species_thermal_index",1.00401544722869
+2,"tmean_breeding::species_thermal_index",1.00257081352627
+2,"prec_breeding::species_thermal_index",1.00422346727484
+2,"hh::species_thermal_index",1.02080779483456
+2,"perc_cropland::species_thermal_index",1.00997639286777
+2,"perc_urban::species_thermal_index",0.998874168587461
+2,"perc_pasture::species_thermal_index",1.03340716463346
+2,"perc_grass_shrub::species_thermal_index",1.00850801864403
+2,"perc_forest_deciduous::species_thermal_index",1.00152469770028
+2,"perc_forest_evergreen::species_thermal_index",1.00060097092574
+2,"perc_forest_mixed_other::species_thermal_index",0.998556310874366
+3,"(Intercept)::(Intercept)",1.00454108325174
+3,"tmean_breeding::(Intercept)",1.00751037930663
+3,"prec_breeding::(Intercept)",1.01583124305234
+3,"hh::(Intercept)",0.999865272665943
+3,"perc_cropland::(Intercept)",1.00403243652049
+3,"perc_urban::(Intercept)",1.00141080579356
+3,"perc_pasture::(Intercept)",1.00031843262031
+3,"perc_grass_shrub::(Intercept)",1.00227934455178
+3,"perc_forest_deciduous::(Intercept)",1.00005310766627
+3,"perc_forest_evergreen::(Intercept)",1.00062592406367
+3,"perc_forest_mixed_other::(Intercept)",1.00915326350358
+3,"(Intercept)::Migration_a3_DOF1",1.06787040143566
+3,"tmean_breeding::Migration_a3_DOF1",1.03838311929692
+3,"prec_breeding::Migration_a3_DOF1",1.00543647444683
+3,"hh::Migration_a3_DOF1",1.00472265468045
+3,"perc_cropland::Migration_a3_DOF1",1.0171205653878
+3,"perc_urban::Migration_a3_DOF1",1.01355237797396
+3,"perc_pasture::Migration_a3_DOF1",1.01155618368518
+3,"perc_grass_shrub::Migration_a3_DOF1",1.00849268265644
+3,"perc_forest_deciduous::Migration_a3_DOF1",1.00879966019786
+3,"perc_forest_evergreen::Migration_a3_DOF1",1.00028196108438
+3,"perc_forest_mixed_other::Migration_a3_DOF1",1.01011627704938
+3,"(Intercept)::Migration_a3_DOF1.5",1.03878543974871
+3,"tmean_breeding::Migration_a3_DOF1.5",1.02431952875593
+3,"prec_breeding::Migration_a3_DOF1.5",0.9986417332454
+3,"hh::Migration_a3_DOF1.5",1.00201888901208
+3,"perc_cropland::Migration_a3_DOF1.5",1.00372557471042
+3,"perc_urban::Migration_a3_DOF1.5",0.999764389278841
+3,"perc_pasture::Migration_a3_DOF1.5",1.00673802522339
+3,"perc_grass_shrub::Migration_a3_DOF1.5",1.00816656320579
+3,"perc_forest_deciduous::Migration_a3_DOF1.5",1.01136057501297
+3,"perc_forest_evergreen::Migration_a3_DOF1.5",0.99892769930956
+3,"perc_forest_mixed_other::Migration_a3_DOF1.5",1.00459255456643
+3,"(Intercept)::Migration_a3_DOF2",1.00674256876641
+3,"tmean_breeding::Migration_a3_DOF2",1.0094013032776
+3,"prec_breeding::Migration_a3_DOF2",1.002939969406
+3,"hh::Migration_a3_DOF2",0.99946812968689
+3,"perc_cropland::Migration_a3_DOF2",0.999711899822955
+3,"perc_urban::Migration_a3_DOF2",1.00271063861692
+3,"perc_pasture::Migration_a3_DOF2",1.00347885425465
+3,"perc_grass_shrub::Migration_a3_DOF2",1.00073166753154
+3,"perc_forest_deciduous::Migration_a3_DOF2",1.00151426520713
+3,"perc_forest_evergreen::Migration_a3_DOF2",0.999907231749399
+3,"perc_forest_mixed_other::Migration_a3_DOF2",1.00322273701232
+3,"(Intercept)::Migration_a3_DOF2.5",1.01165356713343
+3,"tmean_breeding::Migration_a3_DOF2.5",1.01305068929325
+3,"prec_breeding::Migration_a3_DOF2.5",0.999382926919535
+3,"hh::Migration_a3_DOF2.5",1.00113038725314
+3,"perc_cropland::Migration_a3_DOF2.5",1.00155574563518
+3,"perc_urban::Migration_a3_DOF2.5",1.00008436140952
+3,"perc_pasture::Migration_a3_DOF2.5",1.0047246529295
+3,"perc_grass_shrub::Migration_a3_DOF2.5",1.0038732931901
+3,"perc_forest_deciduous::Migration_a3_DOF2.5",1.00168222545311
+3,"perc_forest_evergreen::Migration_a3_DOF2.5",0.998607577097474
+3,"perc_forest_mixed_other::Migration_a3_DOF2.5",1.00015381767927
+3,"(Intercept)::foraging_guild_consensusAerial insectivores",0.999662530338244
+3,"tmean_breeding::foraging_guild_consensusAerial insectivores",1.00602683447229
+3,"prec_breeding::foraging_guild_consensusAerial insectivores",1.00949951036633
+3,"hh::foraging_guild_consensusAerial insectivores",1.00690911855876
+3,"perc_cropland::foraging_guild_consensusAerial insectivores",0.99843024157973
+3,"perc_urban::foraging_guild_consensusAerial insectivores",1.00355052462118
+3,"perc_pasture::foraging_guild_consensusAerial insectivores",1.00403021122599
+3,"perc_grass_shrub::foraging_guild_consensusAerial insectivores",1.01456112892584
+3,"perc_forest_deciduous::foraging_guild_consensusAerial insectivores",1.00139576746142
+3,"perc_forest_evergreen::foraging_guild_consensusAerial insectivores",0.999746241065325
+3,"perc_forest_mixed_other::foraging_guild_consensusAerial insectivores",0.999820748385291
+3,"(Intercept)::foraging_guild_consensusAquatic pursuers",1.00823685101212
+3,"tmean_breeding::foraging_guild_consensusAquatic pursuers",1.00040140031017
+3,"prec_breeding::foraging_guild_consensusAquatic pursuers",1.00469129879246
+3,"hh::foraging_guild_consensusAquatic pursuers",1.00031749037357
+3,"perc_cropland::foraging_guild_consensusAquatic pursuers",1.00305840445362
+3,"perc_urban::foraging_guild_consensusAquatic pursuers",1.00147156905877
+3,"perc_pasture::foraging_guild_consensusAquatic pursuers",0.999937802052059
+3,"perc_grass_shrub::foraging_guild_consensusAquatic pursuers",0.998814839592358
+3,"perc_forest_deciduous::foraging_guild_consensusAquatic pursuers",1.00225813276728
+3,"perc_forest_evergreen::foraging_guild_consensusAquatic pursuers",1.00007068664751
+3,"perc_forest_mixed_other::foraging_guild_consensusAquatic pursuers",1.00015327448385
+3,"(Intercept)::foraging_guild_consensusBuntings",1.00105549845329
+3,"tmean_breeding::foraging_guild_consensusBuntings",1.00194207618592
+3,"prec_breeding::foraging_guild_consensusBuntings",1.00328189725703
+3,"hh::foraging_guild_consensusBuntings",0.999875070427339
+3,"perc_cropland::foraging_guild_consensusBuntings",0.999899932692332
+3,"perc_urban::foraging_guild_consensusBuntings",1.0035943316349
+3,"perc_pasture::foraging_guild_consensusBuntings",1.00095286973824
+3,"perc_grass_shrub::foraging_guild_consensusBuntings",1.00084308039046
+3,"perc_forest_deciduous::foraging_guild_consensusBuntings",1.00049616728628
+3,"perc_forest_evergreen::foraging_guild_consensusBuntings",0.99906816690413
+3,"perc_forest_mixed_other::foraging_guild_consensusBuntings",0.998209627130308
+3,"(Intercept)::foraging_guild_consensusColumbids",1.00116303953736
+3,"tmean_breeding::foraging_guild_consensusColumbids",1.00071711798717
+3,"prec_breeding::foraging_guild_consensusColumbids",0.998988411613403
+3,"hh::foraging_guild_consensusColumbids",1.00049413229953
+3,"perc_cropland::foraging_guild_consensusColumbids",0.999576259436292
+3,"perc_urban::foraging_guild_consensusColumbids",0.998024904691275
+3,"perc_pasture::foraging_guild_consensusColumbids",0.998578804853181
+3,"perc_grass_shrub::foraging_guild_consensusColumbids",1.00106111994237
+3,"perc_forest_deciduous::foraging_guild_consensusColumbids",1.0014327434728
+3,"perc_forest_evergreen::foraging_guild_consensusColumbids",0.998823024722909
+3,"perc_forest_mixed_other::foraging_guild_consensusColumbids",0.999563075629628
+3,"(Intercept)::foraging_guild_consensusCuckoos",1.00255542860545
+3,"tmean_breeding::foraging_guild_consensusCuckoos",0.999053655791094
+3,"prec_breeding::foraging_guild_consensusCuckoos",1.00095934730471
+3,"hh::foraging_guild_consensusCuckoos",1.00381784527299
+3,"perc_cropland::foraging_guild_consensusCuckoos",1.00080923809634
+3,"perc_urban::foraging_guild_consensusCuckoos",1.00270830733456
+3,"perc_pasture::foraging_guild_consensusCuckoos",0.999754512052902
+3,"perc_grass_shrub::foraging_guild_consensusCuckoos",0.999761087210503
+3,"perc_forest_deciduous::foraging_guild_consensusCuckoos",0.999328590798332
+3,"perc_forest_evergreen::foraging_guild_consensusCuckoos",0.999462482809248
+3,"perc_forest_mixed_other::foraging_guild_consensusCuckoos",0.999939397224138
+3,"(Intercept)::foraging_guild_consensusDabbling ducks",1.00049925328704
+3,"tmean_breeding::foraging_guild_consensusDabbling ducks",1.02480788048742
+3,"prec_breeding::foraging_guild_consensusDabbling ducks",1.00039633689847
+3,"hh::foraging_guild_consensusDabbling ducks",1.00566520982856
+3,"perc_cropland::foraging_guild_consensusDabbling ducks",1.0007604249772
+3,"perc_urban::foraging_guild_consensusDabbling ducks",1.00473489330497
+3,"perc_pasture::foraging_guild_consensusDabbling ducks",1.00072516355907
+3,"perc_grass_shrub::foraging_guild_consensusDabbling ducks",1.00036588179284
+3,"perc_forest_deciduous::foraging_guild_consensusDabbling ducks",1.00021397601547
+3,"perc_forest_evergreen::foraging_guild_consensusDabbling ducks",0.999034323331015
+3,"perc_forest_mixed_other::foraging_guild_consensusDabbling ducks",1.00011595445282
+3,"(Intercept)::foraging_guild_consensusDippers",1.00218288747462
+3,"tmean_breeding::foraging_guild_consensusDippers",1.00309924566362
+3,"prec_breeding::foraging_guild_consensusDippers",1.00008116255361
+3,"hh::foraging_guild_consensusDippers",0.998408238686904
+3,"perc_cropland::foraging_guild_consensusDippers",1.00055029876076
+3,"perc_urban::foraging_guild_consensusDippers",1.00065721300664
+3,"perc_pasture::foraging_guild_consensusDippers",1.00801674505613
+3,"perc_grass_shrub::foraging_guild_consensusDippers",1.00459124592673
+3,"perc_forest_deciduous::foraging_guild_consensusDippers",1.00114552534154
+3,"perc_forest_evergreen::foraging_guild_consensusDippers",0.998449837062503
+3,"perc_forest_mixed_other::foraging_guild_consensusDippers",1.00323277511182
+3,"(Intercept)::foraging_guild_consensusDiurnal raptors",0.999230323397117
+3,"tmean_breeding::foraging_guild_consensusDiurnal raptors",1.00402725690594
+3,"prec_breeding::foraging_guild_consensusDiurnal raptors",1.00015457966396
+3,"hh::foraging_guild_consensusDiurnal raptors",1.00327229691142
+3,"perc_cropland::foraging_guild_consensusDiurnal raptors",0.998981714471841
+3,"perc_urban::foraging_guild_consensusDiurnal raptors",0.999968987831989
+3,"perc_pasture::foraging_guild_consensusDiurnal raptors",1.00264391330221
+3,"perc_grass_shrub::foraging_guild_consensusDiurnal raptors",1.00684597287884
+3,"perc_forest_deciduous::foraging_guild_consensusDiurnal raptors",0.999224546220831
+3,"perc_forest_evergreen::foraging_guild_consensusDiurnal raptors",1.00244005460746
+3,"perc_forest_mixed_other::foraging_guild_consensusDiurnal raptors",0.998489783544848
+3,"(Intercept)::foraging_guild_consensusDiving ducks",1.0119072525229
+3,"tmean_breeding::foraging_guild_consensusDiving ducks",1.02818048731673
+3,"prec_breeding::foraging_guild_consensusDiving ducks",1.0027566733704
+3,"hh::foraging_guild_consensusDiving ducks",0.999672010434351
+3,"perc_cropland::foraging_guild_consensusDiving ducks",1.00782787370888
+3,"perc_urban::foraging_guild_consensusDiving ducks",1.00488615292865
+3,"perc_pasture::foraging_guild_consensusDiving ducks",0.99884608062686
+3,"perc_grass_shrub::foraging_guild_consensusDiving ducks",0.999611643327483
+3,"perc_forest_deciduous::foraging_guild_consensusDiving ducks",1.00771842007962
+3,"perc_forest_evergreen::foraging_guild_consensusDiving ducks",0.998279736725881
+3,"perc_forest_mixed_other::foraging_guild_consensusDiving ducks",1.00421726187311
+3,"(Intercept)::foraging_guild_consensusFlycatchers",0.999393108108033
+3,"tmean_breeding::foraging_guild_consensusFlycatchers",1.00625864390086
+3,"prec_breeding::foraging_guild_consensusFlycatchers",0.999262732517329
+3,"hh::foraging_guild_consensusFlycatchers",1.00015944825953
+3,"perc_cropland::foraging_guild_consensusFlycatchers",0.999906353519994
+3,"perc_urban::foraging_guild_consensusFlycatchers",1.00383984320755
+3,"perc_pasture::foraging_guild_consensusFlycatchers",0.998068097320836
+3,"perc_grass_shrub::foraging_guild_consensusFlycatchers",1.00204209139327
+3,"perc_forest_deciduous::foraging_guild_consensusFlycatchers",1.00112048091756
+3,"perc_forest_evergreen::foraging_guild_consensusFlycatchers",0.999855685386664
+3,"perc_forest_mixed_other::foraging_guild_consensusFlycatchers",0.998171853438549
+3,"(Intercept)::foraging_guild_consensusFoliage gleaners",0.999293897847909
+3,"tmean_breeding::foraging_guild_consensusFoliage gleaners",0.998778472543628
+3,"prec_breeding::foraging_guild_consensusFoliage gleaners",0.999509391546411
+3,"hh::foraging_guild_consensusFoliage gleaners",1.0010661760428
+3,"perc_cropland::foraging_guild_consensusFoliage gleaners",0.999680574994058
+3,"perc_urban::foraging_guild_consensusFoliage gleaners",1.00172550358855
+3,"perc_pasture::foraging_guild_consensusFoliage gleaners",0.999106307852545
+3,"perc_grass_shrub::foraging_guild_consensusFoliage gleaners",1.00118065362953
+3,"perc_forest_deciduous::foraging_guild_consensusFoliage gleaners",0.999953461727982
+3,"perc_forest_evergreen::foraging_guild_consensusFoliage gleaners",0.998652412230335
+3,"perc_forest_mixed_other::foraging_guild_consensusFoliage gleaners",1.00136395810592
+3,"(Intercept)::foraging_guild_consensusGallinaceous birds",1.0076501410178
+3,"tmean_breeding::foraging_guild_consensusGallinaceous birds",1.00895412226979
+3,"prec_breeding::foraging_guild_consensusGallinaceous birds",1.00797039178439
+3,"hh::foraging_guild_consensusGallinaceous birds",1.00107503931292
+3,"perc_cropland::foraging_guild_consensusGallinaceous birds",0.999909954546558
+3,"perc_urban::foraging_guild_consensusGallinaceous birds",0.998581577678897
+3,"perc_pasture::foraging_guild_consensusGallinaceous birds",0.998988660864311
+3,"perc_grass_shrub::foraging_guild_consensusGallinaceous birds",1.00659876937655
+3,"perc_forest_deciduous::foraging_guild_consensusGallinaceous birds",0.99915974479503
+3,"perc_forest_evergreen::foraging_guild_consensusGallinaceous birds",0.999877576964516
+3,"perc_forest_mixed_other::foraging_guild_consensusGallinaceous birds",0.998033918396546
+3,"(Intercept)::foraging_guild_consensusGrazing waterfowl",1.00841096587172
+3,"tmean_breeding::foraging_guild_consensusGrazing waterfowl",1.01605218731071
+3,"prec_breeding::foraging_guild_consensusGrazing waterfowl",1.00020358420966
+3,"hh::foraging_guild_consensusGrazing waterfowl",1.01100292389919
+3,"perc_cropland::foraging_guild_consensusGrazing waterfowl",1.00278857455256
+3,"perc_urban::foraging_guild_consensusGrazing waterfowl",1.00933626181732
+3,"perc_pasture::foraging_guild_consensusGrazing waterfowl",1.00265522595019
+3,"perc_grass_shrub::foraging_guild_consensusGrazing waterfowl",1.0092233893336
+3,"perc_forest_deciduous::foraging_guild_consensusGrazing waterfowl",0.998776278166195
+3,"perc_forest_evergreen::foraging_guild_consensusGrazing waterfowl",0.999497407492243
+3,"perc_forest_mixed_other::foraging_guild_consensusGrazing waterfowl",0.999376012771123
+3,"(Intercept)::foraging_guild_consensusGulls",0.999790986859303
+3,"tmean_breeding::foraging_guild_consensusGulls",1.00456444544336
+3,"prec_breeding::foraging_guild_consensusGulls",0.998212893923239
+3,"hh::foraging_guild_consensusGulls",0.998858558014029
+3,"perc_cropland::foraging_guild_consensusGulls",1.0008699297339
+3,"perc_urban::foraging_guild_consensusGulls",1.00033339043801
+3,"perc_pasture::foraging_guild_consensusGulls",1.00527519742574
+3,"perc_grass_shrub::foraging_guild_consensusGulls",1.00210113804008
+3,"perc_forest_deciduous::foraging_guild_consensusGulls",0.999989221583128
+3,"perc_forest_evergreen::foraging_guild_consensusGulls",0.999920413696422
+3,"perc_forest_mixed_other::foraging_guild_consensusGulls",1.00572323229199
+3,"(Intercept)::foraging_guild_consensusKingfishers",0.999313440890502
+3,"tmean_breeding::foraging_guild_consensusKingfishers",0.998463954427072
+3,"prec_breeding::foraging_guild_consensusKingfishers",1.00056521328826
+3,"hh::foraging_guild_consensusKingfishers",1.00024587368462
+3,"perc_cropland::foraging_guild_consensusKingfishers",1.001295056956
+3,"perc_urban::foraging_guild_consensusKingfishers",1.00239784239854
+3,"perc_pasture::foraging_guild_consensusKingfishers",0.999008604910743
+3,"perc_grass_shrub::foraging_guild_consensusKingfishers",1.00572464456942
+3,"perc_forest_deciduous::foraging_guild_consensusKingfishers",0.999850927919661
+3,"perc_forest_evergreen::foraging_guild_consensusKingfishers",1.00417572820406
+3,"perc_forest_mixed_other::foraging_guild_consensusKingfishers",0.999881319060111
+3,"(Intercept)::foraging_guild_consensusLow flycatching feeders",0.999941589273402
+3,"tmean_breeding::foraging_guild_consensusLow flycatching feeders",1.00442297976074
+3,"prec_breeding::foraging_guild_consensusLow flycatching feeders",1.00651375264421
+3,"hh::foraging_guild_consensusLow flycatching feeders",1.00146561284575
+3,"perc_cropland::foraging_guild_consensusLow flycatching feeders",1.00141931866012
+3,"perc_urban::foraging_guild_consensusLow flycatching feeders",1.00228362578211
+3,"perc_pasture::foraging_guild_consensusLow flycatching feeders",1.00563265104448
+3,"perc_grass_shrub::foraging_guild_consensusLow flycatching feeders",1.00616219471347
+3,"perc_forest_deciduous::foraging_guild_consensusLow flycatching feeders",1.0037136064365
+3,"perc_forest_evergreen::foraging_guild_consensusLow flycatching feeders",1.00510756665415
+3,"perc_forest_mixed_other::foraging_guild_consensusLow flycatching feeders",1.00207162704899
+3,"(Intercept)::foraging_guild_consensusMarsh warblers",0.999803144351799
+3,"tmean_breeding::foraging_guild_consensusMarsh warblers",1.0001210914902
+3,"prec_breeding::foraging_guild_consensusMarsh warblers",1.00713460173685
+3,"hh::foraging_guild_consensusMarsh warblers",1.00371831402154
+3,"perc_cropland::foraging_guild_consensusMarsh warblers",1.00107804734721
+3,"perc_urban::foraging_guild_consensusMarsh warblers",1.00009826401039
+3,"perc_pasture::foraging_guild_consensusMarsh warblers",0.998010495069824
+3,"perc_grass_shrub::foraging_guild_consensusMarsh warblers",0.999896536773938
+3,"perc_forest_deciduous::foraging_guild_consensusMarsh warblers",0.999526868644644
+3,"perc_forest_evergreen::foraging_guild_consensusMarsh warblers",0.998439099578037
+3,"perc_forest_mixed_other::foraging_guild_consensusMarsh warblers",1.00075324966091
+3,"(Intercept)::foraging_guild_consensusNigthjars",0.999720802743258
+3,"tmean_breeding::foraging_guild_consensusNigthjars",1.03174856878882
+3,"prec_breeding::foraging_guild_consensusNigthjars",1.01005346579739
+3,"hh::foraging_guild_consensusNigthjars",0.999799114855879
+3,"perc_cropland::foraging_guild_consensusNigthjars",1.00364090505327
+3,"perc_urban::foraging_guild_consensusNigthjars",1.01071124131917
+3,"perc_pasture::foraging_guild_consensusNigthjars",1.00600650473271
+3,"perc_grass_shrub::foraging_guild_consensusNigthjars",0.999655256069505
+3,"perc_forest_deciduous::foraging_guild_consensusNigthjars",1.00421138482937
+3,"perc_forest_evergreen::foraging_guild_consensusNigthjars",0.999601815030637
+3,"perc_forest_mixed_other::foraging_guild_consensusNigthjars",1.002869838902
+3,"(Intercept)::foraging_guild_consensusOmnivorous corvids",0.998979631376912
+3,"tmean_breeding::foraging_guild_consensusOmnivorous corvids",1.02116825190724
+3,"prec_breeding::foraging_guild_consensusOmnivorous corvids",1.01578710917364
+3,"hh::foraging_guild_consensusOmnivorous corvids",1.00558680018028
+3,"perc_cropland::foraging_guild_consensusOmnivorous corvids",0.998317353424577
+3,"perc_urban::foraging_guild_consensusOmnivorous corvids",1.00143245523978
+3,"perc_pasture::foraging_guild_consensusOmnivorous corvids",1.00076186342823
+3,"perc_grass_shrub::foraging_guild_consensusOmnivorous corvids",1.00852225586487
+3,"perc_forest_deciduous::foraging_guild_consensusOmnivorous corvids",1.00624686766285
+3,"perc_forest_evergreen::foraging_guild_consensusOmnivorous corvids",1.00137260754013
+3,"perc_forest_mixed_other::foraging_guild_consensusOmnivorous corvids",0.999707085532807
+3,"(Intercept)::foraging_guild_consensusOpen-land insectivores",1.00173743781163
+3,"tmean_breeding::foraging_guild_consensusOpen-land insectivores",1.0060826859482
+3,"prec_breeding::foraging_guild_consensusOpen-land insectivores",1.00802345948707
+3,"hh::foraging_guild_consensusOpen-land insectivores",1.00288917639533
+3,"perc_cropland::foraging_guild_consensusOpen-land insectivores",0.999292752256742
+3,"perc_urban::foraging_guild_consensusOpen-land insectivores",0.998406642976612
+3,"perc_pasture::foraging_guild_consensusOpen-land insectivores",0.998514257247239
+3,"perc_grass_shrub::foraging_guild_consensusOpen-land insectivores",1.00141221813345
+3,"perc_forest_deciduous::foraging_guild_consensusOpen-land insectivores",1.00029553091708
+3,"perc_forest_evergreen::foraging_guild_consensusOpen-land insectivores",0.999572752598659
+3,"perc_forest_mixed_other::foraging_guild_consensusOpen-land insectivores",1.00095591330976
+3,"(Intercept)::foraging_guild_consensusOrioles",1.00869458968303
+3,"tmean_breeding::foraging_guild_consensusOrioles",1.00411436462276
+3,"prec_breeding::foraging_guild_consensusOrioles",1.00373514116585
+3,"hh::foraging_guild_consensusOrioles",1.00069491149389
+3,"perc_cropland::foraging_guild_consensusOrioles",0.998431885580486
+3,"perc_urban::foraging_guild_consensusOrioles",0.998833377315122
+3,"perc_pasture::foraging_guild_consensusOrioles",0.998861824418973
+3,"perc_grass_shrub::foraging_guild_consensusOrioles",1.00022108456203
+3,"perc_forest_deciduous::foraging_guild_consensusOrioles",1.00694441231696
+3,"perc_forest_evergreen::foraging_guild_consensusOrioles",1.01041120738734
+3,"perc_forest_mixed_other::foraging_guild_consensusOrioles",0.998989702082618
+3,"(Intercept)::foraging_guild_consensusOwls",1.00318208611971
+3,"tmean_breeding::foraging_guild_consensusOwls",0.999264522797629
+3,"prec_breeding::foraging_guild_consensusOwls",0.99811612108933
+3,"hh::foraging_guild_consensusOwls",1.00022816289673
+3,"perc_cropland::foraging_guild_consensusOwls",1.00408824181059
+3,"perc_urban::foraging_guild_consensusOwls",1.00122402363105
+3,"perc_pasture::foraging_guild_consensusOwls",0.998257817654936
+3,"perc_grass_shrub::foraging_guild_consensusOwls",1.0018113617595
+3,"perc_forest_deciduous::foraging_guild_consensusOwls",0.999664096724823
+3,"perc_forest_evergreen::foraging_guild_consensusOwls",1.00157288780487
+3,"perc_forest_mixed_other::foraging_guild_consensusOwls",0.999602666019448
+3,"(Intercept)::foraging_guild_consensusPasserine seedeaters",0.99932784081903
+3,"tmean_breeding::foraging_guild_consensusPasserine seedeaters",1.01967384112378
+3,"prec_breeding::foraging_guild_consensusPasserine seedeaters",1.01794745255805
+3,"hh::foraging_guild_consensusPasserine seedeaters",1.00303066166844
+3,"perc_cropland::foraging_guild_consensusPasserine seedeaters",0.998166223440455
+3,"perc_urban::foraging_guild_consensusPasserine seedeaters",1.00158814926463
+3,"perc_pasture::foraging_guild_consensusPasserine seedeaters",0.998279121854102
+3,"perc_grass_shrub::foraging_guild_consensusPasserine seedeaters",1.00163757875766
+3,"perc_forest_deciduous::foraging_guild_consensusPasserine seedeaters",1.00158681917303
+3,"perc_forest_evergreen::foraging_guild_consensusPasserine seedeaters",0.998987031557305
+3,"perc_forest_mixed_other::foraging_guild_consensusPasserine seedeaters",1.00244206063278
+3,"(Intercept)::foraging_guild_consensusPlovers",0.998586798501973
+3,"tmean_breeding::foraging_guild_consensusPlovers",1.0022365039724
+3,"prec_breeding::foraging_guild_consensusPlovers",1.00046881992713
+3,"hh::foraging_guild_consensusPlovers",0.998751704211643
+3,"perc_cropland::foraging_guild_consensusPlovers",1.00211021552206
+3,"perc_urban::foraging_guild_consensusPlovers",0.999468888759524
+3,"perc_pasture::foraging_guild_consensusPlovers",1.00406129495285
+3,"perc_grass_shrub::foraging_guild_consensusPlovers",1.00019046267543
+3,"perc_forest_deciduous::foraging_guild_consensusPlovers",1.00002336820602
+3,"perc_forest_evergreen::foraging_guild_consensusPlovers",1.0048936865145
+3,"perc_forest_mixed_other::foraging_guild_consensusPlovers",1.00965726625978
+3,"(Intercept)::foraging_guild_consensusRails",1.00116588016365
+3,"tmean_breeding::foraging_guild_consensusRails",1.00483032735098
+3,"prec_breeding::foraging_guild_consensusRails",0.999751761700724
+3,"hh::foraging_guild_consensusRails",1.00576576653383
+3,"perc_cropland::foraging_guild_consensusRails",0.998397504908384
+3,"perc_urban::foraging_guild_consensusRails",1.00028427250348
+3,"perc_pasture::foraging_guild_consensusRails",0.999059183845584
+3,"perc_grass_shrub::foraging_guild_consensusRails",0.999355938622958
+3,"perc_forest_deciduous::foraging_guild_consensusRails",1.00602200639373
+3,"perc_forest_evergreen::foraging_guild_consensusRails",0.998641235047189
+3,"perc_forest_mixed_other::foraging_guild_consensusRails",1.00071203546238
+3,"(Intercept)::foraging_guild_consensusReedlings",0.998224649052503
+3,"tmean_breeding::foraging_guild_consensusReedlings",1.0193704744239
+3,"prec_breeding::foraging_guild_consensusReedlings",0.999608806239279
+3,"hh::foraging_guild_consensusReedlings",1.00824408225074
+3,"perc_cropland::foraging_guild_consensusReedlings",1.0003843177991
+3,"perc_urban::foraging_guild_consensusReedlings",1.01780514907805
+3,"perc_pasture::foraging_guild_consensusReedlings",0.999601706522997
+3,"perc_grass_shrub::foraging_guild_consensusReedlings",0.998581089553213
+3,"perc_forest_deciduous::foraging_guild_consensusReedlings",0.999906804293903
+3,"perc_forest_evergreen::foraging_guild_consensusReedlings",1.00368567291709
+3,"perc_forest_mixed_other::foraging_guild_consensusReedlings",1.00021630483321
+3,"(Intercept)::foraging_guild_consensusScolopacids",0.998724098123271
+3,"tmean_breeding::foraging_guild_consensusScolopacids",1.00008779408472
+3,"prec_breeding::foraging_guild_consensusScolopacids",1.00841719807322
+3,"hh::foraging_guild_consensusScolopacids",0.998868176894643
+3,"perc_cropland::foraging_guild_consensusScolopacids",1.00007726573316
+3,"perc_urban::foraging_guild_consensusScolopacids",0.998986512690182
+3,"perc_pasture::foraging_guild_consensusScolopacids",1.00425464436618
+3,"perc_grass_shrub::foraging_guild_consensusScolopacids",1.00173021379191
+3,"perc_forest_deciduous::foraging_guild_consensusScolopacids",0.998674702938178
+3,"perc_forest_evergreen::foraging_guild_consensusScolopacids",1.00034931290126
+3,"perc_forest_mixed_other::foraging_guild_consensusScolopacids",0.999877881626486
+3,"(Intercept)::foraging_guild_consensusShrikes",1.00057903180765
+3,"tmean_breeding::foraging_guild_consensusShrikes",1.01534994612265
+3,"prec_breeding::foraging_guild_consensusShrikes",1.0038059814692
+3,"hh::foraging_guild_consensusShrikes",0.99832671541909
+3,"perc_cropland::foraging_guild_consensusShrikes",0.998728138908451
+3,"perc_urban::foraging_guild_consensusShrikes",1.00033245609477
+3,"perc_pasture::foraging_guild_consensusShrikes",1.00124264105845
+3,"perc_grass_shrub::foraging_guild_consensusShrikes",0.99940907844578
+3,"perc_forest_deciduous::foraging_guild_consensusShrikes",0.999243764319705
+3,"perc_forest_evergreen::foraging_guild_consensusShrikes",1.00048486005234
+3,"perc_forest_mixed_other::foraging_guild_consensusShrikes",0.999005562348371
+3,"(Intercept)::foraging_guild_consensusStarlings",0.998676923279435
+3,"tmean_breeding::foraging_guild_consensusStarlings",1.01099134828128
+3,"prec_breeding::foraging_guild_consensusStarlings",1.02503347678902
+3,"hh::foraging_guild_consensusStarlings",1.00373806368453
+3,"perc_cropland::foraging_guild_consensusStarlings",0.999954509523503
+3,"perc_urban::foraging_guild_consensusStarlings",1.01013933929291
+3,"perc_pasture::foraging_guild_consensusStarlings",1.00557225348318
+3,"perc_grass_shrub::foraging_guild_consensusStarlings",1.00187290361301
+3,"perc_forest_deciduous::foraging_guild_consensusStarlings",1.00125825609983
+3,"perc_forest_evergreen::foraging_guild_consensusStarlings",0.99946502008708
+3,"perc_forest_mixed_other::foraging_guild_consensusStarlings",0.998675286102365
+3,"(Intercept)::foraging_guild_consensusTerns",1.0031413694841
+3,"tmean_breeding::foraging_guild_consensusTerns",1.01902002010337
+3,"prec_breeding::foraging_guild_consensusTerns",1.0055998103392
+3,"hh::foraging_guild_consensusTerns",0.99934066059415
+3,"perc_cropland::foraging_guild_consensusTerns",1.00276843736766
+3,"perc_urban::foraging_guild_consensusTerns",1.00471615691004
+3,"perc_pasture::foraging_guild_consensusTerns",1.00371744195547
+3,"perc_grass_shrub::foraging_guild_consensusTerns",1.00313868219601
+3,"perc_forest_deciduous::foraging_guild_consensusTerns",1.00340367959413
+3,"perc_forest_evergreen::foraging_guild_consensusTerns",1.00050516377547
+3,"perc_forest_mixed_other::foraging_guild_consensusTerns",1.00559689099716
+3,"(Intercept)::foraging_guild_consensusThrushes",0.999658884053711
+3,"tmean_breeding::foraging_guild_consensusThrushes",1.01384248139755
+3,"prec_breeding::foraging_guild_consensusThrushes",1.02020726814218
+3,"hh::foraging_guild_consensusThrushes",1.00491535356448
+3,"perc_cropland::foraging_guild_consensusThrushes",1.00073134367535
+3,"perc_urban::foraging_guild_consensusThrushes",1.00372223628117
+3,"perc_pasture::foraging_guild_consensusThrushes",1.00007185161222
+3,"perc_grass_shrub::foraging_guild_consensusThrushes",1.00502056525346
+3,"perc_forest_deciduous::foraging_guild_consensusThrushes",0.999459667586376
+3,"perc_forest_evergreen::foraging_guild_consensusThrushes",1.00061801292329
+3,"perc_forest_mixed_other::foraging_guild_consensusThrushes",0.999099648206954
+3,"(Intercept)::foraging_guild_consensusWading birds",0.998646991234648
+3,"tmean_breeding::foraging_guild_consensusWading birds",1.01294331525445
+3,"prec_breeding::foraging_guild_consensusWading birds",0.998985867316071
+3,"hh::foraging_guild_consensusWading birds",1.00064745104032
+3,"perc_cropland::foraging_guild_consensusWading birds",1.00058531067279
+3,"perc_urban::foraging_guild_consensusWading birds",1.00224938474687
+3,"perc_pasture::foraging_guild_consensusWading birds",1.00116432312678
+3,"perc_grass_shrub::foraging_guild_consensusWading birds",0.999977695788511
+3,"perc_forest_deciduous::foraging_guild_consensusWading birds",1.00492140565027
+3,"perc_forest_evergreen::foraging_guild_consensusWading birds",0.99934042204531
+3,"perc_forest_mixed_other::foraging_guild_consensusWading birds",0.998524656364766
+3,"(Intercept)::foraging_guild_consensusWoodpeckers",0.998334687350886
+3,"tmean_breeding::foraging_guild_consensusWoodpeckers",1.00933164469566
+3,"prec_breeding::foraging_guild_consensusWoodpeckers",1.00810488666992
+3,"hh::foraging_guild_consensusWoodpeckers",1.0016202975983
+3,"perc_cropland::foraging_guild_consensusWoodpeckers",0.998974911145242
+3,"perc_urban::foraging_guild_consensusWoodpeckers",0.998141002050687
+3,"perc_pasture::foraging_guild_consensusWoodpeckers",0.998569567101412
+3,"perc_grass_shrub::foraging_guild_consensusWoodpeckers",0.999125449601027
+3,"perc_forest_deciduous::foraging_guild_consensusWoodpeckers",1.00604494641498
+3,"perc_forest_evergreen::foraging_guild_consensusWoodpeckers",1.0010288430662
+3,"perc_forest_mixed_other::foraging_guild_consensusWoodpeckers",1.00071261935277
+3,"(Intercept)::species_thermal_index",1.00087806886276
+3,"tmean_breeding::species_thermal_index",1.01354446290578
+3,"prec_breeding::species_thermal_index",1.02363694769125
+3,"hh::species_thermal_index",1.00454940576563
+3,"perc_cropland::species_thermal_index",1.00340240076778
+3,"perc_urban::species_thermal_index",1.00543220533537
+3,"perc_pasture::species_thermal_index",0.998813401755759
+3,"perc_grass_shrub::species_thermal_index",1.00731912305175
+3,"perc_forest_deciduous::species_thermal_index",1.00221638464648
+3,"perc_forest_evergreen::species_thermal_index",1.00032787704586
+3,"perc_forest_mixed_other::species_thermal_index",1.00524695480558

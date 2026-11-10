@@ -1,0 +1,377 @@
+---
+title: "Spatial latent factors and climate overlap"
+output:
+  html_document:
+    toc: true
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      out.width = "100%", dev = "png")
+report_dir <- dirname(normalizePath(knitr::current_input(dir = TRUE)))
+project_root <- normalizePath(file.path(report_dir, "..", "..", ".."))
+knitr::opts_knit$set(root.dir = project_root)
+```
+
+```{r analysis, include=FALSE}
+analysis <- new.env()
+source(file.path(report_dir, "correlate-climate-spatial-latents.R"), local = analysis)
+results <- analysis$correlation_summary
+fitted <- results[results$cell_set == "fitted", ]
+common <- results[results$cell_set == "common", ]
+map_names <- unlist(lapply(1:3, function(a) sprintf(
+  "atlas%d-spatial-latents-posterior-%s.png", a, c("mean", "sd"))))
+if (!all(file.exists(file.path(report_dir, map_names)))) {
+  source(file.path(report_dir, "plot-spatial-latents.R"), local = new.env())
+}
+show_png <- function(name) knitr::include_graphics(file.path(report_dir, name), rel_path = FALSE)
+fmt <- function(x) sprintf("%.3f", x)
+correlation_table <- function(atlas, cell_set = "fitted") {
+  d <- results[results$atlas == atlas & results$cell_set == cell_set, ]
+  d <- d[order(match(d$climate, c("Temperature", "Precipitation")), d$factor), ]
+  data.frame(Climate = d$climate, Factor = d$factor,
+    `Mean-map r` = fmt(d$mean_map_r), `Draw median r` = fmt(d$median_r),
+    `95% draw interval` = paste0("[", fmt(d$lower_r), ", ", fmt(d$upper_r), "]"),
+    `R-hat` = fmt(d$rhat), `Bulk ESS` = round(d$ess_bulk),
+    `Tail ESS` = round(d$ess_tail), check.names = FALSE)
+}
+diagnostics <- do.call(rbind, lapply(c("fitted", "common"), function(cs) {
+  do.call(rbind, lapply(1:3, function(a) {
+    d <- results[results$atlas == a & results$cell_set == cs, ]
+    data.frame(Cells = cs, Atlas = a, `N cells` = unique(d$n_cells),
+      `R-hat >= 1.1 (of 10)` = sum(d$rhat >= 1.1),
+      `Median R-hat` = fmt(median(d$rhat)), `Maximum R-hat` = fmt(max(d$rhat)),
+      `Minimum bulk ESS` = round(min(d$ess_bulk)), check.names = FALSE)
+  }))
+}))
+strongest <- fitted[which.max(abs(fitted$mean_map_r)), ]
+```
+
+```{r combined-spatial-analysis, include=FALSE}
+combined <- new.env()
+source(file.path(report_dir,"correlate-environment-spatial-effect.R"),local=combined)
+combined_strength <- subset(combined$effect_community_summary,metric=="median_abs")
+```
+
+<style>
+table { display: block; max-width: 100%; overflow-x: auto; }
+</style>
+
+## Question and sample
+
+This report shows all five spatial latent factors from each of the three
+**`2026-11-02_06-55-21`** Hmsc models. It also examines how their spatial patterns
+overlap with breeding-season temperature and precipitation.
+
+We use all four chains and all 250 retained draws per chain, giving **1,000
+draws per atlas**. The maps and primary correlations use every fitted cell:
+1,747 in the 1970s, 1,821 in the 1990s, and 1,875 in the 2010s. A separate
+correlation analysis uses the same **1,697 cells shared by all three atlases**.
+The latter keeps spatial coverage consistent, although each atlas retains its
+own climate measurements and fitted model.
+
+**The derived correlations exhibit substantial chain disagreement.** For the
+fitted-cell analysis, `r sum(fitted$rhat >= 1.1)` of 30 climate–factor correlations
+have rank-normalised R-hat at least 1.1. We therefore present these as descriptive
+diagnostics, not reliable evidence that particular factors are associated with
+climate. The pooled intervals below describe the saved draws and should not be
+treated as well-converged posterior credible intervals.
+
+## What the spatial factors represent
+
+The model's linear predictor contains a fixed environmental contribution and
+a spatial contribution:
+
+\[
+L = X\boldsymbol{\beta} + \boldsymbol{\eta}\boldsymbol{\Lambda}.
+\]
+
+Each column of **Eta** is a spatial latent-factor coordinate at the modelled
+cells. **Lambda** describes how species load onto those factors. The maps below
+show Eta itself, not the combined species-specific spatial contribution
+\(\boldsymbol{\eta}\boldsymbol{\Lambda}\).
+
+We retain the saved within-model alignment used during posterior import.
+Individual factor signs, orientation, and ordering are arbitrary. Factor 1 in
+Atlas 1 is not necessarily the counterpart of factor 1 in another atlas.
+Flipping a factor's sign also flips its correlation sign without changing the
+model when its loadings are flipped correspondingly. Correlations with individual
+factors additionally depend on the chosen orientation of the latent-factor basis.
+
+## Spatial patterns and uncertainty
+
+For each cell and factor, we calculate the arithmetic mean and sample SD across
+all 1,000 saved draws. Means share one zero-centred colour scale across all maps;
+SDs share one sequential scale. No value ranges are clipped. The white-centred
+mean scale can make small values look faint, especially beside larger values
+elsewhere.
+
+Maps use the stored fitted coordinates, transformed from EPSG:23032 to
+longitude/latitude. Latent rows are linked to cells through `Pi` and `dfPi`, and
+cell locations are checked against the local atlas grid. Bornholm appears in
+each inset. Every fitted cell is included.
+
+SD is uncertainty conditional on the saved factor alignment. It is not a
+convergence diagnostic. Pooled mean and SD maps can conceal disagreement between
+chains, including possible unresolved orientation differences.
+
+### Atlas 1: 1970s
+
+```{r atlas1-mean, fig.cap="Atlas 1: posterior mean Eta for all five spatial latent factors."}
+show_png("atlas1-spatial-latents-posterior-mean.png")
+```
+
+```{r atlas1-sd, fig.cap="Atlas 1: posterior SD of Eta, conditional on saved alignment."}
+show_png("atlas1-spatial-latents-posterior-sd.png")
+```
+
+### Atlas 2: 1990s
+
+```{r atlas2-mean, fig.cap="Atlas 2: posterior mean Eta for all five spatial latent factors."}
+show_png("atlas2-spatial-latents-posterior-mean.png")
+```
+
+```{r atlas2-sd, fig.cap="Atlas 2: posterior SD of Eta, conditional on saved alignment."}
+show_png("atlas2-spatial-latents-posterior-sd.png")
+```
+
+### Atlas 3: 2010s
+
+```{r atlas3-mean, fig.cap="Atlas 3: posterior mean Eta for all five spatial latent factors."}
+show_png("atlas3-spatial-latents-posterior-mean.png")
+```
+
+```{r atlas3-sd, fig.cap="Atlas 3: posterior SD of Eta, conditional on saved alignment."}
+show_png("atlas3-spatial-latents-posterior-sd.png")
+```
+
+## Climate correlations
+
+### Calculation and interpretation
+
+We calculate **Pearson correlations across cells** between each climate variable
+and each of the five spatial factors, separately within each atlas. Climate
+values come directly from the fitted model's `XData`, aligned to the same rows
+as Eta. They were standardised before fitting; Pearson correlation is unchanged
+by centring and positive rescaling, so it is the same correlation as for the
+corresponding original-unit climate values on these cells.
+
+Two summaries answer related but different questions:
+
+- **Mean-map correlation:** correlate climate with the posterior mean Eta at
+  each cell. This measures overlap with the spatial pattern visible in the map.
+- **Draw-level correlation:** correlate climate with Eta separately for every
+  posterior draw, then summarise the 1,000 correlations. This includes uncertainty
+  in Eta, conditional on the fitted model and saved alignment.
+
+The correlation of a mean map need not equal the mean or median correlation
+across draws, because correlation is a nonlinear standardised statistic. A
+small mean-map amplitude also does not imply a small correlation.
+
+We report medians and equal-tail 2.5–97.5% intervals of the saved draw-level
+correlations, together with chain diagnostics. Climate values and the chosen
+cell sets are held fixed. Measurement error in climate, model misspecification,
+and alternative factor alignments are not propagated.
+
+We do **not** run ordinary `cor.test` significance tests: neighbouring cells
+are spatially dependent and would not constitute independent replicates for
+those tests. The draw intervals quantify model-based uncertainty, subject to
+convergence; they do not establish causal effects or independent-sample
+significance. These are marginal correlations, without adjustment for the other
+climate variable or other predictors.
+
+### All fitted cells
+
+```{r fitted-correlations, fig.cap="Climate correlations on each atlas's fitted cells. Filled circles show draw medians, diamonds show correlations with mean maps, and lines show 95% pooled-draw intervals. Chain disagreement limits inference."}
+show_png("climate-spatial-latent-correlations-fitted.png")
+```
+
+#### Atlas 1
+
+```{r atlas1-correlations}
+knitr::kable(correlation_table(1), caption = "Atlas 1: 1,747 fitted cells.")
+```
+
+#### Atlas 2
+
+```{r atlas2-correlations}
+knitr::kable(correlation_table(2), caption = "Atlas 2: 1,821 fitted cells.")
+```
+
+#### Atlas 3
+
+```{r atlas3-correlations}
+knitr::kable(correlation_table(3), caption = "Atlas 3: 1,875 fitted cells.")
+```
+
+The largest absolute mean-map correlation among these 30 comparisons is for
+**`r strongest$climate`, Atlas `r strongest$atlas`, factor `r strongest$factor`**:
+mean-map r = **`r fmt(strongest$mean_map_r)`**. The draw-level median is
+`r fmt(strongest$median_r)`, with a pooled-draw interval of
+[`r fmt(strongest$lower_r)`, `r fmt(strongest$upper_r)`] and R-hat
+`r fmt(strongest$rhat)`. This illustrates why a map correlation and a
+well-estimated posterior association are different claims. We do not label
+this or the other comparisons statistically supported.
+
+### Shared-cell sensitivity analysis
+
+The following analysis restricts every atlas to the same 1,697 cells, ordered
+by cell identity. It checks sensitivity to changing spatial coverage, without
+refitting the models. Factors remain defined within their original fitted model.
+
+```{r common-correlations, fig.cap="Climate–factor correlations evaluated on the same 1,697 cells in all three atlases. This does not make factor numbers comparable between atlases."}
+show_png("climate-spatial-latent-correlations-common.png")
+```
+
+```{r common-tables, results='asis'}
+for (atlas in 1:3) {
+  cat("\n\n#### Atlas ", atlas, " on shared cells\n\n", sep = "")
+  print(knitr::kable(correlation_table(atlas, "common"),
+                     caption = paste("Atlas", atlas, ": 1,697 shared cells.")))
+  cat("\n\n")
+}
+```
+
+For matched atlas–climate–factor comparisons, restricting to the common cells
+changes the mean-map correlations by at most
+**`r fmt(max(abs(fitted$mean_map_r - common$mean_map_r)))`** and the draw medians
+by at most **`r fmt(max(abs(fitted$median_r - common$median_r)))`**.
+This is a coverage sensitivity check, not a test of temporal change.
+
+## All environmental predictors and the combined spatial effect
+
+The individual-factor comparisons above depend on the saved latent basis.
+To ask whether overlap is pervasive across predictors, we also correlate all
+ten original environmental variables with the **combined spatial contribution
+for each species**, Eta × Lambda. This is an inferred model component, not an
+independently measured environmental field. No spatially detrended climate
+predictors are used in this comparison.
+
+For every draw, we multiply that draw's Eta and Lambda, then calculate each
+predictor's Pearson correlation with the resulting spatial effect across the
+same 1,697 shared cells. We retain all 155 matched species and all 1,000 draws
+per atlas. Unlike individual-factor correlations, the combined effect is
+unchanged by compensating rotations, permutations, or sign changes of the
+factors and loadings. We verify the efficient covariance calculation against
+direct correlations of Eta × Lambda for selected draws.
+
+### Distribution across species
+
+Each point below is one species' median draw-level correlation. Violin and
+boxplot widths describe variation **among species**, not posterior uncertainty
+for those estimates. A mixture of positive and negative correlations can
+produce a mean close to zero while still involving substantial overlap.
+
+```{r environment-combined-distributions}
+show_png("environment-spatial-effect-correlations.png")
+```
+
+### Strength of overlap and uncertainty
+
+Within each draw, we take the absolute correlations and calculate their median
+across all species. We then show the median and 2.5–97.5% interval of these
+draw-level community summaries. Absolute values prevent opposite species
+directions from cancelling. The species set is fixed; we do not bootstrap
+species or treat posterior draws as independent cell observations.
+
+```{r environment-combined-strength}
+show_png("environment-spatial-effect-correlation-strength.png")
+```
+
+```{r environment-combined-tables,results='asis'}
+for(a in 1:3) {
+  d <- combined_strength[combined_strength$atlas==a,]
+  checks <- combined$effect_diagnostic_summary
+  checks <- checks[checks$atlas==a,]
+  stopifnot(identical(d$variable,checks$variable))
+  tab <- data.frame(Predictor=unname(combined$variable_labels[d$variable]),
+    `Median |r|`=fmt(d$estimate),
+    `95% draw interval`=paste0("[",fmt(d$lower),", ",fmt(d$upper),"]"),
+    `Community R-hat`=fmt(d$rhat),`Community bulk ESS`=round(d$ess_bulk),
+    `Species r R-hat >= 1.1 (of 155)`=checks$n_species_rhat_ge_1_1,
+    check.names=FALSE)
+  cat("\n\n### Atlas ",a," combined spatial effects\n\n",sep="")
+  print(knitr::kable(tab));cat("\n\n")
+}
+```
+
+Atlas 3 precipitation has the largest community median absolute correlation
+in this summary: **`r fmt(combined_strength$estimate[combined_strength$atlas==3 & combined_strength$variable=='prec_breeding'])`**.
+Overlap varies among predictors and species; it is not equally pronounced
+everywhere. No formal test of changing correlations between atlases is performed.
+
+These diagnostics are different from the previously examined **posterior
+trade-off between Beta and the spatial contribution**. The new plots describe
+correlation across cells within draws, whereas the trade-off describes how
+fixed and spatial components compensate as parameters vary across draws.
+Small cross-cell correlations do not establish that coefficients are well
+identified, and larger values do not quantify coefficient bias or prove
+spatial confounding. Community and species-level chain diagnostics are
+reported separately because they can differ substantially. Pooled intervals
+remain conditional on the model and adequacy of sampling.
+
+## Chain agreement and limits on inference
+
+We preserve chain identities for every draw-level correlation and compute
+rank-normalised split/folded R-hat, bulk ESS, tail ESS, and Monte Carlo SE of
+the mean using the `posterior` package. R-hat assesses chain agreement; ESS
+describes sampling efficiency rather than the number of cells. The tables
+below use 1.1 as a flag for conspicuous disagreement, not as a criterion that
+all smaller values are satisfactory. See the official documentation for
+[R-hat](https://mc-stan.org/posterior/reference/rhat.html) and
+[bulk ESS](https://mc-stan.org/posterior/reference/ess_bulk.html).
+
+```{r diagnostic-summary}
+knitr::kable(diagnostics, caption = "Diagnostics of the derived climate–factor correlations.")
+```
+
+```{r chain-comparison, fig.cap="Chain-specific mean correlations on fitted cells. Separation among chains shows disagreement hidden by pooled summaries; factor numbers are categorical within-atlas labels."}
+show_png("climate-spatial-latent-correlations-chains.png")
+```
+
+The maximum fitted-cell correlation R-hat is **`r fmt(max(fitted$rhat))`**.
+Diagnostics of Eta or Gamma individually do not guarantee convergence of
+these derived correlations. Chain disagreement could reflect slow sampling,
+unresolved factor alignment, or both. These results do not by themselves
+distinguish those mechanisms.
+
+Individual-factor correlations are also not a complete diagnostic of the
+previously observed trade-off between Beta and space. Such trade-offs involve
+the species-specific **combined** spatial effect, \(\boldsymbol{\eta}\boldsymbol{\Lambda}\), including
+its average level and its projections onto the environmental predictors.
+Weak correlations for individual factors would not rule out that problem;
+strong correlations would not quantify how much of a species' fitted response
+has been assigned to climate instead of space.
+
+A useful subsequent analysis would therefore check quantities invariant to
+joint factor rotations, such as the combined species-specific spatial effects,
+alongside draw-level VP and their chain diagnostics. No new fitting or VP
+change tests have been performed here.
+
+## Reproducibility and validation
+
+Knitting this report recomputes all climate–factor and environment–combined-effect
+correlations, diagnostics, and five correlation PNGs. Existing map PNGs are embedded; if any are missing,
+the map script regenerates the full set. To regenerate maps explicitly and
+render the report from the repository root:
+
+```{r reproduce, echo=TRUE, eval=FALSE}
+source("scripts/5-vis/spatial-latents/plot-spatial-latents.R")
+rmarkdown::render("scripts/5-vis/spatial-latents/spatial-latents.Rmd")
+```
+
+The correlation script retains `correlation_summary`, `correlation_draws`, and
+`correlation_chains` in memory for further inspection. It verifies model sizes,
+site alignment, finite values, all 1,000 draws, the common-cell intersection,
+and vectorised calculations against direct correlations for a selected draw
+for every climate–factor combination. There are 60 summaries and 60,000
+draw-level correlations across the two cell sets. All generated plots are PNGs;
+the rendered HTML embeds them and can be read without separate image files.
+
+The additional `correlate-environment-spatial-effect.R` script retains
+`effect_draws`, `effect_species_summary`, `effect_community_summary`, and
+`effect_diagnostic_summary` in memory. It checks all ten predictors, matched
+species/site indexing, valid spatial-effect variances, finite correlations,
+direct matrix-product agreement, and invariance to factor permutation/sign
+changes. It creates two additional PNGs and does not modify fitted models.

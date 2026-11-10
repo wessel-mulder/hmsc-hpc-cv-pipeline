@@ -1,0 +1,275 @@
+---
+title: "Variable importance across the Danish bird atlases"
+subtitle: "November 2 models: means and distributions across species"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    self_contained: true
+    theme: readable
+    fig_caption: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      out.width = "100%", fig.retina = 1, dev = "png")
+report_dir <- dirname(normalizePath(knitr::current_input(dir = TRUE)))
+project_root <- normalizePath(file.path(report_dir, "..", "..", ".."))
+knitr::opts_knit$set(root.dir = project_root)
+```
+
+```{r reproduce-figures, include=FALSE}
+# Knit regenerates the figures from the explicitly selected November exports.
+source(file.path(report_dir, "vp-geom-sankey-bump.R"), local = TRUE)
+source(file.path(report_dir, "vp-distributions.R"), local = TRUE)
+show_png <- function(name) {
+  knitr::include_graphics(file.path(report_dir, name), rel_path = FALSE)
+}
+median_table <- function(scale_name) {
+  d <- species_vp[species_vp$scale == scale_name, ]
+  tab <- with(d, tapply(vp_percent, list(variable, atlas), median))
+  data.frame(Predictor = rownames(tab), round(tab, 3), row.names = NULL,
+             check.names = FALSE)
+}
+```
+
+# What we set out to examine
+
+We first summarised environmental variable importance using the mean variance
+partition (VP) across species in each atlas. We then expanded the comparison to
+show the full distribution of species-level estimates. A mean can change because
+many species shift slightly, a few species shift substantially, or both. Looking
+at the distributions helps distinguish these possibilities, although identifying
+the species responsible requires keeping their identities in the comparison.
+
+This report describes the figures we have produced. It does **not** present a
+formal test of temporal change or propagate posterior uncertainty.
+
+# Data and calculations
+
+All figures use the model set **`2026-11-02_06-55-21`**, with one fitted model for
+each atlas: the 1970s, 1990s, and 2010s. Inputs are the
+`parameter_estimates_VP_.csv` exports in each model's `Results` directory under
+`data-new/2-hmsc/derived/models`.
+
+There are **155 matched species in every atlas**, with no species omitted from
+these plots. Each species receives equal weight in the distributions and means.
+The ten environmental predictors are temperature, precipitation, land-use
+heterogeneity, urban cover, cropland cover, pasture cover, grass/shrubland cover,
+and three separate forest-cover predictors: deciduous, evergreen, and mixed/other
+forest. These forest types replace the single forest predictor in the older model.
+
+The site-level random effect is excluded from the displayed panels and Sankey.
+It remains part of the original VP denominator: we have **not** renormalised the
+environmental predictors to sum to 100%. The environmental components plus the
+site random effect sum to one for each species and atlas.
+
+## Two scales of variable importance
+
+**Relative VP** describes the allocation of model-explained variation among the
+environmental predictors and the spatial component. In the figures, it is
+expressed as a percentage. A value of 10% means that the predictor receives one
+tenth of that species' partitioned model-explained variation; it does not mean
+10% of all observed variation in occurrence.
+
+**Tjur R²-scaled VP** multiplies each species' relative VP by that species'
+exported Tjur R² before plotting or averaging:
+
+\[
+\mathrm{scaled\ VP}_{s,v,a}
+= \mathrm{relative\ VP}_{s,v,a}\times\mathrm{Tjur\ R}^{2}_{s,a}.
+\]
+
+Here, \(s\) denotes species, \(v\) predictor, and \(a\) atlas. Both plotted scales
+are multiplied by 100 for display. Scaling matches the existing Sankey figure.
+It combines the predictor's VP allocation with species-level model fit; it is an
+operational scaling, rather than a separate estimate of causal contribution or a
+newly fitted variance decomposition.
+
+Consequently, scaled VP can change because relative VP changes, Tjur R² changes,
+or both. Comparing both scales helps reveal whether a pattern also appears
+without the model-fit scaling.
+
+## Checks performed
+
+The plotting script checks that all three atlases contain the same 155 unique
+species, aligns their columns by species identity, and checks all ten predictors
+are present. Unexpected predictors cause an error instead of being silently
+excluded. Values must be finite and between zero and one, and the unscaled
+partitions must sum to one including the spatial component. The species means
+of scaled VP were also checked against all 30 Sankey ribbon widths.
+
+# Starting point: mean importance
+
+The Sankey bump chart shows the **mean scaled VP across the 155 species** for each
+predictor and atlas. Ribbon thickness represents the mean contribution, while
+the ordering follows relative importance. The total height includes environmental
+predictors only. The ribbons connect atlas summaries; they do not track flows
+of species or ecological quantities between atlases.
+
+```{r sankey, fig.cap="Mean Tjur R²-scaled VP across species, with separate forest-cover predictors and no effect-size panels."}
+show_png("vp-geom-sankey-bump.png")
+```
+
+# Full distributions across species
+
+Each curve below is based on **155 species-level exported estimates** for one
+predictor in one atlas. These are distributions **across species**, not posterior
+distributions, and curve widths do not represent uncertainty about an estimate.
+Blue denotes the 1970s, orange the 1990s, and green the 2010s throughout.
+
+## Relative VP: density curves
+
+A density curve shows where species' VP estimates are concentrated. Curves
+shifted to the right indicate larger VP values; longer right tails indicate a
+subset of species with relatively high importance. Density height is not a
+percentage of species: the area under a curve represents a proportion, and the
+whole curve integrates approximately to one.
+
+We use Gaussian kernel densities with reflection at the boundaries of 0 and
+100 percentage points. For each predictor and VP scale, a single bandwidth is
+selected using `bw.nrd0` on the pooled values from the three atlases, and used
+for all three curves. This avoids introducing atlas differences through different
+smoothing settings. Densities are evaluated on a shared 2,048-point grid within
+each panel, covering every estimate and extending four bandwidths beyond the
+largest value where the upper boundary permits. Their numerical integrals are
+checked to be within 0.01 of one.
+
+Both horizontal and vertical axis ranges vary among density panels. Compare
+atlases **within a panel**; peak heights across predictors are not a ranking of
+importance. Small bumps depend on bandwidth and should not be treated as
+established ecological groups.
+
+```{r relative-density, fig.cap="Distributions of relative VP across the same 155 species, with common smoothing across atlases within each predictor."}
+show_png("vp-distributions-relative-density.png")
+```
+
+## Relative VP: cumulative distributions
+
+The empirical cumulative distribution function (ECDF) shows the percentage of
+species with VP **at or below** a given value. For example, a height of 75% at
+VP = 5% means that 75% of the species have relative VP no greater than 5%.
+At a given horizontal value, a lower curve means fewer species fall below that
+threshold, consistent with generally larger VP values. Crossing curves indicate
+that the difference is not a uniform shift across the distribution.
+
+These curves use the estimates directly, without smoothing. Horizontal ranges
+vary among predictors, while the vertical scale is always 0–100% of species.
+
+```{r relative-ecdf, fig.cap="Empirical cumulative distributions of relative VP; each atlas contains 155 species."}
+show_png("vp-distributions-relative-ecdf.png")
+```
+
+The following medians provide numerical context. Values are percentage points
+on the relative-VP scale; they are descriptive summaries without uncertainty
+intervals.
+
+```{r relative-medians}
+knitr::kable(median_table("relative"), caption = "Median relative VP (%) across species.",
+             digits = 3)
+```
+
+## Tjur R²-scaled VP: density curves
+
+These figures repeat the comparison after applying the species-specific Tjur R²
+scaling. The values are generally smaller because the relative partitions are
+multiplied by model-fit values between zero and one. Differences from the
+relative-VP plots therefore also reflect variation in model fit across species
+and atlases.
+
+```{r scaled-density, fig.cap="Density curves of Tjur R²-scaled VP across species, on the same scale used to calculate the Sankey means."}
+show_png("vp-distributions-scaled-density.png")
+```
+
+## Tjur R²-scaled VP: cumulative distributions
+
+```{r scaled-ecdf, fig.cap="Empirical cumulative distributions of Tjur R²-scaled VP across species."}
+show_png("vp-distributions-scaled-ecdf.png")
+```
+
+```{r scaled-medians}
+knitr::kable(median_table("scaled"), caption = "Median Tjur R²-scaled VP (%) across species.",
+             digits = 3)
+```
+
+# What the figures suggest
+
+Many predictors have strongly right-skewed distributions: most species have
+small VP values, while a smaller number have much higher values. This makes the
+distribution plots useful companions to the means in the Sankey.
+
+The 2010s precipitation curve is visibly shifted towards higher values relative
+to the earlier atlases, on both scales. The ECDFs also suggest higher typical
+grass/shrubland VP in the later atlases. Some other predictors show overlapping
+or crossing curves, so their changes are less well described by a single
+community-wide increase or decrease. These observations are descriptive, and
+are not evidence of statistically supported change by themselves.
+
+# How we can approach temporal comparisons
+
+## Distribution change and species change answer different questions
+
+A distribution comparison asks whether the collection of VP values across species
+changed in location, spread, or shape. A species-level comparison asks which
+species increased or decreased, and by how much. Neither requires the other as
+a preliminary test.
+
+These questions can give different answers. If two species exchange VP values,
+their distribution remains identical even though both species changed. A useful
+next stage would therefore combine community summaries with paired species-level
+differences for the adjacent comparisons, 1970s–1990s and 1990s–2010s.
+
+## The exported estimates do not yet provide uncertainty for change
+
+The current CSVs and saved VP summaries provide one value per species, predictor,
+and atlas. The spread shown here is among species, not uncertainty in those
+values. Formal model-based comparisons would require recovering VP uncertainty
+from the fitted posterior samples, checking convergence, and validating the
+calculation against the original Hmsc implementation.
+
+The intended target would be the fixed set of 155 modelled species. Posterior
+draws should preserve the joint values across species within each atlas, rather
+than treating 155 estimates from a shared community model as independent data.
+The independently fitted atlas models also do not have naturally paired MCMC
+draw indices.
+
+For each adjacent atlas comparison, useful quantities would include changes in
+the mean, median, selected quantiles, and individual species' VP values. A
+whole-distribution distance could describe the magnitude of redistribution.
+Such a distance needs an interpretation in terms of a meaningful magnitude of
+change; being greater than zero alone is not an ecological conclusion.
+
+We have not run an ordinary two-sample distribution test on the exported values.
+The same species occur in all atlases, their estimates share a fitted model,
+and the estimates have uncertainty that those tests would not automatically
+incorporate. A resampling test would need a clearly justified null and dependence
+structure before its p-values could be interpreted.
+
+## Interpretation requires care even after adding uncertainty
+
+Relative VP is compositional: an increase in one component is accompanied by
+decreases elsewhere in the full partition. It also depends on the environmental
+variation represented in each atlas, as well as the fitted species–environment
+relationships. Changes in VP therefore do not establish changes in coefficients
+or causal effects. Scaled VP additionally depends on Tjur R².
+
+The present figures are based on each fitted model's inputs. They do not impose
+a new common-cell evaluation grid or hold environmental covariance constant.
+Those choices would need to be explicit if we later sought to separate changes
+in species responses from changes in the environments represented by the models.
+
+# Reproduction and current status
+
+Knit this document to regenerate the Sankey and four distribution PNGs and embed
+them in a self-contained HTML report. The plotting scripts can also be run
+directly from the project root:
+
+```{r reproduction-commands, eval=FALSE, echo=TRUE}
+source("scripts/5-vis/vp-distributions/vp-geom-sankey-bump.R")
+source("scripts/5-vis/vp-distributions/vp-distributions.R")
+```
+
+The figures and this report remain in `scripts/5-vis/vp-distributions`. Only PNG plots are
+generated. Posterior VP reconstruction, convergence assessment for the proposed
+comparisons, uncertainty intervals, and formal change tests remain future work.

@@ -1,0 +1,22 @@
+2026-11-05 13:43:54 Run: /Users/bhr597/Documents/PhD/projects/ch1-hmsc-hpc-cv-pipeline/scripts/1-atlas-analyses/homogenization/null-results/independent-change/20261105T134354_nsim-9999_seed-20261105_d70d5188a0f9 ; validated existing chunks: 0 / 120 
+2026-11-05 13:43:55 1-2=1500 2-3=0 1-3=0 ; elapsed 1.2 s; remaining estimate 23.3 s 
+2026-11-05 13:43:56 1-2=3000 2-3=0 1-3=0 ; elapsed 2.5 s; remaining estimate 22.7 s 
+2026-11-05 13:43:58 1-2=4500 2-3=0 1-3=0 ; elapsed 3.7 s; remaining estimate 21.1 s 
+2026-11-05 13:43:59 1-2=6000 2-3=0 1-3=0 ; elapsed 5 s; remaining estimate 20 s 
+2026-11-05 13:44:00 1-2=7500 2-3=0 1-3=0 ; elapsed 6.3 s; remaining estimate 19 s 
+2026-11-05 13:44:02 1-2=9000 2-3=0 1-3=0 ; elapsed 7.6 s; remaining estimate 17.8 s 
+2026-11-05 13:44:03 1-2=9999 2-3=500 1-3=0 ; elapsed 9 s; remaining estimate 16.8 s 
+2026-11-05 13:44:04 1-2=9999 2-3=2000 1-3=0 ; elapsed 10.3 s; remaining estimate 15.5 s 
+2026-11-05 13:44:06 1-2=9999 2-3=3500 1-3=0 ; elapsed 11.8 s; remaining estimate 14.4 s 
+2026-11-05 13:44:07 1-2=9999 2-3=5000 1-3=0 ; elapsed 13.3 s; remaining estimate 13.3 s 
+2026-11-05 13:44:09 1-2=9999 2-3=6500 1-3=0 ; elapsed 14.8 s; remaining estimate 12.1 s 
+2026-11-05 13:44:10 1-2=9999 2-3=8000 1-3=0 ; elapsed 16.1 s; remaining estimate 10.7 s 
+2026-11-05 13:44:11 1-2=9999 2-3=9500 1-3=0 ; elapsed 17.4 s; remaining estimate 9.4 s 
+2026-11-05 13:44:13 1-2=9999 2-3=9999 1-3=1000 ; elapsed 18.8 s; remaining estimate 8.1 s 
+2026-11-05 13:44:14 1-2=9999 2-3=9999 1-3=2500 ; elapsed 20.1 s; remaining estimate 6.7 s 
+2026-11-05 13:44:15 1-2=9999 2-3=9999 1-3=4000 ; elapsed 21.4 s; remaining estimate 5.4 s 
+2026-11-05 13:44:17 1-2=9999 2-3=9999 1-3=5500 ; elapsed 22.8 s; remaining estimate 4 s 
+2026-11-05 13:44:18 1-2=9999 2-3=9999 1-3=7000 ; elapsed 24.3 s; remaining estimate 2.7 s 
+2026-11-05 13:44:19 1-2=9999 2-3=9999 1-3=8500 ; elapsed 25.6 s; remaining estimate 1.3 s 
+2026-11-05 13:44:21 1-2=9999 2-3=9999 1-3=9999 ; elapsed 26.9 s; remaining estimate 0 s 
+2026-11-05 13:44:22 Complete. Final results written and verified; redundant checkpoints removed. 

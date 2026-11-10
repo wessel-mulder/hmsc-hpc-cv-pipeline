@@ -1,0 +1,100 @@
+"atlas","coefficient_type","predictor","trait_group","n_parameters","median_rhat","q95_rhat","max_rhat","n_rhat_ge_1_1"
+1,"intercept","(Intercept)","Foraging guild",33,0.999898651477872,1.00263134817477,1.00294897942968,0
+2,"intercept","(Intercept)","Foraging guild",33,0.999733857207201,1.00273461172874,1.01275439899905,0
+3,"intercept","(Intercept)","Foraging guild",33,0.999803144351799,1.00852441539624,1.0119072525229,0
+1,"trait-predictor","hh","Foraging guild",33,0.999332274914905,1.00174697074945,1.0030393768856,0
+2,"trait-predictor","hh","Foraging guild",33,1.00037531781268,1.01603125997594,1.02343909111316,0
+3,"trait-predictor","hh","Foraging guild",33,1.0010661760428,1.00744310403555,1.01100292389919,0
+1,"trait-predictor","perc_cropland","Foraging guild",33,0.999819016806344,1.00342417774502,1.00410249429776,0
+2,"trait-predictor","perc_cropland","Foraging guild",33,1.00175926679777,1.00661155508595,1.01153395306837,0
+3,"trait-predictor","perc_cropland","Foraging guild",33,1.0003843177991,1.0038198397562,1.00782787370888,0
+1,"trait-predictor","perc_forest_deciduous","Foraging guild",33,1.00059261648667,1.00479253521295,1.0071988895963,0
+2,"trait-predictor","perc_forest_deciduous","Foraging guild",33,0.999705131444297,1.00337677382926,1.00562609851406,0
+3,"trait-predictor","perc_forest_deciduous","Foraging guild",33,1.00049616728628,1.00652588552449,1.00771842007962,0
+1,"trait-predictor","perc_forest_evergreen","Foraging guild",33,0.999394646711424,1.00328459239942,1.00531884198513,0
+2,"trait-predictor","perc_forest_evergreen","Foraging guild",33,0.999836523222931,1.0056268546735,1.01734101917391,0
+3,"trait-predictor","perc_forest_evergreen","Foraging guild",33,0.999855685386664,1.00497923857036,1.01041120738734,0
+1,"trait-predictor","perc_forest_mixed_other","Foraging guild",33,1.00016964326407,1.00213367392959,1.00295223245599,0
+2,"trait-predictor","perc_forest_mixed_other","Foraging guild",33,1.00026424898415,1.00723834402754,1.01266745901964,0
+3,"trait-predictor","perc_forest_mixed_other","Foraging guild",33,0.999939397224138,1.00564742751509,1.00965726625978,0
+1,"trait-predictor","perc_grass_shrub","Foraging guild",33,0.999752787868208,1.01168600626577,1.01260053847675,0
+2,"trait-predictor","perc_grass_shrub","Foraging guild",33,0.999903787323303,1.00636001369567,1.01101830180586,0
+3,"trait-predictor","perc_grass_shrub","Foraging guild",33,1.00141221813345,1.00880270925236,1.01456112892584,0
+1,"trait-predictor","perc_pasture","Foraging guild",33,1.0000227335966,1.0031573277327,1.00407809227506,0
+2,"trait-predictor","perc_pasture","Foraging guild",33,1.00023258169235,1.00905456172564,1.01397303775144,0
+3,"trait-predictor","perc_pasture","Foraging guild",33,1.00007185161222,1.00578219251978,1.00801674505613,0
+1,"trait-predictor","perc_urban","Foraging guild",33,1.00018263264508,1.00288799158213,1.0048650018135,0
+2,"trait-predictor","perc_urban","Foraging guild",33,0.999956510449701,1.00555529978338,1.00659091030255,0
+3,"trait-predictor","perc_urban","Foraging guild",33,1.00158814926463,1.01036810010341,1.01780514907805,0
+1,"trait-predictor","prec_breeding","Foraging guild",33,0.999674189027536,1.00335055988565,1.00462739730876,0
+2,"trait-predictor","prec_breeding","Foraging guild",33,1.00081073565153,1.00919741116886,1.01873009627071,0
+3,"trait-predictor","prec_breeding","Foraging guild",33,1.00328189725703,1.01885137879171,1.02503347678902,0
+1,"trait-predictor","tmean_breeding","Foraging guild",33,1.000603450349,1.00264673922437,1.00455112875496,0
+2,"trait-predictor","tmean_breeding","Foraging guild",33,1.00069540293436,1.00905847058553,1.01141199766401,0
+3,"trait-predictor","tmean_breeding","Foraging guild",33,1.00602683447229,1.02615692321915,1.03174856878882,0
+1,"intercept","(Intercept)","Migration strategy",4,1.00074401891011,1.00570832335229,1.0064655359001,0
+2,"intercept","(Intercept)","Migration strategy",4,1.00173802199244,1.01111762965984,1.01276758053745,0
+3,"intercept","(Intercept)","Migration strategy",4,1.02521950344107,1.06350765718262,1.06787040143566,0
+1,"trait-predictor","hh","Migration strategy",4,1.00000139284285,1.00194439885382,1.00220625723963,0
+2,"trait-predictor","hh","Migration strategy",4,1.00556337265391,1.02778433281612,1.03070717344757,0
+3,"trait-predictor","hh","Migration strategy",4,1.00157463813261,1.00431708983019,1.00472265468045,0
+1,"trait-predictor","perc_cropland","Migration strategy",4,1.00000807154241,1.00126253064796,1.00130875834555,0
+2,"trait-predictor","perc_cropland","Migration strategy",4,1.00534657922262,1.00844900684969,1.00888758980191,0
+3,"trait-predictor","perc_cropland","Migration strategy",4,1.0026406601728,1.01511131678619,1.0171205653878,0
+1,"trait-predictor","perc_forest_deciduous","Migration strategy",4,0.999842057758178,1.00172344207595,1.00201132948634,0
+2,"trait-predictor","perc_forest_deciduous","Migration strategy",4,1.00422614652806,1.00580493404493,1.00600325411074,0
+3,"trait-predictor","perc_forest_deciduous","Migration strategy",4,1.00524094282548,1.0109764377907,1.01136057501297,0
+1,"trait-predictor","perc_forest_evergreen","Migration strategy",4,0.99991506528151,1.00526763834408,1.00613169476793,0
+2,"trait-predictor","perc_forest_evergreen","Migration strategy",4,1.00209789162738,1.00425120664871,1.004542397425,0
+3,"trait-predictor","perc_forest_evergreen","Migration strategy",4,0.999417465529479,1.00022575168413,1.00028196108438,0
+1,"trait-predictor","perc_forest_mixed_other","Migration strategy",4,1.00121909576086,1.00286629685735,1.0031288484277,0
+2,"trait-predictor","perc_forest_mixed_other","Migration strategy",4,1.01040282668624,1.02192951297948,1.02368945135664,0
+3,"trait-predictor","perc_forest_mixed_other","Migration strategy",4,1.00390764578938,1.00928771867693,1.01011627704938,0
+1,"trait-predictor","perc_grass_shrub","Migration strategy",4,1.00411383634899,1.00467875542925,1.00471966687386,0
+2,"trait-predictor","perc_grass_shrub","Migration strategy",4,1.0029668044862,1.00872532719213,1.00954021924433,0
+3,"trait-predictor","perc_grass_shrub","Migration strategy",4,1.00601992819795,1.00844376473885,1.00849268265644,0
+1,"trait-predictor","perc_pasture","Migration strategy",4,1.00074559541304,1.00156567640299,1.00169764480331,0
+2,"trait-predictor","perc_pasture","Migration strategy",4,1.00132433711657,1.00873682195357,1.00992393262404,0
+3,"trait-predictor","perc_pasture","Migration strategy",4,1.00573133907645,1.01083345991591,1.01155618368518,0
+1,"trait-predictor","perc_urban","Migration strategy",4,0.998550693856131,0.999128563449884,0.999184913915018,0
+2,"trait-predictor","perc_urban","Migration strategy",4,0.999935681077006,1.00629970203741,1.00728244179205,0
+3,"trait-predictor","perc_urban","Migration strategy",4,1.00139750001322,1.0119261170704,1.01355237797396,0
+1,"trait-predictor","prec_breeding","Migration strategy",4,1.00170997198626,1.005804598199,1.00626242983107,0
+2,"trait-predictor","prec_breeding","Migration strategy",4,1.0132666804593,1.05491918416072,1.06134531971686,0
+3,"trait-predictor","prec_breeding","Migration strategy",4,1.00116144816277,1.00506199869071,1.00543647444683,0
+1,"trait-predictor","tmean_breeding","Migration strategy",4,0.999030926954598,1.00029612169196,1.00043447817225,0
+2,"trait-predictor","tmean_breeding","Migration strategy",4,1.00896142277931,1.01428211312958,1.01473522139802,0
+3,"trait-predictor","tmean_breeding","Migration strategy",4,1.01868510902459,1.03627358071577,1.03838311929692,0
+1,"intercept","(Intercept)","Species thermal index",1,1.00613297716663,1.00613297716663,1.00613297716663,0
+2,"intercept","(Intercept)","Species thermal index",1,1.00401544722869,1.00401544722869,1.00401544722869,0
+3,"intercept","(Intercept)","Species thermal index",1,1.00087806886276,1.00087806886276,1.00087806886276,0
+1,"trait-predictor","hh","Species thermal index",1,0.999054005921905,0.999054005921905,0.999054005921905,0
+2,"trait-predictor","hh","Species thermal index",1,1.02080779483456,1.02080779483456,1.02080779483456,0
+3,"trait-predictor","hh","Species thermal index",1,1.00454940576563,1.00454940576563,1.00454940576563,0
+1,"trait-predictor","perc_cropland","Species thermal index",1,0.999370730864343,0.999370730864343,0.999370730864343,0
+2,"trait-predictor","perc_cropland","Species thermal index",1,1.00997639286777,1.00997639286777,1.00997639286777,0
+3,"trait-predictor","perc_cropland","Species thermal index",1,1.00340240076778,1.00340240076778,1.00340240076778,0
+1,"trait-predictor","perc_forest_deciduous","Species thermal index",1,1.0038711760983,1.0038711760983,1.0038711760983,0
+2,"trait-predictor","perc_forest_deciduous","Species thermal index",1,1.00152469770028,1.00152469770028,1.00152469770028,0
+3,"trait-predictor","perc_forest_deciduous","Species thermal index",1,1.00221638464648,1.00221638464648,1.00221638464648,0
+1,"trait-predictor","perc_forest_evergreen","Species thermal index",1,1.00268539390596,1.00268539390596,1.00268539390596,0
+2,"trait-predictor","perc_forest_evergreen","Species thermal index",1,1.00060097092574,1.00060097092574,1.00060097092574,0
+3,"trait-predictor","perc_forest_evergreen","Species thermal index",1,1.00032787704586,1.00032787704586,1.00032787704586,0
+1,"trait-predictor","perc_forest_mixed_other","Species thermal index",1,0.999901162966757,0.999901162966757,0.999901162966757,0
+2,"trait-predictor","perc_forest_mixed_other","Species thermal index",1,0.998556310874366,0.998556310874366,0.998556310874366,0
+3,"trait-predictor","perc_forest_mixed_other","Species thermal index",1,1.00524695480558,1.00524695480558,1.00524695480558,0
+1,"trait-predictor","perc_grass_shrub","Species thermal index",1,0.999065014226289,0.999065014226289,0.999065014226289,0
+2,"trait-predictor","perc_grass_shrub","Species thermal index",1,1.00850801864403,1.00850801864403,1.00850801864403,0
+3,"trait-predictor","perc_grass_shrub","Species thermal index",1,1.00731912305175,1.00731912305175,1.00731912305175,0
+1,"trait-predictor","perc_pasture","Species thermal index",1,0.998095319750973,0.998095319750973,0.998095319750973,0
+2,"trait-predictor","perc_pasture","Species thermal index",1,1.03340716463346,1.03340716463346,1.03340716463346,0
+3,"trait-predictor","perc_pasture","Species thermal index",1,0.998813401755759,0.998813401755759,0.998813401755759,0
+1,"trait-predictor","perc_urban","Species thermal index",1,0.998870266236654,0.998870266236654,0.998870266236654,0
+2,"trait-predictor","perc_urban","Species thermal index",1,0.998874168587461,0.998874168587461,0.998874168587461,0
+3,"trait-predictor","perc_urban","Species thermal index",1,1.00543220533537,1.00543220533537,1.00543220533537,0
+1,"trait-predictor","prec_breeding","Species thermal index",1,0.999466708210229,0.999466708210229,0.999466708210229,0
+2,"trait-predictor","prec_breeding","Species thermal index",1,1.00422346727484,1.00422346727484,1.00422346727484,0
+3,"trait-predictor","prec_breeding","Species thermal index",1,1.02363694769125,1.02363694769125,1.02363694769125,0
+1,"trait-predictor","tmean_breeding","Species thermal index",1,0.99826104970114,0.99826104970114,0.99826104970114,0
+2,"trait-predictor","tmean_breeding","Species thermal index",1,1.00257081352627,1.00257081352627,1.00257081352627,0
+3,"trait-predictor","tmean_breeding","Species thermal index",1,1.01354446290578,1.01354446290578,1.01354446290578,0

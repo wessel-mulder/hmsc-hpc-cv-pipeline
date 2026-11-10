@@ -1,0 +1,140 @@
+---
+title: "`r params$title`"
+output:
+  html_document:
+    self_contained: true
+    toc: true
+    toc_depth: 2
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    toc_depth: 2
+    number_sections: false
+    keep_tex: false
+fontsize: 10pt
+geometry: [a4paper, landscape, margin=15mm]
+header-includes:
+  - \usepackage{longtable}
+  - \usepackage{booktabs}
+params:
+  directory: "."
+  title: "Model diagnostics"
+  notes: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,dev='png')
+out <- params$directory
+```
+
+## Reading this report
+
+Sampling reliability, posterior uncertainty, directional support and predictive fit answer different questions. Beta diagnostics are the primary assessment. Passing screens is reassuring diagnostic evidence, not proof of convergence. In-sample predictive performance cannot override poor coefficient convergence.
+
+Rank-normalised split/folded R-hat > 1.01, bulk or tail ESS < 100 × chains, and mean MCSE/posterior SD > 0.05 are separate flags. Undefined diagnostics are **cannot assess**. Every saved draw is retained with chain identity; second-half summaries are sensitivity checks only.
+
+Posterior intervals describe conditional uncertainty. Support is max(P(Beta > 0), P(Beta < 0)); wrong-sign probability is one minus support (including ties at zero conservatively). Zero observed wrong-sign draws do not imply certainty. Support does not measure ecological importance. No Holm correction or draw selection is applied. Support summaries for flagged or unassessable coefficients are unreliable; selection counts use passing coefficients only.
+
+Spatial correlations describe overlap, not coefficient bias. Saved factors have arbitrary sign and basis; combined Eta × Lambda effects are invariant under compensating factor transformations. Spatial correlations have their own convergence diagnostics. Projected space and Beta use the saved X scale, including intercepts; within-chain correlations describe compensation. Each spatial level is assessed separately; its sum with Beta excludes other random levels. Rank deficient designs cannot identify individual projected coefficients.
+
+Group summaries are descriptive, with species and coefficient denominators. Broad uncertainty denotes the upper quartile of interval width **within predictor**; intercepts remain separate. Migration values preserve fitted coding. Missing traits are shown as missing. Prevalence uses observed responses as denominator, and includes rare and near-ubiquitous species.
+
+```{r notes, results='asis'}
+cat(params$notes,'\n\n')
+if(file.exists(file.path(out,'provenance.R'))) cat('Input fingerprint, sampling, scaling, thresholds and versions: [provenance.R](provenance.R); [session info](session-info.txt).\n')
+```
+
+```{r output-helpers, include=FALSE}
+show_csv <- function(files) for(f in files) {
+ cat('\n\n### ',sub('\\.csv$','',basename(f)),'\n\n',sep='')
+ cat('[Download full CSV](',basename(f),')\n\n',sep='')
+ d<-read.csv(f,check.names=FALSE)
+ if(basename(f)=='model-comparison.csv') for(i in seq_len(nrow(d))) {cat('[',d$model[i],'](',d$report[i],')',sep='');if('report_pdf' %in% names(d)) cat(' | [PDF](',d$report_pdf[i],')',sep='');cat('  \n')}
+ cat('Rows: ',nrow(d),'. First ',min(if(knitr::is_latex_output()) 10 else 15,nrow(d)),' shown.\n\n<div class="table-scroll">\n\n',sep='')
+ if(knitr::is_latex_output()) {
+   preferred<-c('species','predictor','model','group','family','threshold','status','rhat','ess_bulk','ess_tail','mcse_sd_ratio','median','n_coefficients','n_species','fraction_flagged','selected','expected_wrong_sign')
+   cols<-head(unique(c(intersect(preferred,names(d)),names(d))),7)
+   dd<-head(d[,cols,drop=FALSE],10)
+   names(dd)<-gsub('_',' ',names(dd))
+   for(v in names(dd)) if(is.character(dd[[v]])) dd[[v]]<-ifelse(nchar(dd[[v]])>35,paste0(substr(dd[[v]],1,32),'...'),dd[[v]])
+   cat('\\begingroup\\scriptsize\n')
+   print(knitr::kable(dd,digits=3,format='latex',booktabs=FALSE,longtable=FALSE,row.names=FALSE))
+   cat('\n\\endgroup\n')
+ } else print(knitr::kable(head(d,15),digits=4))
+ cat('\n\n</div>\n\n')
+}
+show_png <- function(files) for(f in files) {
+ if(knitr::is_latex_output()) cat('\\clearpage\n')
+ cat('\n\n### ',sub('\\.png$','',basename(f)),'\n\n',sep='')
+ if(knitr::is_latex_output()) {
+  cat('\\begin{center}\n\\includegraphics[width=\\linewidth,height=0.80\\textheight,keepaspectratio]{',normalizePath(f),'}\n\\end{center}\n',sep='')
+ } else cat('![',basename(f),'](',normalizePath(f),'){width=100%}\n',sep='')
+}
+show_section <- function(pattern) {
+ csv<-list.files(out,pattern='\\.csv$',full.names=TRUE)
+ png<-list.files(out,pattern='\\.png$',full.names=TRUE)
+ if(knitr::is_latex_output()) png<-png[!grepl('^beta-(rhat|ess_bulk|ess_tail)-(intercepts|slopes)',basename(png))] else png<-png[!grepl('^print-heatmap-',basename(png))]
+ show_csv(csv[grepl(pattern,basename(csv))]);show_png(png[grepl(pattern,basename(png))])
+}
+```
+
+<style>
+.main-container { max-width: 1200px; }
+.table-scroll { overflow-x: auto; margin-bottom: 24px; }
+table { font-size: 11px; white-space: nowrap; }
+h2 { margin-top: 48px; }
+</style>
+
+## Beta convergence: primary assessment
+
+Heatmaps include every coefficient; intercepts are separate. Grey means undefined. The second-half check does not alter the primary draws. Detailed chain plots use the deterministic union of the worst five R-hats and lowest five bulk and tail ESS, plus up to three passing coefficients selected in species/predictor order.
+
+```{r beta, results='asis'}
+show_section('^(beta-|diagnostic-|selected-|model-comparison|print-heatmap-)')
+```
+
+<details><summary>Selected coefficient trace, rank, density and autocorrelation plots</summary>
+
+```{r chain-plots, results='asis'}
+show_section('^coefficient-')
+```
+
+</details>
+
+## Where problems and uncertainty concentrate
+
+Species, guild and migration summaries use environmental slopes only. Predictor summaries include intercepts as a separate group. All coefficients remain in denominators; counts of cannot-assess coefficients are reported separately.
+
+```{r concentration, results='asis'}
+show_section('^(concentration-|uncertainty-|rhat-vs-|width-vs-)')
+```
+
+## Spatial overlap and chain differences
+
+Combined effects are the main spatial results. Each correlation is computed within a saved draw across the specified cells. Combined-chain tables show posterior distributions by chain; their R-hat and ESS are in the combined-correlation tables. Saved-field plots are conditional on the saved factor basis. If there are no spatial random levels this section is inapplicable, as recorded above.
+
+```{r spatial, results='asis'}
+show_section('^(spatial-|shared-cell-)')
+```
+
+## Directional support and multiplicity
+
+Families are all environmental slopes within each model, and intercepts separately. The comparison report also pools the selected models' slopes. Expected wrong-sign counts sum posterior wrong-sign probabilities among selected passing coefficients; proportions divide by selected count. These are conditional posterior quantities, without a Holm adjustment.
+
+```{r support, results='asis'}
+show_section('^directional-')
+```
+
+## In-sample predictive fit
+
+Hmsc metrics use all saved draws. Prediction arrays are not exported. Good in-sample performance cannot establish coefficient convergence or out-of-sample accuracy.
+
+```{r fit, results='asis'}
+show_section('^(in-sample-|fit-)')
+```
+
+## Supplementary Gamma and rho diagnostics
+
+```{r supplement, results='asis'}
+show_section('^(gamma-|rho-)')
+```

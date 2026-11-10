@@ -1,0 +1,287 @@
+---
+title: "Temperature and precipitation after spatial detrending"
+output:
+  html_document:
+    toc: true
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, dev='png', out.width='100%')
+report_dir <- dirname(normalizePath(knitr::current_input(dir=TRUE)))
+project_root <- normalizePath(file.path(report_dir,'..','..','..'))
+knitr::opts_knit$set(root.dir=project_root)
+```
+
+```{r run-analysis, include=FALSE}
+analysis <- new.env()
+source(file.path(report_dir,'climate-spatial-residualisation.R'),local=analysis)
+ss <- analysis$smooth_summary
+main <- ss[ss$k==100,]
+main <- main[order(match(main$variable,analysis$variables),main$atlas),]
+fmt <- function(x, digits=3) formatC(x,format='f',digits=digits)
+show_png <- function(suffix) knitr::include_graphics(file.path(report_dir,
+  paste0('climate-spatial-residualisation-',suffix,'.png')),rel_path=FALSE)
+climate_label <- function(variable) unname(analysis$variable_labels[variable])
+summary_table <- function(d) data.frame(
+  Climate=climate_label(d$variable),Atlas=d$atlas,
+  `Original SD`=fmt(d$original_sd),`Residual SD`=fmt(d$residual_sd),
+  `Variance retained (%)`=fmt(d$residual_variance_percent,1),
+  EDF=fmt(d$edf,1),`Original Moran I`=fmt(d$original_moran),
+  `Residual Moran I`=fmt(d$residual_moran),check.names=FALSE)
+range_table <- data.frame(Climate=climate_label(main$variable),Atlas=main$atlas,
+  `Original mean`=fmt(main$original_mean),
+  `Original range`=paste(fmt(main$original_min),fmt(main$original_max),sep=' to '),
+  `Residual range`=paste(fmt(main$residual_min),fmt(main$residual_max),sep=' to '),check.names=FALSE)
+temp <- main[main$variable=='tmean_breeding',]
+prec <- main[main$variable=='prec_breeding',]
+sensitivity <- ss[order(match(ss$variable,analysis$variables),ss$atlas,ss$k),]
+basis_table <- data.frame(Climate=climate_label(sensitivity$variable),Atlas=sensitivity$atlas,
+  k=sensitivity$k,EDF=fmt(sensitivity$edf,1),
+  `EDF / maximum (%)`=fmt(100*sensitivity$edf/sensitivity$basis_max_edf,1),
+  `k-index`=fmt(sensitivity$k_index),
+  Converged=sensitivity$gam_converged,check.names=FALSE)
+```
+
+<style>
+table { display: block; max-width: 100%; overflow-x: auto; }
+</style>
+
+## Question and common data
+
+How much temperature and precipitation variation remains after subtracting a
+smooth geographical trend, and how spatially structured are the residuals?
+This is an exploratory check of the climate information that could inform a
+future Spatial+ analysis. It does not refit the bird models, estimate bird
+responses, or demonstrate that spatial confounding has been resolved.
+
+We use the **same 1,697 cells in all three atlases**, obtained by intersecting
+the retained cells in the November forest-split preprocessing object. The full
+fitted samples contained 1,747, 1,821, and 1,875 cells respectively. Climate and
+coordinates are matched by cell identity, and coordinate equality is checked
+across periods. No extra filtering or interpolation is applied.
+
+Temperature is the March–June mean in **degrees Celsius**; precipitation is the
+March–June total in **mm/season**, averaged over the atlas period by the upstream
+preprocessing. Values are taken from the unstandardised environmental matrix
+bundled with the November model inputs. These retain their original units;
+residuals are not converted to z scores or rescaled to restore their original SD.
+
+## Spatial decomposition
+
+For each climate variable and atlas separately, we fit a Gaussian GAM:
+
+\[
+x_{i,a}=\alpha_a+f_a(E_i,N_i)+r_{i,a}.
+\]
+
+The fitted spatial trend is the intercept plus the two-dimensional thin-plate
+smooth. The residual is the observed climate value minus that full fitted
+trend. Easting and northing are centred and expressed in kilometres using the
+stored EPSG:23032 coordinates. REML selects the smoothing parameter separately
+for each fit.
+
+This is a Euclidean spatial smooth, without coastline or water barriers. The
+same specification includes the mainland, other islands, and Bornholm; the
+map insets are a display choice rather than separate smoothing regions.
+
+The main figures use basis dimension **k = 100**. We repeat the analysis with
+**k = 50 and 200**. The basis dimension limits flexibility; it is not a fixed
+spatial distance or the actual effective degrees of freedom (EDF). We report
+EDF and basis diagnostics rather than selecting whichever fit removes the most
+autocorrelation. See the [mgcv basis-dimension documentation](https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/choose.k.html).
+
+The residual variance percentage is
+\(100\,\operatorname{Var}(r)/\operatorname{Var}(x)\). It describes the variability
+left in the detrended climate field. It is distinct from the percentage of SD
+remaining, which is its square root after accounting for the percentage scale.
+For example, retaining 25% of the original variance means retaining 50% of the
+original SD.
+
+## Main results: how much variation remains?
+
+```{r main-summary}
+knitr::kable(summary_table(main),caption='Main decomposition (k = 100): 1,697 cells in every fit. SDs retain the original climate units.')
+```
+
+After detrending with k = 100, temperature residuals retain
+**`r fmt(min(temp$residual_variance_percent),1)`–`r fmt(max(temp$residual_variance_percent),1)`%**
+of the original spatial variance, equivalent to
+**`r fmt(min(temp$residual_sd_percent),1)`–`r fmt(max(temp$residual_sd_percent),1)`%**
+of the original SD. Precipitation residuals retain
+**`r fmt(min(prec$residual_variance_percent),1)`–`r fmt(max(prec$residual_variance_percent),1)`%**
+of the original variance and
+**`r fmt(min(prec$residual_sd_percent),1)`–`r fmt(max(prec$residual_sd_percent),1)`%**
+of the original SD.
+
+Thus substantial climate variation is represented by the smooth geographical
+trends. There is still residual contrast among cells, but it covers a much
+narrower range than the original climate gradients. The table below gives its
+magnitude in physical units. Residuals can be negative: a negative value means
+cooler or drier than the fitted local spatial trend, not negative absolute
+temperature or rainfall.
+
+```{r original-residual-ranges}
+knitr::kable(range_table,caption='Original climate means/ranges and residual ranges at k = 100. Temperature in °C; precipitation in mm/season.')
+```
+
+## Temperature maps
+
+Each row is an atlas; columns show original values, fitted spatial trend
+including the intercept, and residuals. Original and fitted values share a
+colour scale across all three atlases. Residuals have a separate common
+zero-centred scale. All value ranges are included without clipping. Circular
+points are cell locations, with Bornholm shown in each inset.
+
+```{r temperature-maps}
+show_png('tmean_breeding-maps')
+```
+
+## Precipitation maps
+
+The same display rules apply, now in mm/season. Different residual and original
+colour scales are necessary to see the residual patterns; compare their numeric
+legends and SDs rather than interpreting colour intensity as equal magnitude.
+
+```{r precipitation-maps}
+show_png('prec_breeding-maps')
+```
+
+## Spatial autocorrelation before and after detrending
+
+We use the same symmetrised four-nearest-neighbour graph for every field and
+atlas: an edge is present if either cell selects the other among its four
+nearest neighbours. Consequently, some cells have more than four neighbours.
+Weights are row-standardised. The graph has **`r analysis$graph_components`
+connected components**; disconnected geographical groups are retained.
+
+Moran's I is reported as a descriptive measure of neighbouring similarity.
+Ordinary independent-cell correlation p-values and Moran significance tests
+are not calculated. Neighbourhood definition influences the statistic, so it
+should be read alongside the distance-based diagnostics below.
+
+At k = 100, residual Moran's I is
+**`r fmt(min(temp$residual_moran))`–`r fmt(max(temp$residual_moran))`** for temperature
+and **`r fmt(min(prec$residual_moran))`–`r fmt(max(prec$residual_moran))`** for
+precipitation. Detrending reduces spatial autocorrelation but does **not**
+eliminate it. These are residual climate fields, not independent observations.
+
+### Temperature by distance
+
+The upper row shows empirical semivariance in physical units. The middle row
+divides each semivariogram by that field's own sample variance, making residual
+spatial structure visible despite its reduced magnitude. The bottom row shows
+unordered pair counts, identical across atlases and fields because we use the
+same cells. Bins are (0,10], (10,20], …, (190,200] km. This 200-km limit applies
+only to the displayed semivariograms; all cells inform the GAMs and the neighbour
+graph.
+
+```{r temperature-variograms}
+show_png('tmean_breeding-variograms')
+```
+
+### Precipitation by distance
+
+```{r precipitation-variograms}
+show_png('prec_breeding-variograms')
+```
+
+The dashed value of one means semivariance equals the corresponding field's
+sample variance. It is a reference, not proof of independence or a justified
+cutoff for resampling. Open symbols flag bins with fewer than 100 pairs. No
+confidence intervals or automatic spatial-range estimates are assigned.
+
+```{r pair-counts}
+knitr::kable(analysis$pair_counts,col.names=c('Bin','Midpoint (km)','Unordered pairs'),
+  caption='Cell pairs contributing to each displayed distance bin; shared across all six climate fields.')
+```
+
+## Sensitivity to smoothing flexibility
+
+```{r sensitivity-figure}
+show_png('sensitivity')
+```
+
+Labels on the blue curves indicate k for the three settings used by every
+atlas; horizontal positions indicate the smooth's actual EDF. Each
+fit has its own REML-selected smoothing penalty. The sensitivity check asks how
+the amount and spatial structure of residual climate depend on that adjustment.
+It is not a competition to minimise Moran's I or residual variance. Finer
+spatial adjustment can remove climate information needed for the intended
+species-response question.
+
+```{r sensitivity-summary}
+tab <- summary_table(sensitivity)
+tab <- cbind(tab[,1:2],k=sensitivity$k,tab[,-c(1,2)])
+knitr::kable(tab,caption='Variation remaining and spatial autocorrelation for every basis setting.')
+```
+
+### Basis and convergence diagnostics
+
+All 18 GAMs must pass the optimiser convergence checks before the report can
+render. The k-index compares nearby residual differences with overall residual
+variation. Low values can indicate remaining spatial structure or inadequate
+basis flexibility; for these spatially correlated gridded climate fields they
+are exploratory diagnostics, not an independent-error test proving that a
+particular k is correct. EDF close to the basis maximum warrants particular
+attention. No basis-diagnostic p-values are used to select a final adjustment.
+
+For the main k = 100 fits, smooth EDF ranges from
+**`r fmt(min(main$edf),1)` to `r fmt(max(main$edf),1)`**, out of a maximum of 99.
+Together with the changes at k = 200, this underlines that the main display
+is an exploratory adjustment, not a settled choice of spatial scale.
+
+```{r basis-diagnostics}
+knitr::kable(basis_table,caption='GAM convergence and basis diagnostics; no single adjustment is selected here.')
+```
+
+## Implications for changing species–climate responses
+
+This check shows what climate contrasts remain after removing a specified smooth
+spatial trend. It does not establish whether those remaining contrasts are
+sufficient to estimate species responses: that depends on bird occurrence,
+other predictors, sample support, and the outcome model.
+
+In particular, each separate atlas fit subtracts its own intercept and smooth.
+It removes the atlas's average climate level as well as broad spatial gradients.
+The resulting residuals therefore do **not** retain all information about
+warming, precipitation change, or broad-scale species–climate relationships.
+A residual-based analysis asks about departures from the fitted geographical
+trend. Extrapolating its coefficient to the original broad climate gradient
+requires additional assumptions.
+
+This is only a first-stage exploration motivated by
+[Spatial+](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.13656). It does not
+replicate or validate a complete Spatial+ model for the multivariate Hmsc
+analysis. Uncertainty in the fitted climate trend is not propagated here; no
+first-stage or bird-model credible intervals are produced. Residual climate
+is not guaranteed orthogonal to every possible spatial effect, and adjustment
+of temperature and precipitation separately does not remove their mutual
+correlation or confounding by other covariates.
+
+A future outcome-model comparison would need to specify the spatial adjustment
+consistently, inspect remaining climate support, propagate relevant uncertainty,
+and test recovery of known constant and changing responses. We have not chosen
+a final k, modified the environmental inputs, or refitted any bird models.
+
+## Reproducibility and validation
+
+Knit this document to rerun all 18 fits, regenerate the five PNGs, and embed them
+in a self-contained HTML report. From the repository root:
+
+```{r reproduction,echo=TRUE,eval=FALSE}
+rmarkdown::render('scripts/5-vis/spatial-latents/climate-spatial-residualisation.Rmd')
+```
+
+The adjacent R script retains fitted GAMs, decomposition values, summaries,
+common-cell IDs, spatial graph, semivariograms, and pair counts in memory. It
+checks input alignment, identical coordinates across atlases, the 1,697-cell
+intersection, finite values, optimiser convergence, approximately zero residual
+means, and exact reconstruction of original climate as fitted trend plus
+residual. Selected pair distances are independently checked against coordinate
+differences; spatial weights and distance bins are reused across all fields.
+All source inputs and fitted bird models are read only. Plots are PNG only.
+
+```{r session-info}
+sessionInfo()
+```

@@ -1,0 +1,4 @@
+"atlas","coverage","n_cells","median_land_pct","mean_land_pct","below_25_land","exactly_25_land","at_least_25_land","pct_at_least_25_land"
+"Atlas 1","Good",1444,96.1804342009097,73.7745946015061,222,0,1222,84.6260387811634
+"Atlas 2","Good",1458,98.0736998465922,75.9243216878823,196,0,1262,86.556927297668
+"Atlas 3","Assumed good (Atlas 3)",2156,100,77.7541750271615,280,0,1876,87.012987012987

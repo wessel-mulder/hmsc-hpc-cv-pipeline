@@ -1,0 +1,95 @@
+---
+title: "Unusual temporal turnover under an independent-change null"
+output:
+  html_document:
+    toc: true
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE,message=FALSE,warning=FALSE,dev='png')
+root <- normalizePath(if (dir.exists('data-new')) '.' else '../../..')
+results_root <- file.path(root,'scripts/1-atlas-analyses/unusual-temporal-turnover/simulation-results')
+pointer <- file.path(results_root,'latest-run.txt')
+stopifnot(file.exists(pointer))
+run_rel <- readLines(pointer,warn=FALSE)[1]
+run_dir <- file.path(results_root,run_rel)
+stopifnot(dir.exists(run_dir),file.exists(file.path(run_dir,'simulation-results.RData')),
+          identical(readLines(file.path(run_dir,'run-status.txt'),warn=FALSE)[1],'complete'))
+load(file.path(run_dir,'simulation-results.RData'))
+fmt <- function(x) format(x,big.mark=',',scientific=FALSE,trim=TRUE)
+summary_table <- do.call(rbind,lapply(result,function(z) data.frame(
+  Pair=z$pair,`Observed mean cell TBI`=z$observed_global_mean,
+  `Null mean`=z$global_null_mean,`Null SD`=sqrt(z$global_null_variance),
+  `Null 95% interval`=paste0(sprintf('%.5f',quantile(z$global_mean_draws,.025)),
+    '–',sprintf('%.5f',quantile(z$global_mean_draws,.975))),
+  `Upper-tail p`=sprintf('%.2e',z$global_upper_p),check.names=FALSE)))
+rownames(summary_table) <- NULL
+site_test_table <- site_inference_summary
+site_test_table$pair <- factor(site_test_table$pair,levels=c('1-2','2-3','1-3'))
+adjustment_order <- c('Unadjusted','Holm–Bonferroni')
+site_test_table$adjustment <- factor(site_test_table$adjustment,levels=adjustment_order)
+site_test_table <- site_test_table[order(site_test_table$adjustment,site_test_table$pair),]
+site_test_table$adjustment <- as.character(site_test_table$adjustment)
+site_test_table$pair <- as.character(site_test_table$pair)
+```
+
+## Question and sample
+
+This analysis asks whether the locations of species gains and losses are more spatially aligned than expected if each species changed independently. It tests spatial allocation under a deliberately simple null model. It does not identify causes of change or correct for imperfect detection.
+
+For each cell and atlas, we summed `pct_class_0` (ocean) and `pct_class_77` (inland water) in the updated `X_environment.csv`. Cells with a sum above 75% in any atlas were excluded. We then required Good/Average coverage for Atlases 1 and 2 using the supplied effort workbook; Atlas 3 coverage is treated as adequate because no corresponding coverage data are supplied. The fixed sample has **`r fmt(length(sites))` cells × `r fmt(ncol(matrices[[1]]))` species** in every atlas. All upstream species are retained. Missing or nonbinary occurrence values stop the analysis; they are never recoded as absences.
+
+## Observed turnover and the null model
+
+For each cell, the turnover index (TBI) is the number of species that changed status divided by the number of species present in either atlas period. It ranges from zero (no changes) to one (no shared presences, when the cell has any presence). Empty cells have TBI zero by convention.
+
+For each atlas pair, the null holds every species’ earlier distribution fixed and reallocates that species’ observed losses among its earlier occupied cells and its gains among its earlier unoccupied cells. The locations of changes are randomized independently across species, while each species’ loss and gain totals remain fixed. We ran **`r fmt(n_sim)` simulations per pair**, using `r fmt(metadata$workers)` workers and chunks of `r fmt(metadata$chunk_size)` draws.
+
+For each site and atlas pair, we test both directions. The inclusive lower tail is the fraction of null simulations at or below observed TBI; the inclusive upper tail is the fraction at or above it. Each uses the add-one Monte Carlo correction. A two-sided p-value is twice the smaller inclusive tail, capped at one. The direction comes from observed TBI minus the site's null mean: positive means more turnover than expected; negative means less. Thus sites with unusually little change are tested alongside sites with unusually much change.
+
+We show the raw two-sided p-values at 0.05 for an unadjusted exploratory view, and also adjust them across all **`r fmt(nrow(site_summary))` site-by-atlas-pair tests** using Holm–Bonferroni. Holm controls the family-wise error rate: the chance of one or more false positives across the full set of tests. Grey cells are not flagged; blue flagged cells have less turnover than expected and orange flagged cells have more. The color intensity shows observed minus null mean TBI. These are site-level departures from the specified null, not causal explanations.
+
+This report reads the latest completed run listed in `simulation-results/latest-run.txt`. Run-specific PNGs, the RData summaries, and `simulation-progress.log` are kept together in that run’s folder.
+
+The community-level upper-tail Monte Carlo p-values are exploratory and unadjusted across atlas pairs. They use the add-one calculation and have resolution `r signif(1/(n_sim+1),3)`. In the comparison plot, the red line marks the observed mean and the annotation gives its upper-tail p-value.
+
+```{r results}
+knitr::kable(summary_table,digits=5,row.names=FALSE,
+  caption='Observed grid-wide mean TBI compared with the independent-change null')
+```
+
+Each histogram row uses its own TBI axis range to make the simulated distribution visible. The density axis is shared across rows; compare observed means using the values in the table.
+
+```{r null-distributions, out.width='100%'}
+knitr::include_graphics(file.path(run_dir,'null-distributions-all-pairs.png'))
+```
+
+### Observed site-level TBI distributions
+
+These histograms show the observed TBI values across all 1,698 sites for each atlas pair. The panels share the same 0–1 TBI axis and density scale; each site contributes one value. Red lines mark the corresponding atlas-wide means.
+
+```{r observed-site-tbi, out.width='100%'}
+knitr::include_graphics(file.path(run_dir,'observed-site-tbi-distributions.png'))
+```
+
+## Figures
+
+### Sites with more or less turnover than expected
+
+The maps are ordered from unadjusted (`p < 0.05`) to Holm–Bonferroni adjusted. The unadjusted map is included for comparison and does not account for multiplicity. Both directions are tested simultaneously.
+
+```{r site-tests, results='asis'}
+knitr::kable(site_test_table[,c('adjustment','pair','significant','more','less')],
+  col.names=c('Adjustment','Atlas pair','Flagged sites','More','Less'),
+  caption='Sites with two-sided p < 0.05 by direction (raw p for unadjusted row; adjusted p otherwise)')
+```
+
+```{r site-unadjusted, out.width='100%'}
+knitr::include_graphics(file.path(run_dir,'sitewise-turnover-unadjusted.png'))
+```
+
+```{r site-holm, out.width='100%'}
+knitr::include_graphics(file.path(run_dir,'sitewise-turnover-holm.png'))
+```
+

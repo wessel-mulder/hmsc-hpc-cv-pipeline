@@ -1,0 +1,761 @@
+"atlas_pair","predictor","trait_term","trait_group","trait_label","trait_unit","probability_delta_positive","probability_delta_negative"
+"Atlas1_to_Atlas2","tmean_breeding","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.5151,0.4849
+"Atlas1_to_Atlas2","tmean_breeding","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.3057,0.6943
+"Atlas1_to_Atlas2","tmean_breeding","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.8234,0.1766
+"Atlas1_to_Atlas2","tmean_breeding","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.7294,0.2706
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.8968,0.1032
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.2462,0.7538
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.3687,0.6313
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.3399,0.6601
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4663,0.5337
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.4945,0.5055
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.4262,0.5738
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.1059,0.8941
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.2358,0.7642
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.4299,0.5701
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.4222,0.5778
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.287,0.713
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.3659,0.6341
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.3593,0.6407
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.3809,0.6191
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.488,0.512
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.4378,0.5622
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.523,0.477
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.327,0.673
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.2557,0.7443
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.1826,0.8174
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.404,0.596
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.2539,0.7461
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3891,0.6109
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.2579,0.7421
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.4,0.6
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.2965,0.7035
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.2496,0.7504
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.399,0.601
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.2529,0.7471
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.3162,0.6838
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.2417,0.7583
+"Atlas1_to_Atlas2","tmean_breeding","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.1943,0.8057
+"Atlas1_to_Atlas2","tmean_breeding","species_thermal_index","Species thermal index","STI","per STI unit",0.515,0.485
+"Atlas1_to_Atlas2","prec_breeding","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.544,0.456
+"Atlas1_to_Atlas2","prec_breeding","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.0387,0.9613
+"Atlas1_to_Atlas2","prec_breeding","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.2436,0.7564
+"Atlas1_to_Atlas2","prec_breeding","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.4531,0.5469
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.5084,0.4916
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.4859,0.5141
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.6421,0.3579
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.5317,0.4683
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.6767,0.3233
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.5885,0.4115
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.454,0.546
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.4034,0.5966
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4991,0.5009
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.5155,0.4845
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.6298,0.3702
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.6439,0.3561
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.6652,0.3348
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.49,0.51
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.5572,0.4428
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.3059,0.6941
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.6551,0.3449
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.3569,0.6431
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.597,0.403
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.6394,0.3606
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4209,0.5791
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.3551,0.6449
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.6644,0.3356
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.6545,0.3455
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.5458,0.4542
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.6161,0.3839
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.4963,0.5037
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.5332,0.4668
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.5752,0.4248
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.4642,0.5358
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.3032,0.6968
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.5369,0.4631
+"Atlas1_to_Atlas2","prec_breeding","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.4318,0.5682
+"Atlas1_to_Atlas2","prec_breeding","species_thermal_index","Species thermal index","STI","per STI unit",0.5568,0.4432
+"Atlas1_to_Atlas2","hh","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.3278,0.6722
+"Atlas1_to_Atlas2","hh","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.337,0.663
+"Atlas1_to_Atlas2","hh","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.5218,0.4782
+"Atlas1_to_Atlas2","hh","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.4045,0.5955
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.107,0.893
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.4347,0.5653
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.467,0.533
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.4281,0.5719
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4076,0.5924
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.3896,0.6104
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.4246,0.5754
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.622,0.378
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.3439,0.6561
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.3221,0.6779
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.4989,0.5011
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.5269,0.4731
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5078,0.4922
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.176,0.824
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.4687,0.5313
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.4441,0.5559
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.2064,0.7936
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.4143,0.5857
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.7271,0.2729
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.3322,0.6678
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.0887,0.9113
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.2088,0.7912
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.2193,0.7807
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3499,0.6501
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.317,0.683
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.1796,0.8204
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.685,0.315
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.4705,0.5295
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.2892,0.7108
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.596,0.404
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.2258,0.7742
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.3633,0.6367
+"Atlas1_to_Atlas2","hh","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.3402,0.6598
+"Atlas1_to_Atlas2","hh","species_thermal_index","Species thermal index","STI","per STI unit",0.4303,0.5697
+"Atlas1_to_Atlas2","perc_cropland","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.2553,0.7447
+"Atlas1_to_Atlas2","perc_cropland","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.0387,0.9613
+"Atlas1_to_Atlas2","perc_cropland","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.1594,0.8406
+"Atlas1_to_Atlas2","perc_cropland","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.2601,0.7399
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.1015,0.8985
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.2793,0.7207
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.4729,0.5271
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.5648,0.4352
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.5749,0.4251
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.3888,0.6112
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.3874,0.6126
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.4386,0.5614
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.5946,0.4054
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.1849,0.8151
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.4362,0.5638
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.2303,0.7697
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.6413,0.3587
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.2894,0.7106
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.3811,0.6189
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.6957,0.3043
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.3585,0.6415
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.3219,0.6781
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.1779,0.8221
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.4433,0.5567
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.2524,0.7476
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.1208,0.8792
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.2861,0.7139
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.5112,0.4888
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.6179,0.3821
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.2807,0.7193
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.2523,0.7477
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.4413,0.5587
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.2186,0.7814
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.4481,0.5519
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.3764,0.6236
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.4151,0.5849
+"Atlas1_to_Atlas2","perc_cropland","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.4119,0.5881
+"Atlas1_to_Atlas2","perc_cropland","species_thermal_index","Species thermal index","STI","per STI unit",0.6022,0.3978
+"Atlas1_to_Atlas2","perc_urban","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.7137,0.2863
+"Atlas1_to_Atlas2","perc_urban","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.4641,0.5359
+"Atlas1_to_Atlas2","perc_urban","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.7998,0.2002
+"Atlas1_to_Atlas2","perc_urban","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.7405,0.2595
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.6832,0.3168
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.4718,0.5282
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.3391,0.6609
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.411,0.589
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.5429,0.4571
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.3542,0.6458
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.3631,0.6369
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.6754,0.3246
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4864,0.5136
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.4063,0.5937
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.3687,0.6313
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.3908,0.6092
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5072,0.4928
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.4201,0.5799
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.4871,0.5129
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.5287,0.4713
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.3992,0.6008
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.6253,0.3747
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.4209,0.5791
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.5953,0.4047
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.3538,0.6462
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.5261,0.4739
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.369,0.631
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3696,0.6304
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.5628,0.4372
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.4203,0.5797
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.4408,0.5592
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.3028,0.6972
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.36,0.64
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.0973,0.9027
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.4811,0.5189
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.3986,0.6014
+"Atlas1_to_Atlas2","perc_urban","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.4166,0.5834
+"Atlas1_to_Atlas2","perc_urban","species_thermal_index","Species thermal index","STI","per STI unit",0.3591,0.6409
+"Atlas1_to_Atlas2","perc_pasture","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.2976,0.7024
+"Atlas1_to_Atlas2","perc_pasture","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.2227,0.7773
+"Atlas1_to_Atlas2","perc_pasture","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.2462,0.7538
+"Atlas1_to_Atlas2","perc_pasture","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.4066,0.5934
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.7012,0.2988
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.6064,0.3936
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.5375,0.4625
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.7059,0.2941
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.6766,0.3234
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.5286,0.4714
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.6046,0.3954
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.3392,0.6608
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.5925,0.4075
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.3807,0.6193
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.3976,0.6024
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.4689,0.5311
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5509,0.4491
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.6422,0.3578
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.4163,0.5837
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.8861,0.1139
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.6327,0.3673
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.6388,0.3612
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.6007,0.3993
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.7211,0.2789
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.6049,0.3951
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.3053,0.6947
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.6006,0.3994
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3649,0.6351
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.5423,0.4577
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.4865,0.5135
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.3446,0.6554
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.5406,0.4594
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.5156,0.4844
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.3268,0.6732
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.4967,0.5033
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.5715,0.4285
+"Atlas1_to_Atlas2","perc_pasture","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.6387,0.3613
+"Atlas1_to_Atlas2","perc_pasture","species_thermal_index","Species thermal index","STI","per STI unit",0.5869,0.4131
+"Atlas1_to_Atlas2","perc_grass_shrub","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.3787,0.6213
+"Atlas1_to_Atlas2","perc_grass_shrub","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.653,0.347
+"Atlas1_to_Atlas2","perc_grass_shrub","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.5115,0.4885
+"Atlas1_to_Atlas2","perc_grass_shrub","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.5935,0.4065
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.3296,0.6704
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.5807,0.4193
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.3272,0.6728
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.52,0.48
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.5626,0.4374
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.699,0.301
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.6316,0.3684
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.8157,0.1843
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.5663,0.4337
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.2704,0.7296
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.5462,0.4538
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.4147,0.5853
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5637,0.4363
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.6422,0.3578
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.3553,0.6447
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.5309,0.4691
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.7088,0.2912
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.766,0.234
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.3813,0.6187
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.3253,0.6747
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4889,0.5111
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.4753,0.5247
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.3545,0.6455
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3411,0.6589
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.6469,0.3531
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.594,0.406
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.272,0.728
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.5203,0.4797
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.6843,0.3157
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.3071,0.6929
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.4954,0.5046
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.6545,0.3455
+"Atlas1_to_Atlas2","perc_grass_shrub","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.5222,0.4778
+"Atlas1_to_Atlas2","perc_grass_shrub","species_thermal_index","Species thermal index","STI","per STI unit",0.4802,0.5198
+"Atlas1_to_Atlas2","perc_forest_deciduous","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.5669,0.4331
+"Atlas1_to_Atlas2","perc_forest_deciduous","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.5464,0.4536
+"Atlas1_to_Atlas2","perc_forest_deciduous","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.4567,0.5433
+"Atlas1_to_Atlas2","perc_forest_deciduous","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.5631,0.4369
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.3965,0.6035
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.3135,0.6865
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.5392,0.4608
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.5024,0.4976
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4215,0.5785
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.3821,0.6179
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.4237,0.5763
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.4248,0.5752
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4397,0.5603
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.4515,0.5485
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.282,0.718
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.3395,0.6605
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5045,0.4955
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.5049,0.4951
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.5368,0.4632
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.4611,0.5389
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.2808,0.7192
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.3695,0.6305
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.5341,0.4659
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.373,0.627
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.7097,0.2903
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.5883,0.4117
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.6323,0.3677
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.5846,0.4154
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.4443,0.5557
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.5359,0.4641
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.2171,0.7829
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.334,0.666
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.4219,0.5781
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.4121,0.5879
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.2503,0.7497
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.4967,0.5033
+"Atlas1_to_Atlas2","perc_forest_deciduous","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.4723,0.5277
+"Atlas1_to_Atlas2","perc_forest_deciduous","species_thermal_index","Species thermal index","STI","per STI unit",0.3665,0.6335
+"Atlas1_to_Atlas2","perc_forest_evergreen","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.6198,0.3802
+"Atlas1_to_Atlas2","perc_forest_evergreen","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.2996,0.7004
+"Atlas1_to_Atlas2","perc_forest_evergreen","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.2178,0.7822
+"Atlas1_to_Atlas2","perc_forest_evergreen","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.2059,0.7941
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.223,0.777
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.3732,0.6268
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.478,0.522
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.257,0.743
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4106,0.5894
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.3074,0.6926
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.5063,0.4937
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.0219,0.9781
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4844,0.5156
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.5524,0.4476
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.5325,0.4675
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.3541,0.6459
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5917,0.4083
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.4645,0.5355
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.4821,0.5179
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.5724,0.4276
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.3925,0.6075
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.3504,0.6496
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.4076,0.5924
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.52,0.48
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.5012,0.4988
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.2692,0.7308
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.3259,0.6741
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.4148,0.5852
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.2676,0.7324
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.451,0.549
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.5334,0.4666
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.3671,0.6329
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.53,0.47
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.8265,0.1735
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.2363,0.7637
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.542,0.458
+"Atlas1_to_Atlas2","perc_forest_evergreen","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.3632,0.6368
+"Atlas1_to_Atlas2","perc_forest_evergreen","species_thermal_index","Species thermal index","STI","per STI unit",0.4392,0.5608
+"Atlas1_to_Atlas2","perc_forest_mixed_other","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.4659,0.5341
+"Atlas1_to_Atlas2","perc_forest_mixed_other","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.228,0.772
+"Atlas1_to_Atlas2","perc_forest_mixed_other","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.1906,0.8094
+"Atlas1_to_Atlas2","perc_forest_mixed_other","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.3177,0.6823
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.5943,0.4057
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.1805,0.8195
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.2748,0.7252
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.318,0.682
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.5094,0.4906
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.5138,0.4862
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.4751,0.5249
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.6175,0.3825
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4108,0.5892
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.5263,0.4737
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.3785,0.6215
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.2815,0.7185
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.3616,0.6384
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.453,0.547
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.3383,0.6617
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.4463,0.5537
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.4764,0.5236
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.4405,0.5595
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.3276,0.6724
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.4754,0.5246
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4786,0.5214
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.3718,0.6282
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.2879,0.7121
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.46,0.54
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.607,0.393
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.473,0.527
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.4238,0.5762
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.456,0.544
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.3511,0.6489
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.5262,0.4738
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.4688,0.5312
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.4636,0.5364
+"Atlas1_to_Atlas2","perc_forest_mixed_other","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.4876,0.5124
+"Atlas1_to_Atlas2","perc_forest_mixed_other","species_thermal_index","Species thermal index","STI","per STI unit",0.5469,0.4531
+"Atlas2_to_Atlas3","tmean_breeding","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.6241,0.3759
+"Atlas2_to_Atlas3","tmean_breeding","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.1553,0.8447
+"Atlas2_to_Atlas3","tmean_breeding","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.0545,0.9455
+"Atlas2_to_Atlas3","tmean_breeding","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.059,0.941
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.1912,0.8088
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.3026,0.6974
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.5836,0.4164
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.4229,0.5771
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4162,0.5838
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.4814,0.5186
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.4272,0.5728
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.8525,0.1475
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4701,0.5299
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.4716,0.5284
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.2411,0.7589
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.2885,0.7115
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5295,0.4705
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.3124,0.6876
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.6583,0.3417
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.4467,0.5533
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.2086,0.7914
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.1661,0.8339
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.483,0.517
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.5506,0.4494
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.3796,0.6204
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.4877,0.5123
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.539,0.461
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3935,0.6065
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.3739,0.6261
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.4864,0.5136
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.7359,0.2641
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.4685,0.5315
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.3424,0.6576
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.5104,0.4896
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.4028,0.5972
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.5143,0.4857
+"Atlas2_to_Atlas3","tmean_breeding","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.4802,0.5198
+"Atlas2_to_Atlas3","tmean_breeding","species_thermal_index","Species thermal index","STI","per STI unit",0.6836,0.3164
+"Atlas2_to_Atlas3","prec_breeding","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.3181,0.6819
+"Atlas2_to_Atlas3","prec_breeding","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.8342,0.1658
+"Atlas2_to_Atlas3","prec_breeding","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.4906,0.5094
+"Atlas2_to_Atlas3","prec_breeding","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.3626,0.6374
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.5253,0.4747
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.4669,0.5331
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.3495,0.6505
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.7517,0.2483
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.5208,0.4792
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.2882,0.7118
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.5886,0.4114
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.621,0.379
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.5023,0.4977
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.6878,0.3122
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.3994,0.6006
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.2713,0.7287
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.4484,0.5516
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.6235,0.3765
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.5141,0.4859
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.5606,0.4394
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.3697,0.6303
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.6609,0.3391
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.4233,0.5767
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.4753,0.5247
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.6072,0.3928
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.4437,0.5563
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.5561,0.4439
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3871,0.6129
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.6964,0.3036
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.5371,0.4629
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.5512,0.4488
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.3614,0.6386
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.2517,0.7483
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.6446,0.3554
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.571,0.429
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.5276,0.4724
+"Atlas2_to_Atlas3","prec_breeding","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.5677,0.4323
+"Atlas2_to_Atlas3","prec_breeding","species_thermal_index","Species thermal index","STI","per STI unit",0.6658,0.3342
+"Atlas2_to_Atlas3","hh","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.5875,0.4125
+"Atlas2_to_Atlas3","hh","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.3223,0.6777
+"Atlas2_to_Atlas3","hh","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.333,0.667
+"Atlas2_to_Atlas3","hh","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.4138,0.5862
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.6735,0.3265
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.5705,0.4295
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.513,0.487
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.6804,0.3196
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.6535,0.3465
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.6515,0.3485
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.5271,0.4729
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.6322,0.3678
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.6607,0.3393
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.7027,0.2973
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.3285,0.6715
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.2092,0.7908
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5189,0.4811
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.6973,0.3027
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.635,0.365
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.4834,0.5166
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.8142,0.1858
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.5185,0.4815
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.6702,0.3298
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.4926,0.5074
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.7187,0.2813
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.7355,0.2645
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.8111,0.1889
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.7342,0.2658
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.3909,0.6091
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.6243,0.3757
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.5293,0.4707
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.497,0.503
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.8736,0.1264
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.5529,0.4471
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.4673,0.5327
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.5436,0.4564
+"Atlas2_to_Atlas3","hh","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.6747,0.3253
+"Atlas2_to_Atlas3","hh","species_thermal_index","Species thermal index","STI","per STI unit",0.6275,0.3725
+"Atlas2_to_Atlas3","perc_cropland","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.6903,0.3097
+"Atlas2_to_Atlas3","perc_cropland","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.8109,0.1891
+"Atlas2_to_Atlas3","perc_cropland","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.4371,0.5629
+"Atlas2_to_Atlas3","perc_cropland","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.3713,0.6287
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.3775,0.6225
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.3985,0.6015
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.5705,0.4295
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.5181,0.4819
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4926,0.5074
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.6671,0.3329
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.5048,0.4952
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.73,0.27
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4961,0.5039
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.6821,0.3179
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.291,0.709
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.498,0.502
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5776,0.4224
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.4581,0.5419
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.6815,0.3185
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.2249,0.7751
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.7376,0.2624
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.6188,0.3812
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.5897,0.4103
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.4325,0.5675
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.7769,0.2231
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.6956,0.3044
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.4454,0.5546
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.4869,0.5131
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.57,0.43
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.6591,0.3409
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.5835,0.4165
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.3913,0.6087
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.674,0.326
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.651,0.349
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.481,0.519
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.7255,0.2745
+"Atlas2_to_Atlas3","perc_cropland","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.5432,0.4568
+"Atlas2_to_Atlas3","perc_cropland","species_thermal_index","Species thermal index","STI","per STI unit",0.5054,0.4946
+"Atlas2_to_Atlas3","perc_urban","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.6151,0.3849
+"Atlas2_to_Atlas3","perc_urban","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.6774,0.3226
+"Atlas2_to_Atlas3","perc_urban","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.4428,0.5572
+"Atlas2_to_Atlas3","perc_urban","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.3305,0.6695
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.2875,0.7125
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.3595,0.6405
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.4804,0.5196
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.4067,0.5933
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.499,0.501
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.67,0.33
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.7073,0.2927
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.7727,0.2273
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.5447,0.4553
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.678,0.322
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.3219,0.6781
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.283,0.717
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.4941,0.5059
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.4858,0.5142
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.7156,0.2844
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.4106,0.5894
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.5214,0.4786
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.3953,0.6047
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.2791,0.7209
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.6631,0.3369
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4869,0.5131
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.7018,0.2982
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.3549,0.6451
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.6004,0.3996
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.7092,0.2908
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.5903,0.4097
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.4148,0.5852
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.6224,0.3776
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.5311,0.4689
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.6107,0.3893
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.5636,0.4364
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.5903,0.4097
+"Atlas2_to_Atlas3","perc_urban","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.6755,0.3245
+"Atlas2_to_Atlas3","perc_urban","species_thermal_index","Species thermal index","STI","per STI unit",0.4323,0.5677
+"Atlas2_to_Atlas3","perc_pasture","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.7512,0.2488
+"Atlas2_to_Atlas3","perc_pasture","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.7807,0.2193
+"Atlas2_to_Atlas3","perc_pasture","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.7799,0.2201
+"Atlas2_to_Atlas3","perc_pasture","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.5853,0.4147
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.5371,0.4629
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.351,0.649
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.356,0.644
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.4803,0.5197
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.3356,0.6644
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.6549,0.3451
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.5695,0.4305
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.5094,0.4906
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.2871,0.7129
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.3768,0.6232
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.5708,0.4292
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.6097,0.3903
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.4373,0.5627
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.3367,0.6633
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.4892,0.5108
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.4662,0.5338
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.4504,0.5496
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.6226,0.3774
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.3138,0.6862
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.4498,0.5502
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4593,0.5407
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.9042,0.0958
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.2598,0.7402
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.4585,0.5415
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.5532,0.4468
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.4673,0.5327
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.4964,0.5036
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.388,0.612
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.4991,0.5009
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.8193,0.1807
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.6329,0.3671
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.4854,0.5146
+"Atlas2_to_Atlas3","perc_pasture","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.3399,0.6601
+"Atlas2_to_Atlas3","perc_pasture","species_thermal_index","Species thermal index","STI","per STI unit",0.3831,0.6169
+"Atlas2_to_Atlas3","perc_grass_shrub","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.6326,0.3674
+"Atlas2_to_Atlas3","perc_grass_shrub","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.6175,0.3825
+"Atlas2_to_Atlas3","perc_grass_shrub","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.4671,0.5329
+"Atlas2_to_Atlas3","perc_grass_shrub","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.5795,0.4205
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.5112,0.4888
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.4197,0.5803
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.5235,0.4765
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.55,0.45
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.3514,0.6486
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.4497,0.5503
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.6767,0.3233
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.4486,0.5514
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4824,0.5176
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.5534,0.4466
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.5831,0.4169
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.7953,0.2047
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.5318,0.4682
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.5751,0.4249
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.3904,0.6096
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.2656,0.7344
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.642,0.358
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.5321,0.4679
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.7159,0.2841
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.608,0.392
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.721,0.279
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.6896,0.3104
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.451,0.549
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.6206,0.3794
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.4427,0.5573
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.5215,0.4785
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.5397,0.4603
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.4951,0.5049
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.4033,0.5967
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.6879,0.3121
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.6325,0.3675
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.6432,0.3568
+"Atlas2_to_Atlas3","perc_grass_shrub","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.6818,0.3182
+"Atlas2_to_Atlas3","perc_grass_shrub","species_thermal_index","Species thermal index","STI","per STI unit",0.5545,0.4455
+"Atlas2_to_Atlas3","perc_forest_deciduous","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.457,0.543
+"Atlas2_to_Atlas3","perc_forest_deciduous","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.4222,0.5778
+"Atlas2_to_Atlas3","perc_forest_deciduous","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.2941,0.7059
+"Atlas2_to_Atlas3","perc_forest_deciduous","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.4207,0.5793
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.3131,0.6869
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.5801,0.4199
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.5205,0.4795
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.5126,0.4874
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4501,0.5499
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.4218,0.5782
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.6121,0.3879
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.6514,0.3486
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.4245,0.5755
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.511,0.489
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.5725,0.4275
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.5984,0.4016
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.6087,0.3913
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.4729,0.5271
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.5884,0.4116
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.551,0.449
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.5767,0.4233
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.6297,0.3703
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.1368,0.8632
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.5064,0.4936
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4762,0.5238
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.4991,0.5009
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.2477,0.7523
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.3184,0.6816
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.6707,0.3293
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.5277,0.4723
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.5379,0.4621
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.611,0.389
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.3702,0.6298
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.3285,0.6715
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.775,0.225
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.4441,0.5559
+"Atlas2_to_Atlas3","perc_forest_deciduous","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.5075,0.4925
+"Atlas2_to_Atlas3","perc_forest_deciduous","species_thermal_index","Species thermal index","STI","per STI unit",0.5569,0.4431
+"Atlas2_to_Atlas3","perc_forest_evergreen","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.5748,0.4252
+"Atlas2_to_Atlas3","perc_forest_evergreen","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.5873,0.4127
+"Atlas2_to_Atlas3","perc_forest_evergreen","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.7606,0.2394
+"Atlas2_to_Atlas3","perc_forest_evergreen","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.6383,0.3617
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.5842,0.4158
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.4805,0.5195
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.3456,0.6544
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.5228,0.4772
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.4534,0.5466
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.6292,0.3708
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.5809,0.4191
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.9353,0.0647
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.2544,0.7456
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.3135,0.6865
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.4418,0.5582
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.6119,0.3881
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.4387,0.5613
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.4975,0.5025
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.4325,0.5675
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.3424,0.6576
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.6938,0.3062
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.404,0.596
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.7328,0.2672
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.293,0.707
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4729,0.5271
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.1299,0.8701
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.4313,0.5687
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.4121,0.5879
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.6253,0.3747
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.3888,0.6112
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.1324,0.8676
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.5994,0.4006
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.6143,0.3857
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.1448,0.8552
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.734,0.266
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.711,0.289
+"Atlas2_to_Atlas3","perc_forest_evergreen","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.5686,0.4314
+"Atlas2_to_Atlas3","perc_forest_evergreen","species_thermal_index","Species thermal index","STI","per STI unit",0.502,0.498
+"Atlas2_to_Atlas3","perc_forest_mixed_other","Migration_a3_DOF1","Migration strategy","1","factor contrast vs reference",0.717,0.283
+"Atlas2_to_Atlas3","perc_forest_mixed_other","Migration_a3_DOF1.5","Migration strategy","1.5","factor contrast vs reference",0.4952,0.5048
+"Atlas2_to_Atlas3","perc_forest_mixed_other","Migration_a3_DOF2","Migration strategy","2","factor contrast vs reference",0.4582,0.5418
+"Atlas2_to_Atlas3","perc_forest_mixed_other","Migration_a3_DOF2.5","Migration strategy","2.5","factor contrast vs reference",0.4676,0.5324
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusAerial insectivores","Foraging guild","Aerial insectivores","factor contrast vs reference",0.3449,0.6551
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusAquatic pursuers","Foraging guild","Aquatic pursuers","factor contrast vs reference",0.3665,0.6335
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusBuntings","Foraging guild","Buntings","factor contrast vs reference",0.4481,0.5519
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusColumbids","Foraging guild","Columbids","factor contrast vs reference",0.4845,0.5155
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusCuckoos","Foraging guild","Cuckoos","factor contrast vs reference",0.5353,0.4647
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusDabbling ducks","Foraging guild","Dabbling ducks","factor contrast vs reference",0.5182,0.4818
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusDippers","Foraging guild","Dippers","factor contrast vs reference",0.374,0.626
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusDiurnal raptors","Foraging guild","Diurnal raptors","factor contrast vs reference",0.2714,0.7286
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusDiving ducks","Foraging guild","Diving ducks","factor contrast vs reference",0.343,0.657
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusFlycatchers","Foraging guild","Flycatchers","factor contrast vs reference",0.4198,0.5802
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusFoliage gleaners","Foraging guild","Foliage gleaners","factor contrast vs reference",0.3407,0.6593
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusGallinaceous birds","Foraging guild","Gallinaceous birds","factor contrast vs reference",0.3765,0.6235
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusGrazing waterfowl","Foraging guild","Grazing waterfowl","factor contrast vs reference",0.4734,0.5266
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusGulls","Foraging guild","Gulls","factor contrast vs reference",0.4638,0.5362
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusKingfishers","Foraging guild","Kingfishers","factor contrast vs reference",0.544,0.456
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusLow flycatching feeders","Foraging guild","Low flycatching feeders","factor contrast vs reference",0.3662,0.6338
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusMarsh warblers","Foraging guild","Marsh warblers","factor contrast vs reference",0.2466,0.7534
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusNigthjars","Foraging guild","Nigthjars","factor contrast vs reference",0.3304,0.6696
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusOmnivorous corvids","Foraging guild","Omnivorous corvids","factor contrast vs reference",0.3821,0.6179
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusOpen-land insectivores","Foraging guild","Open-land insectivores","factor contrast vs reference",0.3575,0.6425
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusOrioles","Foraging guild","Orioles","factor contrast vs reference",0.4298,0.5702
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusOwls","Foraging guild","Owls","factor contrast vs reference",0.435,0.565
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusPasserine seedeaters","Foraging guild","Passerine seedeaters","factor contrast vs reference",0.4153,0.5847
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusPlovers","Foraging guild","Plovers","factor contrast vs reference",0.2783,0.7217
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusRails","Foraging guild","Rails","factor contrast vs reference",0.5485,0.4515
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusReedlings","Foraging guild","Reedlings","factor contrast vs reference",0.4431,0.5569
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusScolopacids","Foraging guild","Scolopacids","factor contrast vs reference",0.5301,0.4699
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusShrikes","Foraging guild","Shrikes","factor contrast vs reference",0.413,0.587
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusStarlings","Foraging guild","Starlings","factor contrast vs reference",0.4777,0.5223
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusTerns","Foraging guild","Terns","factor contrast vs reference",0.2939,0.7061
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusThrushes","Foraging guild","Thrushes","factor contrast vs reference",0.3331,0.6669
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusWading birds","Foraging guild","Wading birds","factor contrast vs reference",0.462,0.538
+"Atlas2_to_Atlas3","perc_forest_mixed_other","foraging_guild_consensusWoodpeckers","Foraging guild","Woodpeckers","factor contrast vs reference",0.3296,0.6704
+"Atlas2_to_Atlas3","perc_forest_mixed_other","species_thermal_index","Species thermal index","STI","per STI unit",0.3364,0.6636
