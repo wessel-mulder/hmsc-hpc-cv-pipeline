@@ -4,10 +4,9 @@
 SAMPLES=250
 THIN=100
 MODELS=(
-  "2026-11-06_06-55-21_Atlas1_MinOccs5_CoverageGoodAverage"
-  "2026-11-06_06-55-21_Atlas2_MinOccs5_CoverageGoodAverage"
-  "2026-11-06_06-55-21_Atlas3_MinOccs5_CoverageGoodAverage"
-
+  "2026-11-06_05-11-30_Atlas1_MinOccs5_CoverageGoodAverage_EnvironmentOnly"
+  "2026-11-06_05-11-30_Atlas2_MinOccs5_CoverageGoodAverage_EnvironmentOnly"
+  "2026-11-06_05-11-30_Atlas3_MinOccs5_CoverageGoodAverage_EnvironmentOnly"
 )
 
 for MODEL in "${MODELS[@]}"; do
