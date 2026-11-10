@@ -53,7 +53,7 @@ if('--integration' %in% commandArgs(trailingOnly=TRUE)) {
   MF_provenance<-list(input_md5=unname(tools::md5sum(input)),Hmsc=as.character(packageVersion('Hmsc')),mode='in-sample all saved draws expected=TRUE',version=1L)
   save(MF,MF_provenance,file=file.path(folder,'MF_preCV_samples_0040_thin_01_chains_2.Rdata'))
   original_root<-Sys.getenv('CH1_MODEL_OUTPUT_DIR',unset=NA_character_);Sys.setenv(CH1_MODEL_OUTPUT_DIR=fixture_root)
-  status<-system2(file.path(R.home('bin'),'Rscript'),c('scripts/2-hmsc/S3a_show_model_fit.R','synthetic','40','1','2','1'),stdout=file.path(fixture_root,'run.log'),stderr=file.path(fixture_root,'run.log'))
+  status<-system2(file.path(R.home('bin'),'Rscript'),c('scripts/2-hmsc/model-diagnostics/run-diagnostics.R','synthetic','40','1','2','1'),stdout=file.path(fixture_root,'run.log'),stderr=file.path(fixture_root,'run.log'))
   if(is.na(original_root)) Sys.unsetenv('CH1_MODEL_OUTPUT_DIR') else Sys.setenv(CH1_MODEL_OUTPUT_DIR=original_root)
   if(status!=0) stop(paste(readLines(file.path(fixture_root,'run.log')),collapse='\n'))
   output<-file.path(dirname(dirname(folder)),'Results','model-diagnostics','HPC_samples_0040_thin_01_chains_2')
@@ -62,7 +62,7 @@ if('--integration' %in% commandArgs(trailingOnly=TRUE)) {
   stopifnot(all(dd$status[dd$predictor=='constant']=='cannot assess'),all(is.na(dd$Migration_a3_DOF)))
   html<-paste(readLines(file.path(output,'report.html'),warn=FALSE),collapse='\n')
   stopifnot(grepl('Inapplicable: no spatial random levels',html),grepl('data:image/png',html,fixed=TRUE))
-  cat('Full legacy wrapper integration (environment-only, missing traits, constant predictor/draws, cached MF, HTML and PDF) passed.\n')
+  cat('Full expanded-workflow integration (environment-only, missing traits, constant predictor/draws, cached MF, HTML and PDF) passed.\n')
 }
 if('--models' %in% commandArgs(trailingOnly=TRUE)) {
   root<-Sys.getenv('CH1_MODEL_OUTPUT_DIR','HmscOutputs')

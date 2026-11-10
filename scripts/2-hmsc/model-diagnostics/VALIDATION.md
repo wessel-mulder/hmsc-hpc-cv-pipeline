@@ -46,7 +46,7 @@ From the repository root:
 
 ```sh
 CH1_MODEL_OUTPUT_DIR=data-new/2-hmsc/derived/models \
-  Rscript scripts/2-hmsc/S3_check_model_fit_TensorFlow.R 2026-11-02 250 100 4 4
+  Rscript scripts/2-hmsc/model-diagnostics/run-diagnostics.R 2026-11-02 250 100 4 4
 Rscript scripts/2-hmsc/model-diagnostics/test-diagnostics.R --integration
 CH1_MODEL_OUTPUT_DIR=data-new/2-hmsc/derived/models \
   Rscript scripts/2-hmsc/model-diagnostics/test-diagnostics.R --models

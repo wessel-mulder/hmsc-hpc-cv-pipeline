@@ -218,7 +218,7 @@ render_diagnostics <- function(out,template,title,notes) {
 
 run_diagnostics <- function(args,helper_dir) {
   for(pkg in c('Hmsc','posterior','ggplot2','rmarkdown','knitr')) if(!requireNamespace(pkg,quietly=TRUE)) stop('Required package: ',pkg)
-  if(!length(args)||!nzchar(args[1])) stop('Supply an explicit model-folder pattern: S3_check_model_fit_TensorFlow.R PATTERN [samples=250] [thin=100] [chains=4] [workers=4]')
+  if(!length(args)||!nzchar(args[1])) stop('Supply an explicit model-folder pattern: run-diagnostics.R PATTERN [samples=250] [thin=100] [chains=4] [workers=4]')
   if(length(args)>5) stop('At most five positional arguments are supported.')
   settings<-c(250L,100L,4L,4L)
   if(length(args)>1) for(i in 2:length(args)) {v<-suppressWarnings(as.numeric(args[i]));if(length(v)!=1||!is.finite(v)||v<1||v!=floor(v)) stop('Sampling arguments must be positive integers.');settings[i-1]<-v}

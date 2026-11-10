@@ -47,19 +47,28 @@ repository root on the HPC; set `CH1_MODEL_OUTPUT_DIR` for another output path.
 This supersedes the older path caveats above. Fitting and prediction scaling
 still require their own checks; no MCMC sampling is performed by S1.
 
-## Combined S3 diagnostics
+## Original S3 scripts
 
-Both `S3_check_model_fit_TensorFlow.R` and the compatibility wrapper
-`S3a_show_model_fit.R` run the same workflow. A literal folder-name substring is
-required; the other positional arguments retain their legacy defaults:
+`S3_check_model_fit_TensorFlow.R` and `S3a_show_model_fit.R` have been restored
+from `c8ccace`. S3 checks convergence; S3a calculates and plots in-sample fit.
+Both use `HmscOutputs/` as before. S3 retains its editable `pattern2match`
+(default `2026-11-02`); S3a retains its optional positional arguments.
+S3 skips Omega plots when there are no random levels. Figures are PNGs;
+S3a writes a separate PNG for each fit metric. No sampling changes are included.
+
+## Separate expanded diagnostics
+
+The expanded report workflow remains available independently through
+`model-diagnostics/run-diagnostics.R`; it does not run through S3 or S3a.
+A literal folder-name substring is required; other arguments retain their defaults:
 
 ```sh
 CH1_MODEL_OUTPUT_DIR=data-new/2-hmsc/derived/models \
-  Rscript scripts/2-hmsc/S3_check_model_fit_TensorFlow.R 2026-11-02 250 100 4 4
+  Rscript scripts/2-hmsc/model-diagnostics/run-diagnostics.R 2026-11-02 250 100 4 4
 Rscript scripts/2-hmsc/model-diagnostics/test-diagnostics.R
 ```
 
-Arguments are folder pattern, saved samples per chain, fitting thinning interval,
+For the expanded workflow, arguments are folder pattern, saved samples per chain, fitting thinning interval,
 chains and prediction workers. The root defaults to `HmscOutputs`. Counts and
 thinning are checked against the actual fitted object; no additional thinning,
 chain alignment or chain exclusion occurs. Every matching folder must contain
@@ -95,8 +104,8 @@ The R Markdown template knits both self-contained HTML and landscape PDF.
 PDFs show up to ten rows and seven relevant columns per table; HTML shows up to
 fifteen rows with all columns. Complete CSVs accompany both. PDF heatmaps use
 at most 32 species per page; HTML retains the full species heatmaps. All figures
-are PNGs, including those embedded in the PDFs. For the full synthetic legacy
-wrapper check, run the test script with `--integration` (also requires XeLaTeX).
+are PNGs, including those embedded in the PDFs. For the full synthetic expanded-workflow
+check, run the test script with `--integration` (also requires XeLaTeX).
 To validate completed reports against saved fitted draws and fingerprints, use:
 
 ```sh
