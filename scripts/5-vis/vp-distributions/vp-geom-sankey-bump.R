@@ -105,7 +105,7 @@ y_max <- max(0.1, ceiling(max(tapply(plot_data$mean_VP, plot_data$atlas, sum)) /
 vp_plot <- ggplot(plot_data, aes(x = atlas, node = variable,
                                 fill = variable, value = mean_VP)) +
   ggsankey::geom_sankey_bump(space = 0, type = "alluvial", alpha = 0.8,
-                            colour = "black", linewidth = 0.25) +
+                            colour = NA, linewidth = 0) +
   scale_y_continuous(limits = c(0, y_max), breaks = seq(0, y_max, 0.025),
                      minor_breaks = seq(0, y_max, 0.0125), labels = percent_labels) +
   scale_fill_manual(values = variable_colours) +

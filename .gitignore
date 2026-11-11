@@ -23,3 +23,7 @@ misc-figures/
 # Local working datasets; only portable HPC inputs in data-shared are shared.
 /data-new/
 /Data/
+
+# Regenerable draw-level VP caches; scripts, summaries and PNGs are shared.
+/scripts/4-post/compare-scaled-vp-changes/*.rds
+/scripts/4-post/compare-scaled-vp-changes/spatial/*.rds

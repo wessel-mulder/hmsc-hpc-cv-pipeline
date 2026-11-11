@@ -21,17 +21,19 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 guild_models <- c('All')
 variable_models <- c('All')   # 10 S0 predictors: climate, heterogeneity, seven cover variables 
 coverages <- c('GoodAverage')
-atlas_models <- c(1,2,3)
+atlas_models <- c(1)
 min_occs2run <- c(5)
-# Choose c("spatial", "none") to prepare both versions for each atlas.
-# Use "spatial" alone for environment + space, or "none" for environment only.
-# "none" removes all site latent factors; it does not substitute non-spatial ones.
-spatial_models <- c("none")
-spatial_n_factors <- 5L
+# Prepare one environment-only model and spatial models with 1–5 factors.
+# Each spatial model uses the full spatial covariance across fitted cells.
+# Set spatial_n_factors to a single value to prepare just that spatial version.
+spatial_models <- c("none", "spatial")
+spatial_n_factors <- 1:5
 stopifnot(length(spatial_models) > 0L, !anyDuplicated(spatial_models),
           all(spatial_models %in% c("spatial", "none")),
-          length(spatial_n_factors) == 1L, is.finite(spatial_n_factors),
-          spatial_n_factors >= 1L, spatial_n_factors == as.integer(spatial_n_factors))
+          length(spatial_n_factors) > 0L, !anyDuplicated(spatial_n_factors),
+          all(is.finite(spatial_n_factors)),
+          all(spatial_n_factors >= 1L),
+          all(spatial_n_factors == as.integer(spatial_n_factors)))
 guild2run <- guild_models[[1]]
 variable2run <- variable_models[[1]]
 atlas_model <- atlas_models[[1]]
@@ -44,6 +46,7 @@ for(atlas_model in atlas_models){
 for(guild2run in guild_models){
 for(variable2run in variable_models){
 for(spatial_model in spatial_models){
+for(n_factors in if (spatial_model == "spatial") spatial_n_factors else 0L){
 # assign correct names 
 guild <- guild2run
 variables <- variable2run
@@ -56,7 +59,7 @@ model_description = paste(as.character(date),
                           paste('MinOccs',min_occs,sep=''),
                           paste('Coverage',coverage,sep=''),
                           if (spatial_model == "spatial") {
-                            paste0("EnvironmentSpace_nf", spatial_n_factors)
+                            paste0("EnvironmentSpace_nf", n_factors)
                           } else {
                             "EnvironmentOnly"
                           },
@@ -161,7 +164,7 @@ rownames(proj_xycoords_unique) <- proj_xycoords_unique$site
 proj_xycoords_unique$site <- NULL
 
 struc_space <- HmscRandomLevel(sData = proj_xycoords_unique, sMethod = "Full")
-struc_space <- setPriors(struc_space, nfMin=spatial_n_factors, nfMax=spatial_n_factors)
+struc_space <- setPriors(struc_space, nfMin=n_factors, nfMax=n_factors)
 nrow(struc_space$s)
 random_levels <- list(site = struc_space)
 }
@@ -190,6 +193,10 @@ model = Hmsc(Y = Y_sub,
                      ranLevels = random_levels,
                      distr='probit')
 stopifnot(model$nr == if (spatial_model == "spatial") 1L else 0L)
+if (spatial_model == "spatial") {
+  stopifnot(model$ranLevels$site$nfMin == n_factors,
+            model$ranLevels$site$nfMax == n_factors)
+}
 print(model)
 #### Save model ####
 #These lists are left over from the orginal pipeline which had multiple models
@@ -245,6 +252,7 @@ if (!is.null(script_path) && file.exists(script_path)) {
   warning("Could not determine script path for backup")
 }
 
+}
 }
 }
 }

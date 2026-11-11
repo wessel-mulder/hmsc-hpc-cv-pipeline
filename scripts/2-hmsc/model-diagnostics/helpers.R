@@ -11,7 +11,12 @@ diagnose_matrix <- function(z) {
   end <- safe_stat(posterior::mcse_quantile,z,probs=c(.025,.975))
   if(length(end)!=2) end<-rep(NA_real_,2)
   ratio <- d['mcse_mean']/s
-  flags <- c(rhat=d['rhat']>diag_thresholds$rhat,
+  rhat_flag <- if (isTRUE(diag_thresholds$rhat_strict)) {
+    d['rhat'] >= diag_thresholds$rhat
+  } else {
+    d['rhat'] > diag_thresholds$rhat
+  }
+  flags <- c(rhat=rhat_flag,
     bulk=d['ess_bulk']<diag_thresholds$ess_per_chain*ncol(z),
     tail=d['ess_tail']<diag_thresholds$ess_per_chain*ncol(z),mcse=ratio>diag_thresholds$mcse_ratio)
   cannot <- !valid || any(!is.finite(c(d,ratio,end))) || s==0 || ncol(z)<2 || nrow(z)<4
