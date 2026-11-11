@@ -3,7 +3,8 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem-per-cpu=1GB
 #SBATCH --gpus-per-node=1
-#SBATCH --time=04:00:00
+#SBATCH --time=05:00:00
+# Per-model time limits are supplied by S2a_Fit_HMSC_Model_Launch.sh.
 #SBATCH --array=0-3
 #SBATCH --output=HmscOutputs/%x/Models/Logs/%x_%A_%a.log
 #SBATCH --error=HmscOutputs/%x/Models/Logs/%x_%A_%a.log
