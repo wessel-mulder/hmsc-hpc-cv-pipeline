@@ -30,7 +30,7 @@ if (!requireNamespace("cli", quietly = TRUE)) {
 }
 
 args <- commandArgs(trailingOnly = TRUE)
-pattern2match <- if (length(args) >= 1 && nzchar(args[1])) args[1] else "2026-07-27"
+pattern2match <- if (length(args) >= 1 && nzchar(args[1])) args[1] else "2026-11-06"
 samples <- if (length(args) >= 2) as.integer(args[2]) else 250L
 thin <- if (length(args) >= 3) as.integer(args[3]) else 100L
 nChains <- if (length(args) >= 4) as.integer(args[4]) else 4L
