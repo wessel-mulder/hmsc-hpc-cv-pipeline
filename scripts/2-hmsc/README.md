@@ -7,6 +7,7 @@ This folder contains scripts and Slurm launchers for the HMSC model-fitting work
 - `S2_Model_Fitting_HPC_Version.R`: prepares HMSC model objects for TensorFlow/HPC fitting by exporting JSON/RDS objects.
 - `S2a_Fit_HMSC_Model.sh`: Slurm launcher for fitting full HMSC models on the HPC.
 - `S2b_HPC_output_merger.R`: merges sampled HPC output back into fitted HMSC model objects.
+- `S2c_multimodel_diagnostics.R`: compares convergence across date-selected model variants within each atlas; editable targets and two date-labelled PNGs comparing convergence and predictor–spatial-factor correlations across all selected models. See [S2c guide](multimodel-diagnostics/README.md).
 - `S3_check_model_fit_TensorFlow.R`: checks fitted model convergence and diagnostics.
 - `S4_Partition_Creation.R`: creates cross-validation partitions and exports fold-specific model objects.
 - `S4a_Fit_HMSC_Model_KFold.sh`: Slurm launcher for cross-validation fitting.
