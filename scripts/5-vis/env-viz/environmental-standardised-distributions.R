@@ -50,19 +50,26 @@ colours <- c('Atlas 1 — 1970s'='#74A9CF','Atlas 2 — 1990s'='#FEE08B',
 dodge <- position_dodge(width=.75)
 p <- ggplot(stats,aes(x=variable,fill=period,group=interaction(variable,period))) +
   geom_hline(yintercept=0,colour='grey45',linetype='dashed',linewidth=.45) +
-  geom_boxplot(aes(ymin=min,lower=q1,middle=median,upper=q3,ymax=max),
+  geom_boxplot(aes(ymin=pmax(min,-2),lower=pmax(q1,-2),middle=median,upper=pmin(q3,2),ymax=pmin(max,2)),
     stat='identity',position=dodge,width=.65,linewidth=.4,colour='grey35') +
   geom_point(aes(y=median),position=dodge,shape=21,fill='white',
              colour='black',size=1.65,stroke=.45) +
+  # Keep every group in these layers so dodge positions match the boxes.
+  # Invisible points mark in-range endpoints; coloured dots flag clipped tails.
+  geom_point(aes(y=-2,alpha=I(as.numeric(min < -2))),position=dodge,
+             shape=21,colour='grey25',size=2.2,stroke=.4,show.legend=FALSE) +
+  geom_point(aes(y=2,alpha=I(as.numeric(max > 2))),position=dodge,
+             shape=21,colour='grey25',size=2.2,stroke=.4,show.legend=FALSE) +
   scale_x_discrete(labels=axis_labels) +
   scale_fill_manual(values=colours,breaks=names(colours),name=NULL) +
-  scale_y_continuous(breaks=scales::breaks_width(2),
-                     expand=expansion(mult=c(.035,.025))) +
-  coord_flip() +
+  scale_y_continuous(breaks=seq(-2,2,by=1),
+                     expand=expansion(mult=0)) +
+  coord_flip(ylim=c(-2,2),clip='off') +
   labs(title='Environmental distributions on a common SD scale',
     subtitle=sprintf('%s identical cells per atlas; centred and scaled using all three periods together',length(shared)),
     x=NULL,y='Deviation from pooled mean (standard deviations)',
     caption=paste('White dot / black line = median; box = middle 50%; whiskers = full minimum–maximum.',
+      'Coloured dots at −2 or +2 flag observed minima or maxima beyond the displayed range.',
       'Labels give pooled mean and sample SD in original units (5,091 cell–period values per variable).',
       'Zero marks the pooled mean. Ranges describe variation among cells, not uncertainty.',sep='\n')) +
   theme_minimal(base_size=10.5) +
@@ -79,16 +86,3 @@ p <- ggplot(stats,aes(x=variable,fill=period,group=interaction(variable,period))
 ggsave(file.path(out_dir,'environmental-standardised-distributions.png'),p,
        width=12,height=9,dpi=240,bg='white')
 if(interactive()) print(p)
-rows <- vapply(names(labels),function(v) sprintf('| %s | %s | %s | %s | %s |',
-  labels[[v]],nrow(X),units[[v]],format(pooled_mean[[v]],digits=8),
-  format(pooled_sd[[v]],digits=8)),character(1))
-writeLines(c('# Pooled standardisation reference','',
-  paste('Source:',input),'',
-  sprintf('Same %s cells in each atlas. Mean and sample SD pooled over all %s cell–period values,',
-          length(shared),nrow(X)),
-  'with equal numbers of cells per period. SD includes both spatial and temporal variation.',
-  'Transformation: (original value - pooled mean) / pooled SD. No within-atlas standardisation.','',
-  '| Predictor | Cell–period values | Units | Pooled mean | Pooled SD |',
-  '|---|---:|---|---:|---:|',rows),
-  file.path(out_dir,'environmental-standardisation-reference.md'))
-message('Saved environmental-standardised-distributions.png and standardisation reference')

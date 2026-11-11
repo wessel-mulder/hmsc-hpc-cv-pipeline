@@ -63,13 +63,11 @@ for(v in names(labels)) {
                        length(shared)),x=.02,y=.25,hjust=0,size=9)
   p <- plot_grid(heading,body,ncol=1,rel_heights=c(.13,1))
   figures[[v]] <- p
-  ggsave(file.path(out_dir,paste0(v,'-atlas1-2-3.png')),p,
-         width=13,height=5.7,dpi=240,bg='white')
   message(v,': ',paste(signif(limits,5),collapse=' to '),' ',units[[v]])
 }
-# A tall overview preserves readable labels; individual rows are saved above.
+# A tall overview preserves readable labels.
 overview <- plot_grid(plotlist=figures,ncol=1)
 ggsave(file.path(out_dir,'environmental-panel.png'),overview,
        width=13,height=57,dpi=160,bg='white',limitsize=FALSE)
 if(interactive()) print(overview)
-message('Saved overview and ',length(figures),' predictor PNGs to ',out_dir)
+message('Saved environmental-panel.png to ',out_dir)
