@@ -21,13 +21,13 @@ date <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 guild_models <- c('All')
 variable_models <- c('All')   # 10 S0 predictors: climate, heterogeneity, seven cover variables 
 coverages <- c('GoodAverage')
-atlas_models <- c(1)
+atlas_models <- c(1,2,3)
 min_occs2run <- c(5)
 # Prepare one environment-only model and spatial models with 1–5 factors.
 # Each spatial model uses the full spatial covariance across fitted cells.
 # Set spatial_n_factors to a single value to prepare just that spatial version.
-spatial_models <- c("none", "spatial")
-spatial_n_factors <- 1:5
+spatial_models <- c("spatial")
+spatial_n_factors <- 2
 stopifnot(length(spatial_models) > 0L, !anyDuplicated(spatial_models),
           all(spatial_models %in% c("spatial", "none")),
           length(spatial_n_factors) > 0L, !anyDuplicated(spatial_n_factors),

@@ -2,7 +2,7 @@
 # Two comparison heatmaps for all selected models. Run from the repository root.
 # Edit this block; no fitted model or existing fit-cache file is changed.
 .libPaths(c("~/Rlibs", .libPaths()))
-patterns2match <- c("2026-11-02", "2026-11-06")
+patterns2match <- c("2026-11-11")
 model_root <- Sys.getenv("CH1_MODEL_OUTPUT_DIR", "HmscOutputs")
 samples <- 250L
 thin <- 100L
